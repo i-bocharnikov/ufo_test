@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, View } from "react-native";
+import { Container, Header, Content, Button, Text, Left, Body, Title, Right, StyleProvider } from 'native-base';
+import getTheme from './native-base-theme/components';
 import { connect } from "react-redux";
 
 import PlaceInput from "./src/components/PlaceInput/PlaceInput";
@@ -31,18 +33,34 @@ class App extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <PlaceDetail
-          selectedPlace={this.props.selectedPlace}
-          onItemDeleted={this.placeDeletedHandler}
-          onModalClosed={this.modalClosedHandler}
-        />
-        <PlaceInput onPlaceAdded={this.placeAddedHandler} />
-        <PlaceList
-          places={this.props.places}
-          onItemSelected={this.placeSelectedHandler}
-        />
-      </View>
+      <StyleProvider style={getTheme()}>
+        <Container>
+          <Header >
+            <Left />
+            <Body>
+              <Title>UFODRIVE</Title>
+            </Body>
+            <Right />
+          </Header>
+          <Content>
+            <Button>
+              <Text>Click Me!</Text>
+            </Button>
+            <View style={styles.container}>
+              <PlaceDetail
+                selectedPlace={this.props.selectedPlace}
+                onItemDeleted={this.placeDeletedHandler}
+                onModalClosed={this.modalClosedHandler}
+              />
+              <PlaceInput onPlaceAdded={this.placeAddedHandler} />
+              <PlaceList
+                places={this.props.places}
+                onItemSelected={this.placeSelectedHandler}
+              />
+            </View>
+          </Content>
+        </Container>
+      </StyleProvider>
     );
   }
 }

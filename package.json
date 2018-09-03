@@ -18,6 +18,7 @@
     "preset": "react-native"
   },
   "dependencies": {
+    "native-base": "^2.8.0",
     "react": "16.3.1",
     "react-native": "~0.55.2",
     "react-redux": "^5.0.7",
