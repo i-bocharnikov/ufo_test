@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { Container, H1, Content, Button, Text, StyleProvider } from 'native-base';
-import getTheme from '../../native-base-theme/components';
+import getTheme from '../../../native-base-theme/components';
 
 class CockpitScreen extends Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
-      title: 'Rental ' + navigation.getParam('reference', 'NO-REFERENCE'),
+      title: 'User ' + navigation.getParam('reference', '') + ' preference',
     };
   };
 
@@ -19,12 +19,9 @@ class CockpitScreen extends Component {
       <StyleProvider style={getTheme()}>
         <Container>
           <Content>
-            <H1>Rental {reference}</H1>
+            <H1>User {reference}</H1>
           </Content>
           <Content>
-            <Button transparent onPress={() => this.props.navigation.push('Cockpit', { reference: 'BLU0' + Math.floor(Math.random() * 100) })}>
-              <Text>Go to Another COCKPIT... again</Text>
-            </Button>
             <Button transparent onPress={() => this.props.navigation.navigate('Home')}>
               <Text>Go to HOME</Text>
             </Button>

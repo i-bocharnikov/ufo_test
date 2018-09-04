@@ -1,18 +1,30 @@
 import React, { Component } from "react";
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Text, Button } from 'react-native';
 
 
 class ReservePaymentScreen extends Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
-      title: 'Select the date and car',
+      title: 'Confirm',
     };
   };
 
   render() {
     return (
       <View style={styles.container}>
+        <Text>Payment input</Text>
+        <Button
+          title="Back"
+          onPress={() => this.props.navigation.goBack()}
+        />
+        <Button
+          title="Next"
+          onPress={() => {
+            this.props.navigation.popToTop()
+            this.props.navigation.navigate('Home')
+          }}
+        />
       </View>
     );
   }

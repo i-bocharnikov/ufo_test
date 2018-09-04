@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Text, Button } from 'react-native';
 
 
 class ReserveDateAndCarScreen extends Component {
@@ -13,6 +13,15 @@ class ReserveDateAndCarScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <Text>List of Dates and cars</Text>
+        <Button
+          title="Back"
+          onPress={() => this.props.navigation.goBack()}
+        />
+        <Button
+          title="Next"
+          onPress={() => this.props.navigation.navigate('Payment')}
+        />
       </View>
     );
   }
@@ -24,7 +33,7 @@ const styles = StyleSheet.create({
     padding: 26,
     backgroundColor: "#fff",
     alignItems: "center",
-    justifyContent: "flex-start"
+    justifyContent: "center"
   }
 });
 

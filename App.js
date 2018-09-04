@@ -1,100 +1,81 @@
 import React from "react";
-import { Button, View, StyleSheet, Image, Text } from 'react-native';
 import { createBottomTabNavigator, createStackNavigator } from 'react-navigation';
 
-import SupportScreen from './src/screens/SampleScreen'
-import DriveScreen from './src/screens/DriveScreen'
-import ReserveLocationScreen from './src/screens/ReserveLocationScreen'
-import ReserveDateAndCarScreen from './src/screens/ReserveDateAndCarScreen'
-import ReservePaymentScreen from './src/screens/ReservePaymentScreen'
-import RegisterScreen from './src/screens/CockpitScreen'
-import Video from 'react-native-video';
+import HomeScreen from './src/Containers/Home/ui'
+import SupportScreen from './src/Containers/SampleScreen'
+import DriveScreen from './src/Containers/DriveScreen'
+import ReserveLocationScreen from './src/Containers/Reserve/SelectLocation/ui'
+import ReserveDateAndCarScreen from './src/Containers/Reserve/SelectDateAndCar/ui'
+import ReservePaymentScreen from './src/Containers/Reserve/Payment/ui'
+import RegisterScreen from './src/Containers/Register/ui'
 import Ionicons from 'react-native-vector-icons/Ionicons';
-const logo = require('./src/assets/UFOLogo-alone-Horizontal.png')
-const video = require('./src/assets/UFOdrive.mp4')
 
 
 //Temporary ignore warning comming from react-native
 import { YellowBox } from 'react-native';
 YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
 
-class LogoTitle extends React.Component {
-  render() {
-    return (
-      <Image
-        source={logo}
-        style={{ width: 200, height: 20 }}
-      />
-    );
+const HomeStack = createStackNavigator(
+  {
+    Home: {
+      screen: HomeScreen
+    }
+  }, {
+    navigationOptions: ({ navigation }) => ({
+      headerStyle: {
+        backgroundColor: '#172c32',
+      },
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      },
+    }
+    )
   }
-}
-
-class HomeScreen extends React.Component {
-  static navigationOptions = {
-    headerTitle: <LogoTitle />,
-  };
-  render() {
-    return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Video source={video}   // Can be a URL or a local file.
-          ref={(ref) => {
-            this.player = ref
-          }}                                      // Store reference
-          style={styles.backgroundVideo}
-          resizeMode={"cover"}
-          //repeat={true}
-          muted={true}
-        />
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <Text> what is next?</Text>
-          <Button
-            title="1 - Reserve"
-            onPress={() => this.props.navigation.navigate('Reserve')}
-          />
-          <Button
-            title="2 - Register"
-            onPress={() => this.props.navigation.navigate('Register')}
-          />
-          <Button
-            title="3 - Drive"
-            onPress={() => this.props.navigation.navigate('Drive', { reference: "BLU001" })}
-          />
-        </View>
-      </View >
-    );
-  }
-}
-
-// Later on in your styles..
-var styles = StyleSheet.create({
-  backgroundVideo: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    bottom: 0,
-    right: 0,
-  },
-});
+);
 
 const DriveStack = createStackNavigator(
   {
     Drive: {
       screen: DriveScreen
     }
+  }, {
+    navigationOptions: ({ navigation }) => ({
+      headerStyle: {
+        backgroundColor: '#172c32',
+      },
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      },
+    }
+    )
   }
 );
 
 const ReserveStack = createStackNavigator(
   {
-    ReserveLocationScreen: {
+    Locations: {
       screen: ReserveLocationScreen
     },
-    ReserveDateAndCarScreen: {
+    DatesAndCars: {
       screen: ReserveDateAndCarScreen
     },
-    ReservePaymentScreen: {
+    Payment: {
       screen: ReservePaymentScreen
     }
+  }, {
+    initialRouteName: 'Locations',
+    navigationOptions: ({ navigation }) => ({
+      headerStyle: {
+        backgroundColor: '#172c32',
+      },
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      },
+    }
+    )
   }
 );
 
@@ -103,7 +84,20 @@ const RegisterStack = createStackNavigator(
     RegisterScreen: {
       screen: RegisterScreen
     }
+  },
+  {
+    navigationOptions: ({ navigation }) => ({
+      headerStyle: {
+        backgroundColor: '#172c32',
+      },
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      },
+    }
+    )
   }
+
 );
 
 const SupportStack = createStackNavigator(
@@ -111,13 +105,24 @@ const SupportStack = createStackNavigator(
     SupportScreen: {
       screen: SupportScreen
     }
+  }, {
+    navigationOptions: ({ navigation }) => ({
+      headerStyle: {
+        backgroundColor: '#172c32',
+      },
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      },
+    }
+    )
   }
 );
 
 const RootStack = createBottomTabNavigator(
   {
     Home: {
-      screen: HomeScreen
+      screen: HomeStack
     },
     Reserve: {
       screen: ReserveStack
@@ -161,14 +166,7 @@ const RootStack = createBottomTabNavigator(
         activeBackgroundColor: '#172c32',
         inactiveBackgroundColor: '#172c32'
 
-      },
-      headerStyle: {
-        backgroundColor: '#172c32',
-      },
-      headerTintColor: '#fff',
-      headerTitleStyle: {
-        fontWeight: 'bold',
-      },
+      }
     }
     )
   })
