@@ -1,6 +1,7 @@
 import React from "react";
 import { createBottomTabNavigator, createStackNavigator } from 'react-navigation';
-
+import { View, StyleSheet, StatusBar, ActivityIndicator } from 'react-native';
+import DeveloperMenu from './src/components/DeveloperMenu/ui'
 import HomeScreen from './src/Containers/Home/ui'
 import SupportScreen from './src/Containers/SampleScreen'
 import DriveScreen from './src/Containers/DriveScreen'
@@ -175,6 +176,10 @@ const RootStack = createBottomTabNavigator(
 
 export default class App extends React.Component {
   render() {
-    return <RootStack />;
+    return <View style={{ flex: 1 }}>
+      <StatusBar translucent={false} backgroundColor='#172c32' barStyle='light-content' />
+      <RootStack />
+      {__DEV__ && <DeveloperMenu />}
+    </View>;
   }
 }

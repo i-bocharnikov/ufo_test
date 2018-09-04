@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Container, H1, Content, Button, Text, StyleProvider } from 'native-base';
+import { Container, H1, Content, Button, Text, StyleProvider, Header, ListItem, Left, Icon, Body, Right, Switch } from 'native-base';
 import getTheme from '../../../native-base-theme/components';
 
 class CockpitScreen extends Component {
@@ -19,15 +19,47 @@ class CockpitScreen extends Component {
       <StyleProvider style={getTheme()}>
         <Container>
           <Content>
-            <H1>User {reference}</H1>
-          </Content>
-          <Content>
-            <Button transparent onPress={() => this.props.navigation.navigate('Home')}>
-              <Text>Go to HOME</Text>
-            </Button>
-            <Button transparent onPress={() => this.props.navigation.goBack()}>
-              <Text>Go BACK</Text>
-            </Button>
+            <ListItem icon>
+              <Left>
+                <Button success>
+                  <Icon active name="phone-portrait" />
+                </Button>
+              </Left>
+              <Body>
+                <Text>Phone Number</Text>
+              </Body>
+              <Right>
+                <Text>+352XXXXXXXXX</Text>
+              </Right>
+            </ListItem>
+            <ListItem icon>
+              <Left>
+                <Button style={{ backgroundColor: "#007AFF" }}>
+                  <Icon active name="mail" />
+                </Button>
+              </Left>
+              <Body>
+                <Text>Email Address</Text>
+              </Body>
+              <Right>
+                <Text>stany.blanvalet@ufodrive.com</Text>
+                <Icon active name="arrow-forward" />
+              </Right>
+            </ListItem>
+            <ListItem icon>
+              <Left>
+                <Button style={{ backgroundColor: "#007AFF" }}>
+                  <Icon active name="bluetooth" />
+                </Button>
+              </Left>
+              <Body>
+                <Text>navigate</Text>
+              </Body>
+              <Right>
+                <Text>Adam Street 12</Text>
+                <Icon active name="arrow-forward" />
+              </Right>
+            </ListItem>
           </Content>
         </Container>
       </StyleProvider >
