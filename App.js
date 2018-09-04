@@ -1,94 +1,87 @@
-import React, { Component } from "react";
-import { StyleSheet, View } from "react-native";
-import { Container, Header, Content, Button, Text, Left, Body, Title, Right, StyleProvider } from 'native-base';
-import getTheme from './native-base-theme/components';
-import { connect } from "react-redux";
+import React from "react";
+import { Button, View, Text, Image } from 'react-native';
+import { createStackNavigator } from 'react-navigation';
 
-import PlaceInput from "./src/components/PlaceInput/PlaceInput";
-import PlaceList from "./src/components/PlaceList/PlaceList";
-import PlaceDetail from "./src/components/PlaceDetail/PlaceDetail";
-import {
-  addPlace,
-  deletePlace,
-  selectPlace,
-  deselectPlace
-} from "./src/store/actions/index";
+import SupportScreen from './src/screens/SampleScreen'
+import DriveScreen from './src/screens/DriveScreen'
+import ReserveScreen from './src/screens/ReserveLocationScreen'
+import RegisterScreen from './src/screens/CockpitScreen'
 
-class App extends Component {
-  placeAddedHandler = placeName => {
-    this.props.onAddPlace(placeName);
-  };
 
-  placeDeletedHandler = () => {
-    this.props.onDeletePlace();
-  };
-
-  modalClosedHandler = () => {
-    this.props.onDeselectPlace();
-  };
-
-  placeSelectedHandler = key => {
-    this.props.onSelectPlace(key);
-  };
-
+class LogoTitle extends React.Component {
   render() {
     return (
-      <StyleProvider style={getTheme()}>
-        <Container>
-          <Header >
-            <Left />
-            <Body>
-              <Title>UFODRIVE</Title>
-            </Body>
-            <Right />
-          </Header>
-          <Content>
-            <Button>
-              <Text>Click Me!</Text>
-            </Button>
-            <View style={styles.container}>
-              <PlaceDetail
-                selectedPlace={this.props.selectedPlace}
-                onItemDeleted={this.placeDeletedHandler}
-                onModalClosed={this.modalClosedHandler}
-              />
-              <PlaceInput onPlaceAdded={this.placeAddedHandler} />
-              <PlaceList
-                places={this.props.places}
-                onItemSelected={this.placeSelectedHandler}
-              />
-            </View>
-          </Content>
-        </Container>
-      </StyleProvider>
+      <Image
+        source={require('./src/assets/UFOLogo-alone-Horizontal.png')}
+        style={{ width: 200, height: 20 }}
+      />
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 26,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "flex-start"
+class HomeScreen extends React.Component {
+  static navigationOptions = {
+    headerTitle: <LogoTitle />,
+  };
+  render() {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Button
+          title="Drive"
+          onPress={() => this.props.navigation.navigate('Drive', { reference: "BLU001" })}
+        />
+        <Button
+          title="Reserve"
+          onPress={() => this.props.navigation.navigate('Reserve')}
+        />
+        <Button
+          title="Register"
+          onPress={() => this.props.navigation.navigate('Register')}
+        />
+        <Button
+          title="Support"
+          onPress={() => this.props.navigation.navigate('Support')}
+        />
+      </View>
+    );
   }
-});
+}
 
-const mapStateToProps = state => {
-  return {
-    places: state.places.places,
-    selectedPlace: state.places.selectedPlace
-  };
-};
+const RootStack = createStackNavigator(
+  {
+    Home: {
+      screen: HomeScreen
+    },
+    Drive: {
+      screen: DriveScreen
+    },
+    Register: {
+      screen: RegisterScreen
+    },
+    Reserve: {
+      screen: ReserveScreen
+    },
+    Support: {
+      screen: SupportScreen
+    }
+  },
+  {
+    initialRouteName: 'Home',
+    /* The header config from HomeScreen is now here */
+    navigationOptions: {
+      headerStyle: {
+        backgroundColor: '#172c32',
+      },
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      },
+    },
+  }
+);
 
-const mapDispatchToProps = dispatch => {
-  return {
-    onAddPlace: name => dispatch(addPlace(name)),
-    onDeletePlace: () => dispatch(deletePlace()),
-    onSelectPlace: key => dispatch(selectPlace(key)),
-    onDeselectPlace: () => dispatch(deselectPlace())
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default class App extends React.Component {
+  render() {
+    return <RootStack />;
+  }
+}
