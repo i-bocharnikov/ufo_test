@@ -1,6 +1,10 @@
 import React, { Component } from "react";
 import { View, StyleSheet, Text, Button, Image } from 'react-native';
 import Video from 'react-native-video';
+import { observer } from "mobx-react";
+import { observable } from "mobx";
+
+import UserStore from "../../stores/usersStore"
 
 const logo = require('../../assets/UFOLogo-alone-Horizontal.png')
 const video = require('../../assets/UFOdrive.mp4')
@@ -17,11 +21,21 @@ class LogoTitle extends React.Component {
 }
 
 
-
+@observer
 class HomeScreen extends React.Component {
   static navigationOptions = {
     headerTitle: <LogoTitle />,
   };
+
+  @observable boxVisible = true;
+  toggleBox = () => {
+    this.boxVisible = !this.boxVisible;
+  };
+
+  componentDidMount() {
+    UserStore.registerDevice()
+  }
+
   render() {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -36,7 +50,9 @@ class HomeScreen extends React.Component {
           muted={true}
         />
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <Text> what is next?</Text>
+          <Text> Welcome  {UserStore.user ? UserStore.user.reference : "NA"} what is next? </Text>
+          <Button onPress={this.toggleBox} title="Toggle Box"></Button>
+          {this.boxVisible && <View style={styles.box} />}
           <Button
             title="1 - Reserve"
             onPress={() => this.props.navigation.navigate('Reserve')}
@@ -64,6 +80,12 @@ var styles = StyleSheet.create({
     bottom: 0,
     right: 0,
   },
+  box: {
+    margin: 10,
+    height: 200,
+    width: 200,
+    backgroundColor: "red"
+  }
 });
 
 

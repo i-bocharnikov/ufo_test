@@ -1,8 +1,11 @@
 import React, { Component } from "react";
-import { Container, H1, Content, Button, Text, StyleProvider, Header, ListItem, Left, Icon, Body, Right, Switch } from 'native-base';
+import { Container, H1, Content, Button, Text, StyleProvider, Header, ListItem, Left, Icon, Body, Right, Switch, Card, CardItem } from 'native-base';
 import getTheme from '../../../native-base-theme/components';
+import CounterStore from '../../stores/counterStore.js';
+import { observer } from 'mobx-react';
 
-class CockpitScreen extends Component {
+@observer
+class RegisterScreen extends Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
@@ -18,6 +21,26 @@ class CockpitScreen extends Component {
     return (
       <StyleProvider style={getTheme()}>
         <Container>
+
+          <Card>
+            <CardItem header>
+              <Text>NativeBase</Text>
+            </CardItem>
+            <CardItem>
+              <Body>
+                <Text>
+                  The counter is [{CounterStore.counter}]
+                </Text>
+              </Body>
+            </CardItem>
+          </Card>
+          <Button primary block onPress={() => CounterStore.increment()}>
+            <Text>Increment</Text>
+          </Button>
+          <Button primary block onPress={() => CounterStore.decrement()}>
+            <Text>Decrement</Text>
+          </Button>
+
           <Content>
             <ListItem icon>
               <Left>
@@ -69,4 +92,4 @@ class CockpitScreen extends Component {
 
 
 
-export default CockpitScreen;
+export default RegisterScreen;

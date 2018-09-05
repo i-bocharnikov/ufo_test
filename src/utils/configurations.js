@@ -5,7 +5,7 @@ const development = {
     UFO_APP_NAME: packageJson.name,
     UFO_APP_VERSION: packageJson.version,
     UFO_APP_BUILD_NUMBER: "002",
-    UFO_SERVER_API_URL: "http://localhost:1337/ufodrive/1.0.0/",
+    UFO_SERVER_API_URL: "http://192.168.178.27:1337/ufodrive/1.0.0/",
     UFO_SERVER_API_VERSION: "v1",
     UFO_ANALYTICS_ACTIVE: false,
     UFO_ANALYTICS_API_URL: "http://localhost",
@@ -39,6 +39,6 @@ const production = {
     UFO_PAYMENT_API_KEY: "pk_live_oi9sZTmKXYxcHmWzV7UMLboa"
 };
 
-const config = development;
+const configurations = development;
 
-export default config;
+export default configurations;

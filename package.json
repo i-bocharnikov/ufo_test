@@ -3,9 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
+    "babel-preset-react-native": "^4.0.0",
     "babel-preset-react-native-stage-0": "^1.0.1",
+    "babel-preset-stage-3": "^6.24.1",
     "jest": "^23.5.0",
     "jest-react-native": "^18.0.0",
+    "jsc-android": "224109.x.x",
     "react-test-renderer": "16.3.1"
   },
   "scripts": {
@@ -19,13 +22,20 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "global": "^4.3.2",
     "immutable": "^3.8.2",
+    "mobx": "^5.1.0",
+    "mobx-persist": "^0.4.1",
+    "mobx-react": "^5.2.6",
+    "moment": "^2.22.2",
     "native-base": "^2.8.0",
     "react": "16.3.1",
+    "react-devtools": "^3.3.2",
     "react-native": "~0.55.2",
     "react-native-video": "^3.2.0",
     "react-navigation": "^2.12.1",
     "react-redux": "^5.0.7",
-    "redux": "^4.0.0"
+    "redux": "^4.0.0",
+    "uuid": "^3.3.2"
   }
 }

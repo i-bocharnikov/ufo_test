@@ -238,7 +238,7 @@ export default {
   tabFontSize: 15,
 
   // Text
-  textColor: "#fff",//"#000",
+  textColor: "#000",
   inverseTextColor: "#fff",
   noteFontSize: 14,
   get defaultTextColor() {
@@ -250,7 +250,7 @@ export default {
   titleFontSize: platform === "ios" ? 17 : 19,
   subTitleFontSize: platform === "ios" ? 11 : 14,
   subtitleColor: platform === "ios" ? "#8e8e93" : "#FFF",
-  titleFontColor: "#FFF", //platform === "ios" ? "#000" : "#FFF",
+  titleFontColor: platform === "ios" ? "#000" : "#FFF",
 
   // Other
   borderRadiusBase: platform === "ios" ? 5 : 2,
