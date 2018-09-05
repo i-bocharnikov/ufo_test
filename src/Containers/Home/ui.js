@@ -3,6 +3,7 @@ import { View, StyleSheet, Text, Button, Image } from 'react-native';
 import Video from 'react-native-video';
 import { observer } from "mobx-react";
 import { observable } from "mobx";
+import { translate } from "react-i18next";
 
 import UserStore from "../../stores/usersStore"
 
@@ -37,6 +38,7 @@ class HomeScreen extends React.Component {
   }
 
   render() {
+    const { t } = this.props;
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Video source={video}   // Can be a URL or a local file.
@@ -50,7 +52,7 @@ class HomeScreen extends React.Component {
           muted={true}
         />
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <Text> Welcome  {UserStore.user ? UserStore.user.reference : "NA"} what is next? </Text>
+          <Text> {t('home:welcome', { user: UserStore.user })}  </Text>
           <Button onPress={this.toggleBox} title="Toggle Box"></Button>
           {this.boxVisible && <View style={styles.box} />}
           <Button
@@ -89,4 +91,4 @@ var styles = StyleSheet.create({
 });
 
 
-export default (HomeScreen);
+export default translate("translations")(HomeScreen);
