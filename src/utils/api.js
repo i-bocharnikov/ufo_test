@@ -1,6 +1,6 @@
 import axios from "axios";
 import configurations from "../utils/configurations"
-import appInfoStore from '../stores/appInfoStore'
+import activitiesStore from '../stores/activitiesStore'
 
 export const ufodrive_server_connectivity_test_api = axios.create({
     baseURL:
@@ -39,14 +39,14 @@ export async function getFromApi(path, suppressToastBox = false, usePublicApi = 
 
     let api = usePublicApi ? ufodrive_server_public_api : ufodrive_server_api
     try {
-        appInfoStore.apiConnectionPending = true
+        activitiesStore.internetAccessPending = true
         let response = await api.get(path)
-        appInfoStore.apiConnectionPending = false
-        appInfoStore.apiConnectionFailed = false
-        return response.data.data
+        activitiesStore.internetAccessPending = false
+        activitiesStore.internetAccessFailure = false
+        return response.data
     } catch (error) {
-        appInfoStore.apiConnectionPending = false
-        appInfoStore.apiConnectionFailed = true
+        activitiesStore.internetAccessPending = false
+        activitiesStore.internetAccessFailure = true
         handleError(error, suppressToastBox)
     }
 }
@@ -62,14 +62,14 @@ export async function getFromApi(path, suppressToastBox = false, usePublicApi = 
 export async function postToApi(path, body, suppressToastBox = false, usePublicApi = false) {
     let api = usePublicApi ? ufodrive_server_public_api : ufodrive_server_api
     try {
-        appInfoStore.apiConnectionPending = true
+        activitiesStore.internetAccessPending = true
         let response = await api.post(path, body)
-        appInfoStore.apiConnectionPending = false
-        appInfoStore.apiConnectionFailed = false
-        return response.data.data
+        activitiesStore.internetAccessPending = false
+        activitiesStore.internetAccessFailure = false
+        return response.data
     } catch (error) {
-        appInfoStore.apiConnectionPending = false
-        appInfoStore.apiConnectionFailed = true
+        activitiesStore.internetAccessPending = false
+        activitiesStore.internetAccessFailure = true
         handleError(error, suppressToastBox)
     }
 }
@@ -85,14 +85,14 @@ export async function postToApi(path, body, suppressToastBox = false, usePublicA
 export async function putToApi(path, body, suppressToastBox = false, usePublicApi = false) {
     let api = usePublicApi ? ufodrive_server_public_api : ufodrive_server_api
     try {
-        appInfoStore.apiConnectionPending = true
+        activitiesStore.internetAccessPending = true
         let response = await api.put(path, body)
-        appInfoStore.apiConnectionPending = false
-        appInfoStore.apiConnectionFailed = false
-        return response.data.data
+        activitiesStore.internetAccessPending = false
+        activitiesStore.internetAccessFailure = false
+        return response.data
     } catch (error) {
-        appInfoStore.apiConnectionPending = false
-        appInfoStore.apiConnectionFailed = true
+        activitiesStore.internetAccessPending = false
+        activitiesStore.internetAccessFailure = true
         handleError(error, suppressToastBox)
     }
 }
@@ -100,14 +100,14 @@ export async function putToApi(path, body, suppressToastBox = false, usePublicAp
 export async function checkConnectivity() {
 
     try {
-        appInfoStore.apiConnectionPending = true
+        activitiesStore.internetAccessPending = true
         await ufodrive_server_connectivity_test_api.get("/")
-        appInfoStore.apiConnectionPending = false
-        appInfoStore.apiConnectionFailed = false
+        activitiesStore.internetAccessPending = false
+        activitiesStore.internetAccessFailure = false
         return true
     } catch (error) {
-        appInfoStore.apiConnectionPending = false
-        appInfoStore.apiConnectionFailed = true
+        activitiesStore.internetAccessPending = false
+        activitiesStore.internetAccessFailure = true
         return false
     }
 }
@@ -132,10 +132,10 @@ function formatApiError(error) {
     if (
         error.response &&
         error.response.data &&
-        error.response.data.data &&
-        error.response.data.data.message
+        error.response.data &&
+        error.response.data.message
     ) {
-        message = error.response.data.data.message;
+        message = error.response.data.message;
         key = error.response.status ? error.response.status : "api";
         if (key === "401") {
             message =

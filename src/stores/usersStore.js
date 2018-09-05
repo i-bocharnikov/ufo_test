@@ -4,7 +4,6 @@ import DeviceInfo from 'react-native-device-info';
 import { persist } from 'mobx-persist'
 import uuid from "uuid";
 
-import { hydrate } from '../utils/store'
 import configurations from "../utils/configurations";
 import { getAuthenticationUUIDFromStore, setAuthenticationUUIDInStore, setAuthenticationPasswordInStore, getAuthenticationPasswordFromStore, setAuthenticationTokenInStore } from "../utils/authentications"
 import { useTokenInApi, postToApi, putToApi } from '../utils/api'
@@ -12,6 +11,18 @@ import { useTokenInApi, postToApi, putToApi } from '../utils/api'
 
 class User {
     @persist @observable reference = null
+    @persist @observable role = null
+    @persist @observable status = null
+    @persist @observable company_name = null
+    @persist @observable first_name = null
+    @persist @observable last_name = null
+    @persist @observable phone_number = null
+    @persist @observable phone_number_status = null
+    @persist @observable email = null
+    @persist @observable email_status = null
+    @persist @observable address = null
+    @persist @observable address_status = null
+    @persist @observable registration_message = null
 }
 
 
@@ -44,27 +55,23 @@ class UsersStore {
             name: await DeviceInfo.getDeviceName(),
             description: await DeviceInfo.getUserAgent()
         };
-        console.info("usersStore.registerDevice before: %s", await DeviceInfo.getModel());
-        console.info("usersStore.registerDevice before: %s", this.user.reference);
         const response = isNew
             ? await postToApi("/users/devices", body, true, true)
             : await putToApi(
                 "/users/devices/" + device_uuid,
                 body, true, true
             );
-        await setAuthenticationUUIDInStore(device_uuid);
-        await setAuthenticationPasswordInStore(device_pwd);
-        await setAuthenticationTokenInStore(response.token);
-        await useTokenInApi(response.token);
 
-        //await setUserForSupport(response.data.data.user);
-        this.user = response.user
-        console.info("usersStore.registerDevice after: %s", this.user.reference);
-
+        if (response && response.status === "success") {
+            console.info("usersStore.registerDevice : %j", response);
+            await setAuthenticationUUIDInStore(device_uuid);
+            await setAuthenticationPasswordInStore(device_pwd);
+            await setAuthenticationTokenInStore(response.data.token);
+            await useTokenInApi(response.data.token);
+            this.user = response.data.user
+        }
     }
-
-
 }
 
 export default usersStore = new UsersStore();
-hydrate('users', usersStore).then(() => console.log('usersStore hydrated'))
+

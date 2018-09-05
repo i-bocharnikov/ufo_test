@@ -11,3 +11,7 @@ const DriverApp = () => (
 );
 
 AppRegistry.registerComponent('driverApp', () => DriverApp);
+
+import { hydrate } from './src/utils/store'
+import usersStore from './src/stores/usersStore'
+hydrate('users', usersStore).then(() => console.log('usersStore hydrated'))

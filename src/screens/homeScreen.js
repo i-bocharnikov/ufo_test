@@ -1,40 +1,23 @@
 import React, { Component } from "react";
-import { View, StyleSheet, Text, Button, Image } from 'react-native';
+import { View, StyleSheet, Text, Button } from 'react-native';
 import Video from 'react-native-video';
 import { observer } from "mobx-react";
-import { observable } from "mobx";
 import { translate } from "react-i18next";
+import UserStore from "../stores/usersStore"
+import Logo from "../components/logo"
 
-import UserStore from "../../stores/usersStore"
 
-const logo = require('../../assets/UFOLogo-alone-Horizontal.png')
-const video = require('../../assets/UFOdrive.mp4')
-
-class LogoTitle extends React.Component {
-  render() {
-    return (
-      <Image
-        source={logo}
-        style={{ width: 200, height: 20 }}
-      />
-    );
-  }
-}
+const video = require('../assets/UFOdrive.mp4')
 
 
 @observer
 class HomeScreen extends React.Component {
   static navigationOptions = {
-    headerTitle: <LogoTitle />,
+    headerTitle: <Logo />,
   };
 
-  @observable boxVisible = true;
-  toggleBox = () => {
-    this.boxVisible = !this.boxVisible;
-  };
-
-  componentDidMount() {
-    UserStore.registerDevice()
+  async componentDidMount() {
+    await UserStore.registerDevice()
   }
 
   render() {
@@ -53,8 +36,6 @@ class HomeScreen extends React.Component {
         />
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
           <Text> {t('home:welcome', { user: UserStore.user })}  </Text>
-          <Button onPress={this.toggleBox} title="Toggle Box"></Button>
-          {this.boxVisible && <View style={styles.box} />}
           <Button
             title="1 - Reserve"
             onPress={() => this.props.navigation.navigate('Reserve')}
@@ -81,12 +62,6 @@ var styles = StyleSheet.create({
     left: 0,
     bottom: 0,
     right: 0,
-  },
-  box: {
-    margin: 10,
-    height: 200,
-    width: 200,
-    backgroundColor: "red"
   }
 });
 

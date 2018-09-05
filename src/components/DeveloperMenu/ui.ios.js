@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import * as snapshot from '../../utils/snapshot';
 
 import {
   TouchableOpacity,
@@ -24,7 +23,6 @@ class DeveloperMenu extends Component {
 
     const callback = async index => {
       if (index === options.clearState) {
-        await snapshot.clearSnapshot();
         console.warn('(╯°□°）╯︵ ┻━┻ \nState cleared, Cmd+R to reload the application now');
       }
     };

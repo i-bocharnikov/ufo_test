@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import * as snapshot from '../../utils/snapshot';
 
 import {
   View,
@@ -26,8 +25,7 @@ class DeveloperMenu extends Component {
   };
 
   clearState = async () => {
-    await snapshot.clearSnapshot();
-    console.warn('(╯°□°）╯︵ ┻━┻ \nState cleared, Cmd+R to reload the application now');
+    console.warn('(╯°□°）╯︵ ┻━┻ \nState cleared, R+R to reload the application now');
     this.closeMenu();
   };
 

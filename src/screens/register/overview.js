@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Container, H1, Content, Button, Text, StyleProvider, Header, ListItem, Left, Icon, Body, Right, Switch, Card, CardItem } from 'native-base';
 import getTheme from '../../../native-base-theme/components';
-import CounterStore from '../../stores/counterStore.js';
+import usersStore from '../../stores/usersStore';
 import { observer } from 'mobx-react';
 
 @observer
@@ -9,77 +9,73 @@ class RegisterScreen extends Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
-      title: 'User ' + navigation.getParam('reference', '') + ' preference',
+      title: 'Registration ' + usersStore.user.reference,
     };
   };
 
+  getColorForStatus = (status) => {
+    switch (status) {
+      case "missing":
+        return "red"
+      case "not_validated":
+        return "orange"
+      case "validated":
+        return "green"
+      default:
+        return "grey"
+    }
+  }
+
   render() {
 
-    const { navigation } = this.props
-    const reference = navigation.getParam('reference', 'NO-REFERENCE')
-
+    let phoneNumberColor = this.getColorForStatus(usersStore.user.phone_number_status)
+    let emailColor = this.getColorForStatus(usersStore.user.email_status)
+    let addressColor = this.getColorForStatus(usersStore.user.address_status)
+    let identificationColor = this.getColorForStatus(usersStore.user.identification_status)
+    let driverLicenceColor = this.getColorForStatus(usersStore.user.driver_licence_status)
     return (
       <StyleProvider style={getTheme()}>
         <Container>
-
-          <Card>
-            <CardItem header>
-              <Text>NativeBase</Text>
-            </CardItem>
-            <CardItem>
-              <Body>
-                <Text>
-                  The counter is [{CounterStore.counter}]
-                </Text>
-              </Body>
-            </CardItem>
-          </Card>
-          <Button primary block onPress={() => CounterStore.increment()}>
-            <Text>Increment</Text>
-          </Button>
-          <Button primary block onPress={() => CounterStore.decrement()}>
-            <Text>Decrement</Text>
-          </Button>
-
           <Content>
             <ListItem icon>
               <Left>
-                <Button success>
+                <Button style={{ backgroundColor: phoneNumberColor }}>
                   <Icon active name="phone-portrait" />
                 </Button>
               </Left>
               <Body>
-                <Text>Phone Number</Text>
+                <Text>Phone</Text>
               </Body>
               <Right>
-                <Text>+352XXXXXXXXX</Text>
-              </Right>
-            </ListItem>
-            <ListItem icon>
-              <Left>
-                <Button style={{ backgroundColor: "#007AFF" }}>
-                  <Icon active name="mail" />
-                </Button>
-              </Left>
-              <Body>
-                <Text>Email Address</Text>
-              </Body>
-              <Right>
-                <Text>stany.blanvalet@ufodrive.com</Text>
+                <Text>{usersStore.user.phone_number}</Text>
                 <Icon active name="arrow-forward" />
               </Right>
             </ListItem>
             <ListItem icon>
               <Left>
-                <Button style={{ backgroundColor: "#007AFF" }}>
+                <Button style={{ backgroundColor: emailColor }}>
+                  <Icon active name="mail" />
+                </Button>
+              </Left>
+              <Body>
+                <Text>Email</Text>
+              </Body>
+              <Right>
+                <Text>{usersStore.user.email}</Text>
+                <Icon active name="arrow-forward" />
+              </Right>
+            </ListItem>
+            <ListItem icon>
+              <Left>
+                <Button style={{ backgroundColor: addressColor }}>
                   <Icon active name="bluetooth" />
                 </Button>
               </Left>
               <Body>
-                <Text>navigate</Text>
+                <Text>Address</Text>
               </Body>
               <Right>
-                <Text>Adam Street 12</Text>
+                <Text>{usersStore.user.address}</Text>
                 <Icon active name="arrow-forward" />
               </Right>
             </ListItem>
@@ -89,6 +85,9 @@ class RegisterScreen extends Component {
     );
   }
 }
+
+
+
 
 
 

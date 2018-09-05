@@ -1,18 +1,22 @@
 import React from "react";
 import { createBottomTabNavigator, createStackNavigator } from 'react-navigation';
+import { View, StyleSheet, Text } from 'react-native';
 import { Root } from "native-base";
 import { StatusBar } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { translate } from "react-i18next";
+import { observer } from "mobx-react";
 
-import DeveloperMenu from './src/components/DeveloperMenu/ui'
-import HomeScreen from './src/containers/Home/ui'
-import SupportScreen from './src/containers/SupportScreen'
-import DriveScreen from './src/containers/DriveScreen'
-import ReserveLocationScreen from './src/containers/Reserve/SelectLocation/ui'
-import ReserveDateAndCarScreen from './src/containers/Reserve/SelectDateAndCar/ui'
-import ReservePaymentScreen from './src/containers/Reserve/Payment/ui'
-import RegisterScreen from './src/containers/Register/ui'
-
+import DeveloperMenu from './src/components/developerMenu/ui'
+import HomeScreen from './src/screens/homeScreen'
+import SupportScreen from './src/screens/supportScreen'
+import DriveScreen from './src/screens/driveScreen'
+import ReserveLocationScreen from './src/screens/reserve/locationScreen'
+import ReserveDateAndCarScreen from './src/screens/reserve/dateAndCarScreen'
+import ReservePaymentScreen from './src/screens/reserve/paymentScreen'
+import RegisterScreen from './src/screens/register/overview'
+import ActivitiesStore from './src/stores/activitiesStore'
+import Activities from "./src/components/activities"
 
 //Temporary ignore warning comming from react-native
 import { YellowBox } from 'react-native';
@@ -32,6 +36,9 @@ const HomeStack = createStackNavigator(
       headerTitleStyle: {
         fontWeight: 'bold',
       },
+      headerRight: (
+        <Activities />
+      ),
     }
     )
   }
@@ -51,6 +58,9 @@ const DriveStack = createStackNavigator(
       headerTitleStyle: {
         fontWeight: 'bold',
       },
+      headerRight: (
+        <Activities />
+      ),
     }
     )
   }
@@ -77,6 +87,9 @@ const ReserveStack = createStackNavigator(
       headerTitleStyle: {
         fontWeight: 'bold',
       },
+      headerRight: (
+        <Activities />
+      ),
     }
     )
   }
@@ -97,6 +110,9 @@ const RegisterStack = createStackNavigator(
       headerTitleStyle: {
         fontWeight: 'bold',
       },
+      headerRight: (
+        <Activities />
+      ),
     }
     )
   }
@@ -117,6 +133,9 @@ const SupportStack = createStackNavigator(
       headerTitleStyle: {
         fontWeight: 'bold',
       },
+      headerRight: (
+        <Activities />
+      ),
     }
     )
   }
@@ -175,15 +194,37 @@ const RootStack = createBottomTabNavigator(
   })
 
 
+@observer
+class App extends React.Component {
 
-export default class App extends React.Component {
   render() {
+    const { t } = this.props;
     return (
       <Root>
         <StatusBar translucent={false} backgroundColor='#172c32' barStyle='light-content' />
+        {ActivitiesStore.internetAccessFailure && (
+          <View style={styles.activities}><Text style={{ color: 'white' }}>{t('activities:internetAccessFailure')}</Text></View>
+        )}
+        {ActivitiesStore.bluetoothAccessFailure && (
+          <View style={styles.activities}><Text style={{ color: 'white' }}>{t('activities:bluetoothAccessFailure')}</Text></View>
+        )}
         <RootStack />
         {__DEV__ && <DeveloperMenu />}
       </Root>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  activities: {
+    backgroundColor: "black",
+    alignItems: "center",
+    justifyContent: "flex-start"
+  }
+});
+
+
+export default translate("translations")(App);
+
+
+

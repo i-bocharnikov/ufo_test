@@ -5,6 +5,10 @@ i18n.use(LanguageDetector).init({
     // we init with resources
     resources: {
         en: {
+            activities: {
+                "internetAccessFailure": "Unexpected internet connectivity issues. Operating in offline/degraded mode",
+                "bluetoothAccessFailure": "Unexpected bluetooth connectivity issues. Operating in offline/degraded mode",
+            },
             home: {
                 "welcome": "Hello {{user.reference}}, What is next ?",
             }
