@@ -43,8 +43,6 @@
     "react-native-locale-detector": "^1.0.1",
     "react-native-video": "^3.2.0",
     "react-navigation": "^2.12.1",
-    "react-redux": "^5.0.7",
-    "redux": "^4.0.0",
     "uuid": "^3.3.2"
   }
 }

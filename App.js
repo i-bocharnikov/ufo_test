@@ -1,16 +1,17 @@
 import React from "react";
 import { createBottomTabNavigator, createStackNavigator } from 'react-navigation';
 import { Root } from "native-base";
-import { StatusBar, ActivityIndicator } from 'react-native';
-import DeveloperMenu from './src/components/DeveloperMenu/ui'
-import HomeScreen from './src/Containers/Home/ui'
-import SupportScreen from './src/Containers/SampleScreen'
-import DriveScreen from './src/Containers/DriveScreen'
-import ReserveLocationScreen from './src/Containers/Reserve/SelectLocation/ui'
-import ReserveDateAndCarScreen from './src/Containers/Reserve/SelectDateAndCar/ui'
-import ReservePaymentScreen from './src/Containers/Reserve/Payment/ui'
-import RegisterScreen from './src/Containers/Register/ui'
+import { StatusBar } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+
+import DeveloperMenu from './src/components/DeveloperMenu/ui'
+import HomeScreen from './src/containers/Home/ui'
+import SupportScreen from './src/containers/SupportScreen'
+import DriveScreen from './src/containers/DriveScreen'
+import ReserveLocationScreen from './src/containers/Reserve/SelectLocation/ui'
+import ReserveDateAndCarScreen from './src/containers/Reserve/SelectDateAndCar/ui'
+import ReservePaymentScreen from './src/containers/Reserve/Payment/ui'
+import RegisterScreen from './src/containers/Register/ui'
 
 
 //Temporary ignore warning comming from react-native
