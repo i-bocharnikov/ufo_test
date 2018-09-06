@@ -39,14 +39,14 @@ export async function getFromApi(path, suppressToastBox = false, usePublicApi = 
 
     let api = usePublicApi ? ufodrive_server_public_api : ufodrive_server_api
     try {
-        activitiesStore.internetAccessPending = true
+        activitiesStore.activities.internetAccessPending = true
         let response = await api.get(path)
-        activitiesStore.internetAccessPending = false
-        activitiesStore.internetAccessFailure = false
+        activitiesStore.activities.internetAccessPending = false
+        activitiesStore.activities.internetAccessFailure = false
         return response.data
     } catch (error) {
-        activitiesStore.internetAccessPending = false
-        activitiesStore.internetAccessFailure = true
+        activitiesStore.activities.internetAccessPending = false
+        activitiesStore.activities.internetAccessFailure = true
         handleError(error, suppressToastBox)
     }
 }
@@ -62,14 +62,14 @@ export async function getFromApi(path, suppressToastBox = false, usePublicApi = 
 export async function postToApi(path, body, suppressToastBox = false, usePublicApi = false) {
     let api = usePublicApi ? ufodrive_server_public_api : ufodrive_server_api
     try {
-        activitiesStore.internetAccessPending = true
+        activitiesStore.activities.internetAccessPending = true
         let response = await api.post(path, body)
-        activitiesStore.internetAccessPending = false
-        activitiesStore.internetAccessFailure = false
+        activitiesStore.activities.internetAccessPending = false
+        activitiesStore.activities.internetAccessFailure = false
         return response.data
     } catch (error) {
-        activitiesStore.internetAccessPending = false
-        activitiesStore.internetAccessFailure = true
+        activitiesStore.activities.internetAccessPending = false
+        activitiesStore.activities.internetAccessFailure = true
         handleError(error, suppressToastBox)
     }
 }
@@ -85,14 +85,14 @@ export async function postToApi(path, body, suppressToastBox = false, usePublicA
 export async function putToApi(path, body, suppressToastBox = false, usePublicApi = false) {
     let api = usePublicApi ? ufodrive_server_public_api : ufodrive_server_api
     try {
-        activitiesStore.internetAccessPending = true
+        activitiesStore.activities.internetAccessPending = true
         let response = await api.put(path, body)
-        activitiesStore.internetAccessPending = false
-        activitiesStore.internetAccessFailure = false
+        activitiesStore.activities.internetAccessPending = false
+        activitiesStore.activities.internetAccessFailure = false
         return response.data
     } catch (error) {
-        activitiesStore.internetAccessPending = false
-        activitiesStore.internetAccessFailure = true
+        activitiesStore.activities.internetAccessPending = false
+        activitiesStore.activities.internetAccessFailure = true
         handleError(error, suppressToastBox)
     }
 }
@@ -102,12 +102,12 @@ export async function checkConnectivity() {
     try {
         activitiesStore.internetAccessPending = true
         await ufodrive_server_connectivity_test_api.get("/")
-        activitiesStore.internetAccessPending = false
-        activitiesStore.internetAccessFailure = false
+        activitiesStore.activities.internetAccessPending = false
+        activitiesStore.activities.internetAccessFailure = false
         return true
     } catch (error) {
-        activitiesStore.internetAccessPending = false
-        activitiesStore.internetAccessFailure = true
+        activitiesStore.activities.internetAccessPending = false
+        activitiesStore.activities.internetAccessFailure = true
         return false
     }
 }

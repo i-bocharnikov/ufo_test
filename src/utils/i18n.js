@@ -11,6 +11,12 @@ i18n.use(LanguageDetector).init({
             },
             home: {
                 "welcome": "Hello {{user.reference}}, What is next ?",
+            },
+            register: {
+                "overviewTitle": "Registration {{user.reference}}",
+                "phoneNumberLabel": "Phone",
+                "emailLabel": "Email",
+                "addressLabel": "Address",
             }
         },
         fr: {

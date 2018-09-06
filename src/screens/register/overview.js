@@ -3,31 +3,24 @@ import { Container, H1, Content, Button, Text, StyleProvider, Header, ListItem, 
 import getTheme from '../../../native-base-theme/components';
 import usersStore from '../../stores/usersStore';
 import { observer } from 'mobx-react';
+import { translate } from "react-i18next";
 
 @observer
 class RegisterScreen extends Component {
 
-  static navigationOptions = ({ navigation }) => {
+  static navigationOptions = ({ navigation, navigationOptions, screenProps }) => {
     return {
-      title: 'Registration ' + usersStore.user.reference,
+      title: navigation.getParam('title', 'Registration'),
     };
   };
 
-  getColorForStatus = (status) => {
-    switch (status) {
-      case "missing":
-        return "red"
-      case "not_validated":
-        return "orange"
-      case "validated":
-        return "green"
-      default:
-        return "grey"
-    }
+  async componentDidMount() {
+    this.props.navigation.setParams({ title: this.props.t('register:overviewTitle', { user: usersStore.user }) })
   }
 
   render() {
 
+    const { t } = this.props;
     let phoneNumberColor = this.getColorForStatus(usersStore.user.phone_number_status)
     let emailColor = this.getColorForStatus(usersStore.user.email_status)
     let addressColor = this.getColorForStatus(usersStore.user.address_status)
@@ -44,7 +37,7 @@ class RegisterScreen extends Component {
                 </Button>
               </Left>
               <Body>
-                <Text>Phone</Text>
+                <Text>{t('register:phoneNumberLabel')}</Text>
               </Body>
               <Right>
                 <Text>{usersStore.user.phone_number}</Text>
@@ -58,7 +51,7 @@ class RegisterScreen extends Component {
                 </Button>
               </Left>
               <Body>
-                <Text>Email</Text>
+                <Text>{t('register:emailLabel')}</Text>
               </Body>
               <Right>
                 <Text>{usersStore.user.email}</Text>
@@ -72,7 +65,7 @@ class RegisterScreen extends Component {
                 </Button>
               </Left>
               <Body>
-                <Text>Address</Text>
+                <Text>{t('register:addressLabel')}</Text>
               </Body>
               <Right>
                 <Text>{usersStore.user.address}</Text>
@@ -84,11 +77,19 @@ class RegisterScreen extends Component {
       </StyleProvider >
     );
   }
+
+  getColorForStatus = (status) => {
+    switch (status) {
+      case "missing":
+        return "red"
+      case "not_validated":
+        return "orange"
+      case "validated":
+        return "green"
+      default:
+        return "grey"
+    }
+  }
 }
 
-
-
-
-
-
-export default RegisterScreen;
+export default translate("translations")(RegisterScreen);

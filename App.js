@@ -15,33 +15,35 @@ import ReserveLocationScreen from './src/screens/reserve/locationScreen'
 import ReserveDateAndCarScreen from './src/screens/reserve/dateAndCarScreen'
 import ReservePaymentScreen from './src/screens/reserve/paymentScreen'
 import RegisterScreen from './src/screens/register/overview'
-import ActivitiesStore from './src/stores/activitiesStore'
-import Activities from "./src/components/activities"
+import activitiesStore from './src/stores/activitiesStore'
+import ActivitiesComponent from "./src/components/activities"
 
 //Temporary ignore warning comming from react-native
 import { YellowBox } from 'react-native';
 YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
+
+
+const commonStackNavigationOptions =
+{
+  headerStyle: {
+    backgroundColor: '#172c32',
+  },
+  headerTintColor: '#fff',
+  headerTitleStyle: {
+    fontWeight: 'bold',
+  },
+  headerRight: (
+    <ActivitiesComponent activities={activitiesStore.activities} />
+  ),
+};
+
 
 const HomeStack = createStackNavigator(
   {
     Home: {
       screen: HomeScreen
     }
-  }, {
-    navigationOptions: ({ navigation }) => ({
-      headerStyle: {
-        backgroundColor: '#172c32',
-      },
-      headerTintColor: '#fff',
-      headerTitleStyle: {
-        fontWeight: 'bold',
-      },
-      headerRight: (
-        <Activities />
-      ),
-    }
-    )
-  }
+  }, { navigationOptions: commonStackNavigationOptions }
 );
 
 const DriveStack = createStackNavigator(
@@ -49,21 +51,7 @@ const DriveStack = createStackNavigator(
     Drive: {
       screen: DriveScreen
     }
-  }, {
-    navigationOptions: ({ navigation }) => ({
-      headerStyle: {
-        backgroundColor: '#172c32',
-      },
-      headerTintColor: '#fff',
-      headerTitleStyle: {
-        fontWeight: 'bold',
-      },
-      headerRight: (
-        <Activities />
-      ),
-    }
-    )
-  }
+  }, { navigationOptions: commonStackNavigationOptions }
 );
 
 const ReserveStack = createStackNavigator(
@@ -79,44 +67,17 @@ const ReserveStack = createStackNavigator(
     }
   }, {
     initialRouteName: 'Locations',
-    navigationOptions: ({ navigation }) => ({
-      headerStyle: {
-        backgroundColor: '#172c32',
-      },
-      headerTintColor: '#fff',
-      headerTitleStyle: {
-        fontWeight: 'bold',
-      },
-      headerRight: (
-        <Activities />
-      ),
-    }
-    )
+    navigationOptions: commonStackNavigationOptions
   }
 );
+
 
 const RegisterStack = createStackNavigator(
   {
     RegisterScreen: {
       screen: RegisterScreen
     }
-  },
-  {
-    navigationOptions: ({ navigation }) => ({
-      headerStyle: {
-        backgroundColor: '#172c32',
-      },
-      headerTintColor: '#fff',
-      headerTitleStyle: {
-        fontWeight: 'bold',
-      },
-      headerRight: (
-        <Activities />
-      ),
-    }
-    )
-  }
-
+  }, { navigationOptions: commonStackNavigationOptions }
 );
 
 const SupportStack = createStackNavigator(
@@ -124,21 +85,7 @@ const SupportStack = createStackNavigator(
     SupportScreen: {
       screen: SupportScreen
     }
-  }, {
-    navigationOptions: ({ navigation }) => ({
-      headerStyle: {
-        backgroundColor: '#172c32',
-      },
-      headerTintColor: '#fff',
-      headerTitleStyle: {
-        fontWeight: 'bold',
-      },
-      headerRight: (
-        <Activities />
-      ),
-    }
-    )
-  }
+  }, { navigationOptions: commonStackNavigationOptions }
 );
 
 const RootStack = createBottomTabNavigator(
@@ -202,10 +149,10 @@ class App extends React.Component {
     return (
       <Root>
         <StatusBar translucent={false} backgroundColor='#172c32' barStyle='light-content' />
-        {ActivitiesStore.internetAccessFailure && (
+        {activitiesStore.internetAccessFailure && (
           <View style={styles.activities}><Text style={{ color: 'white' }}>{t('activities:internetAccessFailure')}</Text></View>
         )}
-        {ActivitiesStore.bluetoothAccessFailure && (
+        {activitiesStore.bluetoothAccessFailure && (
           <View style={styles.activities}><Text style={{ color: 'white' }}>{t('activities:bluetoothAccessFailure')}</Text></View>
         )}
         <RootStack />

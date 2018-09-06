@@ -7,11 +7,12 @@ import ActivitiesStore from '../stores/activitiesStore'
 
 @observer
 export default class Activities extends React.Component {
+
     render() {
 
-
-        let internetColor = ActivitiesStore.internetAccessFailure ? "red" : ActivitiesStore.internetAccessPending ? "white" : "grey"
-        let bluetoothColor = ActivitiesStore.bluetoothAccessFailure ? "red" : ActivitiesStore.bluetoothAccessPending ? "white" : "grey"
+        let activities = this.props.activities
+        let internetColor = activities ? activities.internetAccessFailure ? "red" : activities.internetAccessPending ? "white" : "grey" : "black"
+        let bluetoothColor = activities ? activities.bluetoothAccessFailure ? "red" : activities.bluetoothAccessPending ? "white" : "grey" : "black"
 
         return (
             <Grid>
