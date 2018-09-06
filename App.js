@@ -163,6 +163,7 @@ const RootStack = createBottomTabNavigator(
     initialRouteName: 'Home',
     /* The header config from HomeScreen is now here */
     navigationOptions: ({ navigation }) => ({
+      tabBarVisible: true, //TODO change to false to remove the tabbar
       tabBarIcon: ({ focused, tintColor }) => {
         const { routeName } = navigation.state;
         let iconName;
@@ -186,8 +187,7 @@ const RootStack = createBottomTabNavigator(
         activeTintColor: '#4ec6d6',
         inactiveTintColor: 'gray',
         activeBackgroundColor: '#172c32',
-        inactiveBackgroundColor: '#172c32'
-
+        inactiveBackgroundColor: '#172c32',
       }
     }
     )
