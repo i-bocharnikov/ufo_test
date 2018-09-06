@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { View, StyleSheet, Text, Button } from 'react-native';
+import ActionBarComponent from '../../components/actionBar'
 
 
 class ReserveDateAndCarScreen extends Component {
@@ -11,6 +12,28 @@ class ReserveDateAndCarScreen extends Component {
   };
 
   render() {
+
+    let actions = [
+
+      {
+        style: 'todo',
+        icon: 'menu-left',
+        text: 'previous',
+        onPress: () => this.props.navigation.navigate('Location')
+      },
+      {
+        style: 'done',
+        icon: 'home',
+        text: 'Home',
+        onPress: () => this.props.navigation.navigate('Home')
+      },
+      {
+        style: 'todo',
+        icon: 'menu-right',
+        text: 'Next',
+        onPress: () => this.props.navigation.navigate('Payment')
+      },
+    ]
     return (
       <View style={styles.container}>
         <Text>List of Dates and cars</Text>
@@ -22,6 +45,7 @@ class ReserveDateAndCarScreen extends Component {
           title="Next"
           onPress={() => this.props.navigation.navigate('Payment')}
         />
+        <ActionBarComponent actions={actions} />
       </View>
     );
   }

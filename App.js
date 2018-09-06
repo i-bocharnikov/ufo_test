@@ -14,9 +14,11 @@ import DriveScreen from './src/screens/driveScreen'
 import ReserveLocationScreen from './src/screens/reserve/locationScreen'
 import ReserveDateAndCarScreen from './src/screens/reserve/dateAndCarScreen'
 import ReservePaymentScreen from './src/screens/reserve/paymentScreen'
-import RegisterScreen from './src/screens/register/overview'
+import RegisterOverviewScreen from './src/screens/register/overview'
+import RegisterPhoneScreen from './src/screens/register/phone'
 import activitiesStore from './src/stores/activitiesStore'
 import ActivitiesComponent from "./src/components/activities"
+import MessageComponent from "./src/components/message"
 
 //Temporary ignore warning comming from react-native
 import { YellowBox } from 'react-native';
@@ -56,17 +58,17 @@ const DriveStack = createStackNavigator(
 
 const ReserveStack = createStackNavigator(
   {
-    Locations: {
+    Location: {
       screen: ReserveLocationScreen
     },
-    DatesAndCars: {
+    DateAndCar: {
       screen: ReserveDateAndCarScreen
     },
     Payment: {
       screen: ReservePaymentScreen
     }
   }, {
-    initialRouteName: 'Locations',
+    initialRouteName: 'Location',
     navigationOptions: commonStackNavigationOptions
   }
 );
@@ -74,10 +76,9 @@ const ReserveStack = createStackNavigator(
 
 const RegisterStack = createStackNavigator(
   {
-    RegisterScreen: {
-      screen: RegisterScreen
-    }
-  }, { navigationOptions: commonStackNavigationOptions }
+    Overview: { screen: RegisterOverviewScreen },
+    Phone: { screen: RegisterPhoneScreen }
+  }, { initialRouteName: 'Overview', navigationOptions: commonStackNavigationOptions }
 );
 
 const SupportStack = createStackNavigator(
@@ -110,7 +111,7 @@ const RootStack = createBottomTabNavigator(
     initialRouteName: 'Home',
     /* The header config from HomeScreen is now here */
     navigationOptions: ({ navigation }) => ({
-      tabBarVisible: true, //TODO change to false to remove the tabbar
+      tabBarVisible: false, //TODO change to false to remove the tabbar
       tabBarIcon: ({ focused, tintColor }) => {
         const { routeName } = navigation.state;
         let iconName;
@@ -146,16 +147,19 @@ class App extends React.Component {
 
   render() {
     const { t } = this.props;
+    const activities = activitiesStore.activities
     return (
       <Root>
         <StatusBar translucent={false} backgroundColor='#172c32' barStyle='light-content' />
-        {activitiesStore.internetAccessFailure && (
-          <View style={styles.activities}><Text style={{ color: 'white' }}>{t('activities:internetAccessFailure')}</Text></View>
-        )}
-        {activitiesStore.bluetoothAccessFailure && (
-          <View style={styles.activities}><Text style={{ color: 'white' }}>{t('activities:bluetoothAccessFailure')}</Text></View>
-        )}
-        <RootStack />
+        <View style={styles.activities}>
+          {activities.internetAccessFailure && (
+            <MessageComponent text={t('activities:internetAccessFailure')} />
+          )}
+          {activities.bluetoothAccessFailure && (
+            <MessageComponent text={t('activities:bluetoothAccessFailure')} />
+          )}
+        </View>
+        <View style={{ flex: 1 }}><RootStack /></View>
         {__DEV__ && <DeveloperMenu />}
       </Root>
     );
@@ -164,8 +168,9 @@ class App extends React.Component {
 
 const styles = StyleSheet.create({
   activities: {
-    backgroundColor: "black",
-    alignItems: "center",
+    width: '100%',
+    alignItems: 'center',
+    backgroundColor: "#172c32",
     justifyContent: "flex-start"
   }
 });

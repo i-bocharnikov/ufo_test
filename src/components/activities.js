@@ -1,12 +1,8 @@
 import React, { Component } from "react";
 import { Grid, Col } from "react-native-easy-grid";
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { observer } from "mobx-react";
 
-import ActivitiesStore from '../stores/activitiesStore'
-
-@observer
-export default class Activities extends React.Component {
+export default class ActivitiesComponent extends React.Component {
 
     render() {
 

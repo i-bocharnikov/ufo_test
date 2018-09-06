@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { View, StyleSheet } from 'react-native';
-
+import ActionBarComponent from '../components/actionBar'
 
 class DriveScreen extends Component {
 
@@ -11,9 +11,17 @@ class DriveScreen extends Component {
   };
 
   render() {
+    let actions = [
+      {
+        style: 'done',
+        icon: 'home',
+        text: 'Home',
+        onPress: () => this.props.navigation.navigate('Home')
+      },
+    ]
     return (
       <View style={styles.container}>
-
+        <ActionBarComponent actions={actions} />
       </View>
     );
   }

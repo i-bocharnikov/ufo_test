@@ -3,7 +3,7 @@ import { Image } from 'react-native';
 
 const logo = require('../assets/UFOLogo-alone-Horizontal.png')
 
-export default class Logo extends React.Component {
+export default class LogoComponent extends React.Component {
     render() {
         return (
             <Image

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { View, StyleSheet, Text, Button } from 'react-native';
-
+import ActionBarComponent from '../../components/actionBar'
 
 class ReservePaymentScreen extends Component {
 
@@ -11,6 +11,27 @@ class ReservePaymentScreen extends Component {
   };
 
   render() {
+    let actions = [
+      {
+        style: 'todo',
+        icon: 'menu-left',
+        text: 'previous',
+        onPress: () => this.props.navigation.navigate('DatesAndCars')
+      },
+      {
+        style: 'done',
+        icon: 'home',
+        text: 'Home',
+        onPress: () => this.props.navigation.navigate('Home')
+      },
+      {
+
+        style: 'todo',
+        icon: 'credit-card',
+        text: 'Pay',
+        onPress: () => { this.props.navigation.popToTop(); this.props.navigation.navigate('Home') }
+      },
+    ]
     return (
       <View style={styles.container}>
         <Text>Payment input</Text>
@@ -25,6 +46,7 @@ class ReservePaymentScreen extends Component {
             this.props.navigation.navigate('Home')
           }}
         />
+        <ActionBarComponent actions={actions} />
       </View>
     );
   }

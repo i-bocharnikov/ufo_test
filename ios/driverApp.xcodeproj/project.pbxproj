@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -43,6 +44,7 @@
 		6399501CBF384C5895FCDADA /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2DE9876270B949B198D5B141 /* MaterialCommunityIcons.ttf */; };
 		68762648BA1449A39A9ACB40 /* Roboto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D8B96245F4584256B45C64D1 /* Roboto.ttf */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
+		8CE6B193F4C247CF9026B8DC /* libRNTextInputMask.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 25F5606085C2451795E826BF /* libRNTextInputMask.a */; };
 		911A4AB8CB2649A78DAB93F0 /* rubicon-icon-font.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 75D4AD015B5A4F4DAB9CDC1F /* rubicon-icon-font.ttf */; };
 		99600D69E89C42F09292A9E0 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B34931F54FA244F98482756F /* Octicons.ttf */; };
 		A19F4431E78541778FE1C74C /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FA634670A487447AAB94D336 /* Foundation.ttf */; };
@@ -56,6 +58,8 @@
 		E891AD1F7EA04052A232EE6C /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7288A12FC82D43E38136D624 /* Ionicons.ttf */; };
 		ED855B4EA1BB43B2AAC8DE17 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 914F449DF8E249B4A066C414 /* Entypo.ttf */; };
 		F35A65AB082F496482EEFAD0 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FDD6C0E564104784BEF4D1AC /* FontAwesome.ttf */; };
+		FB3AE6F32141A7BE00553A5C /* InputMask.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB3AE6F22141A7BE00553A5C /* InputMask.framework */; };
+		FB3AE6F42141A7BE00553A5C /* InputMask.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FB3AE6F22141A7BE00553A5C /* InputMask.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -346,6 +350,13 @@
 			remoteGlobalIDString = 641E28441F0EEC8500443AF6;
 			remoteInfo = "RCTVideo-tvOS";
 		};
+		FB3AE6F02141A66500553A5C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 49E062BC7F374F639C468EB3 /* RNTextInputMask.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 00278A001F2F25CE0023E794;
+			remoteInfo = RNTextInputMask;
+		};
 		FB941B65214044A4003DBD7E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = DEC0CF07DE9F4D32AA578AB0 /* RNDeviceInfo.xcodeproj */;
@@ -383,6 +394,20 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		FB3AE6F52141A7BE00553A5C /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				FB3AE6F42141A7BE00553A5C /* InputMask.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
 		00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTActionSheet.xcodeproj; path = "../node_modules/react-native/Libraries/ActionSheetIOS/RCTActionSheet.xcodeproj"; sourceTree = "<group>"; };
@@ -404,11 +429,13 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = driverApp/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		1DAA220D5C4145279B76E384 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/native-base/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
+		25F5606085C2451795E826BF /* libRNTextInputMask.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNTextInputMask.a; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* driverApp-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "driverApp-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* driverApp-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "driverApp-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2DE9876270B949B198D5B141 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/native-base/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		3CEF4D3A140F4805B83F8B14 /* RNI18n.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNI18n.xcodeproj; path = "../node_modules/react-native-locale-detector/RNI18n.xcodeproj"; sourceTree = "<group>"; };
+		49E062BC7F374F639C468EB3 /* RNTextInputMask.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNTextInputMask.xcodeproj; path = "../node_modules/react-native-text-input-mask/ios/RNTextInputMask/RNTextInputMask.xcodeproj"; sourceTree = "<group>"; };
 		4A0C56020D424026A12CE631 /* libRNDeviceInfo-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNDeviceInfo-tvOS.a"; sourceTree = "<group>"; };
 		56313FFC2225499F8F00720B /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/native-base/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		585316B369E24E0C9FF5EBB5 /* libRCTVideo.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTVideo.a; sourceTree = "<group>"; };
@@ -433,6 +460,7 @@
 		EDCCB8407D804D658AAA2959 /* RNImagePicker.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNImagePicker.xcodeproj; path = "../node_modules/react-native-image-picker/ios/RNImagePicker.xcodeproj"; sourceTree = "<group>"; };
 		F15388B12C6C4B7E95D746E3 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/native-base/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		FA634670A487447AAB94D336 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/native-base/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
+		FB3AE6F22141A7BE00553A5C /* InputMask.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = InputMask.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FDD6C0E564104784BEF4D1AC /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/native-base/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -457,6 +485,7 @@
 				00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */,
 				00C302E81ABCBA2D00DB3ED1 /* libRCTImage.a in Frameworks */,
 				133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */,
+				FB3AE6F32141A7BE00553A5C /* InputMask.framework in Frameworks */,
 				00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */,
 				139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */,
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
@@ -466,6 +495,7 @@
 				B94BC32AB47843E2B7B7F604 /* libRNI18n.a in Frameworks */,
 				0E06B51CD3904C19967F3098 /* libRNImagePicker.a in Frameworks */,
 				E19ECF1A6DA84DDFB752503A /* libRNDeviceInfo.a in Frameworks */,
+				8CE6B193F4C247CF9026B8DC /* libRNTextInputMask.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -678,6 +708,7 @@
 				3CEF4D3A140F4805B83F8B14 /* RNI18n.xcodeproj */,
 				EDCCB8407D804D658AAA2959 /* RNImagePicker.xcodeproj */,
 				DEC0CF07DE9F4D32AA578AB0 /* RNDeviceInfo.xcodeproj */,
+				49E062BC7F374F639C468EB3 /* RNTextInputMask.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -694,6 +725,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				FB3AE6F22141A7BE00553A5C /* InputMask.framework */,
 				13B07FAE1A68108700A75B9A /* driverApp */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* driverAppTests */,
@@ -736,6 +768,7 @@
 				5D4B374493C24C6190C09750 /* libRNImagePicker.a */,
 				A01B2D1844754F1588CAF2B4 /* libRNDeviceInfo.a */,
 				4A0C56020D424026A12CE631 /* libRNDeviceInfo-tvOS.a */,
+				25F5606085C2451795E826BF /* libRNTextInputMask.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -745,6 +778,14 @@
 			children = (
 				FB2468B6213EE7B40061F009 /* libRCTVideo.a */,
 				FB2468B8213EE7B40061F009 /* libRCTVideo.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FB3AE6C12141A66500553A5C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FB3AE6F12141A66500553A5C /* libRNTextInputMask.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -804,6 +845,7 @@
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
+				FB3AE6F52141A7BE00553A5C /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -955,6 +997,10 @@
 				{
 					ProductGroup = FB941B38214044A4003DBD7E /* Products */;
 					ProjectRef = EDCCB8407D804D658AAA2959 /* RNImagePicker.xcodeproj */;
+				},
+				{
+					ProductGroup = FB3AE6C12141A66500553A5C /* Products */;
+					ProjectRef = 49E062BC7F374F639C468EB3 /* RNTextInputMask.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -1241,6 +1287,13 @@
 			remoteRef = FB2468B7213EE7B40061F009 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		FB3AE6F12141A66500553A5C /* libRNTextInputMask.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNTextInputMask.a;
+			remoteRef = FB3AE6F02141A66500553A5C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		FB941B66214044A4003DBD7E /* libRNDeviceInfo.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1435,12 +1488,14 @@
 					"$(SRCROOT)/../node_modules/react-native-locale-detector/RNI18n",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-device-info/ios/RNDeviceInfo",
+					"$(SRCROOT)/../node_modules/react-native-text-input-mask/ios/RNTextInputMask/RNTextInputMask/**",
 				);
 				INFOPLIST_FILE = driverAppTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1469,12 +1524,14 @@
 					"$(SRCROOT)/../node_modules/react-native-locale-detector/RNI18n",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-device-info/ios/RNDeviceInfo",
+					"$(SRCROOT)/../node_modules/react-native-text-input-mask/ios/RNTextInputMask/RNTextInputMask/**",
 				);
 				INFOPLIST_FILE = driverAppTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1494,6 +1551,7 @@
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
@@ -1504,6 +1562,7 @@
 					"$(SRCROOT)/../node_modules/react-native-locale-detector/RNI18n",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-device-info/ios/RNDeviceInfo",
+					"$(SRCROOT)/../node_modules/react-native-text-input-mask/ios/RNTextInputMask/RNTextInputMask/**",
 				);
 				INFOPLIST_FILE = driverApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1520,6 +1579,7 @@
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 44JX5RRRZZ;
@@ -1529,6 +1589,7 @@
 					"$(SRCROOT)/../node_modules/react-native-locale-detector/RNI18n",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-device-info/ios/RNDeviceInfo",
+					"$(SRCROOT)/../node_modules/react-native-text-input-mask/ios/RNTextInputMask/RNTextInputMask/**",
 				);
 				INFOPLIST_FILE = driverApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1561,11 +1622,13 @@
 					"$(SRCROOT)/../node_modules/react-native-locale-detector/RNI18n",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-device-info/ios/RNDeviceInfo",
+					"$(SRCROOT)/../node_modules/react-native-text-input-mask/ios/RNTextInputMask/RNTextInputMask/**",
 				);
 				INFOPLIST_FILE = "driverApp-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1604,11 +1667,13 @@
 					"$(SRCROOT)/../node_modules/react-native-locale-detector/RNI18n",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-device-info/ios/RNDeviceInfo",
+					"$(SRCROOT)/../node_modules/react-native-text-input-mask/ios/RNTextInputMask/RNTextInputMask/**",
 				);
 				INFOPLIST_FILE = "driverApp-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1646,11 +1711,13 @@
 					"$(SRCROOT)/../node_modules/react-native-locale-detector/RNI18n",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-device-info/ios/RNDeviceInfo",
+					"$(SRCROOT)/../node_modules/react-native-text-input-mask/ios/RNTextInputMask/RNTextInputMask/**",
 				);
 				INFOPLIST_FILE = "driverApp-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1688,11 +1755,13 @@
 					"$(SRCROOT)/../node_modules/react-native-locale-detector/RNI18n",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-device-info/ios/RNDeviceInfo",
+					"$(SRCROOT)/../node_modules/react-native-text-input-mask/ios/RNTextInputMask/RNTextInputMask/**",
 				);
 				INFOPLIST_FILE = "driverApp-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",

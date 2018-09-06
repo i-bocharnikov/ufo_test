@@ -14,7 +14,10 @@ i18n.use(LanguageDetector).init({
             },
             register: {
                 "overviewTitle": "Registration {{user.reference}}",
+                "phoneTitle": "Registration - Phone",
                 "phoneNumberLabel": "Phone",
+                "phoneNumberInputLabel": "Your mobile phone number",
+                "smsCodeInputLabel": "The SMS code you will receive",
                 "emailLabel": "Email",
                 "addressLabel": "Address",
             }

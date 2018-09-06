@@ -13,7 +13,8 @@
     "react-test-renderer": "16.3.1"
   },
   "scripts": {
-    "start": "react-native start",
+    "dev": "react-native start",
+    "link": "react-native link",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "android.logs": "react-native log-android",
@@ -26,10 +27,12 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "color": "^3.0.0",
     "global": "^4.3.2",
     "i18next": "^11.7.0",
     "i18next-react-native-language-detector": "^1.0.2",
     "immutable": "^3.8.2",
+    "lodash": "^4.17.10",
     "mobx": "^5.1.0",
     "mobx-persist": "^0.4.1",
     "mobx-react": "^5.2.6",
@@ -38,9 +41,12 @@
     "react": "16.3.1",
     "react-i18next": "^7.11.1",
     "react-native": "~0.55.2",
+    "react-native-country-picker-modal": "^0.6.2",
     "react-native-device-info": "^0.22.5",
     "react-native-image-picker": "^0.26.10",
     "react-native-locale-detector": "^1.0.1",
+    "react-native-phone-input": "^0.2.1",
+    "react-native-text-input-mask": "^0.8.0",
     "react-native-video": "^3.2.0",
     "react-navigation": "^2.12.1",
     "uuid": "^3.3.2"

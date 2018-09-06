@@ -3,6 +3,7 @@ package com.driverapp;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.RNTextInputMask.RNTextInputMaskPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.imagepicker.ImagePickerPackage;
 import com.i18n.reactnativei18n.ReactNativeI18n;
@@ -27,6 +28,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNTextInputMaskPackage(),
             new RNDeviceInfo(),
             new ImagePickerPackage(),
             new ReactNativeI18n(),

@@ -29,6 +29,7 @@ class User {
 class UsersStore {
 
     @persist('object', User) @observable user = new User
+    acknowledge_uri = ""
 
     async registerDevice() {
 
@@ -62,15 +63,39 @@ class UsersStore {
                 body, true, true
             );
 
-        if (response && response.status === "success") {
+        if (response && response.status === "success" && response.data && response.data.token && response.data.user) {
             console.info("usersStore.registerDevice : %j", response);
             await setAuthenticationUUIDInStore(device_uuid);
             await setAuthenticationPasswordInStore(device_pwd);
             await setAuthenticationTokenInStore(response.data.token);
             await useTokenInApi(response.data.token);
             this.user = response.data.user
+            return true
         }
+        return false
     }
+
+    async requestCode() {
+
+        const response = await postToApi("/users/validation/phone_number/" + this.user.phone_number, {});
+        if (response && response.status === "success" && response.data && response.data.notification) {
+            console.info("usersStore.requestCode : %j", response);
+            this.acknowledge_uri = response.data.notification.acknowledge_uri
+            return true
+        }
+        return false
+    };
+
+    async validateCode(code) {
+
+        const response = await postToApi("/" + this.acknowledge_uri, { validation_code: code });
+        if (response && response.status === "success") {
+            console.info("usersStore.validateCode : %j", response);
+            return await this.registerDevice()
+        }
+        return false
+
+    };
 }
 
 export default usersStore = new UsersStore();

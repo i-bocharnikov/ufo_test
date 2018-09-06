@@ -1,11 +1,12 @@
 import axios from "axios";
 import configurations from "../utils/configurations"
 import activitiesStore from '../stores/activitiesStore'
+import Toast from 'native-base'
 
 export const ufodrive_server_connectivity_test_api = axios.create({
     baseURL:
-        configurations.UFO_SERVER_API_URL,
-    timeout: 500
+        configurations.UFO_SERVER_API_BASE_URL,
+    timeout: 300
 });
 
 export const ufodrive_server_public_api = axios.create({
@@ -39,14 +40,15 @@ export async function getFromApi(path, suppressToastBox = false, usePublicApi = 
 
     let api = usePublicApi ? ufodrive_server_public_api : ufodrive_server_api
     try {
+        if (!checkConnectivity()) {
+            throw new Error("No internet access")
+        }
         activitiesStore.activities.internetAccessPending = true
         let response = await api.get(path)
         activitiesStore.activities.internetAccessPending = false
-        activitiesStore.activities.internetAccessFailure = false
         return response.data
     } catch (error) {
         activitiesStore.activities.internetAccessPending = false
-        activitiesStore.activities.internetAccessFailure = true
         handleError(error, suppressToastBox)
     }
 }
@@ -62,14 +64,15 @@ export async function getFromApi(path, suppressToastBox = false, usePublicApi = 
 export async function postToApi(path, body, suppressToastBox = false, usePublicApi = false) {
     let api = usePublicApi ? ufodrive_server_public_api : ufodrive_server_api
     try {
+        if (!checkConnectivity()) {
+            throw new Error("No internet access")
+        }
         activitiesStore.activities.internetAccessPending = true
         let response = await api.post(path, body)
         activitiesStore.activities.internetAccessPending = false
-        activitiesStore.activities.internetAccessFailure = false
         return response.data
     } catch (error) {
         activitiesStore.activities.internetAccessPending = false
-        activitiesStore.activities.internetAccessFailure = true
         handleError(error, suppressToastBox)
     }
 }
@@ -85,14 +88,15 @@ export async function postToApi(path, body, suppressToastBox = false, usePublicA
 export async function putToApi(path, body, suppressToastBox = false, usePublicApi = false) {
     let api = usePublicApi ? ufodrive_server_public_api : ufodrive_server_api
     try {
+        if (!checkConnectivity()) {
+            throw new Error("No internet access")
+        }
         activitiesStore.activities.internetAccessPending = true
         let response = await api.put(path, body)
         activitiesStore.activities.internetAccessPending = false
-        activitiesStore.activities.internetAccessFailure = false
         return response.data
     } catch (error) {
         activitiesStore.activities.internetAccessPending = false
-        activitiesStore.activities.internetAccessFailure = true
         handleError(error, suppressToastBox)
     }
 }

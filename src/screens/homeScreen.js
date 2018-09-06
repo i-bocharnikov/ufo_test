@@ -4,8 +4,8 @@ import Video from 'react-native-video';
 import { observer } from "mobx-react";
 import { translate } from "react-i18next";
 import UserStore from "../stores/usersStore"
-import Logo from "../components/logo"
-
+import LogoComponent from "../components/logo"
+import ActionBarComponent from '../components/actionBar'
 
 const video = require('../assets/UFOdrive.mp4')
 
@@ -13,7 +13,7 @@ const video = require('../assets/UFOdrive.mp4')
 @observer
 class HomeScreen extends React.Component {
   static navigationOptions = {
-    headerTitle: <Logo />,
+    headerTitle: <LogoComponent />,
   };
 
   async componentDidMount() {
@@ -22,6 +22,28 @@ class HomeScreen extends React.Component {
 
   render() {
     const { t } = this.props;
+
+    let actions = [
+      {
+        style: 'todo',
+        icon: 'plus',
+        text: 'Reserve',
+        onPress: () => this.props.navigation.navigate('Reserve')
+      },
+      {
+        style: 'todo',
+        icon: 'account',
+        text: 'Register',
+        onPress: () => this.props.navigation.navigate('Register')
+      },
+      {
+        style: 'todo',
+        icon: 'steering',
+        text: 'Drive',
+        onPress: () => this.props.navigation.navigate('Drive', { reference: "BLU001" })
+      }
+    ]
+
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Video source={video}   // Can be a URL or a local file.
@@ -36,19 +58,8 @@ class HomeScreen extends React.Component {
         />
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
           <Text> {t('home:welcome', { user: UserStore.user })}  </Text>
-          <Button
-            title="1 - Reserve"
-            onPress={() => this.props.navigation.navigate('Reserve')}
-          />
-          <Button
-            title="2 - Register"
-            onPress={() => this.props.navigation.navigate('Register')}
-          />
-          <Button
-            title="3 - Drive"
-            onPress={() => this.props.navigation.navigate('Drive', { reference: "BLU001" })}
-          />
         </View>
+        <ActionBarComponent actions={actions} />
       </View >
     );
   }
