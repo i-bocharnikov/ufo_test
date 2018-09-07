@@ -2,81 +2,53 @@ import React, { Component } from "react";
 import usersStore from '../../stores/usersStore';
 import { observer } from 'mobx-react';
 import { translate } from "react-i18next";
-import { StyleSheet, View, Text } from 'react-native';
-import ActionBarComponent from '../../components/actionBar'
+import { Container, Content, Form, Item, Label, Input } from 'native-base';
 import _ from 'lodash'
+
+import HeaderComponent from "../../components/header";
+import ActionSupportComponent from '../../components/actionSupport'
+import ActionBarComponent from '../../components/actionBar'
+import { screens, styles, icons } from '../../utils/global'
 
 @observer
 class EmailScreen extends Component {
 
-  static navigationOptions = ({ navigation, navigationOptions, screenProps }) => {
-    return {
-      title: navigation.getParam('title', 'Registration - Email'),
-    };
-  };
-
-  async componentDidMount() {
-    this.props.navigation.setParams({ title: this.props.t('register:emailTitle', { user: usersStore.user }) })
-  }
-
-
-
   render() {
 
-    const { t, i18n } = this.props;
+    const { t } = this.props;
     let actions = [
       {
-        style: 'active',
-        icon: 'arrow-round-back',
-        text: 'previous',
+        style: styles.ACTIVE,
+        icon: icons.BACK,
         onPress: () => this.props.navigation.pop()
       },
       {
-        style: 'active',
-        icon: 'home',
-        text: 'Home',
-        onPress: () => this.props.navigation.navigate('Home')
+        style: styles.ACTIVE,
+        icon: icons.HOME,
+        onPress: () => this.props.navigation.navigate(screens.HOME)
       },
       {
-        style: 'todo',
-        icon: 'arrow-round-forward',
-        text: 'Next',
-        onPress: () => this.props.navigation.navigate('Payment')
+        style: styles.TODO,
+        icon: icons.NEXT,
+        onPress: () => this.props.navigation.navigate(screens.REGISTER_ADDRESS)
       },
     ]
     return (
-      <View style={styles.container}>
-
-
-        < View style={styles.item}>
-          <Text>{t('register:emailInputLabel')}</Text>
-
-        </View>
-
-
+      <Container>
+        <HeaderComponent title={t('register:emailTitle', { user: usersStore.user })} />
+        <Content padder>
+          <Form>
+            <Item floatingLabel last>
+              <Label>{t('register:emailInputLabel')}</Label>
+              <Input />
+            </Item>
+          </Form>
+        </Content>
+        <ActionSupportComponent onPress={() => this.props.navigation.navigate(screens.SUPPORT, { context: screens.REGISTER_EMAIL })} />
         <ActionBarComponent actions={actions} />
-      </View >
+      </Container>
     );
   }
 }
-
-let styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    padding: 30,
-    paddingBottom: 100
-    //backgroundColor: "red"
-  },
-  item: {
-    flex: 0.5,
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
-    padding: 10,
-
-    //backgroundColor: "blue"
-  }
-});
 
 export default translate("translations")(EmailScreen);

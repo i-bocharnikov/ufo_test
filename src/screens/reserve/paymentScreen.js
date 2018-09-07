@@ -1,67 +1,46 @@
 import React, { Component } from "react";
-import { View, StyleSheet, Text, Button } from 'react-native';
+import { translate } from "react-i18next";
+import { Container, Content } from 'native-base';
+
+import HeaderComponent from "../../components/header";
+import ActionSupportComponent from '../../components/actionSupport'
 import ActionBarComponent from '../../components/actionBar'
+import { screens, styles, icons } from '../../utils/global'
 
 class ReservePaymentScreen extends Component {
 
-  static navigationOptions = ({ navigation }) => {
-    return {
-      title: 'Confirm',
-    };
-  };
-
   render() {
+    const { t } = this.props;
     let actions = [
       {
-        style: 'active',
-        icon: 'arrow-round-back',
-        text: 'previous',
+        style: styles.ACTIVE,
+        icon: icons.BACK,
         onPress: () => this.props.navigation.pop()
       },
       {
-        style: 'active',
-        icon: 'home',
-        text: 'Home',
-        onPress: () => this.props.navigation.navigate('Home')
+        style: styles.ACTIVE,
+        icon: icons.HOME,
+        onPress: () => this.props.navigation.navigate(screens.HOME)
       },
       {
 
-        style: 'todo',
-        icon: 'card',
-        text: 'Pay',
-        onPress: () => { this.props.navigation.popToTop(); this.props.navigation.navigate('Home') }
+        style: styles.TODO,
+        icon: icons.PAY,
+        onPress: () => { this.props.navigation.popToTop(); this.props.navigation.navigate(screens.HOME) }
       },
     ]
     return (
-      <View style={styles.container}>
-        <Text>Payment input</Text>
-        <Button
-          title="Back"
-          onPress={() => this.props.navigation.goBack()}
-        />
-        <Button
-          title="Next"
-          onPress={() => {
-            this.props.navigation.popToTop()
-            this.props.navigation.navigate('Home')
-          }}
-        />
+      <Container>
+        <HeaderComponent title={t('reserve:reservePaymentTitle')} />
+        <Content padder>
+        </Content>
+        <ActionSupportComponent onPress={() => this.props.navigation.navigate(screens.SUPPORT, { context: screens.RESERVE_PAYMENT })} />
+
         <ActionBarComponent actions={actions} />
-      </View>
+      </Container>
+
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 26,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "flex-start"
-  }
-});
-
-
-
-export default (ReservePaymentScreen);
+export default translate("translations")(ReservePaymentScreen);

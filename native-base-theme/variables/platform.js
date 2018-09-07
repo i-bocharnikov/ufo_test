@@ -112,7 +112,7 @@ export default {
   brandLight: "#f4f4f4",
 
   //Container
-  containerBgColor: "#fff",
+  containerBgColor: "#172c32",//"#fff",
 
   //Date Picker
   datePickerTextColor: "#000",
@@ -141,13 +141,13 @@ export default {
   tabBarTextColor: platform === "ios" ? "#6b6b6b" : "#b3c7f9",
   tabBarTextSize: platform === "ios" ? 14 : 11,
   activeTab: platform === "ios" ? "#007aff" : "#fff",
-  sTabBarActiveTextColor: "#007aff",
+  tabBarActiveTextColor: "#007aff",
   tabBarActiveTextColor: platform === "ios" ? "#007aff" : "#fff",
   tabActiveBgColor: platform === "ios" ? "#cde1f9" : "#3F51B5",
 
   // Header
-  toolbarBtnColor: "#172c32",//platform === "ios" ? "#007aff" : "#fff",
-  toolbarDefaultBg: "#172c32", //platform === "ios" ? "#F8F8F8" : "#3F51B5",
+  toolbarBtnColor: this.containerBgColor,//platform === "ios" ? "#007aff" : "#fff",
+  toolbarDefaultBg: this.containerBgColor,//platform === "ios" ? "#F8F8F8" : "#3F51B5",
   toolbarHeight: platform === "ios" ? 64 : 56,
   toolbarSearchIconSize: platform === "ios" ? 20 : 23,
   toolbarInputColor: "#fff", //platform === "ios" ? "#CECDD2" : "#fff",
@@ -238,7 +238,7 @@ export default {
   tabFontSize: 15,
 
   // Text
-  textColor: "#000",
+  textColor: "#fff",//"#000",
   inverseTextColor: "#fff",
   noteFontSize: 14,
   get defaultTextColor() {

@@ -1,37 +1,27 @@
 import React, { Component } from "react";
 import usersStore from '../../stores/usersStore';
 import { observer } from 'mobx-react';
-import { observable, computed } from 'mobx';
+import { observable } from 'mobx';
 import { translate } from "react-i18next";
-import { StyleSheet, View, Text, Image } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import PhoneInput from 'react-native-phone-input';
 import CountryPicker from 'react-native-country-picker-modal';
 import DeviceInfo from 'react-native-device-info'
 import TextInputMask from 'react-native-text-input-mask';
-import ActionBarComponent from '../../components/actionBar'
+import { Container, Content, Form, Item, Label, Input } from 'native-base';
 import _ from 'lodash'
 
-const STATUS_VALIDATED = "validated"
+import HeaderComponent from "../../components/header";
+import ActionSupportComponent from '../../components/actionSupport'
+import ActionBarComponent from '../../components/actionBar'
+import { screens, styles, icons } from '../../utils/global'
 
 @observer
 class PhoneScreen extends Component {
 
-  static navigationOptions = ({ navigation, navigationOptions, screenProps }) => {
-    return {
-      title: navigation.getParam('title', 'Registration - Phone'),
-    };
-  };
-
   @observable countryCode = DeviceInfo.getDeviceCountry().toLowerCase()
   @observable isCodeRequested = false
   @observable code = null
-
-  async componentDidMount() {
-    this.props.navigation.setParams({ title: this.props.t('register:phoneTitle', { user: usersStore.user }) })
-    if (usersStore.user.phone_number_status !== STATUS_VALIDATED) {
-      this.phone.focus()
-    }
-  }
 
   onPressFlag = () => {
     this.countryPicker.openModal()
@@ -43,7 +33,7 @@ class PhoneScreen extends Component {
   }
 
   onChangePhoneNumber = (phoneNumber) => {
-    if (usersStore.user.phone_number_status !== STATUS_VALIDATED) {
+    if (!usersStore.isStatusValidated(usersStore.user.phone_number_status)) {
       usersStore.user.phone_number = phoneNumber
     }
   }
@@ -51,120 +41,103 @@ class PhoneScreen extends Component {
   render() {
 
     const { t, i18n } = this.props;
-
-    let isUserConnected = usersStore.user.phone_number_status === STATUS_VALIDATED
-
+    let user = usersStore.user
+    let isUserConnected = !usersStore.isStatusMissing
 
     let actions = [
       {//TODO home versus back based on where user come from
-        style: 'active',
-        icon: 'arrow-round-back',
-        text: 'Back',
+        style: styles.ACTIVE,
+        icon: icons.BACK,
         onPress: () => this.props.navigation.pop()
       },
       {
-        style: isUserConnected ? 'active' : 'disable',
-        icon: 'log-out',
-        text: 'Disconnect',
+        style: isUserConnected ? styles.ACTIVE : styles.DISABLE,
+        icon: icons.DISCONNECT,
         onPress: () => { this.isCodeRequested = usersStore.disconnect() }
       }
     ]
 
     if (this.isCodeRequested) {
       actions.push({
-        style: !isUserConnected && this.code && this.code.length === 6 ? 'todo' : 'disable',
-        icon: 'log-in',
-        text: 'Connect',
+        style: !isUserConnected && this.code && this.code.length === 6 ? styles.TODO : styles.DISABLE,
+        icon: icons.CONNECT,
         onPress: async () => {
           if (await usersStore.connect(this.code)) {
-            this.props.navigation.pop()
+            this.props.navigation.navigate(screens.REGISTER_EMAIL)
           }
           this.code = null
         }
       })
     } else {
       actions.push({
-        style: !isUserConnected && this.phone && this.phone.isValidNumber() ? 'todo' : 'disable',
-        icon: 'key',
-        text: 'Request code',
+        style: !isUserConnected && this.phone && this.phone.isValidNumber() ? styles.TODO : styles.DISABLE,
+        icon: icons.REQUEST_CODE,
         onPress: async () => {
           this.isCodeRequested = await usersStore.requestCode()
         }
       })
     }
 
-
-
-
     return (
-      <View style={styles.container}>
-        {isUserConnected && (
-          <View style={styles.item}>
-            <Text>{usersStore.user.phone_number}</Text>
-          </View>
-        )}
-        {!isUserConnected && !this.isCodeRequested && (
-          <View style={styles.item}>
-            <Text>{t('register:phoneNumberInputLabel')}</Text>
-            <PhoneInput
-              ref={(ref) => { this.phone = ref; }}
-              onPressFlag={this.onPressFlag}
-              initialCountry={_.isEmpty(this.countryCode) ? "lu" : this.countryCode}
-              style={{ width: 200, borderBottomWidth: 1 }}
-              value={usersStore.user.phone_number}
-              onChangePhoneNumber={this.onChangePhoneNumber}
-              offset={20}
-            />
 
-            <CountryPicker
-              ref={(ref) => { this.countryPicker = ref; }}
-              onChange={(value) => this.selectCountry(value)}
-              translation={i18n.language}
-              cca2={this.countryCode}
-            >
-              <View></View>
-            </CountryPicker>
-          </View>
-        )}
-        {!isUserConnected && this.isCodeRequested && (
-          < View style={styles.item}>
-            <Text>{t('register:smsCodeInputLabel')}</Text>
-            <TextInputMask
-              refInput={ref => { this.input = ref }}
-              onChangeText={(formatted, extracted) => {
-                this.code = extracted
-              }}
-              mask={"[000] - [000]"}
-              placeholder=" 000 - 000 "
-              style={{ width: 70 }}
-            />
 
-          </View>
-        )
-        }
+      <Container>
+        <HeaderComponent title={t('register:phoneTitle', { user: usersStore.user })} />
+        <Content padder>
+          <Form>
+            {isUserConnected && (
+              <Item >
+                <Label>{t('register:phoneNumberInputLabel')}[{user.phone_number}]</Label>
+                <Input defaultValue={user.phone_number} editable={false} />
+
+              </Item>
+            )}
+            {!isUserConnected && !this.isCodeRequested && (
+              <Item floatingLabel>
+                <Label>{t('register:phoneNumberInputLabel')}</Label>
+                <PhoneInput
+                  ref={(ref) => { this.phone = ref; }}
+                  onPressFlag={this.onPressFlag}
+                  initialCountry={_.isEmpty(this.countryCode) ? "lu" : this.countryCode}
+                  style={{ width: 200, borderBottomWidth: 1 }}
+                  value={user.phone_number}
+                  onChangePhoneNumber={this.onChangePhoneNumber}
+                  offset={20}
+                />
+
+                <CountryPicker
+                  ref={(ref) => { this.countryPicker = ref; }}
+                  onChange={(value) => this.selectCountry(value)}
+                  translation={i18n.language}
+                  cca2={this.countryCode}
+                >
+                  <View></View>
+                </CountryPicker>
+              </Item>
+            )}
+
+            {!isUserConnected && this.isCodeRequested && (
+              <Item floatingLabel>
+                <Label>{t('register:smsCodeInputLabel')}</Label>
+                <TextInputMask
+                  refInput={ref => { this.input = ref }}
+                  onChangeText={(formatted, extracted) => {
+                    this.code = extracted
+                  }}
+                  mask={"[000] - [000]"}
+                  placeholder=" 000 - 000 "
+                  style={{ width: 70 }}
+                />
+              </Item>
+            )}
+
+          </Form>
+        </Content>
+        <ActionSupportComponent onPress={() => this.props.navigation.navigate(screens.SUPPORT, { context: screens.REGISTER_PHONE })} />
         <ActionBarComponent actions={actions} />
-      </View >
+      </Container>
     );
   }
 }
-
-let styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    padding: 30,
-    paddingBottom: 100
-    //backgroundColor: "red"
-  },
-  item: {
-    flex: 0.5,
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
-    padding: 10,
-
-    //backgroundColor: "blue"
-  }
-});
 
 export default translate("translations")(PhoneScreen);

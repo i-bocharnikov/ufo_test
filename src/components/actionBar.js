@@ -1,85 +1,62 @@
 import React, { Component } from "react";
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import { wrongColor, activeColor, textColor, successColor, errorColor, todoColor, doneColor, pendingColor, disableColor } from '../utils/colors'
-
+import { translate } from "react-i18next";
+import { styles, colors, icons, sizes } from '../utils/global'
 import Icon from './Icon'
 
-export default class ActionBarComponent extends React.Component {
+class ActionBarComponent extends React.Component {
     render() {
 
+        const { t } = this.props;
         let actions = this.props.actions ? this.props.actions : []
 
         return (
-            <View style={styles.actionBar}>
-                {actions.map((action, index) =>
-                    <TouchableOpacity
-                        key={index}
-                        style={{
-                            alignItems: 'center',
-                            justifyContent: 'center'
-                        }}
-                        onPress={action.onPress}
-                        action={action}
-                        disabled={action.style === 'disable'}
-                    >
-                        <View style={{
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            width: 80,
-                            height: 80,
-                            backgroundColor: this.getBackgroundColorForStyle(action.style),
-                            borderRadius: 100,
-                            elevation: 1
-                        }}>
-                            <Icon name={action.icon} size={50} color={textColor} />
-                        </View>
-                        <Text style={{ color: textColor.string(), fontWeight: 'bold' }}>{action.text}</Text>
-                    </TouchableOpacity>
+            <View style={{
+                position: 'absolute',
+                bottom: 0,
+                flexDirection: 'row',
+                justifyContent: 'space-evenly',
+                alignItems: 'center',
+                height: 100,
+                width: '100%',
+            }}>
+                {actions.map((action, index) => {
+
+                    let style = action.style ? action.style : styles.WRONG
+                    let color = style.color ? style.color : colors.WRONG
+                    let elevation = style.elevation ? style.elevation : 0
+                    let icon = action.icon ? action.icon : icons.WRONG
+                    return (
+                        <TouchableOpacity
+                            key={index}
+                            style={{
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}
+                            onPress={action.onPress}
+                            action={action}
+                            disabled={style === styles.DISABLE}
+                        >
+                            <View style={{
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                width: 80,
+                                height: 80,
+                                backgroundColor: color.string(),
+                                borderRadius: 100,
+                                elevation: elevation
+                            }}>
+                                <Icon icon={icon} size={sizes.BIG} color={colors.TEXT} />
+                            </View>
+                            <Text style={{ color: colors.TEXT.string(), fontWeight: 'bold' }}>{t(icon.i18nKey)}</Text>
+                        </TouchableOpacity>
+                    )
+                }
                 )}
             </View>
         );
     }
-
-
-
-
-
-    getBackgroundColorForStyle = (style) => {
-        switch (style) {
-            case 'todo':
-                return todoColor
-            case 'done':
-                return doneColor
-            case 'active':
-                return activeColor
-            case 'disable':
-                return disableColor
-            case 'success':
-                return successColor
-            case 'error':
-                return errorColor
-            case 'pending':
-                return pendingColor
-            default:
-                return wrongColor
-        }
-    }
-
-    getColorForStyle = (style) => {
-        return textColor
-    }
-
 }
 
-const styles = StyleSheet.create({
-    actionBar: {
-        position: 'absolute',
-        bottom: 0,
-        flexDirection: 'row',
-        justifyContent: 'space-evenly',
-        alignItems: 'center',
-        height: 100,
-        width: '100%',
-    }
-});
 
+export default translate("translations")(ActionBarComponent);

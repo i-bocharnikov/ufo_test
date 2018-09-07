@@ -1,11 +1,14 @@
 import React from "react";
 import { createBottomTabNavigator, createStackNavigator } from 'react-navigation';
-import { View, StyleSheet, Text } from 'react-native';
 import { Root } from "native-base";
-import { StatusBar } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import { translate } from "react-i18next";
 import { observer } from "mobx-react";
+import { StyleProvider } from 'native-base';
+
+//Temporary ignore warning comming from react-native
+import { YellowBox } from 'react-native';
+YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
+
 
 import DeveloperMenu from './src/components/developerMenu/ui'
 import HomeScreen from './src/screens/homeScreen'
@@ -18,44 +21,33 @@ import RegisterOverviewScreen from './src/screens/register/overview'
 import RegisterEmailScreen from './src/screens/register/email'
 import RegisterPhoneScreen from './src/screens/register/phone'
 import activitiesStore from './src/stores/activitiesStore'
-import ActivitiesComponent from "./src/components/activities"
-import MessageComponent from "./src/components/message"
-import { backgroundColor, textColor } from './src/utils/colors'
+import getTheme from './native-base-theme/components';
+import './src/utils/global'
+import { screens } from './src/utils/global'
 
-//Temporary ignore warning comming from react-native
-import { YellowBox } from 'react-native';
-YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
-
-
-const commonStackNavigationOptions =
-{
-  headerStyle: {
-    backgroundColor: backgroundColor.string(),
-  },
-  headerTintColor: textColor.string(),
-  headerTitleStyle: {
-    fontWeight: 'bold',
-  },
-  headerRight: (
-    <ActivitiesComponent activities={activitiesStore.activities} />
-  ),
-};
+const commonStackNavigationOptions = {};
 
 
 const HomeStack = createStackNavigator(
   {
     Home: {
       screen: HomeScreen
+    },
+    Support: {
+      screen: SupportScreen
     }
-  }, { navigationOptions: commonStackNavigationOptions }
+  }, { headerMode: 'none', navigationOptions: commonStackNavigationOptions }
 );
 
 const DriveStack = createStackNavigator(
   {
     Drive: {
       screen: DriveScreen
+    },
+    Support: {
+      screen: SupportScreen
     }
-  }, { navigationOptions: commonStackNavigationOptions }
+  }, { headerMode: 'none', navigationOptions: commonStackNavigationOptions }
 );
 
 const ReserveStack = createStackNavigator(
@@ -68,9 +60,13 @@ const ReserveStack = createStackNavigator(
     },
     Payment: {
       screen: ReservePaymentScreen
+    },
+    Support: {
+      screen: SupportScreen
     }
   }, {
-    initialRouteName: 'Location',
+    initialRouteName: screens.RESERVE_LOCATION,
+    headerMode: 'none',
     navigationOptions: commonStackNavigationOptions
   }
 );
@@ -80,17 +76,14 @@ const RegisterStack = createStackNavigator(
   {
     Overview: { screen: RegisterOverviewScreen },
     Phone: { screen: RegisterPhoneScreen },
-    Email: { screen: RegisterEmailScreen }
-  }, { initialRouteName: 'Overview', navigationOptions: commonStackNavigationOptions }
-);
-
-const SupportStack = createStackNavigator(
-  {
-    SupportScreen: {
+    Email: { screen: RegisterEmailScreen },
+    Support: {
       screen: SupportScreen
     }
-  }, { navigationOptions: commonStackNavigationOptions }
+
+  }, { initialRouteName: screens.REGISTER_OVERVIEW, headerMode: 'none', navigationOptions: commonStackNavigationOptions }
 );
+
 
 const RootStack = createBottomTabNavigator(
   {
@@ -106,41 +99,10 @@ const RootStack = createBottomTabNavigator(
     Drive: {
       screen: DriveStack
     },
-    Support: {
-      screen: SupportStack
-    }
   },
   {
-    initialRouteName: 'Home',
-    /* The header config from HomeScreen is now here */
-    navigationOptions: ({ navigation }) => ({
-      tabBarVisible: false, //TODO change to false to remove the tabbar
-      tabBarIcon: ({ focused, tintColor }) => {
-        const { routeName } = navigation.state;
-        let iconName;
-        if (routeName === 'Home') {
-          iconName = `ios-planet${focused ? '' : '-outline'}`;
-        } else if (routeName === 'Drive') {
-          iconName = `ios-car${focused ? '' : '-outline'}`;
-        } else if (routeName === 'Register') {
-          iconName = `ios-contact${focused ? '' : '-outline'}`;
-        } else if (routeName === 'Reserve') {
-          iconName = `ios-add-circle${focused ? '' : '-outline'}`;
-        } else if (routeName === 'Support') {
-          iconName = `ios-help-circle${focused ? '' : '-outline'}`;
-        }
-
-        // You can return any component that you like here! We usually use an
-        // icon component from react-native-vector-icons
-        return <Ionicons name={iconName} size={25} color={tintColor} />;
-      },
-      tabBarOptions: {
-        activeTintColor: '#4ec6d6',
-        inactiveTintColor: 'gray',
-        activeBackgroundColor: '#172c32',
-        inactiveBackgroundColor: '#172c32',
-      }
-    }
+    initialRouteName: screens.HOME,
+    navigationOptions: ({ navigation }) => ({ tabBarVisible: false }
     )
   })
 
@@ -148,36 +110,21 @@ const RootStack = createBottomTabNavigator(
 @observer
 class App extends React.Component {
 
+
+
   render() {
     const { t } = this.props;
     const activities = activitiesStore.activities
     return (
       <Root>
-        <StatusBar translucent={false} backgroundColor='#172c32' barStyle='light-content' />
-        <View style={styles.activities}>
-          {activities.internetAccessFailure && (
-            <MessageComponent text={t('activities:internetAccessFailure')} />
-          )}
-          {activities.bluetoothAccessFailure && (
-            <MessageComponent text={t('activities:bluetoothAccessFailure')} />
-          )}
-        </View>
-        <View style={{ flex: 1 }}><RootStack /></View>
+        <StyleProvider style={getTheme()}>
+          <RootStack />
+        </StyleProvider>
         {__DEV__ && <DeveloperMenu />}
-      </Root>
+      </Root >
     );
   }
 }
-
-const styles = StyleSheet.create({
-  activities: {
-    width: '100%',
-    alignItems: 'center',
-    backgroundColor: "#172c32",
-    justifyContent: "flex-start"
-  }
-});
-
 
 export default translate("translations")(App);
 

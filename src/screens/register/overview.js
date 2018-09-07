@@ -1,39 +1,29 @@
 import React, { Component } from "react";
-import { View } from 'react-native';
-import { Container, H1, Content, Button, Text, StyleProvider, Header, ListItem, Left, Icon, Body, Right, Switch, Card, CardItem } from 'native-base';
-import getTheme from '../../../native-base-theme/components';
-import usersStore from '../../stores/usersStore';
+import { Container, Content, Button, Text, ListItem, Left, Icon, Body, Right } from 'native-base';
 import { observer } from 'mobx-react';
 import { translate } from "react-i18next";
-import ActionBarComponent from '../../components/actionBar'
 
-const STATUS_MISSING = "missing"
+import HeaderComponent from "../../components/header";
+import ActionSupportComponent from '../../components/actionSupport'
+import ActionBarComponent from '../../components/actionBar'
+import usersStore from '../../stores/usersStore';
+import { screens, styles, icons } from '../../utils/global'
 
 @observer
 class RegisterScreen extends Component {
 
-  static navigationOptions = ({ navigation, navigationOptions, screenProps }) => {
-    return {
-      title: navigation.getParam('title', 'Registration'),
-    };
-  };
-
-
 
   async componentDidMount() {
+
     let user = usersStore.user
-    this.props.navigation.setParams({ title: this.props.t('register:overviewTitle', { user: user }) })
-
-    if (user.phone_number_status === STATUS_MISSING) {
-      this.props.navigation.navigate('Phone')
+    if (usersStore.isStatusMissing(user.phone_number_status)) {
+      this.props.navigation.navigate(screens.REGISTER_PHONE)
       return
     }
-
-    if (user.email_status === STATUS_MISSING) {
-      this.props.navigation.navigate('Email')
+    if (usersStore.isStatusMissing(user.email_status)) {
+      this.props.navigation.navigate(screens.REGISTER_EMAIL)
       return
     }
-
   }
 
   render() {
@@ -41,10 +31,9 @@ class RegisterScreen extends Component {
     const { t } = this.props;
     let actions = [
       {
-        style: 'active',
-        icon: 'home',
-        text: 'Home',
-        onPress: () => this.props.navigation.navigate('Home')
+        style: styles.ACTIVE,
+        icon: icons.HOME,
+        onPress: () => this.props.navigation.navigate(screens.HOME)
       },
     ]
 
@@ -55,55 +44,55 @@ class RegisterScreen extends Component {
     let identificationColor = this.getColorForStatus(user.identification_status)
     let driverLicenceColor = this.getColorForStatus(user.driver_licence_status)
     return (
-      <StyleProvider style={getTheme()}>
-        <Container>
-          <Content>
-            <ListItem icon onPress={() => this.props.navigation.navigate('Phone')}>
-              <Left>
-                <Button style={{ backgroundColor: phoneNumberColor }}>
-                  <Icon active name="phone-portrait" />
-                </Button>
-              </Left>
-              <Body>
-                <Text>{t('register:phoneNumberLabel')}</Text>
-              </Body>
-              <Right>
-                <Text>{usersStore.user.phone_number}</Text>
-                <Icon active name="arrow-forward" />
-              </Right>
-            </ListItem>
-            <ListItem icon>
-              <Left>
-                <Button style={{ backgroundColor: emailColor }}>
-                  <Icon active name="mail" />
-                </Button>
-              </Left>
-              <Body>
-                <Text>{t('register:emailLabel')}</Text>
-              </Body>
-              <Right>
-                <Text>{usersStore.user.email}</Text>
-                <Icon active name="arrow-forward" />
-              </Right>
-            </ListItem>
-            <ListItem icon>
-              <Left>
-                <Button style={{ backgroundColor: addressColor }}>
-                  <Icon active name="bluetooth" />
-                </Button>
-              </Left>
-              <Body>
-                <Text>{t('register:addressLabel')}</Text>
-              </Body>
-              <Right>
-                <Text>{usersStore.user.address}</Text>
-                <Icon active name="arrow-forward" />
-              </Right>
-            </ListItem>
-          </Content>
-          <ActionBarComponent actions={actions} />
-        </Container>
-      </StyleProvider >
+      <Container>
+        <HeaderComponent title={t('register:overviewTitle', { user: user })} />
+        <Content padder>
+          <ListItem icon onPress={() => this.props.navigation.navigate(screens.REGISTER_PHONE)}>
+            <Left>
+              <Button style={{ backgroundColor: phoneNumberColor }}>
+                <Icon active name="phone-portrait" />
+              </Button>
+            </Left>
+            <Body>
+              <Text>{t('register:phoneNumberLabel')}</Text>
+            </Body>
+            <Right>
+              <Text>{usersStore.user.phone_number}</Text>
+              <Icon active name="arrow-forward" />
+            </Right>
+          </ListItem>
+          <ListItem icon>
+            <Left>
+              <Button style={{ backgroundColor: emailColor }}>
+                <Icon active name="mail" />
+              </Button>
+            </Left>
+            <Body>
+              <Text>{t('register:emailLabel')}</Text>
+            </Body>
+            <Right>
+              <Text>{usersStore.user.email}</Text>
+              <Icon active name="arrow-forward" />
+            </Right>
+          </ListItem>
+          <ListItem icon>
+            <Left>
+              <Button style={{ backgroundColor: addressColor }}>
+                <Icon active name="bluetooth" />
+              </Button>
+            </Left>
+            <Body>
+              <Text>{t('register:addressLabel')}</Text>
+            </Body>
+            <Right>
+              <Text>{usersStore.user.address}</Text>
+              <Icon active name="arrow-forward" />
+            </Right>
+          </ListItem>
+        </Content>
+        <ActionSupportComponent onPress={() => this.props.navigation.navigate(screens.SUPPORT, { context: screens.REGISTER_OVERVIEW })} />
+        <ActionBarComponent actions={actions} />
+      </Container>
     );
   }
 

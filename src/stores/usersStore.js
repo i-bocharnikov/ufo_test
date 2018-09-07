@@ -1,5 +1,5 @@
 import { Platform } from 'react-native'
-import { observable } from 'mobx';
+import { observable, computed } from 'mobx';
 import DeviceInfo from 'react-native-device-info';
 import { persist } from 'mobx-persist'
 import uuid from "uuid";
@@ -8,6 +8,12 @@ import configurations from "../utils/configurations";
 import { clearAuthenticationsFromStore, getAuthenticationUUIDFromStore, setAuthenticationUUIDInStore, setAuthenticationPasswordInStore, getAuthenticationPasswordFromStore, setAuthenticationTokenInStore } from "../utils/authentications"
 import { useTokenInApi, postToApi, putToApi } from '../utils/api'
 
+const USER_STATUS_REGISTERED = "registered"
+const USER_STATUS_REGISTRATION_PENDING = "registration_pending"
+const USER_STATUS_REGISTRATION_MISSING = "registration_missing"
+const STATUS_MISSING = "missing"
+const STATUS_NOT_VALIDATED = "not_validated"
+const STATUS_VALIDATED = "validated"
 
 class User {
     @persist @observable reference = null
@@ -30,6 +36,30 @@ class UsersStore {
 
     @persist('object', User) @observable user = new User
     acknowledge_uri = ""
+
+    @computed get isUserRegistered() {
+        return this.user.status === USER_STATUS_REGISTERED
+    }
+
+    @computed get isUserRegistrationInProgress() {
+        return this.user.status === USER_STATUS_REGISTRATION_PENDING
+    }
+
+    @computed get isUserRegistrationMissing() {
+        return this.user.status === USER_STATUS_REGISTRATION_MISSING
+    }
+
+    isStatusMissing(status) {
+        return status === STATUS_MISSING
+    }
+
+    isStatusNotValidated(status) {
+        return status === STATUS_NOT_VALIDATED
+    }
+
+    isStatusValidated(status) {
+        return status === STATUS_VALIDATED
+    }
 
     async registerDevice() {
 

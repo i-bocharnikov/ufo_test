@@ -12,15 +12,39 @@ i18n.use(LanguageDetector).init({
             home: {
                 "welcome": "Hello {{user.reference}}, What is next ?",
             },
+            icon: {
+                "reserve": "Reserve",
+                "register": "Register",
+                "drive": "Drive",
+                "back": "Back",
+                "next": "Next",
+                "home": "Home",
+                "connect": "Connect",
+                "disconnect": "Disconnect",
+                "requestCode": "Request code",
+            },
             register: {
                 "overviewTitle": "Registration {{user.reference}} {{user.status}}",
-                "phoneTitle": "Registration - Phone",
+                "phoneTitle": "Register - Phone",
                 "phoneNumberLabel": "Phone",
                 "phoneNumberInputLabel": "Your mobile phone number",
-                "smsCodeInputLabel": "The code received by SMS",
+                "emailTitle": "Register Email",
+                "emailInputLabel": "Your email address",
                 "emailLabel": "Email",
+                "smsCodeInputLabel": "The code received by SMS",
                 "addressLabel": "Address",
-            }
+            },
+            reserve: {
+                "reserveLocationTitle": "Select the location",
+                "reserveDateAndCarTitle": "Select the date and car",
+                "reservePaymentTitle": "Confirm",
+            },
+            support: {
+                "supportTitle": "How can we help you?",
+            },
+            drive: {
+                "driveTitle": "Rental",
+            },
         },
         fr: {
             home: {
