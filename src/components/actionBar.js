@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { whiteColor, successColor, errorColor, todoColor, doneColor, pendingColor, disableColor } from '../utils/colors'
+import { wrongColor, activeColor, textColor, successColor, errorColor, todoColor, doneColor, pendingColor, disableColor } from '../utils/colors'
 
+import Icon from './Icon'
 
 export default class ActionBarComponent extends React.Component {
     render() {
@@ -31,9 +31,9 @@ export default class ActionBarComponent extends React.Component {
                             borderRadius: 100,
                             elevation: 1
                         }}>
-                            <Icon name={action.icon} size={50} color={this.getColorForStyle(action.color)} />
+                            <Icon name={action.icon} size={50} color={textColor} />
                         </View>
-                        <Text style={{ color: whiteColor, fontWeight: 'bold' }}>{action.text}</Text>
+                        <Text style={{ color: textColor.string(), fontWeight: 'bold' }}>{action.text}</Text>
                     </TouchableOpacity>
                 )}
             </View>
@@ -50,6 +50,8 @@ export default class ActionBarComponent extends React.Component {
                 return todoColor
             case 'done':
                 return doneColor
+            case 'active':
+                return activeColor
             case 'disable':
                 return disableColor
             case 'success':
@@ -59,12 +61,12 @@ export default class ActionBarComponent extends React.Component {
             case 'pending':
                 return pendingColor
             default:
-                return whiteColor
+                return wrongColor
         }
     }
 
     getColorForStyle = (style) => {
-        return whiteColor
+        return textColor
     }
 
 }

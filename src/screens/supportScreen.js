@@ -13,7 +13,7 @@ class SupportScreen extends Component {
   render() {
     let actions = [
       {
-        style: 'done',
+        style: 'active',
         icon: 'home',
         text: 'Home',
         onPress: () => this.props.navigation.navigate('Home')

@@ -7,7 +7,7 @@ import { observer } from 'mobx-react';
 import { translate } from "react-i18next";
 import ActionBarComponent from '../../components/actionBar'
 
-const USER_STATUS_REGISTRATION_MISSING = "registration_missing"
+const STATUS_MISSING = "missing"
 
 @observer
 class RegisterScreen extends Component {
@@ -18,25 +18,30 @@ class RegisterScreen extends Component {
     };
   };
 
+
+
   async componentDidMount() {
     let user = usersStore.user
-    //TODO check if user status, if registration_missing go to wizzard
-    if (user.status === USER_STATUS_REGISTRATION_MISSING) {
-      console.info("Disconnected driver => redirect to phone")
+    this.props.navigation.setParams({ title: this.props.t('register:overviewTitle', { user: user }) })
+
+    if (user.phone_number_status === STATUS_MISSING) {
       this.props.navigation.navigate('Phone')
       return
     }
 
-    this.props.navigation.setParams({ title: this.props.t('register:overviewTitle', { user: user }) })
+    if (user.email_status === STATUS_MISSING) {
+      this.props.navigation.navigate('Email')
+      return
+    }
+
   }
 
   render() {
 
     const { t } = this.props;
-
     let actions = [
       {
-        style: 'done',
+        style: 'active',
         icon: 'home',
         text: 'Home',
         onPress: () => this.props.navigation.navigate('Home')
@@ -50,57 +55,55 @@ class RegisterScreen extends Component {
     let identificationColor = this.getColorForStatus(user.identification_status)
     let driverLicenceColor = this.getColorForStatus(user.driver_licence_status)
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', width: '100%' }}>
-        <StyleProvider style={getTheme()}>
-          <Container>
-            <Content>
-              <ListItem icon>
-                <Left>
-                  <Button style={{ backgroundColor: phoneNumberColor }}>
-                    <Icon active name="phone-portrait" />
-                  </Button>
-                </Left>
-                <Body>
-                  <Text>{t('register:phoneNumberLabel')}</Text>
-                </Body>
-                <Right>
-                  <Text>{usersStore.user.phone_number}</Text>
-                  <Icon active name="arrow-forward" />
-                </Right>
-              </ListItem>
-              <ListItem icon>
-                <Left>
-                  <Button style={{ backgroundColor: emailColor }}>
-                    <Icon active name="mail" />
-                  </Button>
-                </Left>
-                <Body>
-                  <Text>{t('register:emailLabel')}</Text>
-                </Body>
-                <Right>
-                  <Text>{usersStore.user.email}</Text>
-                  <Icon active name="arrow-forward" />
-                </Right>
-              </ListItem>
-              <ListItem icon>
-                <Left>
-                  <Button style={{ backgroundColor: addressColor }}>
-                    <Icon active name="bluetooth" />
-                  </Button>
-                </Left>
-                <Body>
-                  <Text>{t('register:addressLabel')}</Text>
-                </Body>
-                <Right>
-                  <Text>{usersStore.user.address}</Text>
-                  <Icon active name="arrow-forward" />
-                </Right>
-              </ListItem>
-            </Content>
-          </Container>
-        </StyleProvider >
-        <ActionBarComponent actions={actions} />
-      </View >
+      <StyleProvider style={getTheme()}>
+        <Container>
+          <Content>
+            <ListItem icon onPress={() => this.props.navigation.navigate('Phone')}>
+              <Left>
+                <Button style={{ backgroundColor: phoneNumberColor }}>
+                  <Icon active name="phone-portrait" />
+                </Button>
+              </Left>
+              <Body>
+                <Text>{t('register:phoneNumberLabel')}</Text>
+              </Body>
+              <Right>
+                <Text>{usersStore.user.phone_number}</Text>
+                <Icon active name="arrow-forward" />
+              </Right>
+            </ListItem>
+            <ListItem icon>
+              <Left>
+                <Button style={{ backgroundColor: emailColor }}>
+                  <Icon active name="mail" />
+                </Button>
+              </Left>
+              <Body>
+                <Text>{t('register:emailLabel')}</Text>
+              </Body>
+              <Right>
+                <Text>{usersStore.user.email}</Text>
+                <Icon active name="arrow-forward" />
+              </Right>
+            </ListItem>
+            <ListItem icon>
+              <Left>
+                <Button style={{ backgroundColor: addressColor }}>
+                  <Icon active name="bluetooth" />
+                </Button>
+              </Left>
+              <Body>
+                <Text>{t('register:addressLabel')}</Text>
+              </Body>
+              <Right>
+                <Text>{usersStore.user.address}</Text>
+                <Icon active name="arrow-forward" />
+              </Right>
+            </ListItem>
+          </Content>
+          <ActionBarComponent actions={actions} />
+        </Container>
+      </StyleProvider >
     );
   }
 

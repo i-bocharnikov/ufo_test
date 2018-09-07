@@ -3,13 +3,15 @@ import usersStore from '../../stores/usersStore';
 import { observer } from 'mobx-react';
 import { observable, computed } from 'mobx';
 import { translate } from "react-i18next";
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, Image } from 'react-native';
 import PhoneInput from 'react-native-phone-input';
 import CountryPicker from 'react-native-country-picker-modal';
 import DeviceInfo from 'react-native-device-info'
 import TextInputMask from 'react-native-text-input-mask';
 import ActionBarComponent from '../../components/actionBar'
 import _ from 'lodash'
+
+const STATUS_VALIDATED = "validated"
 
 @observer
 class PhoneScreen extends Component {
@@ -26,7 +28,9 @@ class PhoneScreen extends Component {
 
   async componentDidMount() {
     this.props.navigation.setParams({ title: this.props.t('register:phoneTitle', { user: usersStore.user }) })
-    this.phone.focus()
+    if (usersStore.user.phone_number_status !== STATUS_VALIDATED) {
+      this.phone.focus()
+    }
   }
 
   onPressFlag = () => {
@@ -39,38 +43,67 @@ class PhoneScreen extends Component {
   }
 
   onChangePhoneNumber = (phoneNumber) => {
-    usersStore.user.phone_number = phoneNumber
+    if (usersStore.user.phone_number_status !== STATUS_VALIDATED) {
+      usersStore.user.phone_number = phoneNumber
+    }
   }
 
   render() {
 
     const { t, i18n } = this.props;
+
+    let isUserConnected = usersStore.user.phone_number_status === STATUS_VALIDATED
+
+
     let actions = [
-      {
-        style: 'done',
-        icon: 'home',
-        text: 'Home',
-        onPress: () => this.props.navigation.navigate('Home')
+      {//TODO home versus back based on where user come from
+        style: 'active',
+        icon: 'arrow-round-back',
+        text: 'Back',
+        onPress: () => this.props.navigation.pop()
       },
       {
-        style: this.phone && this.phone.isValidNumber() ? 'todo' : 'disable',
-        icon: 'account-key',
-        text: 'Request code',
-        onPress: () => {
-          this.isCodeRequested = usersStore.requestCode()
-        }
-      },
-      {
-        style: this.code && this.code.length === 6 ? 'todo' : 'disable',
-        icon: 'account-check',
-        text: 'Validate code',
-        onPress: () => usersStore.validateCode(this.code)
-      },
+        style: isUserConnected ? 'active' : 'disable',
+        icon: 'log-out',
+        text: 'Disconnect',
+        onPress: () => { this.isCodeRequested = usersStore.disconnect() }
+      }
     ]
+
+    if (this.isCodeRequested) {
+      actions.push({
+        style: !isUserConnected && this.code && this.code.length === 6 ? 'todo' : 'disable',
+        icon: 'log-in',
+        text: 'Connect',
+        onPress: async () => {
+          if (await usersStore.connect(this.code)) {
+            this.props.navigation.pop()
+          }
+          this.code = null
+        }
+      })
+    } else {
+      actions.push({
+        style: !isUserConnected && this.phone && this.phone.isValidNumber() ? 'todo' : 'disable',
+        icon: 'key',
+        text: 'Request code',
+        onPress: async () => {
+          this.isCodeRequested = await usersStore.requestCode()
+        }
+      })
+    }
+
+
+
+
     return (
       <View style={styles.container}>
-
-        {!this.isCodeRequested && (
+        {isUserConnected && (
+          <View style={styles.item}>
+            <Text>{usersStore.user.phone_number}</Text>
+          </View>
+        )}
+        {!isUserConnected && !this.isCodeRequested && (
           <View style={styles.item}>
             <Text>{t('register:phoneNumberInputLabel')}</Text>
             <PhoneInput
@@ -93,7 +126,7 @@ class PhoneScreen extends Component {
             </CountryPicker>
           </View>
         )}
-        {this.isCodeRequested && (
+        {!isUserConnected && this.isCodeRequested && (
           < View style={styles.item}>
             <Text>{t('register:smsCodeInputLabel')}</Text>
             <TextInputMask

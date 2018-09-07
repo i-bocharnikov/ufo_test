@@ -15,10 +15,12 @@ import ReserveLocationScreen from './src/screens/reserve/locationScreen'
 import ReserveDateAndCarScreen from './src/screens/reserve/dateAndCarScreen'
 import ReservePaymentScreen from './src/screens/reserve/paymentScreen'
 import RegisterOverviewScreen from './src/screens/register/overview'
+import RegisterEmailScreen from './src/screens/register/email'
 import RegisterPhoneScreen from './src/screens/register/phone'
 import activitiesStore from './src/stores/activitiesStore'
 import ActivitiesComponent from "./src/components/activities"
 import MessageComponent from "./src/components/message"
+import { backgroundColor, textColor } from './src/utils/colors'
 
 //Temporary ignore warning comming from react-native
 import { YellowBox } from 'react-native';
@@ -28,9 +30,9 @@ YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTIm
 const commonStackNavigationOptions =
 {
   headerStyle: {
-    backgroundColor: '#172c32',
+    backgroundColor: backgroundColor.string(),
   },
-  headerTintColor: '#fff',
+  headerTintColor: textColor.string(),
   headerTitleStyle: {
     fontWeight: 'bold',
   },
@@ -77,7 +79,8 @@ const ReserveStack = createStackNavigator(
 const RegisterStack = createStackNavigator(
   {
     Overview: { screen: RegisterOverviewScreen },
-    Phone: { screen: RegisterPhoneScreen }
+    Phone: { screen: RegisterPhoneScreen },
+    Email: { screen: RegisterEmailScreen }
   }, { initialRouteName: 'Overview', navigationOptions: commonStackNavigationOptions }
 );
 

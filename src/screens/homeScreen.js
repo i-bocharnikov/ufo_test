@@ -6,6 +6,7 @@ import { translate } from "react-i18next";
 import UserStore from "../stores/usersStore"
 import LogoComponent from "../components/logo"
 import ActionBarComponent from '../components/actionBar'
+import { textColor, backgroundColor } from "../utils/colors";
 
 const video = require('../assets/UFOdrive.mp4')
 
@@ -14,6 +15,9 @@ const video = require('../assets/UFOdrive.mp4')
 class HomeScreen extends React.Component {
   static navigationOptions = {
     headerTitle: <LogoComponent />,
+    headerStyle: {
+      backgroundColor: backgroundColor.alpha(0.5).string(),
+    },
   };
 
   async componentDidMount() {
@@ -26,19 +30,19 @@ class HomeScreen extends React.Component {
     let actions = [
       {
         style: 'todo',
-        icon: 'plus',
+        icon: 'add',
         text: 'Reserve',
         onPress: () => this.props.navigation.navigate('Reserve')
       },
       {
         style: 'todo',
-        icon: 'account',
+        icon: 'person',
         text: 'Register',
         onPress: () => this.props.navigation.navigate('Register')
       },
       {
         style: 'todo',
-        icon: 'steering',
+        icon: 'car',
         text: 'Drive',
         onPress: () => this.props.navigation.navigate('Drive', { reference: "BLU001" })
       }
@@ -57,7 +61,7 @@ class HomeScreen extends React.Component {
           muted={true}
         />
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <Text> {t('home:welcome', { user: UserStore.user })}  </Text>
+          <Text style={{ color: textColor }}> {t('home:welcome', { user: UserStore.user })}  </Text>
         </View>
         <ActionBarComponent actions={actions} />
       </View >
@@ -69,7 +73,7 @@ class HomeScreen extends React.Component {
 var styles = StyleSheet.create({
   backgroundVideo: {
     position: 'absolute',
-    top: 0,
+    top: -100,
     left: 0,
     bottom: 0,
     right: 0,

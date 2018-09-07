@@ -1,7 +1,7 @@
 import axios from "axios";
 import configurations from "../utils/configurations"
 import activitiesStore from '../stores/activitiesStore'
-import Toast from 'native-base'
+import Toast from 'react-native-simple-toast';
 
 export const ufodrive_server_connectivity_test_api = axios.create({
     baseURL:
@@ -104,7 +104,7 @@ export async function putToApi(path, body, suppressToastBox = false, usePublicAp
 export async function checkConnectivity() {
 
     try {
-        activitiesStore.internetAccessPending = true
+        activitiesStore.activities.internetAccessPending = true
         await ufodrive_server_connectivity_test_api.get("/")
         activitiesStore.activities.internetAccessPending = false
         activitiesStore.activities.internetAccessFailure = false
@@ -121,11 +121,7 @@ function handleError(error, suppressToastBox) {
     console.warn("api.get error: %s", ufoError.message);
     console.debug("api.get error.stack: %j", error);
     if (!suppressToastBox) {
-        Toast.show({
-            text: ufoError.message,
-            duration: 3000,
-            buttonText: "Okay",
-        })
+        Toast.show(ufoError.message);
     }
 }
 

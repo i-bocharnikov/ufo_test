@@ -13,11 +13,11 @@ i18n.use(LanguageDetector).init({
                 "welcome": "Hello {{user.reference}}, What is next ?",
             },
             register: {
-                "overviewTitle": "Registration {{user.reference}}",
+                "overviewTitle": "Registration {{user.reference}} {{user.status}}",
                 "phoneTitle": "Registration - Phone",
                 "phoneNumberLabel": "Phone",
                 "phoneNumberInputLabel": "Your mobile phone number",
-                "smsCodeInputLabel": "The SMS code you will receive",
+                "smsCodeInputLabel": "The code received by SMS",
                 "emailLabel": "Email",
                 "addressLabel": "Address",
             }

@@ -14,14 +14,14 @@ class ReserveLocationScreen extends Component {
 
     let actions = [
       {
-        style: 'done',
+        style: 'active',
         icon: 'home',
         text: 'Home',
         onPress: () => this.props.navigation.navigate('Home')
       },
       {
         style: 'todo',
-        icon: 'menu-right',
+        icon: 'arrow-round-forward',
         text: 'Next',
         onPress: () => this.props.navigation.navigate('DateAndCar')
       },

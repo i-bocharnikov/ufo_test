@@ -2,21 +2,18 @@
 import Color from 'color'
 
 
-const white = Color('#fff')
-const todo = Color('#c51162')
-const done = Color('#03DAC6')
-const disable = Color('#808080')
-const pending = Color('#018786')
-const success = Color('#03DAC6')
-const error = Color('#c51162')
+export const backgroundColor = Color('#172c32')
+export const textColor = Color('#fff')
+export const todoColor = Color('#c51162')
+export const doneColor = Color('#03DAC6')
+export const activeColor = Color('#0081B5')
+export const disableColor = Color('#808080')
+export const pendingColor = Color('#018786')
+export const successColor = Color('#03DAC6')
+export const errorColor = Color('#C8102E')
+export const warningColor = Color.rgb(255, 87, 34)
+export const wrongColor = Color('yellow')
 
-export const whiteColor = white.string()
-export const todoColor = todo.string()
-export const doneColor = done.string()
-export const disableColor = disable.string()
-export const pendingColor = pending.string()
-export const successColor = success.string()
-export const errorColor = error.string()
 
 /*        static let JapaneseIndigo = UIColor(red: 34, green: 56, blue: 67)
         static let Lava = UIColor(netHex: 0xC8102E)

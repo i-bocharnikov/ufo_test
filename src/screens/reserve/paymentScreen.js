@@ -13,13 +13,13 @@ class ReservePaymentScreen extends Component {
   render() {
     let actions = [
       {
-        style: 'todo',
-        icon: 'menu-left',
+        style: 'active',
+        icon: 'arrow-round-back',
         text: 'previous',
-        onPress: () => this.props.navigation.navigate('DatesAndCars')
+        onPress: () => this.props.navigation.pop()
       },
       {
-        style: 'done',
+        style: 'active',
         icon: 'home',
         text: 'Home',
         onPress: () => this.props.navigation.navigate('Home')
@@ -27,7 +27,7 @@ class ReservePaymentScreen extends Component {
       {
 
         style: 'todo',
-        icon: 'credit-card',
+        icon: 'card',
         text: 'Pay',
         onPress: () => { this.props.navigation.popToTop(); this.props.navigation.navigate('Home') }
       },

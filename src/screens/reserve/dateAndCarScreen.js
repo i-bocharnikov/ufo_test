@@ -16,20 +16,20 @@ class ReserveDateAndCarScreen extends Component {
     let actions = [
 
       {
-        style: 'todo',
-        icon: 'menu-left',
+        style: 'active',
+        icon: 'arrow-round-back',
         text: 'previous',
-        onPress: () => this.props.navigation.navigate('Location')
+        onPress: () => this.props.navigation.pop()
       },
       {
-        style: 'done',
+        style: 'active',
         icon: 'home',
         text: 'Home',
         onPress: () => this.props.navigation.navigate('Home')
       },
       {
         style: 'todo',
-        icon: 'menu-right',
+        icon: 'arrow-round-forward',
         text: 'Next',
         onPress: () => this.props.navigation.navigate('Payment')
       },

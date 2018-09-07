@@ -5,7 +5,7 @@ import { persist } from 'mobx-persist'
 import uuid from "uuid";
 
 import configurations from "../utils/configurations";
-import { getAuthenticationUUIDFromStore, setAuthenticationUUIDInStore, setAuthenticationPasswordInStore, getAuthenticationPasswordFromStore, setAuthenticationTokenInStore } from "../utils/authentications"
+import { clearAuthenticationsFromStore, getAuthenticationUUIDFromStore, setAuthenticationUUIDInStore, setAuthenticationPasswordInStore, getAuthenticationPasswordFromStore, setAuthenticationTokenInStore } from "../utils/authentications"
 import { useTokenInApi, postToApi, putToApi } from '../utils/api'
 
 
@@ -86,7 +86,7 @@ class UsersStore {
         return false
     };
 
-    async validateCode(code) {
+    async connect(code) {
 
         const response = await postToApi("/" + this.acknowledge_uri, { validation_code: code });
         if (response && response.status === "success") {
@@ -95,6 +95,13 @@ class UsersStore {
         }
         return false
 
+    };
+
+    async disconnect() {
+
+        //TODO add logout service on server so we can unmap device and user in place of recreating new device
+        await clearAuthenticationsFromStore();
+        return await this.registerDevice()
     };
 }
 
