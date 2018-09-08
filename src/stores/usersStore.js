@@ -6,7 +6,7 @@ import uuid from "uuid";
 
 import configurations from "../utils/configurations";
 import { clearAuthenticationsFromStore, getAuthenticationUUIDFromStore, setAuthenticationUUIDInStore, setAuthenticationPasswordInStore, getAuthenticationPasswordFromStore, setAuthenticationTokenInStore } from "../utils/authentications"
-import { useTokenInApi, postToApi, putToApi } from '../utils/api'
+import { useTokenInApi, postToApi, putToApi, downloadFromApi, uploadToApi } from '../utils/api'
 
 const USER_STATUS_REGISTERED = "registered"
 const USER_STATUS_REGISTRATION_PENDING = "registration_pending"
@@ -29,6 +29,10 @@ class User {
     @persist @observable address = null
     @persist @observable address_status = null
     @persist @observable registration_message = null
+    @persist @observable identification_front_side_reference = null
+    @persist @observable identification_back_side_reference = null
+    @persist @observable driver_licence_front_side_reference = null
+    @persist @observable driver_licence_back_side_reference = null
 }
 
 
@@ -120,7 +124,7 @@ class UsersStore {
 
         const response = await postToApi("/" + this.acknowledge_uri, { validation_code: code });
         if (response && response.status === "success") {
-            console.info("usersStore.validateCode : %j", response);
+            console.info("usersStore.connect : %j", response);
             return await this.registerDevice()
         }
         return false
@@ -133,7 +137,43 @@ class UsersStore {
         await clearAuthenticationsFromStore();
         return await this.registerDevice()
     };
+
+    async save() {
+
+        const response = await putToApi("/users/" + this.user.reference, { ...this.user });
+        if (response && response.status === "success") {
+            console.info("usersStore.validateCode : %j", response);
+            this.user = response.data.user
+            return true
+        }
+        return false
+    };
+
+
+    async downloadDocument(reference) {
+
+        const response = await downloadFromApi(reference, false);
+        if (response && response.status === "success") {
+            console.info("usersStore.downloadDocument : %j", response);
+            return URL.createObjectURL(response.data.document)
+        }
+        return null
+    };
+
+
+    async uploadDocument(domain, format, type, sub_type, file) {
+
+        const response = await this.uploadDocument(domain, format, type, sub_type, file);
+        if (response && response.status === "success") {
+            console.info("usersStore.uploadDocument : %j", response);
+            return response.data.document
+        }
+        return null
+    };
+
 }
 
 export default usersStore = new UsersStore();
+
+
 

@@ -27,8 +27,6 @@ class PhoneScreen extends Component {
   @observable isCodeRequested = false
   @observable code = null
 
-
-
   onPressFlag = () => {
     this.countryPicker.openModal()
   }
@@ -76,9 +74,9 @@ class PhoneScreen extends Component {
         icon: icons.CONNECT,
         onPress: async () => {
           if (await usersStore.connect(this.code)) {
+            this.code = null
             this.props.navigation.navigate(screens.REGISTER_EMAIL)
           }
-          this.code = null
         }
       })
     } else {
@@ -86,15 +84,16 @@ class PhoneScreen extends Component {
         style: !isUserConnected && this.phoneInput && this.phoneInput.isValidNumber() ? styles.TODO : styles.DISABLE,
         icon: icons.REQUEST_CODE,
         onPress: async () => {
-          this.isCodeRequested = await usersStore.requestCode()
+          if (await usersStore.requestCode())
+            this.isCodeRequested = true
         }
       })
     }
-    let defaultPaddintTop = (Dimensions.get("window").height / 6)
+    let defaultPaddintTop = (Dimensions.get("window").height / 10)
 
     return (
       <Container>
-        <HeaderComponent title={t('register:phoneTitle', { user: usersStore.user })} subTitle={" " + Dimensions.get("window").height} />
+        <HeaderComponent title={t('register:phoneTitle', { user: usersStore.user })} />
         <Content padder ref={(ref) => { this.content = ref; }}>
           <Form>
             {isUserConnected && (
@@ -117,6 +116,7 @@ class PhoneScreen extends Component {
                     value={user.phone_number}
                     onChangePhoneNumber={this.onChangePhoneNumber}
                     offset={20}
+                    autoFocus
                   />
 
                   <CountryPicker
@@ -134,9 +134,9 @@ class PhoneScreen extends Component {
             )}
 
             {!isUserConnected && this.isCodeRequested && (
-              <Item stackedLabel error>
+              <Item stackedLabel>
                 <Label style={{ color: colors.TEXT.string(), paddingTop: defaultPaddintTop, paddingBottom: 25 }}>{t('register:smsCodeInputLabel')}</Label>
-                <Input maxLength={7} keyboardAppearance='dark' keyboardType='numeric' placeholder='000-000' ref={(ref) => { this.codeInput = ref; }} onChangeText={this.onChangeCode} />
+                <Input autoFocus maxLength={7} keyboardAppearance='dark' keyboardType='numeric' placeholder='000-000' ref={(ref) => { this.codeInput = ref; }} onChangeText={this.onChangeCode} />
               </Item>
             )}
           </Form>

@@ -2,6 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSCameraUsageDescription</key>
+	<string>UFODrive needs access to the camera to capture your driver license and inspect your vehicle</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>UFODrive needs Bluetooh usage, for you to open or close the rented car.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>UFODrive needs Face ID authorisation, for you to confirm rental booking and approve terms.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>

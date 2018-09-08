@@ -1,7 +1,7 @@
 import axios from "axios";
 import configurations from "../utils/configurations"
 import activitiesStore from '../stores/activitiesStore'
-import Toast from 'react-native-simple-toast';
+import { Toast, } from 'native-base';
 
 export const ufodrive_server_connectivity_test_api = axios.create({
     baseURL:
@@ -40,7 +40,7 @@ export async function getFromApi(path, suppressToastBox = false, usePublicApi = 
 
     let api = usePublicApi ? ufodrive_server_public_api : ufodrive_server_api
     try {
-        if (!checkConnectivity()) {
+        if (!await checkConnectivity()) {
             throw new Error("No internet access")
         }
         activitiesStore.activities.internetAccessPending = true
@@ -64,7 +64,7 @@ export async function getFromApi(path, suppressToastBox = false, usePublicApi = 
 export async function postToApi(path, body, suppressToastBox = false, usePublicApi = false) {
     let api = usePublicApi ? ufodrive_server_public_api : ufodrive_server_api
     try {
-        if (!checkConnectivity()) {
+        if (!await checkConnectivity()) {
             throw new Error("No internet access")
         }
         activitiesStore.activities.internetAccessPending = true
@@ -88,13 +88,69 @@ export async function postToApi(path, body, suppressToastBox = false, usePublicA
 export async function putToApi(path, body, suppressToastBox = false, usePublicApi = false) {
     let api = usePublicApi ? ufodrive_server_public_api : ufodrive_server_api
     try {
-        if (!checkConnectivity()) {
+        if (!await checkConnectivity()) {
             throw new Error("No internet access")
         }
         activitiesStore.activities.internetAccessPending = true
         let response = await api.put(path, body)
         activitiesStore.activities.internetAccessPending = false
         return response.data
+    } catch (error) {
+        activitiesStore.activities.internetAccessPending = false
+        handleError(error, suppressToastBox)
+    }
+}
+
+/**
+ * UPLOAD JSON to a path relative to API root url
+ * @param {Boolean} suppressToastBox If true, no warning is shown on failed request
+ * @param {Boolean} usePublicApi If true, use th epublic api
+ * @returns {Promise}  of response body
+ */
+export async function uploadToApi(domain, format, type, sub_type, file, suppressToastBox = false) {
+    try {
+        if (!await checkConnectivity()) {
+            throw new Error("No internet access")
+        }
+        const data = new FormData();
+        data.append('document', file, file.name);
+        data.append('domain', domain)
+        data.append('format', format)
+        data.append('type', type)
+        data.append('sub_type', sub_type)
+        data.append('file_name', file.name)
+        data.append('content_type', file.type)
+        activitiesStore.activities.internetAccessPending = true
+        let response = await ufodrive_server_api.post("documents", data, {
+            headers: {
+                'Content-Type': `multipart/form-data; boundary=${data._boundary}`,
+            }
+        })
+        activitiesStore.activities.internetAccessPending = false
+        return response.data
+    } catch (error) {
+        activitiesStore.activities.internetAccessPending = false
+        handleError(error, suppressToastBox)
+    }
+}
+
+/**
+ * DOWNLOAD JSON to a path relative to API root url
+ * @param {Boolean} suppressToastBox If true, no warning is shown on failed request
+ * @param {Boolean} usePublicApi If true, use th epublic api
+ * @returns {Promise}  of response body
+ */
+export async function downloadFromApi(reference, thumbnail = true, suppressToastBox = false) {
+    try {
+        if (!await checkConnectivity()) {
+            throw new Error("No internet access")
+        }
+        activitiesStore.activities.internetAccessPending = true
+        let path = thumbnail ? "thumbnail/" : "documents/"
+        let response = await ufodrive_server_api.get(path + reference)
+        activitiesStore.activities.internetAccessPending = false
+        return response.data
+        //const url = URL.createObjectURL(data);
     } catch (error) {
         activitiesStore.activities.internetAccessPending = false
         handleError(error, suppressToastBox)
@@ -118,10 +174,17 @@ export async function checkConnectivity() {
 
 function handleError(error, suppressToastBox) {
     let ufoError = formatApiError(error);
-    console.warn("api.get error: %s", ufoError.message);
+    //console.warn("api.get error: %s", ufoError.message);
     console.debug("api.get error.stack: %j", error);
     if (!suppressToastBox) {
-        Toast.show(ufoError.message);
+        Toast.show({
+            text: ufoError.message,
+            buttonText: 'Ok',
+            type: "danger",
+            duration: 5000,
+            buttonTextStyle: { color: "#008000" },
+            buttonStyle: { backgroundColor: "#5cb85c" }
+        });
     }
 }
 

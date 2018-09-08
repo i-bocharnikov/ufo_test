@@ -19,7 +19,9 @@ import ReserveDateAndCarScreen from './src/screens/reserve/dateAndCarScreen'
 import ReservePaymentScreen from './src/screens/reserve/paymentScreen'
 import RegisterOverviewScreen from './src/screens/register/overview'
 import RegisterEmailScreen from './src/screens/register/email'
+import RegisterAddressScreen from './src/screens/register/address'
 import RegisterPhoneScreen from './src/screens/register/phone'
+import RegisterIdentificationScreen from './src/screens/register/identification'
 import activitiesStore from './src/stores/activitiesStore'
 import getTheme from './native-base-theme/components';
 import './src/utils/global'
@@ -77,6 +79,8 @@ const RegisterStack = createStackNavigator(
     Overview: { screen: RegisterOverviewScreen },
     Phone: { screen: RegisterPhoneScreen },
     Email: { screen: RegisterEmailScreen },
+    Address: { screen: RegisterAddressScreen },
+    Identification: { screen: RegisterIdentificationScreen },
     Support: {
       screen: SupportScreen
     }

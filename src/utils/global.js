@@ -1,5 +1,22 @@
 import Color from 'color'
 
+
+//https://github.com/jondot/awesome-react-native#geolocation
+
+
+//https://github.com/zhangtaii/react-native-google-place-picker
+//TODO https://github.com/leecade/react-native-swiper
+//https://reactnativeexample.com/react-native-range-datepicker-inspired-by-airbnb/
+//https://github.com/monterosalondon/react-native-parallax-scroll
+//https://github.com/Tinysymphony/react-native-calendar-select
+//https://github.com/anvilabs/react-native-image-carousel
+//https://github.com/xcarpentier/react-native-stripe-api
+//https://github.com/doefler/react-native-social-share
+//https://github.com/bamlab/react-native-image-resizer
+//https://github.com/naoufal/react-native-touch-id
+//https://github.com/oblador/react-native-keychain
+
+
 export const colors = {
     HEADER_BACKGROUND: new Color('#0081B5'),
     BACKGROUND: new Color('#172c32'),
@@ -9,7 +26,7 @@ export const colors = {
     ACTIVE: new Color('#0081B5'),
     PRIMARY: new Color('#0081B5'),
     DISABLE: new Color('#808080'),
-    PENDING: new Color('#018786'),
+    PENDING: new Color('#616161'),
     SUCCESS: new Color('#03DAC6'),
     ERROR: new Color('#C8102E'),
     WARNING: new Color.rgb(255, 87, 34),
@@ -100,6 +117,18 @@ export const icons = {
     HELP: new Icon('help', 'icon:help'),
     WIFI: new Icon('wifi', 'icon:wifi'),
     BLUETOOTH: new Icon('bluetooth', 'icon:bluetooth'),
+    PHONE: new Icon('phone-portrait', 'icon:phone'),
+    EMAIL: new Icon('mail', 'icon:email'),
+    ADDRESS: new Icon('locate', 'icon:address'),
+    IDENTIFICATION: new Icon('contact', 'icon:identification'),
+    DRIVER_LICENCE: new Icon('document', 'icon:driverLicence'),
+    SELECT: new Icon('play', 'icon:select'),
+    CAPTURE: new Icon('camera', 'icon:capture'),
+    TORCH: new Icon('flashlight', 'icon:torch'),
+    VALIDATE: new Icon('checkmark', 'icon:validate'),
+    CANCEL: new Icon('close', 'icon:cancel'),
+    SAVE: new Icon('save', 'icon:save'),
+    REDO: new Icon('redo', 'icon:redo'),
     WRONG: new Icon('bomfire', 'icon:wrong')
 }
 
