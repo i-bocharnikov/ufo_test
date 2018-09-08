@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Content } from 'native-base';
+import { Container, Content, Text } from 'native-base';
 import Video from 'react-native-video';
 import { observer } from "mobx-react";
 import { translate } from "react-i18next";
@@ -20,8 +20,9 @@ class HomeScreen extends React.Component {
   }
 
   render() {
-    const { t, i18n } = this.props;
+    const { t } = this.props;
 
+    let user = usersStore.user
     let actions = [
       {
         style: styles.TODO,
@@ -42,13 +43,13 @@ class HomeScreen extends React.Component {
 
     return (
       <Container>
-        <Video source={video}   // Can be a URL or a local file.
+        <Video source={video}
           ref={(ref) => {
             this.player = ref
-          }}                                      // Store reference
+          }}
           style={{
             position: 'absolute',
-            top: -100,
+            top: 0,
             left: 0,
             bottom: 0,
             right: 0,
@@ -60,6 +61,7 @@ class HomeScreen extends React.Component {
         />
         <HeaderComponent />
         <Content padder>
+          <Text>{t('home:welcome', { user: user })}</Text>
         </Content>
         <ActionSupportComponent onPress={() => this.props.navigation.navigate(screens.SUPPORT, { context: screens.HOME })} />
         <ActionBarComponent actions={actions} />

@@ -36,9 +36,8 @@ export default class ActivitiesComponent extends React.Component {
         return (
             <View style={{
                 top: 0,
-                right: -25,
-                height: 32,
-                width: 32,
+                right: -10,
+                width: 16,
             }}>
                 <Icon size={sizes.SMALL} color={bluetoothColor} icon={icons.BLUETOOTH}></Icon>
                 <Icon size={sizes.SMALL} color={internetColor} icon={icons.WIFI}></Icon>

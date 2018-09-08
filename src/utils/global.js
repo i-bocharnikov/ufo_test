@@ -7,6 +7,7 @@ export const colors = {
     TODO: new Color('#c51162'),
     DONE: new Color('#03DAC6'),
     ACTIVE: new Color('#0081B5'),
+    PRIMARY: new Color('#0081B5'),
     DISABLE: new Color('#808080'),
     PENDING: new Color('#018786'),
     SUCCESS: new Color('#03DAC6'),

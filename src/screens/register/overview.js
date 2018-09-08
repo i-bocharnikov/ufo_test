@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Container, Content, Button, Text, ListItem, Left, Icon, Body, Right } from 'native-base';
+import { Container, Content, Button, Text, ListItem, Left, Icon, Body, Right, Card, CardItem } from 'native-base';
 import { observer } from 'mobx-react';
 import { translate } from "react-i18next";
 
@@ -7,13 +7,14 @@ import HeaderComponent from "../../components/header";
 import ActionSupportComponent from '../../components/actionSupport'
 import ActionBarComponent from '../../components/actionBar'
 import usersStore from '../../stores/usersStore';
-import { screens, styles, icons } from '../../utils/global'
+import { screens, styles, icons, colors } from '../../utils/global'
 
 @observer
 class RegisterScreen extends Component {
 
 
-  async componentDidMount() {
+  //To be Used only to move to another screen
+  async componentWillMount() {
 
     let user = usersStore.user
     if (usersStore.isStatusMissing(user.phone_number_status)) {
@@ -45,8 +46,17 @@ class RegisterScreen extends Component {
     let driverLicenceColor = this.getColorForStatus(user.driver_licence_status)
     return (
       <Container>
-        <HeaderComponent title={t('register:overviewTitle', { user: user })} />
+        <HeaderComponent title={t('register:overviewTitle', { user: user })} subTitle={'STATUS:' + user.status} />
         <Content padder>
+          <Card >
+            <CardItem>
+              <Body>
+                <Text>
+                  {user.registration_message}
+                </Text>
+              </Body>
+            </CardItem>
+          </Card>
           <ListItem icon onPress={() => this.props.navigation.navigate(screens.REGISTER_PHONE)}>
             <Left>
               <Button style={{ backgroundColor: phoneNumberColor }}>
@@ -61,7 +71,7 @@ class RegisterScreen extends Component {
               <Icon active name="arrow-forward" />
             </Right>
           </ListItem>
-          <ListItem icon>
+          <ListItem icon onPress={() => this.props.navigation.navigate(screens.REGISTER_EMAIL)}>
             <Left>
               <Button style={{ backgroundColor: emailColor }}>
                 <Icon active name="mail" />
@@ -97,16 +107,16 @@ class RegisterScreen extends Component {
   }
 
   getColorForStatus = (status) => {
-    switch (status) {
-      case "missing":
-        return "red"
-      case "not_validated":
-        return "orange"
-      case "validated":
-        return "green"
-      default:
-        return "grey"
+    if (usersStore.isStatusValidated(status)) {
+      return colors.DONE
     }
+    if (usersStore.isStatusNotValidated(status)) {
+      return colors.PENDING
+    }
+    if (usersStore.isStatusMissing(status)) {
+      return colors.TODO
+    }
+    return colors.WRONG
   }
 }
 

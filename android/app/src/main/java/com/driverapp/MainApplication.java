@@ -3,11 +3,10 @@ package com.driverapp;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import com.RNTextInputMask.RNTextInputMaskPackage;
-import com.learnium.RNDeviceInfo.RNDeviceInfo;
-import com.imagepicker.ImagePickerPackage;
-import com.i18n.reactnativei18n.ReactNativeI18n;
 import com.brentvatne.react.ReactVideoPackage;
+import com.i18n.reactnativei18n.ReactNativeI18n;
+import com.imagepicker.ImagePickerPackage;
+import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -28,11 +27,10 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new RNTextInputMaskPackage(),
-            new RNDeviceInfo(),
-            new ImagePickerPackage(),
+            new ReactVideoPackage(),
             new ReactNativeI18n(),
-            new ReactVideoPackage()
+            new ImagePickerPackage(),
+            new RNDeviceInfo()
       );
     }
 

@@ -132,11 +132,11 @@ function formatApiError(error) {
     if (
         error.response &&
         error.response.data &&
-        error.response.data &&
-        error.response.data.message
+        error.response.data.data &&
+        error.response.data.data.message
     ) {
-        message = error.response.data.message;
-        key = error.response.status ? error.response.status : "api";
+        message = error.response.data.data.message;
+        key = error.response.data.status ? error.response.data.status : "api";
         if (key === "401") {
             message =
                 "We detect connectivity issues, please reload the application";

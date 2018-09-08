@@ -1,6 +1,8 @@
 import color from "color";
 
 import { Platform, Dimensions, PixelRatio } from "react-native";
+import { colors } from '../../src/utils/global'
+
 
 const deviceHeight = Dimensions.get("window").height;
 const deviceWidth = Dimensions.get("window").width;
@@ -8,6 +10,7 @@ const platform = Platform.OS;
 const platformStyle = undefined;
 const isIphoneX =
   platform === "ios" && (deviceHeight === 812 || deviceWidth === 812);
+
 
 export default {
   platformStyle,
@@ -84,10 +87,12 @@ export default {
     return this.iconFontSize * 0.6;
   },
 
+
+
   // Card
-  cardDefaultBg: "#fff",
-  cardBorderColor: "#ccc",
-  cardBorderRadius: 2,
+  cardDefaultBg: colors.BACKGROUND.string(), //"#fff",
+  cardBorderColor: colors.TEXT.string(), //"#ccc",
+  cardBorderRadius: 4,
   cardItemPadding: platform === "ios" ? 10 : 12,
 
   // CheckBox
@@ -103,16 +108,16 @@ export default {
   checkboxTickColor: "#fff",
 
   // Color
-  brandPrimary: platform === "ios" ? "#007aff" : "#3F51B5",
+  brandPrimary: colors.PRIMARY.string(),//platform === "ios" ? "#007aff" : "#3F51B5",
   brandInfo: "#62B1F6",
-  brandSuccess: "#5cb85c",
-  brandDanger: "#d9534f",
+  brandSuccess: colors.SUCCESS.string(),//"#5cb85c",
+  brandDanger: colors.ERROR.string(),//"#d9534f",
   brandWarning: "#f0ad4e",
   brandDark: "#000",
   brandLight: "#f4f4f4",
 
   //Container
-  containerBgColor: "#172c32",//"#fff",
+  containerBgColor: colors.BACKGROUND.string(),//"#fff",
 
   //Date Picker
   datePickerTextColor: "#000",
@@ -146,14 +151,14 @@ export default {
   tabActiveBgColor: platform === "ios" ? "#cde1f9" : "#3F51B5",
 
   // Header
-  toolbarBtnColor: this.containerBgColor,//platform === "ios" ? "#007aff" : "#fff",
-  toolbarDefaultBg: this.containerBgColor,//platform === "ios" ? "#F8F8F8" : "#3F51B5",
+  toolbarBtnColor: colors.BACKGROUND.string(),//platform === "ios" ? "#007aff" : "#fff",
+  toolbarDefaultBg: colors.BACKGROUND.string(),//platform === "ios" ? "#F8F8F8" : "#3F51B5",
   toolbarHeight: platform === "ios" ? 64 : 56,
   toolbarSearchIconSize: platform === "ios" ? 20 : 23,
-  toolbarInputColor: "#fff", //platform === "ios" ? "#CECDD2" : "#fff",
+  toolbarInputColor: colors.TEXT.string(), //platform === "ios" ? "#CECDD2" : "#fff",
   searchBarHeight: platform === "ios" ? 30 : 40,
   searchBarInputHeight: platform === "ios" ? 30 : 50,
-  toolbarBtnTextColor: "#fff", //platform === "ios" ? "#007aff" : "#fff",
+  toolbarBtnTextColor: colors.TEXT.string(), //platform === "ios" ? "#007aff" : "#fff",
   toolbarDefaultBorder: platform === "ios" ? "#a7a6ab" : "#3F51B5",
   iosStatusbar: "light-content",//platform === "ios" ? "dark-content" : "light-content",
   get statusBarColor() {
@@ -175,8 +180,8 @@ export default {
   // InputGroup
   inputFontSize: 17,
   inputBorderColor: "#D9D5DC",
-  inputSuccessBorderColor: "#2b8339",
-  inputErrorBorderColor: "#ed2f2f",
+  inputSuccessBorderColor: colors.SUCCESS.string(),//"#2b8339",
+  inputErrorBorderColor: colors.ERROR.string(), //"#ed2f2f",
   inputHeightBase: 50,
   get inputColor() {
     return this.textColor;
@@ -238,7 +243,7 @@ export default {
   tabFontSize: 15,
 
   // Text
-  textColor: "#fff",//"#000",
+  textColor: colors.TEXT.string(),//"#000",
   inverseTextColor: "#fff",
   noteFontSize: 14,
   get defaultTextColor() {
@@ -249,8 +254,8 @@ export default {
   titleFontfamily: platform === "ios" ? "System" : "Roboto_medium",
   titleFontSize: platform === "ios" ? 17 : 19,
   subTitleFontSize: platform === "ios" ? 11 : 14,
-  subtitleColor: platform === "ios" ? "#8e8e93" : "#FFF",
-  titleFontColor: platform === "ios" ? "#000" : "#FFF",
+  subtitleColor: colors.TEXT.string(),//platform === "ios" ? "#8e8e93" : "#FFF",
+  titleFontColor: colors.TEXT.string(),//platform === "ios" ? "#000" : "#FFF",
 
   // Other
   borderRadiusBase: platform === "ios" ? 5 : 2,
