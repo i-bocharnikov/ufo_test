@@ -107,23 +107,31 @@ export async function putToApi(path, body, suppressToastBox = false, usePublicAp
  * @param {Boolean} usePublicApi If true, use th epublic api
  * @returns {Promise}  of response body
  */
-export async function uploadToApi(domain, format, type, sub_type, file, suppressToastBox = false) {
+export async function uploadToApi(domain, format, type, sub_type, blob, suppressToastBox = false) {
     try {
         if (!await checkConnectivity()) {
             throw new Error("No internet access")
         }
+        console.log("******* upload:", blob)
+
+
+        //TODO by url https://github.com/axios/axios/issues/1321
+
+
         const data = new FormData();
-        data.append('document', file, file.name);
+        data.append('document', blob, blob._data.type, blob._data.name);
         data.append('domain', domain)
         data.append('format', format)
         data.append('type', type)
         data.append('sub_type', sub_type)
-        data.append('file_name', file.name)
-        data.append('content_type', file.type)
+        data.append('file_name', blob._data.name)
+        data.append('content_type', blob._data.type)
+        console.log("******* data:", data)
+        console.log("******* _boundary:", data._boundary)
         activitiesStore.activities.internetAccessPending = true
         let response = await ufodrive_server_api.post("documents", data, {
             headers: {
-                'Content-Type': `multipart/form-data; boundary=${data._boundary}`,
+                'Content-Type': 'multipart/form-data;',
             }
         })
         activitiesStore.activities.internetAccessPending = false

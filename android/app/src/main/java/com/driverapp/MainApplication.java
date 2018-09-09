@@ -3,7 +3,7 @@ package com.driverapp;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import com.wix.RNCameraKit.RNCameraKitPackage;
+import org.reactnative.camera.RNCameraPackage;
 import com.brentvatne.react.ReactVideoPackage;
 import com.i18n.reactnativei18n.ReactNativeI18n;
 import com.imagepicker.ImagePickerPackage;
@@ -28,7 +28,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new RNCameraKitPackage(),
+            new RNCameraPackage(),
             new ReactVideoPackage(),
             new ReactNativeI18n(),
             new ImagePickerPackage(),

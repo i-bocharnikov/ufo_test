@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import usersStore from '../../stores/usersStore';
 import { observer } from 'mobx-react';
 import { translate } from "react-i18next";
-import { Dimensions, Keyboard, Image } from 'react-native';
+import { Image, StyleSheet, View, Dimensions, ImageEditor, ImageStore } from 'react-native';
 import { Container, Content, Form, Text, Row, Grid, Card, CardItem, Body, List, ListItem, Thumbnail } from 'native-base';
-import { CameraKitCamera } from 'react-native-camera-kit'
+import { RNCamera } from 'react-native-camera';
 import _ from 'lodash'
 
 import HeaderComponent from "../../components/header";
@@ -13,26 +13,20 @@ import ActionBarComponent from '../../components/actionBar'
 import { screens, styles, icons, colors } from '../../utils/global'
 import { observable } from "mobx";
 
-
-
+const CARD_WIDTH = 300
+const CARD_RATIO = 1.586
+const CARD_HEIGHT = CARD_WIDTH / CARD_RATIO
+//TODO Move this in constructor, what if lanscape?
+let deviceWidth = Dimensions.get("window").width
+let deviceHeight = Dimensions.get("window").height
+let paddingV = (deviceHeight - CARD_HEIGHT) / 2
+let paddingH = (deviceWidth - CARD_WIDTH) / 2
 
 @observer
 class IdentificationScreen extends Component {
 
-  @observable identificationFrontImage = null
+  @observable identificationFrontImageUrl = null
   @observable identificationFrontDocument = null
-
-  onChangeIdentificationFront = (document) => {
-    if (document) {
-      this.identificationFrontDocument = document
-      usersStore.user.identification_front_side_reference = document.reference
-    }
-  }
-  onChangeIdentificationBack = (document) => {
-    if (document) {
-      usersStore.user.identification_back_side_reference = document.reference
-    }
-  }
 
   render() {
 
@@ -43,7 +37,7 @@ class IdentificationScreen extends Component {
 
     let actions = []
 
-    if (!this.identificationFrontImage) {
+    if (!this.identificationFrontImageUrl) {
       actions = [
         {
           style: styles.ACTIVE,
@@ -54,8 +48,22 @@ class IdentificationScreen extends Component {
           style: isUserConnected && usersStore.user && !_.isEmpty(usersStore.user.address) ? styles.TODO : styles.DISABLE,
           icon: icons.CAPTURE,
           onPress: async () => {
-            this.identificationFrontImage = await this.camera.capture(true);
-            this.identificationFrontDocument = null
+            if (this.camera) {
+              const options = { quality: 1, base64: true };
+              //Take photo
+              let fullImage = await this.camera.takePictureAsync(options)
+              //Crop Image
+              const { uri, width, height } = fullImage;
+              const cropData = {
+                offset: { x: paddingH, y: paddingV },
+                size: { width: CARD_WIDTH, height: CARD_HEIGHT },
+              };
+              ImageEditor.cropImage(uri, cropData, url => {
+                this.identificationFrontImageUrl = url
+              }, error => console.log(error.message))
+
+
+            }
           }
         },
       ]
@@ -64,63 +72,94 @@ class IdentificationScreen extends Component {
         {
           style: styles.ACTIVE,
           icon: icons.REDO,
-          onPress: () => { this.identificationFrontImage = null }
+          onPress: () => { this.identificationFrontImageUrl = null }
         },
         {
-          style: isUserConnected && this.identificationFrontDocument ? styles.TODO : styles.DISABLE,
+          style: isUserConnected && this.identificationFrontImageUrl ? styles.TODO : styles.DISABLE,
           icon: icons.VALIDATE,
           onPress: async () => {
-            this.identificationFrontImage = await this.camera.capture(true);
-            this.identificationFrontDocument = null
-            let response = await usersStore.uploadDocument("identification", "one_side", "id", "front_side", this.identificationFrontImage)
-            this.identificationFrontDocument = response.document
-            this.props.navigation.pop()
+            if (this.identificationFrontImageUrl) {
+              let response = await usersStore.uploadDocument("identification", "one_side", "id", "front_side", this.identificationFrontImageUrl)
+              this.identificationFrontDocument = response.document
+              this.props.navigation.pop()
+            }
           }
         },
       ]
     }
 
+
+
+
     return (
       <Container>
-        <HeaderComponent title={t('register:identificationTitle', { user: usersStore.user })} />
-        <Content padder>
-          <List>
-            {!this.identificationFrontImage && (
-              <ListItem >
-                <Body style={{ height: 300 }}>
-                  <Text style={{ color: colors.TEXT.string(), paddingBottom: 25 }}>{t('register:identificationFrontInputLabel')}</Text>
-                  <CameraKitCamera
-                    ref={cam => this.camera = cam}
-                    style={{
-                      flex: 1,
-                      backgroundColor: 'white',
-                    }}
-                    cameraOptions={{
-                      flashMode: 'auto',             // on/off/auto(default)
-                      focusMode: 'on',               // off/on(default)
-                      zoomMode: 'on',                // off/on(default)
-                    }}
-                    onReadQRCode={(event) => console.log(event.nativeEvent.qrcodeStringValue)} // optional
-                  />
-                </Body>
-              </ListItem>
-            )}
-            {this.identificationFrontImage && (
-              <ListItem >
-                <Body style={{ height: 300 }}>
-                  <Text style={{ color: colors.TEXT.string(), paddingBottom: 25 }}>{t('register:identificationCheckLabel')}</Text>
-                  <Image source={this.identificationFrontImage} />
-                </Body>
-              </ListItem>
-            )}
-          </List>
-        </Content>
+        {!this.identificationFrontImageUrl && (
+          <View style={_styles.container}>
+            <RNCamera
+              ref={ref => {
+                this.camera = ref;
+              }}
+              style={_styles.preview}
+              type={RNCamera.Constants.Type.back}
+              flashMode={RNCamera.Constants.FlashMode.on}
+              permissionDialogTitle={'Permission to use camera'}
+              permissionDialogMessage={'We need your permission to use your camera phone'}
+            />
+            <View style={{
+              position: 'absolute',
+              top: paddingV,
+              left: paddingH,
+              bottom: paddingV,
+              right: paddingH,
+              backgroundColor: colors.BACKGROUND.alpha(0.7).string(),
+              justifyContent: 'center',
+              alignContent: 'center'
+            }}>
+              <Text style={{ color: colors.TEXT.string(), textAlign: 'center' }}>{t('register:identificationFrontInputLabel')}</Text>
+            </View>
+          </View>
+        )}
+        {this.identificationFrontImageUrl && (
+          <View style={{
+            position: 'absolute',
+            top: paddingV,
+            left: paddingH,
+            bottom: paddingV,
+            right: paddingH,
+          }}>
+            <Image source={{ uri: this.identificationFrontImageUrl }} style={{ width: CARD_WIDTH, height: CARD_HEIGHT }} />
+          </View>
+        )}
+        <HeaderComponent />
+        {this.identificationFrontImageUrl && (
+          <View>
+            <Text style={{ color: colors.TEXT.string(), padding: 20 }}>{t('register:identificationCheckLabel')}</Text>
+          </View>
+        )
+        }
 
         <ActionSupportComponent onPress={() => this.props.navigation.navigate(screens.SUPPORT, { context: screens.REGISTER_ADDRESS })} />
         <ActionBarComponent actions={actions} />
-      </Container>
+      </Container >
     );
   }
 }
+
+const _styles = StyleSheet.create({
+  container: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+  },
+  preview: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+  },
+});
 
 export default translate("translations")(IdentificationScreen);

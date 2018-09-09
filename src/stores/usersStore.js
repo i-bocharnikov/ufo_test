@@ -161,16 +161,19 @@ class UsersStore {
     };
 
 
-    async uploadDocument(domain, format, type, sub_type, file) {
+    async uploadDocument(domain, format, type, sub_type, uri) {
 
-        const response = await this.uploadDocument(domain, format, type, sub_type, file);
+        console.log("******* load url:", uri)
+        const responseDocument = await fetch(uri);
+        console.log("******* load response:", responseDocument)
+        const blob = await responseDocument.blob();
+        const response = await uploadToApi(domain, format, type, sub_type, blob);
         if (response && response.status === "success") {
             console.info("usersStore.uploadDocument : %j", response);
             return response.data.document
         }
         return null
     };
-
 }
 
 export default usersStore = new UsersStore();
