@@ -8,6 +8,7 @@ import { StyleProvider } from 'native-base';
 //Temporary ignore warning comming from react-native
 import { YellowBox } from 'react-native';
 YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
+YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
 
 
 import DeveloperMenu from './src/components/developerMenu/ui'

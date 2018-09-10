@@ -8,6 +8,8 @@
 	<string>UFODrive needs Bluetooh usage, for you to open or close the rented car.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>UFODrive needs Face ID authorisation, for you to confirm rental booking and approve terms.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>UFODrive needs access to store photos taken with the camera</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>

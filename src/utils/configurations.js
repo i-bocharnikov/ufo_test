@@ -1,6 +1,6 @@
 import packageJson from "../../package.json";
 
-const localhost = "192.168.1.107"
+const localhost = "192.168.178.97"
 
 const development = {
     UFO_APP_USAGE: "LOCAL",

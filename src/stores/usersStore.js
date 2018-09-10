@@ -153,9 +153,10 @@ class UsersStore {
     async downloadDocument(reference) {
 
         const response = await downloadFromApi(reference, false);
-        if (response && response.status === "success") {
+        if (response) {
             console.info("usersStore.downloadDocument : %j", response);
-            return URL.createObjectURL(response.data.document)
+            console.log("********downloadDocument", response)
+            return response
         }
         return null
     };
@@ -163,11 +164,7 @@ class UsersStore {
 
     async uploadDocument(domain, format, type, sub_type, uri) {
 
-        console.log("******* load url:", uri)
-        const responseDocument = await fetch(uri);
-        console.log("******* load response:", responseDocument)
-        const blob = await responseDocument.blob();
-        const response = await uploadToApi(domain, format, type, sub_type, blob);
+        const response = await uploadToApi(domain, format, type, sub_type, uri);
         if (response && response.status === "success") {
             console.info("usersStore.uploadDocument : %j", response);
             return response.data.document

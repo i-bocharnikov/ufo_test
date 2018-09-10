@@ -26,7 +26,6 @@ let paddingH = (deviceWidth - CARD_WIDTH) / 2
 class IdentificationScreen extends Component {
 
   @observable identificationFrontImageUrl = null
-  @observable identificationFrontDocument = null
 
   render() {
 
@@ -54,15 +53,15 @@ class IdentificationScreen extends Component {
               let fullImage = await this.camera.takePictureAsync(options)
               //Crop Image
               const { uri, width, height } = fullImage;
+              const ratioX = width / deviceWidth
+              const ratioy = height / deviceHeight
               const cropData = {
-                offset: { x: paddingH, y: paddingV },
-                size: { width: CARD_WIDTH, height: CARD_HEIGHT },
+                offset: { x: paddingH * ratioX, y: paddingV * ratioy },
+                size: { width: CARD_WIDTH * ratioX, height: CARD_HEIGHT * ratioy },
               };
               ImageEditor.cropImage(uri, cropData, url => {
                 this.identificationFrontImageUrl = url
               }, error => console.log(error.message))
-
-
             }
           }
         },
@@ -79,9 +78,12 @@ class IdentificationScreen extends Component {
           icon: icons.VALIDATE,
           onPress: async () => {
             if (this.identificationFrontImageUrl) {
-              let response = await usersStore.uploadDocument("identification", "one_side", "id", "front_side", this.identificationFrontImageUrl)
-              this.identificationFrontDocument = response.document
-              this.props.navigation.pop()
+              let document = await usersStore.uploadDocument("identification", "one_side", "id", "front_side", this.identificationFrontImageUrl)
+              user.identification_front_side_reference = document.reference
+              if (await usersStore.save()) {
+                this.props.navigation.pop()
+              }
+
             }
           }
         },
