@@ -9,7 +9,7 @@ import Thumbnail from '../../components/thumbnail'
 import HeaderComponent from "../../components/header";
 import ActionSupportComponent from '../../components/actionSupport'
 import ActionBarComponent from '../../components/actionBar'
-import usersStore from '../../stores/usersStore';
+import registerStore from '../../stores/registerStore';
 import { screens, styles, icons, colors, sizes } from '../../utils/global'
 import Icon from '../../components/Icon'
 
@@ -27,37 +27,53 @@ class RegisterScreen extends Component {
       return
     }
 
-
-    if (_.isEmpty(usersStore.user.phone_number)) {
-      this.props.navigation.navigate(screens.REGISTER_PHONE)
-      return
+    if (!registerStore.isUserRegistered) {
+      if (!registerStore.isConnected || _.isEmpty(registerStore.user.phone_number)) {
+        this.props.navigation.navigate(screens.REGISTER_PHONE, { 'isInWizzard': true })
+        return
+      }
+      if (_.isEmpty(registerStore.user.email)) {
+        this.props.navigation.navigate(screens.REGISTER_EMAIL, { 'isInWizzard': true })
+        return
+      }
+      if (_.isEmpty(registerStore.user.address)) {
+        this.props.navigation.navigate(screens.REGISTER_ADDRESS, { 'isInWizzard': true })
+        return
+      }
+      if (_.isEmpty(registerStore.user.identification_scan_front_side)) {
+        this.props.navigation.navigate(screens.REGISTER_IDENTIFICATION, { 'isInWizzard': true })
+        return
+      }
+      if (_.isEmpty(registerStore.user.driver_licence_scan_front_side)) {
+        this.props.navigation.navigate(screens.REGISTER_DRIVER_LICENCE, { 'isInWizzard': true })
+        return
+      }
     }
 
-    usersStore.user.identificationFrontDocument = "loading"
-    if (usersStore.user.identification_scan_front_side) {
-      usersStore.identificationFrontDocument = "data:image/png;base64," + (await usersStore.downloadDocument(usersStore.user.identification_scan_front_side.reference))
+    registerStore.user.identificationFrontDocument = "loading"
+    if (registerStore.user.identification_scan_front_side) {
+      registerStore.identificationFrontDocument = "data:image/png;base64," + (await registerStore.downloadDocument(registerStore.user.identification_scan_front_side.reference))
     } else {
-      usersStore.identificationFrontDocument = null
+      registerStore.identificationFrontDocument = null
     }
-    usersStore.user.identificationBackDocument = "loading"
-    if (usersStore.user.identification_scan_back_side) {
-      usersStore.identificationBackDocument = "data:image/png;base64," + (await usersStore.downloadDocument(usersStore.user.identification_scan_back_side.reference))
+    registerStore.user.identificationBackDocument = "loading"
+    if (registerStore.user.identification_scan_back_side) {
+      registerStore.identificationBackDocument = "data:image/png;base64," + (await registerStore.downloadDocument(registerStore.user.identification_scan_back_side.reference))
     } else {
-      usersStore.identificationBackDocument = null
+      registerStore.identificationBackDocument = null
     }
-    usersStore.user.driverLicenceFrontDocument = "loading"
-    if (usersStore.user.driver_licence_scan_front_side) {
-      usersStore.driverLicenceFrontDocument = "data:image/png;base64," + (await usersStore.downloadDocument(usersStore.user.driver_licence_scan_front_side.reference))
+    registerStore.user.driverLicenceFrontDocument = "loading"
+    if (registerStore.user.driver_licence_scan_front_side) {
+      registerStore.driverLicenceFrontDocument = "data:image/png;base64," + (await registerStore.downloadDocument(registerStore.user.driver_licence_scan_front_side.reference))
     } else {
-      usersStore.driverLicenceFrontDocument = null
+      registerStore.driverLicenceFrontDocument = null
     }
-    usersStore.user.driverLicenceBackDocument = "loading"
-    if (usersStore.user.driver_licence_scan_back_side) {
-      usersStore.driverLicenceBackDocument = "data:image/png;base64," + (await usersStore.downloadDocument(usersStore.user.driver_licence_scan_back_side.reference))
+    registerStore.user.driverLicenceBackDocument = "loading"
+    if (registerStore.user.driver_licence_scan_back_side) {
+      registerStore.driverLicenceBackDocument = "data:image/png;base64," + (await registerStore.downloadDocument(registerStore.user.driver_licence_scan_back_side.reference))
     } else {
-      usersStore.driverLicenceBackDocument = null
+      registerStore.driverLicenceBackDocument = null
     }
-
   }
 
   render() {
@@ -71,13 +87,13 @@ class RegisterScreen extends Component {
       }
     ]
 
-    if (usersStore.isConnected) {
+    if (registerStore.isConnected) {
       actions.push({
         style: styles.ACTIVE,
         icon: icons.DISCONNECT,
         onPress: async () => {
           this.isCodeRequested = false;
-          await usersStore.disconnect()
+          await registerStore.disconnect()
         }
       }
       )
@@ -90,15 +106,15 @@ class RegisterScreen extends Component {
         }
       })
     }
-    let phoneNumberColor = this.getColorForStatus(usersStore.user.phone_number_status)
-    let emailColor = this.getColorForStatus(usersStore.user.email_status)
-    let addressColor = this.getColorForStatus(usersStore.user.address_status)
-    let identificationColor = this.getColorForStatus(usersStore.user.identification_status)
-    let driverLicenceColor = this.getColorForStatus(usersStore.user.driver_licence_status)
+    let phoneNumberColor = this.getColorForStatus(registerStore.user.phone_number_status)
+    let emailColor = this.getColorForStatus(registerStore.user.email_status)
+    let addressColor = this.getColorForStatus(registerStore.user.address_status)
+    let identificationColor = this.getColorForStatus(registerStore.user.identification_status)
+    let driverLicenceColor = this.getColorForStatus(registerStore.user.driver_licence_status)
     return (
       <Container>
         <NavigationEvents onWillFocus={payload => { this.onLoad(payload) }} />
-        <HeaderComponent t={t} title={t('register:overviewTitle', { user: usersStore.user })} />
+        <HeaderComponent t={t} title={t('register:overviewTitle', { user: registerStore.user })} />
         <Content padder>
           <List>
             <ListItem>
@@ -107,7 +123,7 @@ class RegisterScreen extends Component {
                   <CardItem>
                     <Body>
                       <Text>
-                        {usersStore.user.registration_message}
+                        {registerStore.user.registration_message}
                       </Text>
                     </Body>
                   </CardItem>
@@ -124,7 +140,7 @@ class RegisterScreen extends Component {
                 <Text>{t('register:phoneNumberLabel')}</Text>
               </Body>
               <Right>
-                <Text>{usersStore.user.phone_number}</Text>
+                <Text>{registerStore.user.phone_number}</Text>
                 <Icon style={{ paddingLeft: 5 }} icon={icons.SELECT} size={sizes.SMALL} color={colors.TEXT} />
               </Right>
             </ListItem>
@@ -138,7 +154,7 @@ class RegisterScreen extends Component {
                 <Text>{t('register:emailLabel')}</Text>
               </Body>
               <Right>
-                <Text>{_.truncate(usersStore.user.email, { 'length': 24 })}</Text>
+                <Text>{_.truncate(registerStore.user.email, { 'length': 24 })}</Text>
                 <Icon style={{ paddingLeft: 5 }} icon={icons.SELECT} size={sizes.SMALL} color={colors.TEXT} />
               </Right>
             </ListItem>
@@ -152,11 +168,11 @@ class RegisterScreen extends Component {
                 <Text>{t('register:addressLabel')}</Text>
               </Body>
               <Right>
-                <Text >{_.truncate(usersStore.user.address, { 'length': 24 })}</Text>
+                <Text >{_.truncate(registerStore.user.address, { 'length': 24 })}</Text>
                 <Icon style={{ paddingLeft: 5 }} icon={icons.SELECT} size={sizes.SMALL} color={colors.TEXT} />
               </Right>
             </ListItem>
-            <ListItem icon onPress={() => this.props.navigation.navigate(screens.REGISTER_IDENTIFICATION, { frontImageUrl: usersStore.identificationFrontDocument, backImageUrl: usersStore.identificationBackDocument })}>
+            <ListItem icon onPress={() => this.props.navigation.navigate(screens.REGISTER_IDENTIFICATION, { frontImageUrl: registerStore.identificationFrontDocument, backImageUrl: registerStore.identificationBackDocument })}>
               <Left>
                 <Button style={{ backgroundColor: identificationColor }}>
                   <Icon icon={icons.IDENTIFICATION} size={sizes.SMALL} color={colors.TEXT} />
@@ -167,12 +183,12 @@ class RegisterScreen extends Component {
               </Body>
               <Right >
 
-                <Thumbnail source={usersStore.identificationFrontDocument} />
-                <Thumbnail source={usersStore.identificationBackDocument} />
+                <Thumbnail source={registerStore.identificationFrontDocument} />
+                <Thumbnail source={registerStore.identificationBackDocument} />
                 <Icon style={{ paddingLeft: 5 }} icon={icons.SELECT} size={sizes.SMALL} color={colors.TEXT} />
               </Right>
             </ListItem>
-            <ListItem icon onPress={() => { this.props.navigation.navigate(screens.REGISTER_DRIVER_LICENCE, { frontImageUrl: usersStore.driverLicenceFrontDocument, backImageUrl: usersStore.driverLicenceBackDocument }) }}>
+            <ListItem icon onPress={() => { this.props.navigation.navigate(screens.REGISTER_DRIVER_LICENCE, { frontImageUrl: registerStore.driverLicenceFrontDocument, backImageUrl: registerStore.driverLicenceBackDocument }) }}>
               <Left>
                 <Button style={{ backgroundColor: driverLicenceColor }}>
                   <Icon icon={icons.DRIVER_LICENCE} size={sizes.SMALL} color={colors.TEXT} />
@@ -182,8 +198,8 @@ class RegisterScreen extends Component {
                 <Text>{t('register:driverLicenceLabel')}</Text>
               </Body>
               <Right >
-                <Thumbnail source={usersStore.driverLicenceFrontDocument} />
-                <Thumbnail source={usersStore.driverLicenceBackDocument} />
+                <Thumbnail source={registerStore.driverLicenceFrontDocument} />
+                <Thumbnail source={registerStore.driverLicenceBackDocument} />
                 <Icon style={{ paddingLeft: 5 }} icon={icons.SELECT} size={sizes.SMALL} color={colors.TEXT} />
               </Right>
             </ListItem>
@@ -196,13 +212,13 @@ class RegisterScreen extends Component {
   }
 
   getColorForStatus = (status) => {
-    if (usersStore.isStatusValidated(status)) {
+    if (registerStore.isStatusValidated(status)) {
       return colors.DONE
     }
-    if (usersStore.isStatusNotValidated(status)) {
+    if (registerStore.isStatusNotValidated(status)) {
       return colors.PENDING
     }
-    if (usersStore.isStatusMissing(status)) {
+    if (registerStore.isStatusMissing(status)) {
       return colors.TODO
     }
     return colors.WRONG

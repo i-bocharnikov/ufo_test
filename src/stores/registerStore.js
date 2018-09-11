@@ -7,6 +7,7 @@ import uuid from "uuid";
 import configurations from "../utils/configurations";
 import { clearAuthenticationsFromStore, getAuthenticationUUIDFromStore, setAuthenticationUUIDInStore, setAuthenticationPasswordInStore, getAuthenticationPasswordFromStore, setAuthenticationTokenInStore } from "../utils/authentications"
 import { useTokenInApi, postToApi, putToApi, downloadFromApi, uploadToApi } from '../utils/api'
+import driveStore from './driveStore'
 
 const USER_STATUS_REGISTERED = "registered"
 const USER_STATUS_REGISTRATION_PENDING = "registration_pending"
@@ -36,7 +37,7 @@ class User {
 }
 
 
-class UsersStore {
+class registerStore {
 
     @persist('object', User) @observable user = new User
 
@@ -109,12 +110,15 @@ class UsersStore {
             );
 
         if (response && response.status === "success" && response.data && response.data.token && response.data.user) {
-            console.info("usersStore.registerDevice : %j", response);
+            console.info("registerStore.registerDevice : %j", response);
             await setAuthenticationUUIDInStore(device_uuid);
             await setAuthenticationPasswordInStore(device_pwd);
             await setAuthenticationTokenInStore(response.data.token);
             await useTokenInApi(response.data.token);
             this.user = response.data.user
+
+            await driveStore.reset()
+
             return true
         }
         return false
@@ -125,7 +129,7 @@ class UsersStore {
 
         const response = await postToApi("/users/validation/phone_number/" + this.user.phone_number, {});
         if (response && response.status === "success" && response.data && response.data.notification) {
-            console.info("usersStore.requestCode : %j", response);
+            console.info("registerStore.requestCode : %j", response);
             this.acknowledge_uri = response.data.notification.acknowledge_uri
             return true
         }
@@ -137,7 +141,7 @@ class UsersStore {
 
         const response = await postToApi("/" + this.acknowledge_uri, { validation_code: code });
         if (response && response.status === "success") {
-            console.info("usersStore.connect : %j", response);
+            console.info("registerStore.connect : %j", response);
             return await this.registerDevice()
         }
         return false
@@ -161,7 +165,7 @@ class UsersStore {
 
         const response = await putToApi("/users/" + this.user.reference, { ...this.user });
         if (response && response.status === "success") {
-            console.info("usersStore.save : %j", response);
+            console.info("registerStore.save:", response);
             this.user = response.data.user
             return true
         }
@@ -179,14 +183,14 @@ class UsersStore {
 
         const response = await uploadToApi(domain, format, type, sub_type, uri);
         if (response && response.status === "success") {
-            console.info("usersStore.uploadDocument : %j", response);
+            console.info("registerStore.uploadDocument : %j", response);
             return response.data.document
         }
         return null
     };
 }
 
-export default usersStore = new UsersStore();
+export default registerStore = new registerStore();
 
 
 

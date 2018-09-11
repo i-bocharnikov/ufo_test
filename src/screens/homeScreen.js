@@ -4,7 +4,8 @@ import Video from 'react-native-video';
 import { observer } from "mobx-react";
 import { translate } from "react-i18next";
 
-import usersStore from "../stores/usersStore"
+import registerStore from "../stores/registerStore"
+import driveStore from "../stores/driveStore"
 import ActionSupportComponent from '../components/actionSupport'
 import ActionBarComponent from '../components/actionBar'
 import { screens, styles, icons } from '../utils/global'
@@ -15,28 +16,27 @@ const video = require('../assets/UFOdrive.mp4')
 class HomeScreen extends React.Component {
 
   async componentDidMount() {
-    await usersStore.registerDevice()
+    await registerStore.registerDevice()
   }
 
   render() {
     const { t } = this.props;
 
-    let user = usersStore.user
     let actions = [
       {
-        style: styles.TODO,
+        style: driveStore.hasRentalConfirmedOrOngoing ? styles.ACTIVE : styles.TODO,
         icon: icons.RESERVE,
         onPress: () => this.props.navigation.navigate(screens.RESERVE)
       },
       {
-        style: usersStore.isUserRegistered ? styles.DONE : styles.TODO,
+        style: registerStore.isUserRegistered ? styles.DONE : styles.TODO,
         icon: icons.REGISTER,
         onPress: () => this.props.navigation.navigate(screens.REGISTER)
       },
       {
-        style: styles.TODO,
+        style: driveStore.hasRentalOngoing ? styles.TODO : driveStore.hasRentalConfirmed ? styles.ACTIVE : styles.DISABLE,
         icon: icons.DRIVE,
-        onPress: () => this.props.navigation.navigate(screens.DRIVE, { reference: "BLU001" })
+        onPress: () => this.props.navigation.navigate(screens.DRIVE)
       }
     ]
 
@@ -60,7 +60,8 @@ class HomeScreen extends React.Component {
         />
         <HeaderComponent t={t} />
         <Content padder>
-          <Text>{t('home:welcome', { user: user })}</Text>
+          <Text>{t('home:welcome', { user: registerStore.user })}</Text>
+          <Text>{driveStore.hasRentalConfirmedOrOngoing}</Text>
         </Content>
         <ActionSupportComponent onPress={() => this.props.navigation.navigate(screens.SUPPORT, { context: screens.HOME })} />
         <ActionBarComponent actions={actions} />

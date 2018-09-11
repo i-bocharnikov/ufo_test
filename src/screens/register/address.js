@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import usersStore from '../../stores/usersStore';
+import registerStore from '../../stores/registerStore';
 import { observer } from 'mobx-react';
 import { translate } from "react-i18next";
 import { Dimensions, Keyboard } from 'react-native';
@@ -12,67 +12,78 @@ import HeaderComponent from "../../components/header";
 import ActionSupportComponent from '../../components/actionSupport'
 import ActionBarComponent from '../../components/actionBar'
 import { screens, styles, icons, colors } from '../../utils/global'
+import { observable, action } from "mobx";
 
 const GOOGLE_API = 'AIzaSyBZ11c3GCMMBlSpF3H-4DK6PioxJjaFPe0'
 
 @observer
 class AddressScreen extends Component {
 
-  onChangeAddres = (data, details) => {
-    let address = data.description
-    if (details && details.formatted_address) {
-      address = details.formatted_address
-    }
-    usersStore.user.address = address
+  @observable addressValue = registerStore.user.address
+
+  @action
+  doCancel = async (isInWizzard) => {
+    isInWizzard ? this.props.navigation.navigate(screens.HOME) : this.props.navigation.popToTop()
   }
+
+  @action
+  doSave = async (isInWizzard) => {
+    registerStore.user.address = this.addressValue
+    if (await registerStore.save()) {
+      if (isInWizzard) {
+        this.props.navigation.navigate(screens.REGISTER_IDENTIFICATION, { 'isInWizzard': isInWizzard })
+        return
+      }
+      this.props.navigation.pop()
+      return
+    }
+  }
+
 
   render() {
 
     const { t } = this.props;
+    let isInWizzard = this.props.navigation.getParam('isInWizzard', false)
 
     let actions = [
       {
         style: styles.ACTIVE,
-        icon: icons.CANCEL,
-        onPress: () => this.props.navigation.popToTop()
+        icon: isInWizzard ? icons.CONTINUE_LATER : icons.CANCEL,
+        onPress: async () => await this.doCancel(isInWizzard)
       },
 
       {
-        style: usersStore.isConnected && usersStore.user && !_.isEmpty(usersStore.user.address) ? styles.TODO : styles.DISABLE,
-        icon: icons.SAVE,
+        style: !_.isEmpty(this.addressValue) && this.addressValue !== registerStore.user.address ? styles.TODO : styles.DISABLE,
+        icon: isInWizzard ? icons.NEXT : icons.SAVE,
         onPress: async () => {
-          if (await usersStore.save()) {
-            if (_.isEmpty(usersStore.user.identification_scan_front_side)) {
-              this.props.navigation.navigate(screens.REGISTER_IDENTIFICATION)
-              return
-            }
-            this.props.navigation.pop()
-            return
-          }
+          await this.doSave(isInWizzard)
         }
       },
     ]
 
-    let defaultPaddintTop = 10
-    let initialAddress = _.isEmpty(usersStore.user.address) ? '' : usersStore.user.address
-
     return (
       <Container>
-        <HeaderComponent t={t} title={t('register:addressTitle', { user: usersStore.user })} />
+        <HeaderComponent t={t} title={t('register:addressTitle', { user: registerStore.user })} />
         <Content padder>
           <Form>
             <Item stackedLabel>
-              <Label style={{ color: colors.TEXT.string(), paddingTop: defaultPaddintTop, paddingBottom: 25 }}>{t('register:addressInputLabel')}</Label>
+              <Label style={{ color: colors.TEXT.string(), paddingTop: 10, paddingBottom: 25 }}>{t('register:addressInputLabel')}</Label>
               <GooglePlacesAutocomplete
-                getDefaultValue={() => initialAddress}
+                getDefaultValue={() => registerStore.user.address ? registerStore.user.address : ''}
                 textInputProps={{
-
-                  onChangeText: (text) => { usersStore.user.address = text }
+                  onChangeText: (text) => { this.addressValue = text }
                 }}
-                onPress={this.onChangeAddres}
-
-                placeholder='Street, number, postal code, city and country'
-                minLength={3}
+                onPress={(data, details) => {
+                  let address = data.description
+                  if (details && details.formatted_address) {
+                    address = details.formatted_address
+                  }
+                  this.addressValue = address
+                }}
+                numberOfLines={2}
+                enablePoweredByContainer={false}
+                placeholder={t('register:addressInputPlaceholder')}
+                minLength={4}
                 autoFocus={true}
                 returnKeyType={'default'}
                 fetchDetails={true}

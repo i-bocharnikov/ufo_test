@@ -19,6 +19,7 @@ i18n.use(LanguageDetector).init({
                 "back": "Back",
                 "next": "Next",
                 "home": "Home",
+                "continueLater": "Continue later",
                 "connect": "Connect",
                 "disconnect": "Disconnect",
                 "requestCode": "Request code",
@@ -29,10 +30,11 @@ i18n.use(LanguageDetector).init({
                 "driverLicence": "Driver licence",
                 "select": "Select",
                 "capture": "Capture",
+                "newCapture": "New capture",
                 "torch": "Torch",
                 "validate": "Validate",
                 "cancel": "Cancel",
-                "redo": "Try again",
+                "redo": "Retry",
                 "skip": "Skip",
             },
             register: {
@@ -45,6 +47,7 @@ i18n.use(LanguageDetector).init({
                 "emailLabel": "Email",
                 "addressTitle": "Register Address",
                 "addressInputLabel": "Your billing address",
+                "addressInputPlaceholder": 'Street, number, postal code, city and country',
                 "addressLabel": "Billing address",
                 "smsCodeInputLabel": "The code received by SMS",
                 "addressLabel": "Address",
@@ -59,7 +62,11 @@ i18n.use(LanguageDetector).init({
                 "driverLicenceCheckLabel": "Please check that the text is readable and the whole document is visible",
                 "driverLicenceBackInputLabel": "Please hold the back side of your id card or passport inside this rectangle. Press back is there is no back side.",
                 "CameraNotAvailable": "The camera is not available",
-                "CameraProcessingError": "Unexpected issues detected during the image processing of the camera ({{message}}). Please try again and contact the support if the problem persist."
+                "CameraProcessingError": "Unexpected issues detected during the image processing of the camera ({{message}}). Please try again and contact the support if the problem persist.",
+                "cameraPermissionTitle": 'Permission to use camera',
+                "cameraPermissionMessage": 'We need your permission to use your camera phone'
+
+
             },
             reserve: {
                 "reserveLocationTitle": "Select the location",

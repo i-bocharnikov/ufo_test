@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import usersStore from '../../stores/usersStore';
+import registerStore from '../../stores/registerStore';
 import { observer } from 'mobx-react';
-import { observable } from 'mobx';
+import { observable, action } from 'mobx';
 import { translate } from "react-i18next";
 import { StyleSheet, View, Dimensions } from 'react-native';
 import PhoneInput from 'react-native-phone-input';
@@ -20,6 +20,8 @@ const PLACEHOLDER_COLOR = "rgba(255,255,255,0.2)";
 const LIGHT_COLOR = "#FFF";
 
 
+const REGEX_CODE_VALIDATION = /^([0-9]{3}-?[0-9]{3})$/
+
 @observer
 class PhoneScreen extends Component {
 
@@ -37,85 +39,97 @@ class PhoneScreen extends Component {
   }
 
   onChangePhoneNumber = (phoneNumber) => {
-    if (!usersStore.isStatusValidated(usersStore.user.phone_number_status)) {
-      usersStore.user.phone_number = phoneNumber
-    }
+    registerStore.user.phone_number = phoneNumber
   }
 
   onChangeCode = (text) => {
     this.code = text
   }
 
+  @action
+  doCancel = async (isInWizzard) => {
+    this.isCodeRequested = false;
+    isInWizzard || !registerStore.isConnected ? this.props.navigation.navigate(screens.HOME) : this.props.navigation.popToTop()
+  }
+
+  @action
+  doDisconnect = async (isInWizzard) => {
+    this.isCodeRequested = false;
+    await registerStore.disconnect()
+  }
+
+  @action
+  doConnect = async (isInWizzard) => {
+    if (await registerStore.connect(this.code)) {
+      this.code = null
+      if (isInWizzard) {
+        this.props.navigation.navigate(screens.REGISTER_EMAIL, { 'isInWizzard': isInWizzard })
+        return
+      } else {
+        this.props.navigation.pop()
+        return
+      }
+    }
+  }
+
+  @action
+  doRequestCode = async (isInWizzard) => {
+    if (await registerStore.requestCode()) {
+      this.isCodeRequested = true
+    }
+  }
+
   render() {
 
     const { t, i18n } = this.props;
 
-    let actions = [
-      {//TODO home versus back based on where user come from
-        style: styles.ACTIVE,
-        icon: icons.CANCEL,
-        onPress: () => {
-          this.isCodeRequested = false
-          if (!usersStore.isConnected) {
-            this.props.navigation.navigate(screens.HOME)
-            return
-          }
-          this.props.navigation.popToTop()
-          return
-        }
-      },
-      {
-        style: usersStore.isConnected ? styles.ACTIVE : styles.DISABLE,
+    let isInWizzard = this.props.navigation.getParam('isInWizzard', false)
+
+    let actions = []
+    actions.push({
+      style: styles.ACTIVE,
+      icon: isInWizzard || !registerStore.isConnected ? icons.CONTINUE_LATER : icons.CANCEL,
+      onPress: async () => await this.doCancel(isInWizzard)
+    })
+
+    if (!registerStore.isConnected && !this.isCodeRequested) {
+      actions.push({
+        style: !registerStore.isConnected && this.phoneInput && this.phoneInput.isValidNumber() ? styles.TODO : styles.DISABLE,
+        icon: icons.REQUEST_CODE,
+        onPress: async () => await this.doRequestCode(isInWizzard)
+      })
+    }
+
+    if (!registerStore.isConnected && this.isCodeRequested) {
+      actions.push({
+        style: !registerStore.isConnected && this.code && REGEX_CODE_VALIDATION.test(this.code) ? styles.TODO : styles.DISABLE,
+        icon: icons.CONNECT,
+        onPress: async () => await this.doConnect(isInWizzard)
+      })
+    }
+
+    if (registerStore.isConnected) {
+      actions.push({
+        style: registerStore.isConnected ? styles.ACTIVE : styles.DISABLE,
         icon: icons.DISCONNECT,
-        onPress: async () => {
-          this.isCodeRequested = false;
-          await usersStore.disconnect()
-        }
-      }
-    ]
-    if (!usersStore.isConnected) {
-      if (this.isCodeRequested) {
-        actions.push({
-          style: !usersStore.isConnected && this.code && /^([0-9]{3}-?[0-9]{3})$/.test(this.code) ? styles.TODO : styles.DISABLE,
-          icon: icons.CONNECT,
-          onPress: async () => {
-            if (await usersStore.connect(this.code)) {
-              this.code = null
-              if (_.isEmpty(usersStore.user.email)) {
-                this.props.navigation.navigate(screens.REGISTER_EMAIL)
-                return
-              }
-              this.props.navigation.pop()
-              return
-            }
-          }
-        })
-      } else {
-        actions.push({
-          style: !usersStore.isConnected && this.phoneInput && this.phoneInput.isValidNumber() ? styles.TODO : styles.DISABLE,
-          icon: icons.REQUEST_CODE,
-          onPress: async () => {
-            if (await usersStore.requestCode())
-              this.isCodeRequested = true
-          }
-        })
-      }
+        onPress: async () => await this.doDisconnect(isInWizzard)
+      })
     }
     let defaultPaddintTop = (Dimensions.get("window").height / 10)
 
     return (
       <Container>
-        <HeaderComponent t={t} title={t('register:phoneTitle', { user: usersStore.user })} />
+        <HeaderComponent t={t} title={t('register:phoneTitle', { user: registerStore.user })} />
         <Content padder ref={(ref) => { this.content = ref; }}>
           <Form>
-            {usersStore.isConnected && (
+            {registerStore.isConnected && (
               <Item stackedLabel>
                 <Label style={{ paddingTop: defaultPaddintTop, paddingBottom: 25 }}>{t('register:phoneNumberInputLabel')}</Label>
-                <Input defaultValue={usersStore.user.phone_number} editable={false} />
+                <Input defaultValue={registerStore.user.phone_number} editable={false} />
               </Item>
 
             )}
-            {!usersStore.isConnected && !this.isCodeRequested && (
+            {!registerStore.isConnected && !this.isCodeRequested && (
               <Item >
                 <View style={{ justifyContent: 'space-evenly', alignContent: 'center' }}>
                   <Text style={{ paddingTop: defaultPaddintTop, paddingBottom: 25 }}>{t('register:phoneNumberInputLabel')}</Text>
@@ -125,10 +139,10 @@ class PhoneScreen extends Component {
                     initialCountry={_.isEmpty(this.countryCode) ? "lu" : this.countryCode}
                     style={{ height: 50 }}
                     textStyle={{ color: colors.TEXT.string() }}
-                    value={usersStore.user.phone_number}
+                    defaultValue={registerStore.user.phone_number}
                     onChangePhoneNumber={this.onChangePhoneNumber}
                     offset={20}
-                    autoFocus
+                    autoFocus={true}
                   />
 
                   <CountryPicker
@@ -145,7 +159,7 @@ class PhoneScreen extends Component {
               </Item>
             )}
 
-            {!usersStore.isConnected && this.isCodeRequested && (
+            {!registerStore.isConnected && this.isCodeRequested && (
               <Item stackedLabel>
                 <Label style={{ color: colors.TEXT.string(), paddingTop: defaultPaddintTop, paddingBottom: 25 }}>{t('register:smsCodeInputLabel')}</Label>
                 <Input autoFocus maxLength={7} keyboardAppearance='dark' keyboardType='numeric' placeholder='000-000' ref={(ref) => { this.codeInput = ref; }} onChangeText={this.onChangeCode} />

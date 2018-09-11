@@ -16,6 +16,7 @@ import Color from 'color'
 //https://github.com/naoufal/react-native-touch-id
 //https://github.com/oblador/react-native-keychain
 
+
 export const colors = {
     HEADER_BACKGROUND: new Color('#0081B5'),
     BACKGROUND: new Color('#172c32'),
@@ -109,6 +110,7 @@ export const icons = {
     BACK: new Icon('arrow-round-back', 'icon:back'),
     NEXT: new Icon('arrow-round-forward', 'icon:next'),
     HOME: new Icon('home', 'icon:home'),
+    CONTINUE_LATER: new Icon('home', 'icon:continueLater'),
     PAY: new Icon('card', 'icon:pay'),
     CONNECT: new Icon('log-in', 'icon:connect'),
     DISCONNECT: new Icon('log-out', 'icon:disconnect'),
@@ -123,11 +125,12 @@ export const icons = {
     DRIVER_LICENCE: new Icon('document', 'icon:driverLicence'),
     SELECT: new Icon('play', 'icon:select'),
     CAPTURE: new Icon('camera', 'icon:capture'),
+    NEW_CAPTURE: new Icon('camera', 'icon:newCapture'),
     TORCH: new Icon('flashlight', 'icon:torch'),
     VALIDATE: new Icon('checkmark', 'icon:validate'),
     CANCEL: new Icon('close', 'icon:cancel'),
     SAVE: new Icon('checkmark', 'icon:save'),
-    REDO: new Icon('redo', 'icon:redo'),
+    REDO: new Icon('repeat', 'icon:redo'),
     SKIP: new Icon('skip-forward', 'icon:skip'),
     WRONG: new Icon('bomfire', 'icon:wrong')
 }

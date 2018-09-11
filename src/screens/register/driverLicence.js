@@ -8,12 +8,12 @@ import { RNCamera } from 'react-native-camera';
 import _ from 'lodash'
 
 import HeaderComponent from "../../components/header";
-import usersStore from '../../stores/usersStore';
+import registerStore from '../../stores/registerStore';
 import ActionSupportComponent from '../../components/actionSupport'
 import ActionBarComponent from '../../components/actionBar'
 import { screens, styles, icons, colors } from '../../utils/global'
 import { showWarning } from '../../utils/toast'
-import { observable } from "mobx";
+import { observable, action } from "mobx";
 
 
 const DEVICE_WIDTH = Dimensions.get("window").width
@@ -25,6 +25,7 @@ const PADDING_WIDTH = (DEVICE_WIDTH - CARD_WIDTH) / 2
 const PADDING_HEIGHT = (DEVICE_HEIGHT - CARD_HEIGHT) / 2
 
 const captureStates = {
+  PREVIEW: 'PREVIEW',
   CAPTURE_FRONT: 'CAPTURE_FRONT',
   CAPTURE_BACK: 'CAPTURE_BACK',
   VALIDATE: 'VALIDATE',
@@ -37,7 +38,20 @@ class DriverLicenceScreen extends Component {
   @observable frontImageUrl = null
   @observable backImageUrl = null
 
-  capturePicture = async (t) => {
+  @action
+  doCancel = async (isInWizzard) => {
+    isInWizzard ? this.props.navigation.navigate(screens.HOME) : this.props.navigation.popToTop()
+  }
+
+  @action
+  doReset = async (isInWizzard) => {
+    this.frontImageUrl = null
+    this.backImageUrl = null
+    this.captureState = captureStates.CAPTURE_FRONT
+  }
+
+  @action
+  doCapture = async (t, isInWizzard) => {
 
     if (!this.camera) {
       showWarning(t("Registration:CameraNotAvailable"))
@@ -71,21 +85,28 @@ class DriverLicenceScreen extends Component {
     )
   }
 
-  uploadAndSave = async (t) => {
+  @action
+  doskip = async (isInWizzard) => {
+    this.backImageUrl = null
+    this.captureState = captureStates.VALIDATE
+  }
+
+  @action
+  doSave = async (t, isInWizzard) => {
     let type = this.frontImageUrl && this.backImageUrl ? "two_side" : "one_side"
     if (this.frontImageUrl) {
-      let document = await usersStore.uploadDocument("driver_licence", type, "driver_licence", "front_side", this.frontImageUrl)
+      let document = await registerStore.uploadDocument("driver_licence", type, "driver_licence", "front_side", this.frontImageUrl)
       if (document && document.reference) {
-        usersStore.user.driver_licence_front_side_reference = document.reference
+        registerStore.user.driver_licence_front_side_reference = document.reference
       }
     }
     if (this.backImageUrl) {
-      let document = await usersStore.uploadDocument("driver_licence", type, "driver_licence", "back_side", this.backImageUrl)
+      let document = await registerStore.uploadDocument("driver_licence", type, "driver_licence", "back_side", this.backImageUrl)
       if (document && document.reference) {
-        usersStore.user.driver_licence_back_side_reference = document.reference
+        registerStore.user.driver_licence_back_side_reference = document.reference
       }
     }
-    if (await usersStore.save()) {
+    if (await registerStore.save()) {
       this.props.navigation.popToTop()
       return
     }
@@ -95,59 +116,63 @@ class DriverLicenceScreen extends Component {
 
     const { t, navigation } = this.props;
 
+    let isInWizzard = this.props.navigation.getParam('isInWizzard', false)
+
+    //Check if we have to retrieve imageUrl from overview screen
     if (this.captureState === null) {
       this.frontImageUrl = navigation.getParam('frontImageUrl');
       this.backImageUrl = navigation.getParam('backImageUrl');
       if (this.frontImageUrl === undefined || this.frontImageUrl === null || this.frontImageUrl === 'loading') {
         this.captureState = captureStates.CAPTURE_FRONT
       } else {
-        this.captureState = captureStates.VALIDATE
+        this.captureState = captureStates.PREVIEW
       }
     }
+
     let actions = []
-    if (this.captureState === captureStates.VALIDATE) {
+    actions.push({
+      style: styles.ACTIVE,
+      icon: isInWizzard ? icons.CONTINUE_LATER : icons.CANCEL,
+      onPress: async () => await this.doCancel(isInWizzard)
+    })
+
+    if (this.captureState === captureStates.VALIDATE || this.captureState === captureStates.PREVIEW) {
+
       actions.push({
         style: styles.ACTIVE,
-        icon: icons.CANCEL,
-        onPress: () => { this.props.navigation.pop() }
+        icon: icons.NEW_CAPTURE,
+        onPress: async () => await this.doReset(isInWizzard)
       })
+    }
+
+    if (this.captureState === captureStates.VALIDATE) {
+
+      let isNewCapture = _.isEmpty(registerStore.user.driver_licence_front_side_reference)
       actions.push(
         {
-          style: styles.ACTIVE,
-          icon: icons.REDO,
-          onPress: () => {
-            this.frontImageUrl = null
-            this.backImageUrl = null
-            this.captureState = captureStates.CAPTURE_FRONT
-          }
-        })
-      actions.push(
-        {
-          style: styles.TODO,
+          style: isNewCapture ? styles.TODO : styles.DISABLE,
           icon: icons.SAVE,
-          onPress: async () => this.uploadAndSave()
+          onPress: async () => this.doSave(t, isInWizzard)
         }
       )
-    } else {
+    }
+
+    if (this.captureState === captureStates.CAPTURE_BACK) {
+
       actions.push({
         style: styles.ACTIVE,
-        icon: icons.CANCEL,
-        onPress: () => this.props.navigation.pop()
+        icon: icons.SKIP,
+        onPress: () => this.doskip(isInWizzard)
       })
+    }
 
-      if (this.captureState === captureStates.CAPTURE_BACK) {
-        actions.push({
-          style: styles.ACTIVE,
-          icon: icons.SKIP,
-          onPress: () => this.captureState = captureStates.VALIDATE
-        })
-      }
+    if (this.captureState === captureStates.CAPTURE_FRONT || this.captureState === captureStates.CAPTURE_BACK) {
 
       actions.push({
         style: styles.TODO,
         icon: icons.CAPTURE,
         onPress: async () => {
-          this.capturePicture(t)
+          this.doCapture(t, isInWizzard)
         }
       },
       )
@@ -155,11 +180,11 @@ class DriverLicenceScreen extends Component {
 
     let inputLabel = this.captureState === captureStates.CAPTURE_FRONT ? 'register:driverLicenceFrontInputLabel' : 'register:driverLicenceBackInputLabel'
 
-    console.log("******* ready to show " + this.captureState)
+    let showCamera = this.captureState !== captureStates.VALIDATE && this.captureState !== captureStates.PREVIEW
 
     return (
       <Container>
-        {this.captureState !== captureStates.VALIDATE && (
+        {showCamera && (
           <View style={_styles.container}>
             <RNCamera
               ref={ref => {
@@ -168,8 +193,8 @@ class DriverLicenceScreen extends Component {
               style={_styles.preview}
               type={RNCamera.Constants.Type.back}
               flashMode={RNCamera.Constants.FlashMode.on}
-              permissionDialogTitle={'Permission to use camera'}
-              permissionDialogMessage={'We need your permission to use your camera phone'}
+              permissionDialogTitle={t('register:cameraPermissionTitle')}
+              permissionDialogMessage={t('register:cameraPermissionMessage')}
             />
             <View style={{
               position: 'absolute',
@@ -183,12 +208,12 @@ class DriverLicenceScreen extends Component {
             }}>
               <Text style={{ color: colors.TEXT.string(), textAlign: 'center' }}>{t(inputLabel)}</Text>
             </View>
-            <HeaderComponent t={t} title={t('register:driverLicenceTitle', { user: usersStore.user })} />
+            <HeaderComponent t={t} title={t('register:driverLicenceTitle', { user: registerStore.user })} />
           </View>
         )}
-        {this.captureState === captureStates.VALIDATE && (
+        {!showCamera && (
           <View>
-            <HeaderComponent t={t} title={t('register:driverLicenceTitle', { user: usersStore.user })} />
+            <HeaderComponent t={t} title={t('register:driverLicenceTitle', { user: registerStore.user })} />
             <View>
               < Text style={{ color: colors.TEXT.string(), padding: 20 }}>{t('register:driverLicenceCheckLabel')}</Text>
               <Image source={{ uri: this.frontImageUrl }} style={{
@@ -205,7 +230,7 @@ class DriverLicenceScreen extends Component {
           </View>
         )
         }
-        <ActionSupportComponent onPress={() => this.props.navigation.navigate(screens.SUPPORT, { context: screens.REGISTER_DRIVER_LICENCE })} />
+        <ActionSupportComponent onPress={() => this.props.navigation.navigate(screens.SUPPORT, { context: screens.REGISTER_IDENTIFICATION })} />
         <ActionBarComponent actions={actions} />
       </Container >
     );

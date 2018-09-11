@@ -5,18 +5,21 @@ import { Dimensions, Keyboard } from 'react-native';
 import { Container, Content, Form, Item, Label, Input } from 'native-base';
 import _ from 'lodash'
 
-import usersStore from '../../stores/usersStore';
+import registerStore from '../../stores/registerStore';
 import HeaderComponent from "../../components/header";
 import ActionSupportComponent from '../../components/actionSupport'
 import ActionBarComponent from '../../components/actionBar'
-import { screens, styles, icons, colors } from '../../utils/global'
-import { observable } from "mobx";
+import { screens, styles, icons, colors, params } from '../../utils/global'
+import { observable, action } from "mobx";
+
+const REGEX_EMAIL_VALIDATION = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 @observer
 class EmailScreen extends Component {
 
   //TODO fix as this doesn't change the topPadding, no urgent I keep the code for reference
   @observable keyboardHeight = 0
+  @observable emailValue = registerStore.user.email
 
   componentDidMount() {
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
@@ -36,33 +39,40 @@ class EmailScreen extends Component {
     this.keyboardHeight = 0;
   }
 
-  onChangeEmail = (email) => {
-    usersStore.user.email = email
+  @action
+  doCancel = async (isInWizzard) => {
+    isInWizzard ? this.props.navigation.navigate(screens.HOME) : this.props.navigation.popToTop()
+  }
+
+  @action
+  doSave = async (isInWizzard) => {
+    registerStore.user.email = this.emailValue
+    if (await registerStore.save()) {
+      if (isInWizzard) {
+        this.props.navigation.navigate(screens.REGISTER_ADDRESS, { 'isInWizzard': isInWizzard })
+        return
+      }
+      this.props.navigation.pop()
+      return
+    }
   }
 
   render() {
 
     const { t } = this.props;
 
+    let isInWizzard = this.props.navigation.getParam('isInWizzard', false)
+
     let actions = [
       {
         style: styles.ACTIVE,
-        icon: icons.CANCEL,
-        onPress: () => this.props.navigation.popToTop()
+        icon: isInWizzard ? icons.CONTINUE_LATER : icons.CANCEL,
+        onPress: async () => await this.doCancel(isInWizzard)
       },
       {
-        style: usersStore.isConnected && usersStore.user.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(usersStore.user.email) ? styles.TODO : styles.DISABLE,
-        icon: icons.SAVE,
-        onPress: async () => {
-          if (await usersStore.save()) {
-            if (_.isEmpty(usersStore.user.address)) {
-              this.props.navigation.navigate(screens.REGISTER_ADDRESS)
-              return
-            }
-            this.props.navigation.pop()
-            return
-          }
-        }
+        style: this.emailValue && REGEX_EMAIL_VALIDATION.test(this.emailValue) && this.emailValue !== registerStore.user.email ? styles.TODO : styles.DISABLE,
+        icon: isInWizzard ? icons.NEXT : icons.SAVE,
+        onPress: async () => await this.doSave(isInWizzard)
       },
     ]
 
@@ -70,12 +80,12 @@ class EmailScreen extends Component {
 
     return (
       <Container>
-        <HeaderComponent t={t} title={t('register:emailTitle', { user: usersStore.user })} />
+        <HeaderComponent t={t} title={t('register:emailTitle', { user: registerStore.user })} />
         <Content padder>
           <Form>
             <Item stackedLabel>
               <Label style={{ color: colors.TEXT.string(), paddingTop: defaultPaddintTop, paddingBottom: 25 }}>{t('register:emailInputLabel')}</Label>
-              <Input autoFocus defaultValue={usersStore.user.email} keyboardAppearance='dark' placeholder='john.doe@gmail.com' ref={(ref) => { this.emailInput = ref; }} onChangeText={this.onChangeEmail} />
+              <Input autoFocus defaultValue={registerStore.user.email} keyboardAppearance='dark' placeholder='john.doe@gmail.com' ref={(ref) => { this.emailInput = ref; }} onChangeText={(text) => this.emailValue = text} />
             </Item>
           </Form>
         </Content>
