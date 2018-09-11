@@ -29,13 +29,13 @@ class ActionSupportComponent extends React.Component {
                     <View style={{
                         alignItems: 'center',
                         justifyContent: 'center',
-                        width: 40,
-                        height: 40,
+                        width: 30,
+                        height: 30,
                         backgroundColor: style.color.string(),
-                        borderRadius: 50,
+                        borderRadius: 40,
                         elevation: style.elevation
                     }}>
-                        <Icon icon={icons.HELP} size={sizes.LARGE} color={colors.TEXT} />
+                        <Icon icon={icons.HELP} size={sizes.SMALL} color={colors.TEXT} />
                     </View>
                 </TouchableOpacity>
             </View>

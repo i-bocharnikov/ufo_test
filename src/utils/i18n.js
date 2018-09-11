@@ -33,6 +33,7 @@ i18n.use(LanguageDetector).init({
                 "validate": "Validate",
                 "cancel": "Cancel",
                 "redo": "Try again",
+                "skip": "Skip",
             },
             register: {
                 "overviewTitle": "Registration {{user.reference}} {{user.status}}",
@@ -57,6 +58,8 @@ i18n.use(LanguageDetector).init({
                 "driverLicenceFrontInputLabel": "Please hold the front side of your driver licence inside this rectangle",
                 "driverLicenceCheckLabel": "Please check that the text is readable and the whole document is visible",
                 "driverLicenceBackInputLabel": "Please hold the back side of your id card or passport inside this rectangle. Press back is there is no back side.",
+                "CameraNotAvailable": "The camera is not available",
+                "CameraProcessingError": "Unexpected issues detected during the image processing of the camera ({{message}}). Please try again and contact the support if the problem persist."
             },
             reserve: {
                 "reserveLocationTitle": "Select the location",

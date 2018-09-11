@@ -3,8 +3,8 @@ import { View } from 'react-native';
 import Icon from './Icon';
 import { sizes, colors, icons } from '../utils/global'
 import activitiesStore from '../stores/activitiesStore'
-import { Toast } from "native-base";
 import { observer } from "mobx-react";
+import { showActivitiesState } from "../utils/toast";
 
 @observer
 export default class ActivitiesComponent extends React.Component {
@@ -13,17 +13,12 @@ export default class ActivitiesComponent extends React.Component {
     componentDidMount() {
 
         let activities = activitiesStore.activities
+        let t = this.props.t
         if (activities.internetAccessFailure) {
-            Toast.show({
-                text: t('activities:internetAccessFailure'),
-                textStyle: { color: colors.TEXT.string() },
-            })
+            showActivitiesState(t('activities:internetAccessFailure'))
         }
         if (activities.bluetoothAccessFailure) {
-            Toast.show({
-                text: t('activities:bluetoothAccessFailure'),
-                textStyle: { color: colors.TEXT.string() },
-            })
+            showActivitiesState(t('activities:bluetoothAccessFailure'))
         }
     }
 

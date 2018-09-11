@@ -20,7 +20,7 @@ class DriveScreen extends Component {
     ]
     return (
       <Container>
-        <HeaderComponent title={t('drive:driveTitle')} />
+        <HeaderComponent t={t} title={t('drive:driveTitle')} />
         <Content padder>
         </Content>
         <ActionSupportComponent onPress={() => this.props.navigation.navigate(screens.SUPPORT, { context: screens.DRIVE })} />

@@ -23,6 +23,7 @@ import RegisterEmailScreen from './src/screens/register/email'
 import RegisterAddressScreen from './src/screens/register/address'
 import RegisterPhoneScreen from './src/screens/register/phone'
 import RegisterIdentificationScreen from './src/screens/register/identification'
+import RegisterDriverLicenceScreen from './src/screens/register/driverLicence'
 import activitiesStore from './src/stores/activitiesStore'
 import getTheme from './native-base-theme/components';
 import './src/utils/global'
@@ -82,6 +83,7 @@ const RegisterStack = createStackNavigator(
     Email: { screen: RegisterEmailScreen },
     Address: { screen: RegisterAddressScreen },
     Identification: { screen: RegisterIdentificationScreen },
+    DriverLicence: { screen: RegisterDriverLicenceScreen },
     Support: {
       screen: SupportScreen
     }

@@ -31,7 +31,7 @@ class ReservePaymentScreen extends Component {
     ]
     return (
       <Container>
-        <HeaderComponent title={t('reserve:reservePaymentTitle')} />
+        <HeaderComponent t={t} title={t('reserve:reservePaymentTitle')} />
         <Content padder>
         </Content>
         <ActionSupportComponent onPress={() => this.props.navigation.navigate(screens.SUPPORT, { context: screens.RESERVE_PAYMENT })} />

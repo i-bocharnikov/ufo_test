@@ -4,10 +4,9 @@ import Video from 'react-native-video';
 import { observer } from "mobx-react";
 import { translate } from "react-i18next";
 
-import UserStore from "../stores/usersStore"
+import usersStore from "../stores/usersStore"
 import ActionSupportComponent from '../components/actionSupport'
 import ActionBarComponent from '../components/actionBar'
-import usersStore from "../stores/usersStore";
 import { screens, styles, icons } from '../utils/global'
 import HeaderComponent from "../components/header";
 const video = require('../assets/UFOdrive.mp4')
@@ -16,7 +15,7 @@ const video = require('../assets/UFOdrive.mp4')
 class HomeScreen extends React.Component {
 
   async componentDidMount() {
-    await UserStore.registerDevice()
+    await usersStore.registerDevice()
   }
 
   render() {
@@ -59,13 +58,13 @@ class HomeScreen extends React.Component {
           paused={false}
           muted={true}
         />
-        <HeaderComponent />
+        <HeaderComponent t={t} />
         <Content padder>
           <Text>{t('home:welcome', { user: user })}</Text>
         </Content>
         <ActionSupportComponent onPress={() => this.props.navigation.navigate(screens.SUPPORT, { context: screens.HOME })} />
         <ActionBarComponent actions={actions} />
-      </Container>
+      </Container >
     );
   }
 }

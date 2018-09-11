@@ -40,13 +40,13 @@ class ActionBarComponent extends React.Component {
                             <View style={{
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                width: 80,
-                                height: 80,
+                                width: 60,
+                                height: 60,
                                 backgroundColor: color.string(),
                                 borderRadius: 100,
                                 elevation: elevation
                             }}>
-                                <Icon icon={icon} size={sizes.BIG} color={colors.TEXT} />
+                                <Icon icon={icon} size={sizes.LARGE} color={colors.TEXT} />
                             </View>
                             <Text style={{ color: colors.TEXT.string(), fontWeight: 'bold' }}>{t(icon.i18nKey)}</Text>
                         </TouchableOpacity>

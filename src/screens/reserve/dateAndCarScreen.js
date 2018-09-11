@@ -32,7 +32,7 @@ class ReserveDateAndCarScreen extends Component {
     ]
     return (
       <Container>
-        <HeaderComponent title={t('reserve:reserveDateAndCarTitle')} />
+        <HeaderComponent t={t} title={t('reserve:reserveDateAndCarTitle')} />
         <Content padder>
         </Content>
         <ActionSupportComponent onPress={() => this.props.navigation.navigate(screens.SUPPORT, { context: screens.RESERVE_DATE_AND_CAR })} />

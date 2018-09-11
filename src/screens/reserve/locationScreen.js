@@ -26,7 +26,7 @@ class ReserveLocationScreen extends Component {
     ]
     return (
       <Container>
-        <HeaderComponent title={t('reserve:reserveLocationTitle')} />
+        <HeaderComponent t={t} title={t('reserve:reserveLocationTitle')} />
         <Content padder>
         </Content>
         <ActionSupportComponent onPress={() => this.props.navigation.navigate(screens.SUPPORT, { context: screens.RESERVE_LOCATION })} />

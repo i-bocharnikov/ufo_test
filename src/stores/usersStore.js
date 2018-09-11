@@ -1,5 +1,5 @@
 import { Platform } from 'react-native'
-import { observable, computed } from 'mobx';
+import { observable, computed, action } from 'mobx';
 import DeviceInfo from 'react-native-device-info';
 import { persist } from 'mobx-persist'
 import uuid from "uuid";
@@ -39,7 +39,17 @@ class User {
 class UsersStore {
 
     @persist('object', User) @observable user = new User
+
+    @observable identificationFrontDocument = "loading"
+    @observable identificationBackDocument = "loading"
+    @observable driverLicenceFrontDocument = "loading"
+    @observable driverLicenceBackDocument = "loading"
+
     acknowledge_uri = ""
+
+    @computed get isConnected() {
+        return this.user.status !== USER_STATUS_REGISTRATION_MISSING
+    }
 
     @computed get isUserRegistered() {
         return this.user.status === USER_STATUS_REGISTERED
@@ -65,6 +75,7 @@ class UsersStore {
         return status === STATUS_VALIDATED
     }
 
+    @action
     async registerDevice() {
 
         let device_uuid = await getAuthenticationUUIDFromStore();
@@ -109,6 +120,7 @@ class UsersStore {
         return false
     }
 
+    @action
     async requestCode() {
 
         const response = await postToApi("/users/validation/phone_number/" + this.user.phone_number, {});
@@ -120,6 +132,7 @@ class UsersStore {
         return false
     };
 
+    @action
     async connect(code) {
 
         const response = await postToApi("/" + this.acknowledge_uri, { validation_code: code });
@@ -131,18 +144,24 @@ class UsersStore {
 
     };
 
+    @action
     async disconnect() {
 
         //TODO add logout service on server so we can unmap device and user in place of recreating new device
         await clearAuthenticationsFromStore();
+        this.identificationFrontDocument = null
+        this.identificationBackDocument = null
+        this.driverLicenceFrontDocument = null
+        this.driverLicenceBackDocument = null
         return await this.registerDevice()
     };
 
+    @action
     async save() {
 
         const response = await putToApi("/users/" + this.user.reference, { ...this.user });
         if (response && response.status === "success") {
-            console.info("usersStore.validateCode : %j", response);
+            console.info("usersStore.save : %j", response);
             this.user = response.data.user
             return true
         }
@@ -152,13 +171,7 @@ class UsersStore {
 
     async downloadDocument(reference) {
 
-        const response = await downloadFromApi(reference, false);
-        if (response) {
-            console.info("usersStore.downloadDocument : %j", response);
-            console.log("********downloadDocument", response)
-            return response
-        }
-        return null
+        return await downloadFromApi(reference, false);
     };
 
 

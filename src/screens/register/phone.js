@@ -49,17 +49,23 @@ class PhoneScreen extends Component {
   render() {
 
     const { t, i18n } = this.props;
-    let user = usersStore.user
-    let isUserConnected = !usersStore.isUserRegistrationMissing
 
     let actions = [
       {//TODO home versus back based on where user come from
         style: styles.ACTIVE,
-        icon: icons.BACK,
-        onPress: () => this.props.navigation.pop()
+        icon: icons.CANCEL,
+        onPress: () => {
+          this.isCodeRequested = false
+          if (!usersStore.isConnected) {
+            this.props.navigation.navigate(screens.HOME)
+            return
+          }
+          this.props.navigation.popToTop()
+          return
+        }
       },
       {
-        style: isUserConnected ? styles.ACTIVE : styles.DISABLE,
+        style: usersStore.isConnected ? styles.ACTIVE : styles.DISABLE,
         icon: icons.DISCONNECT,
         onPress: async () => {
           this.isCodeRequested = false;
@@ -67,43 +73,49 @@ class PhoneScreen extends Component {
         }
       }
     ]
-
-    if (this.isCodeRequested) {
-      actions.push({
-        style: !isUserConnected && this.code && /^([0-9]{3}-?[0-9]{3})$/.test(this.code) ? styles.TODO : styles.DISABLE,
-        icon: icons.CONNECT,
-        onPress: async () => {
-          if (await usersStore.connect(this.code)) {
-            this.code = null
-            this.props.navigation.navigate(screens.REGISTER_EMAIL)
+    if (!usersStore.isConnected) {
+      if (this.isCodeRequested) {
+        actions.push({
+          style: !usersStore.isConnected && this.code && /^([0-9]{3}-?[0-9]{3})$/.test(this.code) ? styles.TODO : styles.DISABLE,
+          icon: icons.CONNECT,
+          onPress: async () => {
+            if (await usersStore.connect(this.code)) {
+              this.code = null
+              if (_.isEmpty(usersStore.user.email)) {
+                this.props.navigation.navigate(screens.REGISTER_EMAIL)
+                return
+              }
+              this.props.navigation.pop()
+              return
+            }
           }
-        }
-      })
-    } else {
-      actions.push({
-        style: !isUserConnected && this.phoneInput && this.phoneInput.isValidNumber() ? styles.TODO : styles.DISABLE,
-        icon: icons.REQUEST_CODE,
-        onPress: async () => {
-          if (await usersStore.requestCode())
-            this.isCodeRequested = true
-        }
-      })
+        })
+      } else {
+        actions.push({
+          style: !usersStore.isConnected && this.phoneInput && this.phoneInput.isValidNumber() ? styles.TODO : styles.DISABLE,
+          icon: icons.REQUEST_CODE,
+          onPress: async () => {
+            if (await usersStore.requestCode())
+              this.isCodeRequested = true
+          }
+        })
+      }
     }
     let defaultPaddintTop = (Dimensions.get("window").height / 10)
 
     return (
       <Container>
-        <HeaderComponent title={t('register:phoneTitle', { user: usersStore.user })} />
+        <HeaderComponent t={t} title={t('register:phoneTitle', { user: usersStore.user })} />
         <Content padder ref={(ref) => { this.content = ref; }}>
           <Form>
-            {isUserConnected && (
+            {usersStore.isConnected && (
               <Item stackedLabel>
                 <Label style={{ paddingTop: defaultPaddintTop, paddingBottom: 25 }}>{t('register:phoneNumberInputLabel')}</Label>
-                <Input defaultValue={user.phone_number} editable={false} />
+                <Input defaultValue={usersStore.user.phone_number} editable={false} />
               </Item>
 
             )}
-            {!isUserConnected && !this.isCodeRequested && (
+            {!usersStore.isConnected && !this.isCodeRequested && (
               <Item >
                 <View style={{ justifyContent: 'space-evenly', alignContent: 'center' }}>
                   <Text style={{ paddingTop: defaultPaddintTop, paddingBottom: 25 }}>{t('register:phoneNumberInputLabel')}</Text>
@@ -113,7 +125,7 @@ class PhoneScreen extends Component {
                     initialCountry={_.isEmpty(this.countryCode) ? "lu" : this.countryCode}
                     style={{ height: 50 }}
                     textStyle={{ color: colors.TEXT.string() }}
-                    value={user.phone_number}
+                    value={usersStore.user.phone_number}
                     onChangePhoneNumber={this.onChangePhoneNumber}
                     offset={20}
                     autoFocus
@@ -133,7 +145,7 @@ class PhoneScreen extends Component {
               </Item>
             )}
 
-            {!isUserConnected && this.isCodeRequested && (
+            {!usersStore.isConnected && this.isCodeRequested && (
               <Item stackedLabel>
                 <Label style={{ color: colors.TEXT.string(), paddingTop: defaultPaddintTop, paddingBottom: 25 }}>{t('register:smsCodeInputLabel')}</Label>
                 <Input autoFocus maxLength={7} keyboardAppearance='dark' keyboardType='numeric' placeholder='000-000' ref={(ref) => { this.codeInput = ref; }} onChangeText={this.onChangeCode} />

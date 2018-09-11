@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Container, Content, Button, Text, ListItem, Left, Body, Right, Card, CardItem, List } from 'native-base';
-import { Image } from 'react-native'
+import { NavigationEvents } from 'react-navigation';
 import { observer } from 'mobx-react';
 import { translate } from "react-i18next";
 import _ from 'lodash'
@@ -13,54 +13,49 @@ import usersStore from '../../stores/usersStore';
 import { screens, styles, icons, colors, sizes } from '../../utils/global'
 import Icon from '../../components/Icon'
 
-import { observable } from "mobx";
-
 @observer
 class RegisterScreen extends Component {
 
+  componentWillMount() {
+    this.onLoad()
+  }
 
-  @observable identificationFrontDocument = "loading"
-  @observable identificationBackDocument = "loading"
-  @observable driverLicenceFrontDocument = "loading"
-  @observable driverLicenceBackDocument = "loading"
+  onLoad = async (payload) => {
+    console.log("=> LOAD SCREEN RegisterScreen:", payload)
 
-  //To be Used only to move to another screen
-  async componentWillMount() {
+    if (payload && payload.state && payload.state.routeName !== 'Overview') {
+      return
+    }
 
-    let user = usersStore.user
-    if (_.isEmpty(user.phone_number)) {
+
+    if (_.isEmpty(usersStore.user.phone_number)) {
       this.props.navigation.navigate(screens.REGISTER_PHONE)
       return
     }
-    if (_.isEmpty(user.email)) {
-      this.props.navigation.navigate(screens.REGISTER_EMAIL)
-      return
-    }
-    if (_.isEmpty(user.address)) {
-      this.props.navigation.navigate(screens.REGISTER_ADDRESS)
-      return
-    }
 
-    if (user.identification_scan_front_side) {
-
-      this.identificationFrontDocument = "data:image/png;base64," + (await usersStore.downloadDocument(user.identification_scan_front_side.reference))
+    usersStore.user.identificationFrontDocument = "loading"
+    if (usersStore.user.identification_scan_front_side) {
+      usersStore.identificationFrontDocument = "data:image/png;base64," + (await usersStore.downloadDocument(usersStore.user.identification_scan_front_side.reference))
     } else {
-      this.identificationFrontDocument = null
+      usersStore.identificationFrontDocument = null
     }
-    if (user.identification_scan_back_side) {
-      this.identificationBackDocument = "data:image/png;base64," + (await usersStore.downloadDocument(user.identification_scan_back_side.reference))
+    usersStore.user.identificationBackDocument = "loading"
+    if (usersStore.user.identification_scan_back_side) {
+      usersStore.identificationBackDocument = "data:image/png;base64," + (await usersStore.downloadDocument(usersStore.user.identification_scan_back_side.reference))
     } else {
-      this.identificationBackDocument = null
+      usersStore.identificationBackDocument = null
     }
-    if (user.driver_licence_scan_front_side) {
-      this.driverLicenceFrontDocument = "data:image/png;base64," + (await usersStore.downloadDocument(user.driver_licence_scan_front_side.reference))
+    usersStore.user.driverLicenceFrontDocument = "loading"
+    if (usersStore.user.driver_licence_scan_front_side) {
+      usersStore.driverLicenceFrontDocument = "data:image/png;base64," + (await usersStore.downloadDocument(usersStore.user.driver_licence_scan_front_side.reference))
     } else {
-      this.driverLicenceFrontDocument = null
+      usersStore.driverLicenceFrontDocument = null
     }
-    if (user.driver_licence_scan_back_side) {
-      this.driverLicenceBackDocument = "data:image/png;base64," + (await usersStore.downloadDocument(user.driver_licence_scan_back_side.reference))
+    usersStore.user.driverLicenceBackDocument = "loading"
+    if (usersStore.user.driver_licence_scan_back_side) {
+      usersStore.driverLicenceBackDocument = "data:image/png;base64," + (await usersStore.downloadDocument(usersStore.user.driver_licence_scan_back_side.reference))
     } else {
-      this.driverLicenceBackDocument = null
+      usersStore.driverLicenceBackDocument = null
     }
 
   }
@@ -68,34 +63,42 @@ class RegisterScreen extends Component {
   render() {
 
     const { t } = this.props;
-    let user = usersStore.user
-    let isUserConnected = !usersStore.isUserRegistrationMissing
     let actions = [
       {
         style: styles.ACTIVE,
         icon: icons.HOME,
         onPress: () => this.props.navigation.navigate(screens.HOME)
-      },
-      {
-        style: isUserConnected ? styles.ACTIVE : styles.DISABLE,
+      }
+    ]
+
+    if (usersStore.isConnected) {
+      actions.push({
+        style: styles.ACTIVE,
         icon: icons.DISCONNECT,
         onPress: async () => {
           this.isCodeRequested = false;
           await usersStore.disconnect()
         }
       }
-    ]
-
-    let phoneNumberColor = this.getColorForStatus(user.phone_number_status)
-    let emailColor = this.getColorForStatus(user.email_status)
-    let addressColor = this.getColorForStatus(user.address_status)
-    let identificationColor = this.getColorForStatus(user.identification_status)
-
-
-    let driverLicenceColor = this.getColorForStatus(user.driver_licence_status)
+      )
+    } else {
+      actions.push({
+        style: styles.ACTIVE,
+        icon: icons.CONNECT,
+        onPress: async () => {
+          this.props.navigation.navigate(screens.REGISTER_PHONE)
+        }
+      })
+    }
+    let phoneNumberColor = this.getColorForStatus(usersStore.user.phone_number_status)
+    let emailColor = this.getColorForStatus(usersStore.user.email_status)
+    let addressColor = this.getColorForStatus(usersStore.user.address_status)
+    let identificationColor = this.getColorForStatus(usersStore.user.identification_status)
+    let driverLicenceColor = this.getColorForStatus(usersStore.user.driver_licence_status)
     return (
       <Container>
-        <HeaderComponent title={t('register:overviewTitle', { user: user })} />
+        <NavigationEvents onWillFocus={payload => { this.onLoad(payload) }} />
+        <HeaderComponent t={t} title={t('register:overviewTitle', { user: usersStore.user })} />
         <Content padder>
           <List>
             <ListItem>
@@ -104,14 +107,14 @@ class RegisterScreen extends Component {
                   <CardItem>
                     <Body>
                       <Text>
-                        {user.registration_message}
+                        {usersStore.user.registration_message}
                       </Text>
                     </Body>
                   </CardItem>
                 </Card>
               </Body>
             </ListItem>
-            <ListItem icon onPress={() => this.props.navigation.navigate(screens.REGISTER_PHONE)}>
+            <ListItem icon onPress={() => { this.props.navigation.navigate(screens.REGISTER_PHONE) }}>
               <Left>
                 <Button style={{ backgroundColor: phoneNumberColor }}>
                   <Icon icon={icons.PHONE} size={sizes.SMALL} color={colors.TEXT} />
@@ -125,7 +128,7 @@ class RegisterScreen extends Component {
                 <Icon style={{ paddingLeft: 5 }} icon={icons.SELECT} size={sizes.SMALL} color={colors.TEXT} />
               </Right>
             </ListItem>
-            <ListItem icon onPress={() => this.props.navigation.navigate(screens.REGISTER_EMAIL)}>
+            <ListItem icon onPress={() => { this.props.navigation.navigate(screens.REGISTER_EMAIL) }}>
               <Left>
                 <Button style={{ backgroundColor: emailColor }}>
                   <Icon icon={icons.EMAIL} size={sizes.SMALL} color={colors.TEXT} />
@@ -135,11 +138,11 @@ class RegisterScreen extends Component {
                 <Text>{t('register:emailLabel')}</Text>
               </Body>
               <Right>
-                <Text>{usersStore.user.email}</Text>
+                <Text>{_.truncate(usersStore.user.email, { 'length': 24 })}</Text>
                 <Icon style={{ paddingLeft: 5 }} icon={icons.SELECT} size={sizes.SMALL} color={colors.TEXT} />
               </Right>
             </ListItem>
-            <ListItem icon onPress={() => this.props.navigation.navigate(screens.REGISTER_ADDRESS)}>
+            <ListItem icon onPress={() => { this.props.navigation.navigate(screens.REGISTER_ADDRESS) }}>
               <Left>
                 <Button style={{ backgroundColor: addressColor }}>
                   <Icon icon={icons.ADDRESS} size={sizes.SMALL} color={colors.TEXT} />
@@ -149,11 +152,11 @@ class RegisterScreen extends Component {
                 <Text>{t('register:addressLabel')}</Text>
               </Body>
               <Right>
-                <Text>{usersStore.user.address}</Text>
+                <Text >{_.truncate(usersStore.user.address, { 'length': 24 })}</Text>
                 <Icon style={{ paddingLeft: 5 }} icon={icons.SELECT} size={sizes.SMALL} color={colors.TEXT} />
               </Right>
             </ListItem>
-            <ListItem icon onPress={() => this.props.navigation.navigate(screens.REGISTER_IDENTIFICATION)}>
+            <ListItem icon onPress={() => this.props.navigation.navigate(screens.REGISTER_IDENTIFICATION, { frontImageUrl: usersStore.identificationFrontDocument, backImageUrl: usersStore.identificationBackDocument })}>
               <Left>
                 <Button style={{ backgroundColor: identificationColor }}>
                   <Icon icon={icons.IDENTIFICATION} size={sizes.SMALL} color={colors.TEXT} />
@@ -164,12 +167,12 @@ class RegisterScreen extends Component {
               </Body>
               <Right >
 
-                <Thumbnail source={this.identificationFrontDocument} />
-                <Thumbnail source={this.identificationBackDocument} />
+                <Thumbnail source={usersStore.identificationFrontDocument} />
+                <Thumbnail source={usersStore.identificationBackDocument} />
                 <Icon style={{ paddingLeft: 5 }} icon={icons.SELECT} size={sizes.SMALL} color={colors.TEXT} />
               </Right>
             </ListItem>
-            <ListItem icon onPress={() => this.props.navigation.navigate(screens.REGISTER_DRIVER_LICENCE)}>
+            <ListItem icon onPress={() => { this.props.navigation.navigate(screens.REGISTER_DRIVER_LICENCE, { frontImageUrl: usersStore.driverLicenceFrontDocument, backImageUrl: usersStore.driverLicenceBackDocument }) }}>
               <Left>
                 <Button style={{ backgroundColor: driverLicenceColor }}>
                   <Icon icon={icons.DRIVER_LICENCE} size={sizes.SMALL} color={colors.TEXT} />
@@ -179,14 +182,14 @@ class RegisterScreen extends Component {
                 <Text>{t('register:driverLicenceLabel')}</Text>
               </Body>
               <Right >
-                <Thumbnail source={this.driverLicenceFrontDocument} />
-                <Thumbnail source={this.driverLicenceBackDocument} />
+                <Thumbnail source={usersStore.driverLicenceFrontDocument} />
+                <Thumbnail source={usersStore.driverLicenceBackDocument} />
                 <Icon style={{ paddingLeft: 5 }} icon={icons.SELECT} size={sizes.SMALL} color={colors.TEXT} />
               </Right>
             </ListItem>
           </List>
         </Content>
-        <ActionSupportComponent onPress={() => this.props.navigation.navigate(screens.SUPPORT, { context: screens.REGISTER_OVERVIEW })} />
+        <ActionSupportComponent onPress={() => { this.props.navigation.navigate(screens.SUPPORT, { context: screens.REGISTER_OVERVIEW }) }} />
         <ActionBarComponent actions={actions} />
       </Container>
     );

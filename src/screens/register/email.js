@@ -44,27 +44,23 @@ class EmailScreen extends Component {
 
     const { t } = this.props;
 
-    let user = usersStore.user
-    let isUserConnected = !usersStore.isUserRegistrationMissing
-    let email = user.email
-
     let actions = [
       {
         style: styles.ACTIVE,
-        icon: icons.BACK,
-        onPress: () => this.props.navigation.pop()
+        icon: icons.CANCEL,
+        onPress: () => this.props.navigation.popToTop()
       },
       {
-        style: styles.ACTIVE,
-        icon: icons.HOME,
-        onPress: () => this.props.navigation.navigate(screens.HOME)
-      },
-      {
-        style: isUserConnected && email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? styles.TODO : styles.DISABLE,
-        icon: icons.NEXT,
+        style: usersStore.isConnected && usersStore.user.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(usersStore.user.email) ? styles.TODO : styles.DISABLE,
+        icon: icons.SAVE,
         onPress: async () => {
           if (await usersStore.save()) {
-            this.props.navigation.navigate(screens.REGISTER_ADDRESS)
+            if (_.isEmpty(usersStore.user.address)) {
+              this.props.navigation.navigate(screens.REGISTER_ADDRESS)
+              return
+            }
+            this.props.navigation.pop()
+            return
           }
         }
       },
@@ -74,12 +70,12 @@ class EmailScreen extends Component {
 
     return (
       <Container>
-        <HeaderComponent title={t('register:emailTitle', { user: usersStore.user })} subTitle={"keyb" + this.keyboardHeight} />
+        <HeaderComponent t={t} title={t('register:emailTitle', { user: usersStore.user })} />
         <Content padder>
           <Form>
             <Item stackedLabel>
               <Label style={{ color: colors.TEXT.string(), paddingTop: defaultPaddintTop, paddingBottom: 25 }}>{t('register:emailInputLabel')}</Label>
-              <Input autoFocus defaultValue={user.email} keyboardAppearance='dark' placeholder='john.doe@gmail.com' ref={(ref) => { this.emailInput = ref; }} onChangeText={this.onChangeEmail} />
+              <Input autoFocus defaultValue={usersStore.user.email} keyboardAppearance='dark' placeholder='john.doe@gmail.com' ref={(ref) => { this.emailInput = ref; }} onChangeText={this.onChangeEmail} />
             </Item>
           </Form>
         </Content>

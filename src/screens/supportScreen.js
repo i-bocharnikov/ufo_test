@@ -9,7 +9,9 @@ import { styles, icons } from '../utils/global'
 class SupportScreen extends Component {
 
   render() {
-    const { t } = this.props;
+    const { t, navigation } = this.props;
+    const context = navigation.getParam('context');
+
     let actions = [
       {
         style: styles.ACTIVE,
@@ -19,7 +21,7 @@ class SupportScreen extends Component {
     ]
     return (
       <Container>
-        <HeaderComponent title={t('support:supportTitle')} />
+        <HeaderComponent t={t} title={t('support:supportTitle')} subTitle={context} />
         <Content padder>
         </Content>
         <ActionBarComponent actions={actions} />

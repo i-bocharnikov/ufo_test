@@ -16,7 +16,6 @@ import Color from 'color'
 //https://github.com/naoufal/react-native-touch-id
 //https://github.com/oblador/react-native-keychain
 
-
 export const colors = {
     HEADER_BACKGROUND: new Color('#0081B5'),
     BACKGROUND: new Color('#172c32'),
@@ -127,8 +126,9 @@ export const icons = {
     TORCH: new Icon('flashlight', 'icon:torch'),
     VALIDATE: new Icon('checkmark', 'icon:validate'),
     CANCEL: new Icon('close', 'icon:cancel'),
-    SAVE: new Icon('save', 'icon:save'),
+    SAVE: new Icon('checkmark', 'icon:save'),
     REDO: new Icon('redo', 'icon:redo'),
+    SKIP: new Icon('skip-forward', 'icon:skip'),
     WRONG: new Icon('bomfire', 'icon:wrong')
 }
 

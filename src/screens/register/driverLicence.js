@@ -13,7 +13,7 @@ import ActionSupportComponent from '../../components/actionSupport'
 import ActionBarComponent from '../../components/actionBar'
 import { screens, styles, icons, colors } from '../../utils/global'
 import { showWarning } from '../../utils/toast'
-import { observable, action } from "mobx";
+import { observable } from "mobx";
 
 
 const DEVICE_WIDTH = Dimensions.get("window").width
@@ -31,13 +31,12 @@ const captureStates = {
 }
 
 @observer
-class IdentificationScreen extends Component {
+class DriverLicenceScreen extends Component {
 
   @observable captureState = null // state 0 = capture front; 1 = capture back; 2 = validate front & back
   @observable frontImageUrl = null
   @observable backImageUrl = null
 
-  @action
   capturePicture = async (t) => {
 
     if (!this.camera) {
@@ -72,27 +71,23 @@ class IdentificationScreen extends Component {
     )
   }
 
-  @action
   uploadAndSave = async (t) => {
     let type = this.frontImageUrl && this.backImageUrl ? "two_side" : "one_side"
     if (this.frontImageUrl) {
-      let document = await usersStore.uploadDocument("identification", type, "id", "front_side", this.frontImageUrl)
+      let document = await usersStore.uploadDocument("driver_licence", type, "driver_licence", "front_side", this.frontImageUrl)
       if (document && document.reference) {
-        usersStore.user.identification_front_side_reference = document.reference
+        usersStore.user.driver_licence_front_side_reference = document.reference
       }
     }
     if (this.backImageUrl) {
-      let document = await usersStore.uploadDocument("identification", type, "id", "back_side", this.backImageUrl)
+      let document = await usersStore.uploadDocument("driver_licence", type, "driver_licence", "back_side", this.backImageUrl)
       if (document && document.reference) {
-        usersStore.user.identification_back_side_reference = document.reference
+        usersStore.user.driver_licence_back_side_reference = document.reference
       }
     }
     if (await usersStore.save()) {
-      if (_.isEmpty(usersStore.user.driver_licence_scan_front_side)) {
-        this.props.navigation.navigate(screens.REGISTER_DRIVER_LICENCE)
-      } else {
-        this.props.navigation.popToTop()
-      }
+      this.props.navigation.popToTop()
+      return
     }
   }
 
@@ -158,7 +153,7 @@ class IdentificationScreen extends Component {
       )
     }
 
-    let inputLabel = this.captureState === captureStates.CAPTURE_FRONT ? 'register:identificationFrontInputLabel' : 'register:identificationBackInputLabel'
+    let inputLabel = this.captureState === captureStates.CAPTURE_FRONT ? 'register:driverLicenceFrontInputLabel' : 'register:driverLicenceBackInputLabel'
 
     console.log("******* ready to show " + this.captureState)
 
@@ -188,14 +183,14 @@ class IdentificationScreen extends Component {
             }}>
               <Text style={{ color: colors.TEXT.string(), textAlign: 'center' }}>{t(inputLabel)}</Text>
             </View>
-            <HeaderComponent t={t} title={t('register:identificationTitle', { user: usersStore.user })} />
+            <HeaderComponent t={t} title={t('register:driverLicenceTitle', { user: usersStore.user })} />
           </View>
         )}
         {this.captureState === captureStates.VALIDATE && (
           <View>
-            <HeaderComponent t={t} title={t('register:identificationTitle', { user: usersStore.user })} />
+            <HeaderComponent t={t} title={t('register:driverLicenceTitle', { user: usersStore.user })} />
             <View>
-              < Text style={{ color: colors.TEXT.string(), padding: 20 }}>{t('register:identificationCheckLabel')}</Text>
+              < Text style={{ color: colors.TEXT.string(), padding: 20 }}>{t('register:driverLicenceCheckLabel')}</Text>
               <Image source={{ uri: this.frontImageUrl }} style={{
                 width: CARD_WIDTH, height: CARD_HEIGHT, position: 'absolute',
                 top: PADDING_HEIGHT - (CARD_HEIGHT / 2) - 5,
@@ -210,7 +205,7 @@ class IdentificationScreen extends Component {
           </View>
         )
         }
-        <ActionSupportComponent onPress={() => this.props.navigation.navigate(screens.SUPPORT, { context: screens.REGISTER_IDENTIFICATION })} />
+        <ActionSupportComponent onPress={() => this.props.navigation.navigate(screens.SUPPORT, { context: screens.REGISTER_DRIVER_LICENCE })} />
         <ActionBarComponent actions={actions} />
       </Container >
     );
@@ -234,4 +229,4 @@ const _styles = StyleSheet.create({
   },
 });
 
-export default translate("translations")(IdentificationScreen);
+export default translate("translations")(DriverLicenceScreen);

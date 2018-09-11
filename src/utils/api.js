@@ -1,14 +1,16 @@
 import axios from "axios";
 import configurations from "../utils/configurations"
 import activitiesStore from '../stores/activitiesStore'
-import { Toast, } from 'native-base';
+import { showError } from './toast'
 import RNFetchBlob from 'react-native-fetch-blob'
 
 const SAVE_TOKEN = null
 export const ufodrive_server_connectivity_test_api = axios.create({
     baseURL:
-        configurations.UFO_SERVER_API_BASE_URL,
-    timeout: 300
+        configurations.UFO_SERVER_API_URL + "public/api/" +
+        configurations.UFO_SERVER_API_VERSION +
+        "/",
+    timeout: 1000
 });
 
 export const ufodrive_server_public_api = axios.create({
@@ -158,15 +160,11 @@ export async function downloadFromApi(reference, thumbnail = true, suppressToast
         activitiesStore.activities.internetAccessPending = true
         let path = thumbnail ? "thumbnail/" : "documents/"
         let url = configurations.UFO_SERVER_API_URL + "api/" + configurations.UFO_SERVER_API_VERSION + "/" + path + reference
-        console.log("***********url", url)
-        console.log("***********Token", SAVE_TOKEN)
         let response = await RNFetchBlob.fetch('GET', url, {
             Authorization: 'Bearer ' + SAVE_TOKEN,
         })
         let base64Str = response.base64()
         activitiesStore.activities.internetAccessPending = false
-        console.log("********downloadFromApi", base64Str)
-
         return base64Str
     } catch (error) {
         activitiesStore.activities.internetAccessPending = false
@@ -191,17 +189,9 @@ export async function checkConnectivity() {
 
 function handleError(error, suppressToastBox) {
     let ufoError = formatApiError(error);
-    //console.warn("api.get error: %s", ufoError.message);
-    console.debug("api.get error.stack: %j", error);
+    console.debug("api.get error.stack: ", error);
     if (!suppressToastBox) {
-        Toast.show({
-            text: ufoError.message,
-            buttonText: 'Ok',
-            type: "danger",
-            duration: 5000,
-            buttonTextStyle: { color: "#008000" },
-            buttonStyle: { backgroundColor: "#5cb85c" }
-        });
+        showError(ufoError.message)
     }
 }
 
