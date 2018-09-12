@@ -5,7 +5,7 @@ import { Container, Content } from 'native-base';
 import HeaderComponent from "../../components/header";
 import ActionSupportComponent from '../../components/actionSupport'
 import ActionBarComponent from '../../components/actionBar'
-import { screens, styles, icons } from '../../utils/global'
+import { screens, actionStyles, icons } from '../../utils/global'
 
 class ReservePaymentScreen extends Component {
 
@@ -13,18 +13,18 @@ class ReservePaymentScreen extends Component {
     const { t } = this.props;
     let actions = [
       {
-        style: styles.ACTIVE,
+        style: actionStyles.ACTIVE,
         icon: icons.BACK,
         onPress: () => this.props.navigation.pop()
       },
       {
-        style: styles.ACTIVE,
+        style: actionStyles.ACTIVE,
         icon: icons.HOME,
         onPress: () => this.props.navigation.navigate(screens.HOME)
       },
       {
 
-        style: styles.TODO,
+        style: actionStyles.TODO,
         icon: icons.PAY,
         onPress: () => { this.props.navigation.popToTop(); this.props.navigation.navigate(screens.HOME) }
       },

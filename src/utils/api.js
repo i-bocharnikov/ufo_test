@@ -5,26 +5,19 @@ import { showError } from './toast'
 import RNFetchBlob from 'react-native-fetch-blob'
 
 const SAVE_TOKEN = null
+
 export const ufodrive_server_connectivity_test_api = axios.create({
-    baseURL:
-        configurations.UFO_SERVER_API_URL + "public/api/" +
-        configurations.UFO_SERVER_API_VERSION +
-        "/",
+    baseURL: configurations.UFO_SERVER_PUBLIC_API_URL,
     timeout: 1000
 });
 
 export const ufodrive_server_public_api = axios.create({
-    baseURL:
-        configurations.UFO_SERVER_API_URL +
-        "public/api/" +
-        configurations.UFO_SERVER_API_VERSION +
-        "/",
+    baseURL: configurations.UFO_SERVER_PUBLIC_API_URL,
     timeout: 10000
 });
 
 export const ufodrive_server_api = axios.create({
-    baseURL:
-        configurations.UFO_SERVER_API_URL + "api/" + configurations.UFO_SERVER_API_VERSION + "/",
+    baseURL: configurations.UFO_SERVER_PRIVATE_API_URL,
     timeout: 10000
 });
 
@@ -48,12 +41,12 @@ export async function getFromApi(path, suppressToastBox = false, usePublicApi = 
         if (!await checkConnectivity()) {
             throw new Error("No internet access")
         }
-        activitiesStore.activities.internetAccessPending = true
+        activitiesStore.activities.registerInternetStart()
         let response = await api.get(path)
-        activitiesStore.activities.internetAccessPending = false
+        activitiesStore.activities.registerInternetStopSuccess()
         return response.data
     } catch (error) {
-        activitiesStore.activities.internetAccessPending = false
+        activitiesStore.activities.registerInternetStopFailure()
         handleError(error, suppressToastBox)
     }
 }
@@ -72,12 +65,12 @@ export async function postToApi(path, body, suppressToastBox = false, usePublicA
         if (!await checkConnectivity()) {
             throw new Error("No internet access")
         }
-        activitiesStore.activities.internetAccessPending = true
+        activitiesStore.activities.registerInternetStart()
         let response = await api.post(path, body)
-        activitiesStore.activities.internetAccessPending = false
+        activitiesStore.activities.registerInternetStopSuccess()
         return response.data
     } catch (error) {
-        activitiesStore.activities.internetAccessPending = false
+        activitiesStore.activities.registerInternetStopFailure()
         handleError(error, suppressToastBox)
     }
 }
@@ -96,12 +89,12 @@ export async function putToApi(path, body, suppressToastBox = false, usePublicAp
         if (!await checkConnectivity()) {
             throw new Error("No internet access")
         }
-        activitiesStore.activities.internetAccessPending = true
+        activitiesStore.activities.registerInternetStart()
         let response = await api.put(path, body)
-        activitiesStore.activities.internetAccessPending = false
+        activitiesStore.activities.registerInternetStopSuccess()
         return response.data
     } catch (error) {
-        activitiesStore.activities.internetAccessPending = false
+        activitiesStore.activities.registerInternetStopFailure()
         handleError(error, suppressToastBox)
     }
 }
@@ -132,16 +125,16 @@ export async function uploadToApi(domain, format, type, sub_type, uri, suppressT
         data.append('sub_type', sub_type)
         data.append('file_name', fileName)
         data.append('content_type', fileType)
-        activitiesStore.activities.internetAccessPending = true
+        activitiesStore.activities.registerInternetStart()
         let response = await ufodrive_server_api.post("documents", data, {
             headers: {
                 'Content-Type': 'multipart/form-data;',
             }
         })
-        activitiesStore.activities.internetAccessPending = false
+        activitiesStore.activities.registerInternetStopSuccess()
         return response.data
     } catch (error) {
-        activitiesStore.activities.internetAccessPending = false
+        activitiesStore.activities.registerInternetStopFailure()
         handleError(error, suppressToastBox)
     }
 }
@@ -157,17 +150,17 @@ export async function downloadFromApi(reference, thumbnail = true, suppressToast
         if (!await checkConnectivity()) {
             throw new Error("No internet access")
         }
-        activitiesStore.activities.internetAccessPending = true
         let path = thumbnail ? "thumbnail/" : "documents/"
         let url = configurations.UFO_SERVER_API_URL + "api/" + configurations.UFO_SERVER_API_VERSION + "/" + path + reference
+        activitiesStore.activities.registerInternetStart()
         let response = await RNFetchBlob.fetch('GET', url, {
             Authorization: 'Bearer ' + SAVE_TOKEN,
         })
         let base64Str = response.base64()
-        activitiesStore.activities.internetAccessPending = false
+        activitiesStore.activities.registerInternetStopSuccess()
         return base64Str
     } catch (error) {
-        activitiesStore.activities.internetAccessPending = false
+        activitiesStore.activities.registerInternetStopFailure()
         handleError(error, suppressToastBox)
     }
 }
@@ -175,14 +168,12 @@ export async function downloadFromApi(reference, thumbnail = true, suppressToast
 export async function checkConnectivity() {
 
     try {
-        activitiesStore.activities.internetAccessPending = true
+        activitiesStore.activities.registerInternetStart()
         await ufodrive_server_connectivity_test_api.get("/")
-        activitiesStore.activities.internetAccessPending = false
-        activitiesStore.activities.internetAccessFailure = false
+        activitiesStore.activities.registerInternetStopSuccess()
         return true
     } catch (error) {
-        activitiesStore.activities.internetAccessPending = false
-        activitiesStore.activities.internetAccessFailure = true
+        activitiesStore.activities.registerInternetStopFailure()
         return false
     }
 }

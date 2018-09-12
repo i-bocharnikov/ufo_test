@@ -10,7 +10,7 @@ import HeaderComponent from "../../components/header";
 import ActionSupportComponent from '../../components/actionSupport'
 import ActionBarComponent from '../../components/actionBar'
 import registerStore from '../../stores/registerStore';
-import { screens, styles, icons, colors, sizes } from '../../utils/global'
+import { screens, actionStyles, icons, colors, sizes } from '../../utils/global'
 import Icon from '../../components/Icon'
 
 @observer
@@ -81,7 +81,7 @@ class RegisterScreen extends Component {
     const { t } = this.props;
     let actions = [
       {
-        style: styles.ACTIVE,
+        style: actionStyles.ACTIVE,
         icon: icons.HOME,
         onPress: () => this.props.navigation.navigate(screens.HOME)
       }
@@ -89,7 +89,7 @@ class RegisterScreen extends Component {
 
     if (registerStore.isConnected) {
       actions.push({
-        style: styles.ACTIVE,
+        style: actionStyles.ACTIVE,
         icon: icons.DISCONNECT,
         onPress: async () => {
           this.isCodeRequested = false;
@@ -99,7 +99,7 @@ class RegisterScreen extends Component {
       )
     } else {
       actions.push({
-        style: styles.ACTIVE,
+        style: actionStyles.ACTIVE,
         icon: icons.CONNECT,
         onPress: async () => {
           this.props.navigation.navigate(screens.REGISTER_PHONE)

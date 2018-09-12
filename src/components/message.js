@@ -11,7 +11,7 @@ export default class MessageComponent extends React.Component {
     }
 }
 
-const styles = StyleSheet.create({
+constactionStyles = StyleSheet.create({
     message: {
         height: 40,
         width: '90%',

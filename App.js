@@ -1,9 +1,10 @@
 import React from "react";
 import { createBottomTabNavigator, createStackNavigator } from 'react-navigation';
-import { Root } from "native-base";
+import { Root, StyleProvider } from "native-base";
 import { translate } from "react-i18next";
 import { observer } from "mobx-react";
-import { StyleProvider } from 'native-base';
+import { observable } from "mobx";
+import { StyleSheet, View, ActivityIndicator } from 'react-native';
 
 //Temporary ignore warning comming from react-native
 import { YellowBox } from 'react-native';
@@ -24,10 +25,12 @@ import RegisterAddressScreen from './src/screens/register/address'
 import RegisterPhoneScreen from './src/screens/register/phone'
 import RegisterIdentificationScreen from './src/screens/register/identification'
 import RegisterDriverLicenceScreen from './src/screens/register/driverLicence'
-import activitiesStore from './src/stores/activitiesStore'
+import { hydrate } from './src/utils/store'
+import registerStore from "./src/stores/registerStore"
+import driveStore from "./src/stores/driveStore"
 import getTheme from './native-base-theme/components';
 import './src/utils/global'
-import { screens } from './src/utils/global'
+import { screens, colors } from './src/utils/global'
 
 const commonStackNavigationOptions = {};
 
@@ -118,10 +121,49 @@ const RootStack = createBottomTabNavigator(
 class App extends React.Component {
 
 
+  @observable isReady = false
+
+  async componentDidMount() {
+
+    let loadSuccess = true
+    try {
+      console.log("****************** LOAD SERVER DATA START *******************************")
+      let registerLoad = await registerStore.registerDevice()
+      let driveLoad = await driveStore.list()
+      console.log("****************** LOAD SERVER DATA DONE *******************************")
+      loadSuccess = registerLoad && driveLoad
+      if (!loadSuccess) {
+        console.log("****************** LOAD SERVER DATA FAILED *******************************")
+      }
+    } catch (error) {
+      console.log("****************** LOAD SERVER DATA FAILED *******************************", error)
+      loadSuccess = false
+    }
+
+    if (!loadSuccess) {
+      console.log("****************** LOAD LOCAL DATA START *******************************")
+      try {
+        hydrate('register', registerStore).then(() => console.log('registerStore hydrated'))
+        hydrate('drive', driveStore).then(() => console.log('driveStore hydrated'))
+      } catch (error) {
+        console.log("****************** LOAD LOCAL DATA FAILED *******************************", error)
+      }
+      console.log("****************** LOAD LOCAL DATA DONE *******************************")
+    }
+    this.isReady = true
+  }
 
   render() {
     const { t } = this.props;
-    const activities = activitiesStore.activities
+
+    if (!this.isReady) {
+      return (
+        <View style={{ flex: 1, backgroundColor: colors.BACKGROUND.string() }}>
+          <ActivityIndicator style={styles.centered} />
+        </View>
+      );
+    }
+
     return (
       <Root>
         <StyleProvider style={getTheme()}>
@@ -132,6 +174,13 @@ class App extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  centered: {
+    flex: 1,
+    alignSelf: 'center'
+  }
+});
 
 export default translate("translations")(App);
 

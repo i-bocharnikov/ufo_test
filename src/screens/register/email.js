@@ -9,7 +9,7 @@ import registerStore from '../../stores/registerStore';
 import HeaderComponent from "../../components/header";
 import ActionSupportComponent from '../../components/actionSupport'
 import ActionBarComponent from '../../components/actionBar'
-import { screens, styles, icons, colors, params } from '../../utils/global'
+import { screens, actionStyles, icons, colors, params } from '../../utils/global'
 import { observable, action } from "mobx";
 
 const REGEX_EMAIL_VALIDATION = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -65,12 +65,12 @@ class EmailScreen extends Component {
 
     let actions = [
       {
-        style: styles.ACTIVE,
+        style: actionStyles.ACTIVE,
         icon: isInWizzard ? icons.CONTINUE_LATER : icons.CANCEL,
         onPress: async () => await this.doCancel(isInWizzard)
       },
       {
-        style: this.emailValue && REGEX_EMAIL_VALIDATION.test(this.emailValue) && this.emailValue !== registerStore.user.email ? styles.TODO : styles.DISABLE,
+        style: this.emailValue && REGEX_EMAIL_VALIDATION.test(this.emailValue) && this.emailValue !== registerStore.user.email ? actionStyles.TODO : actionStyles.DISABLE,
         icon: isInWizzard ? icons.NEXT : icons.SAVE,
         onPress: async () => await this.doSave(isInWizzard)
       },

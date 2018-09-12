@@ -1,7 +1,7 @@
 import packageJson from "../../package.json";
 
-//const localhost = "192.168.178.27"//"192.168.178.97"
-const localhost = "192.168.178.97"
+const localhost = "192.168.178.27"
+//const localhost = "192.168.178.97"
 
 const development = {
     UFO_APP_USAGE: "LOCAL",
@@ -9,7 +9,6 @@ const development = {
     UFO_APP_VERSION: packageJson.version,
     UFO_APP_BUILD_NUMBER: "002",
     UFO_SERVER_API_URL: "http://" + localhost + ":1337/ufodrive/1.0.0/",
-    UFO_SERVER_API_BASE_URL: "http://" + localhost + ":1337",
     UFO_SERVER_API_VERSION: "v1",
     UFO_ANALYTICS_ACTIVE: false,
     UFO_ANALYTICS_API_URL: "http://localhost",
@@ -23,7 +22,6 @@ const uat = {
     UFO_APP_VERSION: packageJson.version,
     UFO_APP_BUILD_NUMBER: "002",
     UFO_SERVER_API_URL: "https://back.ufodrive.com/ufodrive/1.0.0/",
-    UFO_SERVER_API_BASE_URL: "https://back.ufodrive.com/",
     UFO_SERVER_API_VERSION: "v1",
     UFO_ANALYTICS_ACTIVE: false,
     UFO_ANALYTICS_API_URL: "http://localhost",
@@ -37,7 +35,6 @@ const production = {
     UFO_APP_VERSION: packageJson.version,
     UFO_APP_BUILD_NUMBER: "001",
     UFO_SERVER_API_URL: "https://back.ufodrive.com/ufodrive/1.0.0/",
-    UFO_SERVER_API_BASE_URL: "https://back.ufodrive.com/",
     UFO_SERVER_API_VERSION: "v1",
     UFO_ANALYTICS_ACTIVE: true,
     UFO_ANALYTICS_API_URL: "https://back.ufodrive.com/countly/",
@@ -46,5 +43,8 @@ const production = {
 };
 
 const configurations = development;
+configurations.UFO_SERVER_PRIVATE_API_URL = configurations.UFO_SERVER_API_URL + "api/" + configurations.UFO_SERVER_API_VERSION + "/"
+configurations.UFO_SERVER_PUBLIC_API_URL = configurations.UFO_SERVER_API_URL + "public/api/" + configurations.UFO_SERVER_API_VERSION + "/"
+
 
 export default configurations;

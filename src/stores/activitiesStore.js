@@ -1,10 +1,49 @@
-import { observable } from 'mobx';
+import { observable, computed, action } from 'mobx';
 
 class Activities {
-    @observable internetAccessPending = false
+
+    @observable internetAccessPendingRequests = 0
+    @observable bluetoothAccessPendingRequests = 0
+
+    @action
+    registerInternetStart = () => {
+        this.internetAccessPendingRequests++
+    }
+    @action
+    registerInternetStopSuccess = () => {
+        this.internetAccessPendingRequests--
+        this.internetAccessFailure = false
+    }
+
+    @action
+    registerInternetStopFailure = () => {
+        this.internetAccessPendingRequests--
+        this.internetAccessFailure = true
+    }
+
+    @action
+    registerBluethoothStart = () => {
+        this.bluethoothAccessPendingRequests++
+    }
+    @action
+    registerBluethoothStopSuccess = () => {
+        this.bluethoothAccessPendingRequests--
+        this.bluetoothAccessFailure = false
+    }
+    @action
+    registerBluethoothStopFailure = () => {
+        this.bluethoothAccessPendingRequests--
+        this.bluetoothAccessFailure = true
+    }
+
+    @computed get internetAccessPending() {
+        return this.internetAccessPendingRequests > 0
+    }
     @observable internetAccessFailure = false
 
-    @observable bluetoothAccessPending = false
+    @computed get bluethoothAccessPending() {
+        return this.bluethoothAccessPendingRequests > 0
+    }
     @observable bluetoothAccessFailure = false
 }
 

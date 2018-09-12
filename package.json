@@ -17,6 +17,7 @@
     "link": "react-native link",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
+    "ios.stany": "react-native run-ios 'Stany Blanvalet''s iphone'",
     "android.logs": "react-native log-android",
     "ios.logs": "react-native log-ios",
     "debug": "react-devtools &",
@@ -37,6 +38,7 @@
     "mobx-persist": "^0.4.1",
     "mobx-react": "^5.2.6",
     "moment": "^2.22.2",
+    "moment-timezone": "^0.5.21",
     "native-base": "^2.8.0",
     "react": "16.3.1",
     "react-i18next": "^7.11.1",
@@ -51,6 +53,7 @@
     "react-native-parallax-scroll-view": "^0.21.3",
     "react-native-phone-input": "^0.2.1",
     "react-native-simple-toast": "0.0.8",
+    "react-native-snap-carousel": "^3.7.3",
     "react-native-video": "^3.2.0",
     "react-navigation": "^2.12.1",
     "uuid": "^3.3.2"

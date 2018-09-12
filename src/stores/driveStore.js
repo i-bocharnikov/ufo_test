@@ -1,10 +1,12 @@
 import { Platform } from 'react-native'
+import moment from "moment";
+import "moment-timezone";
 import { observable, action, computed } from 'mobx';
 import { persist } from 'mobx-persist'
 import _ from 'lodash'
 
 import { getFromApi } from '../utils/api'
-
+import { dateFormats } from '../utils/global'
 
 class Location {
     @persist @observable reference = null
@@ -35,7 +37,7 @@ class CarModel {
 
 class Car {
     @persist @observable reference = null
-    @persist('object', CarModel) @observable car_model = null
+    @persist('object', CarModel) @observable car_model = new CarModel
     @persist @observable damage_state = null
     @persist @observable key_mode = null
     @persist @observable has_key = null
@@ -69,20 +71,45 @@ class Rental {
     @persist @observable message_for_driver = null
     @persist @observable start_at = null
     @persist @observable end_at = null
-    @persist('object', Location) @observable location = null
-    @persist('object', Car) @observable car = null
-    @persist('object', Term) @observable rental_agreement = null
+    @persist('object', Location) @observable location = new Location
+    @persist('object', Car) @observable car = new Car
+    @persist('object', Term) @observable rental_agreement = new Term
 }
 
 
 
 class driveStore {
 
-    @observable confirmed_rentals = []
-    @observable ongoing_rentals = []
-    @observable closed_rentals = []
-    @persist('object', Rental) @observable rental = new Rental
+    @persist('list', Rental) @observable confirmed_rentals = []
+    @persist('list', Rental) @observable ongoing_rentals = []
+    @persist('list', Rental) @observable closed_rentals = []
+    @persist('list', Rental) @observable rentals = []
+    @persist @observable index = -1
     @persist('object', Key) @observable key = null
+
+
+    format(date, format) {
+        if (!date)
+            return ""
+        let timezone = this.rental.location.timezone
+        if (timezone)
+            return moment(date).tz(timezone).format(format)
+        else
+            return moment(date).format(format)
+    }
+
+    @computed get rental() {
+        if (this.index < 0 || this.index > this.rentals.length) {
+            throw new error("INVALID STATE")
+        }
+
+
+        if (this.index >= 0) {
+            return this.rentals[this.index]
+        }
+        return new Rental
+    }
+
 
     @computed get hasRentalConfirmedOrOngoing() {
         return this.ongoing_rentals.length !== 0 || this.confirmed_rentals.length !== 0
@@ -110,16 +137,16 @@ class driveStore {
             this.confirmed_rentals = response.data.confirmed_rentals
             this.ongoing_rentals = response.data.ongoing_rentals
             this.closed_rentals = response.data.closed_rentals
-
+            this.rentals = []
+            this.rentals = this.rentals.concat(this.closed_rentals)
+            this.rentals = this.rentals.concat(this.ongoing_rentals)
+            this.rentals = this.rentals.concat(this.confirmed_rentals)
             if (!_.isEmpty(this.ongoing_rentals)) {
-                this.rental = this.ongoing_rentals[0]
-                this.key = { keyId: this.rental.key_id }
+                this.index = this.closed_rentals.length
             } else if (!_.isEmpty(this.confirmed_rentals)) {
-                this.rental = this.confirmed_rentals[0]
-                this.key = { keyId: this.rental.key_id }
+                this.index = this.closed_rentals.length + this.ongoing_rentals.length
             } else if (!_.isEmpty(this.closed_rentals)) {
-                this.rental = this.closed_rentals[0]
-                this.key = { keyId: this.rental.key_id }
+                this.index = 0
             } else {
                 this.rental = null
             }
@@ -127,6 +154,21 @@ class driveStore {
         }
         return false
     };
+
+    @action
+    async refresh() {
+
+        const response = await getFromApi("/rentals/" + this.rental.reference);
+        if (response && response.status === "success") {
+            console.info("driveStore.refresh:", response.data);
+            this.rentals[this.index] = response.data.rental
+            return true
+        }
+        return false
+    };
+
+
+
 
 
 }

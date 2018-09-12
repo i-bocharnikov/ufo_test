@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { translate } from "react-i18next";
-import { styles, colors, icons, sizes } from '../utils/global'
+import { actionStyles, colors, icons, sizes } from '../utils/global'
 import Icon from './Icon'
 
 class ActionBarComponent extends React.Component {
@@ -22,7 +22,7 @@ class ActionBarComponent extends React.Component {
             }}>
                 {actions.map((action, index) => {
 
-                    let style = action.style ? action.style : styles.WRONG
+                    let style = action.style ? action.style : actionStyles.WRONG
                     let color = style.color ? style.color : colors.WRONG
                     let elevation = style.elevation ? style.elevation : 0
                     let icon = action.icon ? action.icon : icons.WRONG
@@ -35,7 +35,7 @@ class ActionBarComponent extends React.Component {
                             }}
                             onPress={action.onPress}
                             action={action}
-                            disabled={style === styles.DISABLE}
+                            disabled={style === actionStyles.DISABLE}
                         >
                             <View style={{
                                 alignItems: 'center',

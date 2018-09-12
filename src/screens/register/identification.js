@@ -11,7 +11,7 @@ import HeaderComponent from "../../components/header";
 import registerStore from '../../stores/registerStore';
 import ActionSupportComponent from '../../components/actionSupport'
 import ActionBarComponent from '../../components/actionBar'
-import { screens, styles, icons, colors } from '../../utils/global'
+import { screens, actionStyles, icons, colors } from '../../utils/global'
 import { showWarning } from '../../utils/toast'
 import { observable, action } from "mobx";
 
@@ -136,7 +136,7 @@ class IdentificationScreen extends Component {
 
     let actions = []
     actions.push({
-      style: styles.ACTIVE,
+      style: actionStyles.ACTIVE,
       icon: isInWizzard ? icons.CONTINUE_LATER : icons.CANCEL,
       onPress: async () => await this.doCancel(isInWizzard)
     })
@@ -144,7 +144,7 @@ class IdentificationScreen extends Component {
     if (this.captureState === captureStates.VALIDATE || this.captureState === captureStates.PREVIEW) {
 
       actions.push({
-        style: styles.ACTIVE,
+        style: actionStyles.ACTIVE,
         icon: icons.NEW_CAPTURE,
         onPress: async () => await this.doReset(isInWizzard)
       })
@@ -155,7 +155,7 @@ class IdentificationScreen extends Component {
       let isNewCapture = _.isEmpty(registerStore.user.identification_front_side_reference)
       actions.push(
         {
-          style: isNewCapture ? styles.TODO : styles.DISABLE,
+          style: isNewCapture ? actionStyles.TODO : actionStyles.DISABLE,
           icon: icons.SAVE,
           onPress: async () => this.doSave(t, isInWizzard)
         }
@@ -165,7 +165,7 @@ class IdentificationScreen extends Component {
     if (this.captureState === captureStates.CAPTURE_BACK) {
 
       actions.push({
-        style: styles.ACTIVE,
+        style: actionStyles.ACTIVE,
         icon: icons.SKIP,
         onPress: () => this.doskip(isInWizzard)
       })
@@ -174,7 +174,7 @@ class IdentificationScreen extends Component {
     if (this.captureState === captureStates.CAPTURE_FRONT || this.captureState === captureStates.CAPTURE_BACK) {
 
       actions.push({
-        style: styles.TODO,
+        style: actionStyles.TODO,
         icon: icons.CAPTURE,
         onPress: async () => {
           this.doCapture(t, isInWizzard)
@@ -190,12 +190,12 @@ class IdentificationScreen extends Component {
     return (
       <Container>
         {showCamera && (
-          <View style={_styles.container}>
+          <View style={styles.container}>
             <RNCamera
               ref={ref => {
                 this.camera = ref;
               }}
-              style={_styles.preview}
+              style={styles.preview}
               type={RNCamera.Constants.Type.back}
               flashMode={RNCamera.Constants.FlashMode.on}
               permissionDialogTitle={t('register:cameraPermissionTitle')}
@@ -242,7 +242,7 @@ class IdentificationScreen extends Component {
   }
 }
 
-const _styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     position: 'absolute',
     top: 0,

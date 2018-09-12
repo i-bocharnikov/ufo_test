@@ -11,7 +11,7 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import HeaderComponent from "../../components/header";
 import ActionSupportComponent from '../../components/actionSupport'
 import ActionBarComponent from '../../components/actionBar'
-import { screens, styles, icons, colors } from '../../utils/global'
+import { screens, actionStyles, icons, colors } from '../../utils/global'
 import { observable, action } from "mobx";
 
 const GOOGLE_API = 'AIzaSyBZ11c3GCMMBlSpF3H-4DK6PioxJjaFPe0'
@@ -47,13 +47,13 @@ class AddressScreen extends Component {
 
     let actions = [
       {
-        style: styles.ACTIVE,
+        style: actionStyles.ACTIVE,
         icon: isInWizzard ? icons.CONTINUE_LATER : icons.CANCEL,
         onPress: async () => await this.doCancel(isInWizzard)
       },
 
       {
-        style: !_.isEmpty(this.addressValue) && this.addressValue !== registerStore.user.address ? styles.TODO : styles.DISABLE,
+        style: !_.isEmpty(this.addressValue) && this.addressValue !== registerStore.user.address ? actionStyles.TODO : actionStyles.DISABLE,
         icon: isInWizzard ? icons.NEXT : icons.SAVE,
         onPress: async () => {
           await this.doSave(isInWizzard)

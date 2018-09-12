@@ -4,7 +4,7 @@ import { Container, Content } from 'native-base';
 
 import HeaderComponent from "../components/header";
 import ActionBarComponent from '../components/actionBar'
-import { styles, icons } from '../utils/global'
+import { actionStyles, icons } from '../utils/global'
 
 class SupportScreen extends Component {
 
@@ -14,7 +14,7 @@ class SupportScreen extends Component {
 
     let actions = [
       {
-        style: styles.ACTIVE,
+        style: actionStyles.ACTIVE,
         icon: icons.BACK,
         onPress: () => this.props.navigation.pop()
       },

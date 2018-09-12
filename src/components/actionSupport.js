@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { translate } from "react-i18next";
-import { screens, sizes, styles, colors, icons } from '../utils/global'
+import { screens, sizes, actionStyles, colors, icons } from '../utils/global'
 import Icon from './Icon'
 
 
@@ -10,7 +10,7 @@ class ActionSupportComponent extends React.Component {
 
         const { t, onPress } = this.props;
 
-        let style = styles.TODO
+        let style = actionStyles.TODO
         return (
             <View style={{
                 position: 'absolute',

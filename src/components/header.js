@@ -14,7 +14,7 @@ export default class HeaderComponent extends React.Component {
         let title = this.props.title ? (<Title>{this.props.title}</Title>) : null
         let subTitle = this.props.subTitle ? (<Subtitle>{this.props.subTitle}</Subtitle>) : null
         let logo = title ? null : (<LogoComponent />)
-        let alpha = title ? 1 : 0.5
+        let alpha = this.props.transparent ? 0.8 : 1
         let right = (<ActivitiesComponent t={t} />)
         return (
             <Header style={{ backgroundColor: colors.BACKGROUND.alpha(alpha).string() }} noShadow>

@@ -110,7 +110,7 @@ class registerStore {
             );
 
         if (response && response.status === "success" && response.data && response.data.token && response.data.user) {
-            console.info("registerStore.registerDevice : %j", response);
+            console.info("registerStore.registerDevice:", response.data);
             await setAuthenticationUUIDInStore(device_uuid);
             await setAuthenticationPasswordInStore(device_pwd);
             await setAuthenticationTokenInStore(response.data.token);
@@ -129,7 +129,7 @@ class registerStore {
 
         const response = await postToApi("/users/validation/phone_number/" + this.user.phone_number, {});
         if (response && response.status === "success" && response.data && response.data.notification) {
-            console.info("registerStore.requestCode : %j", response);
+            console.info("registerStore.requestCode:", response.data);
             this.acknowledge_uri = response.data.notification.acknowledge_uri
             return true
         }
@@ -141,7 +141,7 @@ class registerStore {
 
         const response = await postToApi("/" + this.acknowledge_uri, { validation_code: code });
         if (response && response.status === "success") {
-            console.info("registerStore.connect : %j", response);
+            console.info("registerStore.connect:", response.data);
             return await this.registerDevice()
         }
         return false
@@ -165,7 +165,7 @@ class registerStore {
 
         const response = await putToApi("/users/" + this.user.reference, { ...this.user });
         if (response && response.status === "success") {
-            console.info("registerStore.save:", response);
+            console.info("registerStore.save:", response.data);
             this.user = response.data.user
             return true
         }
@@ -183,7 +183,7 @@ class registerStore {
 
         const response = await uploadToApi(domain, format, type, sub_type, uri);
         if (response && response.status === "success") {
-            console.info("registerStore.uploadDocument : %j", response);
+            console.info("registerStore.uploadDocument:", response.data);
             return response.data.document
         }
         return null

@@ -13,7 +13,7 @@ import _ from 'lodash'
 import HeaderComponent from "../../components/header";
 import ActionSupportComponent from '../../components/actionSupport'
 import ActionBarComponent from '../../components/actionBar'
-import { screens, styles, icons, colors } from '../../utils/global'
+import { screens, actionStyles, icons, colors } from '../../utils/global'
 
 const DARK_COLOR = colors.BACKGROUND.string();
 const PLACEHOLDER_COLOR = "rgba(255,255,255,0.2)";
@@ -62,7 +62,7 @@ class PhoneScreen extends Component {
   doConnect = async (isInWizzard) => {
     if (await registerStore.connect(this.code)) {
       this.code = null
-      if (isInWizzard) {
+      if (isInWizzard && _.isEmpty(registerStore.user.email)) {
         this.props.navigation.navigate(screens.REGISTER_EMAIL, { 'isInWizzard': isInWizzard })
         return
       } else {
@@ -87,14 +87,14 @@ class PhoneScreen extends Component {
 
     let actions = []
     actions.push({
-      style: styles.ACTIVE,
+      style: actionStyles.ACTIVE,
       icon: isInWizzard || !registerStore.isConnected ? icons.CONTINUE_LATER : icons.CANCEL,
       onPress: async () => await this.doCancel(isInWizzard)
     })
 
     if (!registerStore.isConnected && !this.isCodeRequested) {
       actions.push({
-        style: !registerStore.isConnected && this.phoneInput && this.phoneInput.isValidNumber() ? styles.TODO : styles.DISABLE,
+        style: !registerStore.isConnected && this.phoneInput && this.phoneInput.isValidNumber() ? actionStyles.TODO : actionStyles.DISABLE,
         icon: icons.REQUEST_CODE,
         onPress: async () => await this.doRequestCode(isInWizzard)
       })
@@ -102,7 +102,7 @@ class PhoneScreen extends Component {
 
     if (!registerStore.isConnected && this.isCodeRequested) {
       actions.push({
-        style: !registerStore.isConnected && this.code && REGEX_CODE_VALIDATION.test(this.code) ? styles.TODO : styles.DISABLE,
+        style: !registerStore.isConnected && this.code && REGEX_CODE_VALIDATION.test(this.code) ? actionStyles.TODO : actionStyles.DISABLE,
         icon: icons.CONNECT,
         onPress: async () => await this.doConnect(isInWizzard)
       })
@@ -110,7 +110,7 @@ class PhoneScreen extends Component {
 
     if (registerStore.isConnected) {
       actions.push({
-        style: registerStore.isConnected ? styles.ACTIVE : styles.DISABLE,
+        style: registerStore.isConnected ? actionStyles.ACTIVE : actionStyles.DISABLE,
         icon: icons.DISCONNECT,
         onPress: async () => await this.doDisconnect(isInWizzard)
       })
@@ -151,7 +151,7 @@ class PhoneScreen extends Component {
                     onChange={(value) => this.selectCountry(value)}
                     translation={i18n.language}
                     cca2={this.countryCode}
-                    styles={darkTheme}
+                    actionStyles={darkTheme}
                   >
                     <View></View>
                   </CountryPicker>

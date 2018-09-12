@@ -17,6 +17,10 @@ import Color from 'color'
 //https://github.com/oblador/react-native-keychain
 
 
+export const dateFormats = {
+    FULL: 'L LT'
+}
+
 export const colors = {
     HEADER_BACKGROUND: new Color('#0081B5'),
     BACKGROUND: new Color('#172c32'),
@@ -82,7 +86,7 @@ class Style {
     elevation = 0
 }
 
-export const styles = {
+export const actionStyles = {
     TODO: new Style('todo', colors.TODO, 3),
     DONE: new Style('done', colors.DONE, 2),
     ACTIVE: new Style('active', colors.ACTIVE, 1),
