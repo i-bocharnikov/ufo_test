@@ -23,6 +23,8 @@ class Faq {
     @persist @observable media_urn = null
     @persist @observable text = null
     @persist @observable priority = null
+
+
 }
 
 
@@ -31,15 +33,22 @@ class supportStore {
 
     @persist('list', FaqCategory) @observable faqCategories = []
 
-    /*     getListFor(context) {
-            let index = _.findIndex(this.faqCategories, faqCategory => faqCategory.reference = context)
-            if (index >= 0 && index < this.faqCategories.length) {
-                let removedFaqCategories = _.pullAt(this.faqCategories, index)
-                return _.concat(removedFaqCategories, this.faqCategories)
-            }
-            return this.faqCategories
+    getFaq(faqCategoryReference, faqReference) {
+        let faqCategory = this.faqCategories.find(faqCategory => { return faqCategory.reference === faqCategoryReference })
+        if (faqCategory) {
+            return faqCategory.faqs.find(faq => { return faq.reference === faqReference })
+        } else {
+            return null
         }
-     */
+    }
+
+    hasImage(faq) {
+        return faq.media_type === 'image'
+    }
+    hasVideo(faq) {
+        return faq.media_type === 'video'
+    }
+
     @action
     async list() {
 

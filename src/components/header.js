@@ -7,12 +7,13 @@ import { colors, icons, actionStyles, screens, navigationParams } from '../utils
 import ActionHeaderComponent from './actionHeader'
 
 const SUPPORT_FAQ_CATEGORY = navigationParams.SUPPORT_FAQ_CATEGORY
+const PREVIOUS_SCREEN = navigationParams.PREVIOUS_SCREEN
 
 export default class HeaderComponent extends React.Component {
 
     missing = () => console.log('Missing action method')
-    goToHome = () => this.props.navigation.navigate(screens.HOME)
-    goToSupport = () => this.props.navigation.navigate(screens.SUPPORT_FAQS, { SUPPORT_FAQ_CATEGORY: this.props.supportContext })
+    goToHome = () => this.props.navigation.navigate(screens.HOME.name)
+    goToSupport = (currentScreen) => this.props.navigation.navigate(screens.SUPPORT_FAQS.name, { SUPPORT_FAQ_CATEGORY: currentScreen.supportFaqCategory, PREVIOUS_SCREEN: currentScreen })
 
     render() {
 
@@ -30,6 +31,9 @@ export default class HeaderComponent extends React.Component {
         let subTitle = this.props.subTitle ? (<Subtitle>{this.props.subTitle}</Subtitle>) : null
         let logo = title ? null : (<LogoComponent />)
         let alpha = this.props.transparent ? 0.8 : 1
+        let currentScreen = this.props.currentScreen ? this.props.currentScreen : screens.HOME
+
+        let isSupport = currentScreen.supportFaqCategory !== null
         let right = (
             <View style={{
                 flexDirection: 'row',
@@ -38,7 +42,9 @@ export default class HeaderComponent extends React.Component {
                 height: 50,
                 width: 50,
             }}>
-                <ActionHeaderComponent icon={icons.HELP} actionStyle={actionStyles.TODO} onPress={this.props.navigation ? this.goToSupport : this.missing} />
+                {(isSupport &&
+                    <ActionHeaderComponent icon={icons.HELP} actionStyle={actionStyles.TODO} onPress={this.props.navigation ? () => this.goToSupport(currentScreen) : this.missing} />
+                )}
                 <ActivitiesComponent t={t} />
             </View>
         )

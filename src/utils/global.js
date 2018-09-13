@@ -37,37 +37,41 @@ export const colors = {
     WRONG: new Color('yellow'),
 }
 
-export const supportContexts = {
-    HOME: 'RESERVE',
-    DRIVE: 'CAR',
-    RESERVE: 'RESERVE',
-    REGISTER: 'REGISTER',
-    RETURN: 'RETURN',
-
-}
-
 
 export const navigationParams = {
+    PREVIOUS_SCREEN: 'PREVIOUS_SCREEN',
     SUPPORT_FAQ_CATEGORY: 'SUPPORT_FAQ_CATEGORY',
     SUPPORT_FAQ: 'SUPPORT_FAQ',
 }
 
+class Screen {
+
+    constructor(name, supportFaqCategory) {
+        this.name = name;
+        this.supportFaqCategory = supportFaqCategory;
+    }
+    name = "missing"
+    supportFaqCategory = "missing"
+}
+
 export const screens = {
-    HOME: 'Home',
-    RESERVE: 'Reserve',
-    RESERVE_LOCATION: 'Location',
-    RESERVE_DATE_AND_CAR: 'DateAndCar',
-    RESERVE_PAYMENT: 'Payment',
-    REGISTER: 'Register',
-    REGISTER_OVERVIEW: 'Overview',
-    REGISTER_PHONE: 'Phone',
-    REGISTER_EMAIL: 'Email',
-    REGISTER_ADDRESS: 'Address',
-    REGISTER_IDENTIFICATION: 'Identification',
-    REGISTER_DRIVER_LICENCE: 'DriverLicence',
-    DRIVE: 'Drive',
-    SUPPORT_FAQS: 'SupportFaqs',
-    SUPPORT_FAQ: 'SupportFaq',
+    HOME: new Screen('Home', ''),
+    RESERVE: new Screen('Reserve', 'RESERVE'),
+    RESERVE_LOCATION: new Screen('Location', 'RESERVE'),
+    RESERVE_DATE_AND_CAR: new Screen('DateAndCar', 'RESERVE'),
+    RESERVE_PAYMENT: new Screen('Payment', 'RESERVE'),
+    REGISTER: new Screen('Register', 'REGISTER'),
+    REGISTER_OVERVIEW: new Screen('Overview', 'REGISTER'),
+    REGISTER_PHONE: new Screen('Phone', 'REGISTER'),
+    REGISTER_EMAIL: new Screen('Email', 'REGISTER'),
+    REGISTER_ADDRESS: new Screen('Address', 'REGISTER'),
+    REGISTER_IDENTIFICATION: new Screen('Identification', 'REGISTER'),
+    REGISTER_DRIVER_LICENCE: new Screen('DriverLicence', 'REGISTER'),
+    DRIVE: new Screen('Drive', 'CAR'),
+    SUPPORT: new Screen('Support', null),
+    SUPPORT_FAQS: new Screen('SupportFaqs', null),
+    SUPPORT_FAQ: new Screen('SupportFaq', null),
+    SUPPORT_CHAT: new Screen('SupportChat', null),
 }
 
 class Size {
@@ -154,6 +158,8 @@ export const icons = {
     SKIP: new Icon('skip-forward', 'icon:skip'),
     SEGMENT_OPEN: new Icon('arrow-dropdown', 'icon:segmentOpen'),
     SEGMENT_CLOSE: new Icon('arrow-dropright', 'icon: segmentClose'),
+    CHAT: new Icon('chatbubbles', 'icon:chat'),
+    EMERGENCY_CALL: new Icon('call', 'icon:emergencyCall'),
     WRONG: new Icon('bomfire', 'icon:wrong')
 }
 

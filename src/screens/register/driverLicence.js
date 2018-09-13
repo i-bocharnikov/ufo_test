@@ -9,7 +9,7 @@ import _ from 'lodash'
 import HeaderComponent from "../../components/header";
 import registerStore from '../../stores/registerStore';
 import ActionBarComponent from '../../components/actionBar'
-import { screens, actionStyles, icons, colors, supportContexts } from '../../utils/global'
+import { screens, actionStyles, icons, colors } from '../../utils/global'
 import { showWarning } from '../../utils/interaction'
 import { observable, action } from "mobx";
 
@@ -38,7 +38,7 @@ class DriverLicenceScreen extends Component {
 
   @action
   doCancel = async (isInWizzard) => {
-    isInWizzard ? this.props.navigation.navigate(screens.HOME) : this.props.navigation.popToTop()
+    isInWizzard ? this.props.navigation.navigate(screens.HOME.name) : this.props.navigation.popToTop()
   }
 
   @action
@@ -206,12 +206,12 @@ class DriverLicenceScreen extends Component {
             }}>
               <Text style={{ color: colors.TEXT.string(), textAlign: 'center' }}>{t(inputLabel)}</Text>
             </View>
-            <HeaderComponent t={t} navigation={navigation} title={t('register:driverLicenceTitle', { user: registerStore.user })} supportContext={supportContexts.REGISTER} />
+            <HeaderComponent t={t} navigation={navigation} title={t('register:driverLicenceTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_DRIVER_LICENCE} />
           </View>
         )}
         {!showCamera && (
           <View>
-            <HeaderComponent t={t} navigation={navigation} title={t('register:driverLicenceTitle', { user: registerStore.user })} supportContext={supportContexts.REGISTER} />
+            <HeaderComponent t={t} navigation={navigation} title={t('register:driverLicenceTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_DRIVER_LICENCE} />
             <View>
               < Text style={{ color: colors.TEXT.string(), padding: 20 }}>{t('register:driverLicenceCheckLabel')}</Text>
               <Image source={{ uri: this.frontImageUrl }} style={{

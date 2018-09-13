@@ -91,8 +91,8 @@ export default {
 
   // Card
   cardDefaultBg: colors.BACKGROUND.string(), //"#fff",
-  cardBorderColor: colors.TEXT.string(), //"#ccc",
-  cardBorderRadius: 4,
+  cardBorderColor: colors.ACTIVE.string(),//"#ccc",
+  cardBorderRadius: 2,
   cardItemPadding: platform === "ios" ? 10 : 12,
 
   // CheckBox
@@ -224,19 +224,19 @@ export default {
   segmentActiveBackgroundColor: platform === "ios" ? "#007aff" : "#fff",
   segmentTextColor: platform === colors.TEXT.string(),//"ios" ? "#007aff" : "#fff",
   segmentActiveTextColor: platform === colors.ACTIVE.string(),//"ios" ? "#fff" : "#3F51B5",
-  segmentBorderColor: platform === "ios" ? "#007aff" : "#fff",
-  segmentBorderColorMain: platform === "ios" ? "#a7a6ab" : "#3F51B5",
+  segmentBorderColor: platform === "#007aff",//"ios" ? "#007aff" : "#fff",
+  segmentBorderColorMain: platform === "#a7a6ab",//"ios" ? "#a7a6ab" : "#3F51B5",
 
   // Spinner
   defaultSpinnerColor: "#45D56E",
   inverseSpinnerColor: "#1A191B",
 
   // Tab
-  tabDefaultBg: platform === "ios" ? "#F8F8F8" : "#3F51B5",
-  topTabBarTextColor: platform === "ios" ? "#6b6b6b" : "#b3c7f9",
-  topTabBarActiveTextColor: platform === "ios" ? "#007aff" : "#fff",
-  topTabBarBorderColor: platform === "ios" ? "#a7a6ab" : "#fff",
-  topTabBarActiveBorderColor: platform === "ios" ? "#007aff" : "#fff",
+  tabDefaultBg: platform === "#F8F8F8",//"ios" ? "#F8F8F8" : "#3F51B5",
+  topTabBarTextColor: platform === "#6b6b6b",//"ios" ? "#6b6b6b" : "#b3c7f9",
+  topTabBarActiveTextColor: platform === "#007aff",//"ios" ? "#007aff" : "#fff",
+  topTabBarBorderColor: platform === "#a7a6ab",//"ios" ? "#a7a6ab" : "#fff",
+  topTabBarActiveBorderColor: platform === "#007aff",//"ios" ? "#007aff" : "#fff",
 
   // Tabs
   tabBgColor: "#F8F8F8",

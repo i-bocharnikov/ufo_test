@@ -12,7 +12,7 @@ import _ from 'lodash'
 
 import HeaderComponent from "../../components/header";
 import ActionBarComponent from '../../components/actionBar'
-import { screens, actionStyles, icons, colors, supportContexts } from '../../utils/global'
+import { screens, actionStyles, icons, colors } from '../../utils/global'
 
 const DARK_COLOR = colors.BACKGROUND.string();
 const PLACEHOLDER_COLOR = "rgba(255,255,255,0.2)";
@@ -48,7 +48,7 @@ class PhoneScreen extends Component {
   @action
   doCancel = async (isInWizzard) => {
     this.isCodeRequested = false;
-    isInWizzard || !registerStore.isConnected ? this.props.navigation.navigate(screens.HOME) : this.props.navigation.popToTop()
+    isInWizzard || !registerStore.isConnected ? this.props.navigation.navigate(screens.HOME.name) : this.props.navigation.popToTop()
   }
 
   @action
@@ -62,7 +62,7 @@ class PhoneScreen extends Component {
     if (await registerStore.connect(this.code)) {
       this.code = null
       if (isInWizzard && _.isEmpty(registerStore.user.email)) {
-        this.props.navigation.navigate(screens.REGISTER_EMAIL, { 'isInWizzard': isInWizzard })
+        this.props.navigation.navigate(screens.REGISTER_EMAIL.name, { 'isInWizzard': isInWizzard })
         return
       } else {
         this.props.navigation.pop()
@@ -118,7 +118,7 @@ class PhoneScreen extends Component {
 
     return (
       <Container>
-        <HeaderComponent t={t} navigation={navigation} title={t('register:phoneTitle', { user: registerStore.user })} supportContext={supportContexts.REGISTER} />
+        <HeaderComponent t={t} navigation={navigation} title={t('register:phoneTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_PHONE} />
         <Content padder ref={(ref) => { this.content = ref; }}>
           <Form>
             {registerStore.isConnected && (

@@ -1,18 +1,21 @@
 import React, { Component } from "react";
 import { translate } from "react-i18next";
 import { Container, Content, Text } from 'native-base';
+import { NavigationEvents } from 'react-navigation';
 import { SectionList, View, TouchableHighlight } from 'react-native'
 import { observer } from "mobx-react";
 import { observable } from "mobx";
-
+import call from 'react-native-phone-call'
 
 import HeaderComponent from "../../components/header";
 import ActionBarComponent from '../../components/actionBar'
 import Icon from '../../components/Icon'
 import { actionStyles, icons, colors, sizes, navigationParams, screens } from '../../utils/global'
 import supportStore from "../../stores/supportStore";
+import driveStore from "../../stores/driveStore";
 
 const SUPPORT_FAQ = navigationParams.SUPPORT_FAQ
+const SUPPORT_FAQ_CATEGORY = navigationParams.SUPPORT_FAQ_CATEGORY
 
 @observer
 class SupportFaqsScreen extends Component {
@@ -24,9 +27,13 @@ class SupportFaqsScreen extends Component {
   section = null
 
 
-  componentDidMount() {
-
-    this.doRefresh()
+  onLoad = async (payload) => {
+    console.log('will focus', payload)
+    console.log("**************", payload)
+    if (payload && payload.state && payload.state.routeName !== 'SupportFaqs') {
+      return
+    }
+    await this.doRefresh()
     this.section = this.props.navigation.getParam(navigationParams.SUPPORT_FAQ_CATEGORY);
   }
 
@@ -39,12 +46,29 @@ class SupportFaqsScreen extends Component {
     }
   }
 
-  onPressItem = (reference) => {
-    console.log("GO to detail ", reference)
-    this.props.navigation.navigate(screens.SUPPORT_FAQ, { SUPPORT_FAQ: reference })
+  onPressItem = (sectionReference, reference) => {
+    this.props.navigation.navigate(screens.SUPPORT_FAQ.name, { SUPPORT_FAQ_CATEGORY: sectionReference, SUPPORT_FAQ: reference })
   }
 
   doRefresh = async () => { return await supportStore.list() }
+
+  doBack = async (navigation) => {
+    this.props.navigation.navigate(navigation.getParam(navigationParams.PREVIOUS_SCREEN, screens.HOME).name)
+  }
+
+  doOpenChat = async (navigation) => {
+    this.props.navigation.navigate(screens.SUPPORT_CHAT.name)
+  }
+
+  doCall = async (number) => {
+    call(
+      {
+        number: number, // String value with the number to call
+        prompt: false // Optional boolean property. Determines if the user should be prompt prior to the call 
+      }
+    )
+  }
+
 
   renderSection = ({ section: { reference, name, isOpen } }) => (
     <TouchableHighlight
@@ -60,7 +84,7 @@ class SupportFaqsScreen extends Component {
   renderItem = ({ item: { reference, title }, index, section }) => (
     <TouchableHighlight
       key={reference}
-      onPress={() => this.onPressItem(reference)}>
+      onPress={() => this.onPressItem(section.reference, reference)}>
       <View style={{ padding: 10, flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center', }}>
         <Text style={{}}>{title}</Text>
         <Icon icon={icons.NEXT} size={sizes.SMALL} color={colors.TEXT} />
@@ -72,13 +96,28 @@ class SupportFaqsScreen extends Component {
   render() {
     const { t, navigation } = this.props;
 
-    let actions = [
-      {
-        style: actionStyles.ACTIVE,
-        icon: icons.BACK,
-        onPress: () => this.props.navigation.pop()
-      },
-    ]
+
+    let actions = []
+
+    actions.push({
+      style: actionStyles.ACTIVE,
+      icon: icons.BACK,
+      onPress: () => this.doBack(navigation)
+    })
+
+    if (driveStore.emergencyNumber) {
+      actions.push({
+        style: actionStyles.TODO,
+        icon: icons.EMERGENCY_CALL,
+        onPress: () => this.doCall(driveStore.emergencyNumber)
+      })
+    }
+
+    actions.push({
+      style: actionStyles.ACTIVE,
+      icon: icons.CHAT,
+      onPress: () => this.doOpenChat(navigation)
+    })
 
     let sections = supportStore.faqCategories.map((faqCategory) => {
 
@@ -91,7 +130,8 @@ class SupportFaqsScreen extends Component {
 
     return (
       <Container>
-        <HeaderComponent t={t} navigation={navigation} title={t('support:supportTitle')} />
+        <NavigationEvents onWillFocus={payload => { this.onLoad(payload) }} />
+        <HeaderComponent t={t} navigation={navigation} title={t('support:supportTitle')} subTitle={this.section} currentScreen={screens.SUPPORT_FAQS} />
         <Content padder>
           <SectionList
             onRefresh={this.doRefresh}

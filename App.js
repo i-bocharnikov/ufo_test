@@ -16,7 +16,8 @@ import DeveloperMenu from './src/components/developerMenu/ui'
 import HomeScreen from './src/screens/homeScreen'
 import SupportFaqsScreen from './src/screens/support/faqsScreen'
 import SupportFaqScreen from './src/screens/support/faqScreen'
-import DriveScreen from './src/screens/driveScreen'
+import SupportChatScreen from './src/screens/support/chatScreen'
+import DriveScreen from './src/screens/drive/driveScreen'
 import ReserveLocationScreen from './src/screens/reserve/locationScreen'
 import ReserveDateAndCarScreen from './src/screens/reserve/dateAndCarScreen'
 import ReservePaymentScreen from './src/screens/reserve/paymentScreen'
@@ -41,12 +42,7 @@ const HomeStack = createStackNavigator(
     Home: {
       screen: HomeScreen
     },
-    SupportFaqs: {
-      screen: SupportFaqsScreen
-    },
-    SupportFaq: {
-      screen: SupportFaqScreen
-    }
+
 
   }, { headerMode: 'none', navigationOptions: commonStackNavigationOptions }
 );
@@ -56,12 +52,7 @@ const DriveStack = createStackNavigator(
     Drive: {
       screen: DriveScreen
     },
-    SupportFaqs: {
-      screen: SupportFaqsScreen
-    },
-    SupportFaq: {
-      screen: SupportFaqScreen
-    }
+
   }, { headerMode: 'none', navigationOptions: commonStackNavigationOptions }
 );
 
@@ -76,19 +67,30 @@ const ReserveStack = createStackNavigator(
     Payment: {
       screen: ReservePaymentScreen
     },
-    SupportFaqs: {
-      screen: SupportFaqsScreen
-    },
-    SupportFaq: {
-      screen: SupportFaqScreen
-    }
   }, {
-    initialRouteName: screens.RESERVE_LOCATION,
+    initialRouteName: screens.RESERVE_LOCATION.name,
     headerMode: 'none',
     navigationOptions: commonStackNavigationOptions
   }
 );
 
+const SupportStack = createStackNavigator(
+  {
+    SupportFaqs: {
+      screen: SupportFaqsScreen
+    },
+    SupportFaq: {
+      screen: SupportFaqScreen
+    },
+    SupportChat: {
+      screen: SupportChatScreen
+    }
+  }, {
+    initialRouteName: screens.SUPPORT_FAQS.name,
+    headerMode: 'none',
+    navigationOptions: commonStackNavigationOptions
+  }
+);
 
 const RegisterStack = createStackNavigator(
   {
@@ -98,14 +100,9 @@ const RegisterStack = createStackNavigator(
     Address: { screen: RegisterAddressScreen },
     Identification: { screen: RegisterIdentificationScreen },
     DriverLicence: { screen: RegisterDriverLicenceScreen },
-    SupportFaqs: {
-      screen: SupportFaqsScreen
-    },
-    SupportFaq: {
-      screen: SupportFaqScreen
-    }
 
-  }, { initialRouteName: screens.REGISTER_OVERVIEW, headerMode: 'none', navigationOptions: commonStackNavigationOptions }
+
+  }, { initialRouteName: screens.REGISTER_OVERVIEW.name, headerMode: 'none', navigationOptions: commonStackNavigationOptions }
 );
 
 
@@ -123,9 +120,12 @@ const RootStack = createBottomTabNavigator(
     Drive: {
       screen: DriveStack
     },
+    Support: {
+      screen: SupportStack
+    }
   },
   {
-    initialRouteName: screens.HOME,
+    initialRouteName: screens.HOME.name,
     navigationOptions: ({ navigation }) => ({ tabBarVisible: false }
     )
   })

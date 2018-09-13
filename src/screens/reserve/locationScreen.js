@@ -6,7 +6,7 @@ import ParallaxScrollView from 'react-native-parallax-scroll-view'
 
 import HeaderComponent from "../../components/header";
 import ActionBarComponent from '../../components/actionBar'
-import { screens, actionStyles, icons, supportContexts } from '../../utils/global'
+import { screens, actionStyles, icons } from '../../utils/global'
 
 class ReserveLocationScreen extends Component {
 
@@ -17,17 +17,17 @@ class ReserveLocationScreen extends Component {
       {
         style: actionStyles.ACTIVE,
         icon: icons.HOME,
-        onPress: () => this.props.navigation.navigate(screens.HOME)
+        onPress: () => this.props.navigation.navigate(screens.HOME.name)
       },
       {
         style: actionStyles.TODO,
         icon: icons.NEXT,
-        onPress: () => this.props.navigation.navigate(screens.RESERVE_DATE_AND_CAR)
+        onPress: () => this.props.navigation.navigate(screens.RESERVE_DATE_AND_CAR.name)
       },
     ]
     return (
       <Container>
-        <HeaderComponent t={t} navigation={navigation} title={t('register:reserveLocationTitle')} supportContext={supportContexts.RESERVE} />
+        <HeaderComponent t={t} navigation={navigation} title={t('register:reserveLocationTitle')} currentScreen={screens.RESERVE_LOCATION} />
 
         <View style={{ flex: 1 }}>
           <View style={{ height: 60, backgroundColor: 'green' }} />

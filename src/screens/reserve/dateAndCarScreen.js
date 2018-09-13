@@ -4,7 +4,7 @@ import { Container, Content } from 'native-base';
 
 import HeaderComponent from "../../components/header";
 import ActionBarComponent from '../../components/actionBar'
-import { screens, actionStyles, icons, supportContexts } from '../../utils/global'
+import { screens, actionStyles, icons } from '../../utils/global'
 
 class ReserveDateAndCarScreen extends Component {
 
@@ -21,17 +21,17 @@ class ReserveDateAndCarScreen extends Component {
       {
         style: actionStyles.ACTIVE,
         icon: icons.HOME,
-        onPress: () => this.props.navigation.navigate(screens.HOME)
+        onPress: () => this.props.navigation.navigate(screens.HOME.name)
       },
       {
         style: actionStyles.TODO,
         icon: icons.NEXT,
-        onPress: () => this.props.navigation.navigate(screens.RESERVE_PAYMENT)
+        onPress: () => this.props.navigation.navigate(screens.RESERVE_PAYMENT.name)
       },
     ]
     return (
       <Container>
-        <HeaderComponent t={t} navigation={navigation} title={t('register:reserveDateAndCarTitle')} supportContext={supportContexts.RESERVE} />
+        <HeaderComponent t={t} navigation={navigation} title={t('register:reserveDateAndCarTitle')} currentScreen={screens.RESERVE_DATE_AND_CAR} />
 
         <Content padder>
         </Content>

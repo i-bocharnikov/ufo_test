@@ -98,12 +98,20 @@ class driveStore {
             return moment(date).format(format)
     }
 
+    @computed get emergencyNumber() {
+        if (this.index === null || this.rental === null) {
+            return null
+        }
+        return this.rental.car.support_number
+    }
+
     @computed get rental() {
+        if (this.index === null) {
+            return null
+        }
         if (this.index < 0 || this.index > this.rentals.length) {
             throw new error("INVALID STATE")
         }
-
-
         if (this.index >= 0) {
             return this.rentals[this.index]
         }
@@ -116,11 +124,11 @@ class driveStore {
     }
 
     @computed get hasRentalConfirmed() {
-        return this.ongoing_rentals.length !== 0
+        return this.confirmed_rentals.length !== 0
     }
 
     @computed get hasRentalOngoing() {
-        return this.confirmed_rentals.length !== 0
+        return this.ongoing_rentals.length !== 0
     }
 
     @action

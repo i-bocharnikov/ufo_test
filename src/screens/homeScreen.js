@@ -7,7 +7,7 @@ import { translate } from "react-i18next";
 import registerStore from "../stores/registerStore"
 import driveStore from "../stores/driveStore"
 import ActionBarComponent from '../components/actionBar'
-import { screens, actionStyles, icons, supportContexts } from '../utils/global'
+import { screens, actionStyles, icons } from '../utils/global'
 import HeaderComponent from "../components/header";
 const video = require('../assets/UFOdrive.mp4')
 
@@ -21,23 +21,23 @@ class HomeScreen extends React.Component {
       {
         style: driveStore.hasRentalConfirmedOrOngoing ? actionStyles.ACTIVE : actionStyles.TODO,
         icon: icons.RESERVE,
-        onPress: () => navigation.navigate(screens.RESERVE)
+        onPress: () => navigation.navigate(screens.RESERVE.name)
       },
       {
         style: registerStore.isUserRegistered ? actionStyles.DONE : actionStyles.TODO,
         icon: icons.REGISTER,
-        onPress: () => navigation.navigate(screens.REGISTER)
+        onPress: () => navigation.navigate(screens.REGISTER.name)
       },
       {
         style: driveStore.hasRentalOngoing ? actionStyles.TODO : driveStore.hasRentalConfirmed ? actionStyles.ACTIVE : actionStyles.DISABLE,
         icon: icons.DRIVE,
-        onPress: () => navigation.navigate(screens.DRIVE)
+        onPress: () => navigation.navigate(screens.DRIVE.name)
       }
     ]
 
     return (
       <Container>
-        <Video source={video}
+        {/*  <Video source={video}
           ref={(ref) => {
             this.player = ref
           }}
@@ -52,8 +52,8 @@ class HomeScreen extends React.Component {
           repeat={true}
           paused={false}
           muted={true}
-        />
-        <HeaderComponent transparent t={t} navigation={navigation} supportContext={supportContexts.HOME} />
+        /> */}
+        <HeaderComponent transparent t={t} navigation={navigation} currentScreen={screens.HOME} />
         <Content padder>
           <Text>{t('home:welcome', { user: registerStore.user })}</Text>
           <Text>{driveStore.hasRentalConfirmedOrOngoing}</Text>

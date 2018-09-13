@@ -10,7 +10,7 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 
 import HeaderComponent from "../../components/header";
 import ActionBarComponent from '../../components/actionBar'
-import { screens, actionStyles, icons, colors, supportContexts } from '../../utils/global'
+import { screens, actionStyles, icons, colors } from '../../utils/global'
 import { observable, action } from "mobx";
 
 const GOOGLE_API = 'AIzaSyBZ11c3GCMMBlSpF3H-4DK6PioxJjaFPe0'
@@ -22,7 +22,7 @@ class AddressScreen extends Component {
 
   @action
   doCancel = async (isInWizzard) => {
-    isInWizzard ? this.props.navigation.navigate(screens.HOME) : this.props.navigation.popToTop()
+    isInWizzard ? this.props.navigation.navigate(screens.HOME.name) : this.props.navigation.popToTop()
   }
 
   @action
@@ -30,7 +30,7 @@ class AddressScreen extends Component {
     registerStore.user.address = this.addressValue
     if (await registerStore.save()) {
       if (isInWizzard) {
-        this.props.navigation.navigate(screens.REGISTER_IDENTIFICATION, { 'isInWizzard': isInWizzard })
+        this.props.navigation.navigate(screens.REGISTER_IDENTIFICATION.name, { 'isInWizzard': isInWizzard })
         return
       }
       this.props.navigation.pop()
@@ -62,7 +62,7 @@ class AddressScreen extends Component {
 
     return (
       <Container>
-        <HeaderComponent t={t} navigation={navigation} title={t('register:addressTitle', { user: registerStore.user })} supportContext={supportContexts.REGISTER} />
+        <HeaderComponent t={t} navigation={navigation} title={t('register:addressTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_ADDRESS} />
         <Content padder>
           <Form>
             <Item stackedLabel>

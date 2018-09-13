@@ -3,6 +3,7 @@ package com.driverapp;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.rf1804.jivochat.RNJivochatPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import org.reactnative.camera.RNCameraPackage;
 import com.brentvatne.react.ReactVideoPackage;
@@ -29,6 +30,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNJivochatPackage(),
             new RNFetchBlobPackage(),
             new RNCameraPackage(),
             new ReactVideoPackage(),

@@ -43,6 +43,8 @@ i18n.use(LanguageDetector).init({
                 "skip": "Skip",
                 "segmentOpen": "Open",
                 "segmentClose": "Close",
+                "chat": "Chat support",
+                "emergencyCall": "Emergency call",
             },
             register: {
                 "overviewTitle": "Registration {{user.reference}} {{user.status}}",

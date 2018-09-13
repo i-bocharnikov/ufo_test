@@ -8,7 +8,7 @@ import _ from 'lodash'
 import registerStore from '../../stores/registerStore';
 import HeaderComponent from "../../components/header";
 import ActionBarComponent from '../../components/actionBar'
-import { screens, actionStyles, icons, colors, supportContexts } from '../../utils/global'
+import { screens, actionStyles, icons, colors } from '../../utils/global'
 import { observable, action } from "mobx";
 
 const REGEX_EMAIL_VALIDATION = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -40,7 +40,7 @@ class EmailScreen extends Component {
 
   @action
   doCancel = async (isInWizzard) => {
-    isInWizzard ? this.props.navigation.navigate(screens.HOME) : this.props.navigation.popToTop()
+    isInWizzard ? this.props.navigation.navigate(screens.HOME.name) : this.props.navigation.popToTop()
   }
 
   @action
@@ -48,7 +48,7 @@ class EmailScreen extends Component {
     registerStore.user.email = this.emailValue
     if (await registerStore.save()) {
       if (isInWizzard) {
-        this.props.navigation.navigate(screens.REGISTER_ADDRESS, { 'isInWizzard': isInWizzard })
+        this.props.navigation.navigate(screens.REGISTER_ADDRESS.name, { 'isInWizzard': isInWizzard })
         return
       }
       this.props.navigation.pop()
@@ -79,7 +79,7 @@ class EmailScreen extends Component {
 
     return (
       <Container>
-        <HeaderComponent t={t} navigation={navigation} title={t('register:emailTitle', { user: registerStore.user })} supportContext={supportContexts.REGISTER} />
+        <HeaderComponent t={t} navigation={navigation} title={t('register:emailTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_EMAIL} />
         <Content padder>
           <Form>
             <Item stackedLabel>
