@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { observer } from 'mobx-react';
 import { translate } from "react-i18next";
-import { NavigationEvents } from 'react-navigation';
 import { Image, StyleSheet, View, Dimensions, ImageEditor, ImageStore } from 'react-native';
 import { Container, Content, Form, Text, Row, Grid, Card, CardItem, Body, List, ListItem, Thumbnail } from 'native-base';
 import { RNCamera } from 'react-native-camera';
@@ -9,10 +8,9 @@ import _ from 'lodash'
 
 import HeaderComponent from "../../components/header";
 import registerStore from '../../stores/registerStore';
-import ActionSupportComponent from '../../components/actionSupport'
 import ActionBarComponent from '../../components/actionBar'
-import { screens, actionStyles, icons, colors } from '../../utils/global'
-import { showWarning } from '../../utils/toast'
+import { screens, actionStyles, icons, colors, supportContexts } from '../../utils/global'
+import { showWarning } from '../../utils/interaction'
 import { observable, action } from "mobx";
 
 
@@ -208,12 +206,12 @@ class DriverLicenceScreen extends Component {
             }}>
               <Text style={{ color: colors.TEXT.string(), textAlign: 'center' }}>{t(inputLabel)}</Text>
             </View>
-            <HeaderComponent t={t} title={t('register:driverLicenceTitle', { user: registerStore.user })} />
+            <HeaderComponent t={t} navigation={navigation} title={t('register:driverLicenceTitle', { user: registerStore.user })} supportContext={supportContexts.REGISTER} />
           </View>
         )}
         {!showCamera && (
           <View>
-            <HeaderComponent t={t} title={t('register:driverLicenceTitle', { user: registerStore.user })} />
+            <HeaderComponent t={t} navigation={navigation} title={t('register:driverLicenceTitle', { user: registerStore.user })} supportContext={supportContexts.REGISTER} />
             <View>
               < Text style={{ color: colors.TEXT.string(), padding: 20 }}>{t('register:driverLicenceCheckLabel')}</Text>
               <Image source={{ uri: this.frontImageUrl }} style={{
@@ -230,7 +228,6 @@ class DriverLicenceScreen extends Component {
           </View>
         )
         }
-        <ActionSupportComponent onPress={() => this.props.navigation.navigate(screens.SUPPORT, { context: screens.REGISTER_IDENTIFICATION })} />
         <ActionBarComponent actions={actions} />
       </Container >
     );

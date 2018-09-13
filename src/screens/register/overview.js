@@ -7,10 +7,9 @@ import _ from 'lodash'
 
 import Thumbnail from '../../components/thumbnail'
 import HeaderComponent from "../../components/header";
-import ActionSupportComponent from '../../components/actionSupport'
 import ActionBarComponent from '../../components/actionBar'
 import registerStore from '../../stores/registerStore';
-import { screens, actionStyles, icons, colors, sizes } from '../../utils/global'
+import { screens, actionStyles, icons, colors, sizes, supportContexts } from '../../utils/global'
 import Icon from '../../components/Icon'
 
 @observer
@@ -78,7 +77,7 @@ class RegisterScreen extends Component {
 
   render() {
 
-    const { t } = this.props;
+    const { t, navigation } = this.props;
     let actions = [
       {
         style: actionStyles.ACTIVE,
@@ -93,7 +92,7 @@ class RegisterScreen extends Component {
         icon: icons.DISCONNECT,
         onPress: async () => {
           this.isCodeRequested = false;
-          await registerStore.disconnect()
+          await registerStore.disconnect(t)
         }
       }
       )
@@ -114,7 +113,7 @@ class RegisterScreen extends Component {
     return (
       <Container>
         <NavigationEvents onWillFocus={payload => { this.onLoad(payload) }} />
-        <HeaderComponent t={t} title={t('register:overviewTitle', { user: registerStore.user })} />
+        <HeaderComponent t={t} navigation={navigation} title={t('register:overviewTitle', { user: registerStore.user })} supportContext={supportContexts.REGISTER} />
         <Content padder>
           <List>
             <ListItem>
@@ -205,7 +204,6 @@ class RegisterScreen extends Component {
             </ListItem>
           </List>
         </Content>
-        <ActionSupportComponent onPress={() => { this.props.navigation.navigate(screens.SUPPORT, { context: screens.REGISTER_OVERVIEW }) }} />
         <ActionBarComponent actions={actions} />
       </Container>
     );

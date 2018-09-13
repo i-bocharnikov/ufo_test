@@ -6,9 +6,8 @@ import { translate } from "react-i18next";
 
 import registerStore from "../stores/registerStore"
 import driveStore from "../stores/driveStore"
-import ActionSupportComponent from '../components/actionSupport'
 import ActionBarComponent from '../components/actionBar'
-import { screens, actionStyles, icons } from '../utils/global'
+import { screens, actionStyles, icons, supportContexts } from '../utils/global'
 import HeaderComponent from "../components/header";
 const video = require('../assets/UFOdrive.mp4')
 
@@ -16,23 +15,23 @@ const video = require('../assets/UFOdrive.mp4')
 class HomeScreen extends React.Component {
 
   render() {
-    const { t } = this.props;
+    const { t, navigation } = this.props;
 
     let actions = [
       {
         style: driveStore.hasRentalConfirmedOrOngoing ? actionStyles.ACTIVE : actionStyles.TODO,
         icon: icons.RESERVE,
-        onPress: () => this.props.navigation.navigate(screens.RESERVE)
+        onPress: () => navigation.navigate(screens.RESERVE)
       },
       {
         style: registerStore.isUserRegistered ? actionStyles.DONE : actionStyles.TODO,
         icon: icons.REGISTER,
-        onPress: () => this.props.navigation.navigate(screens.REGISTER)
+        onPress: () => navigation.navigate(screens.REGISTER)
       },
       {
         style: driveStore.hasRentalOngoing ? actionStyles.TODO : driveStore.hasRentalConfirmed ? actionStyles.ACTIVE : actionStyles.DISABLE,
         icon: icons.DRIVE,
-        onPress: () => this.props.navigation.navigate(screens.DRIVE)
+        onPress: () => navigation.navigate(screens.DRIVE)
       }
     ]
 
@@ -54,12 +53,11 @@ class HomeScreen extends React.Component {
           paused={false}
           muted={true}
         />
-        <HeaderComponent t={t} transparent />
+        <HeaderComponent transparent t={t} navigation={navigation} supportContext={supportContexts.HOME} />
         <Content padder>
           <Text>{t('home:welcome', { user: registerStore.user })}</Text>
           <Text>{driveStore.hasRentalConfirmedOrOngoing}</Text>
         </Content>
-        <ActionSupportComponent onPress={() => this.props.navigation.navigate(screens.SUPPORT, { context: screens.HOME })} />
         <ActionBarComponent actions={actions} />
       </Container >
     );

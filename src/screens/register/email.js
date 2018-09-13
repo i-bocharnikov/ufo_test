@@ -7,9 +7,8 @@ import _ from 'lodash'
 
 import registerStore from '../../stores/registerStore';
 import HeaderComponent from "../../components/header";
-import ActionSupportComponent from '../../components/actionSupport'
 import ActionBarComponent from '../../components/actionBar'
-import { screens, actionStyles, icons, colors, params } from '../../utils/global'
+import { screens, actionStyles, icons, colors, supportContexts } from '../../utils/global'
 import { observable, action } from "mobx";
 
 const REGEX_EMAIL_VALIDATION = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -59,7 +58,7 @@ class EmailScreen extends Component {
 
   render() {
 
-    const { t } = this.props;
+    const { t, navigation } = this.props;
 
     let isInWizzard = this.props.navigation.getParam('isInWizzard', false)
 
@@ -80,7 +79,7 @@ class EmailScreen extends Component {
 
     return (
       <Container>
-        <HeaderComponent t={t} title={t('register:emailTitle', { user: registerStore.user })} />
+        <HeaderComponent t={t} navigation={navigation} title={t('register:emailTitle', { user: registerStore.user })} supportContext={supportContexts.REGISTER} />
         <Content padder>
           <Form>
             <Item stackedLabel>
@@ -89,7 +88,6 @@ class EmailScreen extends Component {
             </Item>
           </Form>
         </Content>
-        <ActionSupportComponent onPress={() => this.props.navigation.navigate(screens.SUPPORT, { context: screens.REGISTER_EMAIL })} />
         <ActionBarComponent actions={actions} />
       </Container>
     );

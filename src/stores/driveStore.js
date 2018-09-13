@@ -148,7 +148,7 @@ class driveStore {
             } else if (!_.isEmpty(this.closed_rentals)) {
                 this.index = 0
             } else {
-                this.rental = null
+                this.index = null
             }
             return true
         }

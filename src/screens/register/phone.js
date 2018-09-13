@@ -11,9 +11,8 @@ import { Container, Content, Form, Item, Label, Input, Text } from 'native-base'
 import _ from 'lodash'
 
 import HeaderComponent from "../../components/header";
-import ActionSupportComponent from '../../components/actionSupport'
 import ActionBarComponent from '../../components/actionBar'
-import { screens, actionStyles, icons, colors } from '../../utils/global'
+import { screens, actionStyles, icons, colors, supportContexts } from '../../utils/global'
 
 const DARK_COLOR = colors.BACKGROUND.string();
 const PLACEHOLDER_COLOR = "rgba(255,255,255,0.2)";
@@ -53,9 +52,9 @@ class PhoneScreen extends Component {
   }
 
   @action
-  doDisconnect = async (isInWizzard) => {
+  doDisconnect = async (t, isInWizzard) => {
     this.isCodeRequested = false;
-    await registerStore.disconnect()
+    await registerStore.disconnect(t)
   }
 
   @action
@@ -81,7 +80,7 @@ class PhoneScreen extends Component {
 
   render() {
 
-    const { t, i18n } = this.props;
+    const { t, i18n, navigation } = this.props;
 
     let isInWizzard = this.props.navigation.getParam('isInWizzard', false)
 
@@ -112,14 +111,14 @@ class PhoneScreen extends Component {
       actions.push({
         style: registerStore.isConnected ? actionStyles.ACTIVE : actionStyles.DISABLE,
         icon: icons.DISCONNECT,
-        onPress: async () => await this.doDisconnect(isInWizzard)
+        onPress: async () => await this.doDisconnect(t, isInWizzard)
       })
     }
     let defaultPaddintTop = (Dimensions.get("window").height / 10)
 
     return (
       <Container>
-        <HeaderComponent t={t} title={t('register:phoneTitle', { user: registerStore.user })} />
+        <HeaderComponent t={t} navigation={navigation} title={t('register:phoneTitle', { user: registerStore.user })} supportContext={supportContexts.REGISTER} />
         <Content padder ref={(ref) => { this.content = ref; }}>
           <Form>
             {registerStore.isConnected && (
@@ -168,7 +167,6 @@ class PhoneScreen extends Component {
           </Form>
 
         </Content>
-        <ActionSupportComponent onPress={() => this.props.navigation.navigate(screens.SUPPORT, { context: screens.REGISTER_PHONE })} />
         <ActionBarComponent actions={actions} />
       </Container>
     );

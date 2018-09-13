@@ -5,15 +5,14 @@ import { Dimensions, View, Text, ImageBackground, Image, StyleSheet } from 'reac
 import ParallaxScrollView from 'react-native-parallax-scroll-view'
 
 import HeaderComponent from "../../components/header";
-import ActionSupportComponent from '../../components/actionSupport'
 import ActionBarComponent from '../../components/actionBar'
-import { screens, actionStyles, icons } from '../../utils/global'
+import { screens, actionStyles, icons, supportContexts } from '../../utils/global'
 
 class ReserveLocationScreen extends Component {
 
   render() {
 
-    const { t } = this.props;
+    const { t, navigation } = this.props;
     let actions = [
       {
         style: actionStyles.ACTIVE,
@@ -28,7 +27,8 @@ class ReserveLocationScreen extends Component {
     ]
     return (
       <Container>
-        <HeaderComponent t={t} title={t('reserve:reserveLocationTitle')} />
+        <HeaderComponent t={t} navigation={navigation} title={t('register:reserveLocationTitle')} supportContext={supportContexts.RESERVE} />
+
         <View style={{ flex: 1 }}>
           <View style={{ height: 60, backgroundColor: 'green' }} />
           <View style={{ flex: 1, flexDirection: 'row' }}>
@@ -44,7 +44,6 @@ class ReserveLocationScreen extends Component {
           </View>
           <View style={{ height: 60, backgroundColor: 'blue' }} />
         </View>
-        <ActionSupportComponent onPress={() => this.props.navigation.navigate(screens.SUPPORT, { context: screens.RESERVE_LOCATION })} />
         <ActionBarComponent actions={actions} />
       </Container>
 

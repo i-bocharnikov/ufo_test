@@ -3,15 +3,14 @@ import { translate } from "react-i18next";
 import { Container, Content } from 'native-base';
 
 import HeaderComponent from "../../components/header";
-import ActionSupportComponent from '../../components/actionSupport'
 import ActionBarComponent from '../../components/actionBar'
-import { screens, actionStyles, icons } from '../../utils/global'
+import { screens, actionStyles, icons, supportContexts } from '../../utils/global'
 
 class ReserveDateAndCarScreen extends Component {
 
   render() {
 
-    const { t } = this.props;
+    const { t, navigation } = this.props;
     let actions = [
 
       {
@@ -32,10 +31,10 @@ class ReserveDateAndCarScreen extends Component {
     ]
     return (
       <Container>
-        <HeaderComponent t={t} title={t('reserve:reserveDateAndCarTitle')} />
+        <HeaderComponent t={t} navigation={navigation} title={t('register:reserveDateAndCarTitle')} supportContext={supportContexts.RESERVE} />
+
         <Content padder>
         </Content>
-        <ActionSupportComponent onPress={() => this.props.navigation.navigate(screens.SUPPORT, { context: screens.RESERVE_DATE_AND_CAR })} />
         <ActionBarComponent actions={actions} />
       </Container>
 

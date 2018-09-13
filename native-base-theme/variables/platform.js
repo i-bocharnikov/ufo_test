@@ -18,9 +18,9 @@ export default {
 
   //Accordion
   headerStyle: "#edebed",
-  iconStyle: "#000",
+  iconStyle: colors.ACTIVE.string(),//"#000",
   contentStyle: "#f5f4f5",
-  expandedIconStyle: "#000",
+  expandedIconStyle: colors.ACTIVE.string(),//"#000",
   accordionBorderColor: "#d3d3d3",
 
   // Android
@@ -244,7 +244,7 @@ export default {
 
   // Text
   textColor: colors.TEXT.string(),//"#000",
-  inverseTextColor: "#fff",
+  inverseTextColor: colors.ACTIVE.string(),//"#fff",
   noteFontSize: 14,
   get defaultTextColor() {
     return this.textColor;

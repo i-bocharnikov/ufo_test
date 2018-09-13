@@ -6,7 +6,7 @@ import { sizes, colors, icons } from '../utils/global'
 
 const isIos = Platform.OS === 'ios'
 
-export default class LogoComponent extends React.Component {
+export default class IconComponent extends React.Component {
     render() {
         let name = (isIos ? 'ios-' : 'md-') + (this.props.icon && this.props.icon.name ? this.props.icon.name : icons.WRONG)
         let color = this.props.color ? this.props.color : colors.WRONG

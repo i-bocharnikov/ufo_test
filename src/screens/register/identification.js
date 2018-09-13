@@ -9,10 +9,9 @@ import _ from 'lodash'
 
 import HeaderComponent from "../../components/header";
 import registerStore from '../../stores/registerStore';
-import ActionSupportComponent from '../../components/actionSupport'
 import ActionBarComponent from '../../components/actionBar'
-import { screens, actionStyles, icons, colors } from '../../utils/global'
-import { showWarning } from '../../utils/toast'
+import { screens, actionStyles, icons, colors, supportContexts } from '../../utils/global'
+import { showWarning } from '../../utils/interaction'
 import { observable, action } from "mobx";
 
 
@@ -213,12 +212,12 @@ class IdentificationScreen extends Component {
             }}>
               <Text style={{ color: colors.TEXT.string(), textAlign: 'center' }}>{t(inputLabel)}</Text>
             </View>
-            <HeaderComponent t={t} title={t('register:identificationTitle', { user: registerStore.user })} />
+            <HeaderComponent t={t} navigation={navigation} title={t('register:identificationTitle', { user: registerStore.user })} supportContext={supportContexts.REGISTER} />
           </View>
         )}
         {!showCamera && (
           <View>
-            <HeaderComponent t={t} title={t('register:identificationTitle', { user: registerStore.user })} />
+            <HeaderComponent t={t} navigation={navigation} title={t('register:identificationTitle', { user: registerStore.user })} supportContext={supportContexts.REGISTER} />
             <View>
               < Text style={{ color: colors.TEXT.string(), padding: 20 }}>{t('register:identificationCheckLabel')}</Text>
               <Image source={{ uri: this.frontImageUrl }} style={{
@@ -235,7 +234,6 @@ class IdentificationScreen extends Component {
           </View>
         )
         }
-        <ActionSupportComponent onPress={() => this.props.navigation.navigate(screens.SUPPORT, { context: screens.REGISTER_IDENTIFICATION })} />
         <ActionBarComponent actions={actions} />
       </Container >
     );

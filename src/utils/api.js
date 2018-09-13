@@ -1,7 +1,7 @@
 import axios from "axios";
 import configurations from "../utils/configurations"
 import activitiesStore from '../stores/activitiesStore'
-import { showError } from './toast'
+import { showError } from './interaction'
 import RNFetchBlob from 'react-native-fetch-blob'
 
 const SAVE_TOKEN = null

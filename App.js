@@ -14,7 +14,8 @@ YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTIm
 
 import DeveloperMenu from './src/components/developerMenu/ui'
 import HomeScreen from './src/screens/homeScreen'
-import SupportScreen from './src/screens/supportScreen'
+import SupportFaqsScreen from './src/screens/support/faqsScreen'
+import SupportFaqScreen from './src/screens/support/faqScreen'
 import DriveScreen from './src/screens/driveScreen'
 import ReserveLocationScreen from './src/screens/reserve/locationScreen'
 import ReserveDateAndCarScreen from './src/screens/reserve/dateAndCarScreen'
@@ -29,8 +30,8 @@ import { hydrate } from './src/utils/store'
 import registerStore from "./src/stores/registerStore"
 import driveStore from "./src/stores/driveStore"
 import getTheme from './native-base-theme/components';
-import './src/utils/global'
 import { screens, colors } from './src/utils/global'
+import supportStore from "./src/stores/supportStore";
 
 const commonStackNavigationOptions = {};
 
@@ -40,9 +41,13 @@ const HomeStack = createStackNavigator(
     Home: {
       screen: HomeScreen
     },
-    Support: {
-      screen: SupportScreen
+    SupportFaqs: {
+      screen: SupportFaqsScreen
+    },
+    SupportFaq: {
+      screen: SupportFaqScreen
     }
+
   }, { headerMode: 'none', navigationOptions: commonStackNavigationOptions }
 );
 
@@ -51,8 +56,11 @@ const DriveStack = createStackNavigator(
     Drive: {
       screen: DriveScreen
     },
-    Support: {
-      screen: SupportScreen
+    SupportFaqs: {
+      screen: SupportFaqsScreen
+    },
+    SupportFaq: {
+      screen: SupportFaqScreen
     }
   }, { headerMode: 'none', navigationOptions: commonStackNavigationOptions }
 );
@@ -68,8 +76,11 @@ const ReserveStack = createStackNavigator(
     Payment: {
       screen: ReservePaymentScreen
     },
-    Support: {
-      screen: SupportScreen
+    SupportFaqs: {
+      screen: SupportFaqsScreen
+    },
+    SupportFaq: {
+      screen: SupportFaqScreen
     }
   }, {
     initialRouteName: screens.RESERVE_LOCATION,
@@ -87,8 +98,11 @@ const RegisterStack = createStackNavigator(
     Address: { screen: RegisterAddressScreen },
     Identification: { screen: RegisterIdentificationScreen },
     DriverLicence: { screen: RegisterDriverLicenceScreen },
-    Support: {
-      screen: SupportScreen
+    SupportFaqs: {
+      screen: SupportFaqsScreen
+    },
+    SupportFaq: {
+      screen: SupportFaqScreen
     }
 
   }, { initialRouteName: screens.REGISTER_OVERVIEW, headerMode: 'none', navigationOptions: commonStackNavigationOptions }
@@ -130,8 +144,9 @@ class App extends React.Component {
       console.log("****************** LOAD SERVER DATA START *******************************")
       let registerLoad = await registerStore.registerDevice()
       let driveLoad = await driveStore.list()
+      let supportLoad = await supportStore.list()
+      loadSuccess = registerLoad && driveLoad && supportLoad
       console.log("****************** LOAD SERVER DATA DONE *******************************")
-      loadSuccess = registerLoad && driveLoad
       if (!loadSuccess) {
         console.log("****************** LOAD SERVER DATA FAILED *******************************")
       }
@@ -143,8 +158,9 @@ class App extends React.Component {
     if (!loadSuccess) {
       console.log("****************** LOAD LOCAL DATA START *******************************")
       try {
-        hydrate('register', registerStore).then(() => console.log('registerStore hydrated'))
-        hydrate('drive', driveStore).then(() => console.log('driveStore hydrated'))
+        await hydrate('register', registerStore).then(() => console.log('registerStore hydrated'))
+        await hydrate('drive', driveStore).then(() => console.log('driveStore hydrated'))
+        await hydrate('support', supportStore).then(() => console.log('supportStore hydrated'))
       } catch (error) {
         console.log("****************** LOAD LOCAL DATA FAILED *******************************", error)
       }
@@ -159,7 +175,7 @@ class App extends React.Component {
     if (!this.isReady) {
       return (
         <View style={{ flex: 1, backgroundColor: colors.BACKGROUND.string() }}>
-          <ActivityIndicator style={styles.centered} />
+          <ActivityIndicator style={styles.centered} size="large" color={colors.ACTIVE} />
         </View>
       );
     }

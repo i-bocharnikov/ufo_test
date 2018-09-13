@@ -18,7 +18,7 @@ import Color from 'color'
 
 
 export const dateFormats = {
-    FULL: 'L LT'
+    FULL: 'LLLL'
 }
 
 export const colors = {
@@ -37,6 +37,21 @@ export const colors = {
     WRONG: new Color('yellow'),
 }
 
+export const supportContexts = {
+    HOME: 'RESERVE',
+    DRIVE: 'CAR',
+    RESERVE: 'RESERVE',
+    REGISTER: 'REGISTER',
+    RETURN: 'RETURN',
+
+}
+
+
+export const navigationParams = {
+    SUPPORT_FAQ_CATEGORY: 'SUPPORT_FAQ_CATEGORY',
+    SUPPORT_FAQ: 'SUPPORT_FAQ',
+}
+
 export const screens = {
     HOME: 'Home',
     RESERVE: 'Reserve',
@@ -51,7 +66,8 @@ export const screens = {
     REGISTER_IDENTIFICATION: 'Identification',
     REGISTER_DRIVER_LICENCE: 'DriverLicence',
     DRIVE: 'Drive',
-    SUPPORT: 'Support',
+    SUPPORT_FAQS: 'SupportFaqs',
+    SUPPORT_FAQ: 'SupportFaq',
 }
 
 class Size {
@@ -74,7 +90,7 @@ export const sizes = {
     MASSIVE: new Size('massive', 256),
 }
 
-class Style {
+class ActionStyle {
 
     constructor(name, color, elevation) {
         this.name = name;
@@ -87,14 +103,14 @@ class Style {
 }
 
 export const actionStyles = {
-    TODO: new Style('todo', colors.TODO, 3),
-    DONE: new Style('done', colors.DONE, 2),
-    ACTIVE: new Style('active', colors.ACTIVE, 1),
-    DISABLE: new Style('disable', colors.DISABLE, 0),
-    SUCCESS: new Style('success', colors.SUCCESS, 2),
-    ERROR: new Style('error', colors.ERROR, 3),
-    PENDIBNG: new Style('pending', colors.PENDING, 0),
-    WRONG: new Style('wrong', colors.WRONG, 0),
+    TODO: new ActionStyle('todo', colors.TODO, 3),
+    DONE: new ActionStyle('done', colors.DONE, 2),
+    ACTIVE: new ActionStyle('active', colors.ACTIVE, 1),
+    DISABLE: new ActionStyle('disable', colors.DISABLE, 0),
+    SUCCESS: new ActionStyle('success', colors.SUCCESS, 2),
+    ERROR: new ActionStyle('error', colors.ERROR, 3),
+    PENDIBNG: new ActionStyle('pending', colors.PENDING, 0),
+    WRONG: new ActionStyle('wrong', colors.WRONG, 0),
 }
 
 class Icon {
@@ -136,6 +152,8 @@ export const icons = {
     SAVE: new Icon('checkmark', 'icon:save'),
     REDO: new Icon('repeat', 'icon:redo'),
     SKIP: new Icon('skip-forward', 'icon:skip'),
+    SEGMENT_OPEN: new Icon('arrow-dropdown', 'icon:segmentOpen'),
+    SEGMENT_CLOSE: new Icon('arrow-dropright', 'icon: segmentClose'),
     WRONG: new Icon('bomfire', 'icon:wrong')
 }
 

@@ -1,6 +1,18 @@
 
-import { Toast, } from 'native-base';
+import { Toast } from 'native-base';
+import { Alert } from 'react-native';
 
+export function confirm(title, message, action) {
+    Alert.alert(
+        title,
+        message,
+        [
+            { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+            { text: 'OK', onPress: () => { console.log('OK Pressed'), action() } },
+        ],
+        { cancelable: true }
+    )
+}
 
 export function showError(message) {
     Toast.show({

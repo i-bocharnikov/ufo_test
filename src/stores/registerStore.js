@@ -8,6 +8,7 @@ import configurations from "../utils/configurations";
 import { clearAuthenticationsFromStore, getAuthenticationUUIDFromStore, setAuthenticationUUIDInStore, setAuthenticationPasswordInStore, getAuthenticationPasswordFromStore, setAuthenticationTokenInStore } from "../utils/authentications"
 import { useTokenInApi, postToApi, putToApi, downloadFromApi, uploadToApi } from '../utils/api'
 import driveStore from './driveStore'
+import { confirm } from '../utils/interaction';
 
 const USER_STATUS_REGISTERED = "registered"
 const USER_STATUS_REGISTRATION_PENDING = "registration_pending"
@@ -149,8 +150,7 @@ class registerStore {
     };
 
     @action
-    async disconnect() {
-
+    async doDisconnect() {
         //TODO add logout service on server so we can unmap device and user in place of recreating new device
         await clearAuthenticationsFromStore();
         this.identificationFrontDocument = null
@@ -158,6 +158,11 @@ class registerStore {
         this.driverLicenceFrontDocument = null
         this.driverLicenceBackDocument = null
         return await this.registerDevice()
+    }
+
+    @action
+    async disconnect(t) {
+        confirm(t('global:confirmationTitle'), t('register:disconnectConfirmationMessage'), () => this.doDisconnect())
     };
 
     @action

@@ -12,6 +12,11 @@ i18n.use(LanguageDetector).init({
             home: {
                 "welcome": "Hello {{user.reference}}, What is next ?",
             },
+            global: {
+                "confirmationTitle": "Confirmation needed",
+                "confirmationOk": "OK",
+                "confirmationCancel": "Cancel",
+            },
             icon: {
                 "reserve": "Reserve",
                 "register": "Register",
@@ -36,6 +41,8 @@ i18n.use(LanguageDetector).init({
                 "cancel": "Cancel",
                 "redo": "Retry",
                 "skip": "Skip",
+                "segmentOpen": "Open",
+                "segmentClose": "Close",
             },
             register: {
                 "overviewTitle": "Registration {{user.reference}} {{user.status}}",
@@ -64,8 +71,8 @@ i18n.use(LanguageDetector).init({
                 "CameraNotAvailable": "The camera is not available",
                 "CameraProcessingError": "Unexpected issues detected during the image processing of the camera ({{message}}). Please try again and contact the support if the problem persist.",
                 "cameraPermissionTitle": 'Permission to use camera',
-                "cameraPermissionMessage": 'We need your permission to use your camera phone'
-
+                "cameraPermissionMessage": 'We need your permission to use your camera phone',
+                "disconnectConfirmationMessage": "are you sure you want to disconnect?",
 
             },
             reserve: {

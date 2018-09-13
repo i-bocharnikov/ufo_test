@@ -4,7 +4,7 @@ import Icon from './Icon';
 import { sizes, colors, icons } from '../utils/global'
 import activitiesStore from '../stores/activitiesStore'
 import { observer } from "mobx-react";
-import { showActivitiesState } from "../utils/toast";
+import { showActivitiesState } from "../utils/interaction";
 
 @observer
 export default class ActivitiesComponent extends React.Component {

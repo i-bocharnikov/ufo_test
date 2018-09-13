@@ -9,9 +9,8 @@ import _ from 'lodash'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 import HeaderComponent from "../../components/header";
-import ActionSupportComponent from '../../components/actionSupport'
 import ActionBarComponent from '../../components/actionBar'
-import { screens, actionStyles, icons, colors } from '../../utils/global'
+import { screens, actionStyles, icons, colors, supportContexts } from '../../utils/global'
 import { observable, action } from "mobx";
 
 const GOOGLE_API = 'AIzaSyBZ11c3GCMMBlSpF3H-4DK6PioxJjaFPe0'
@@ -42,7 +41,7 @@ class AddressScreen extends Component {
 
   render() {
 
-    const { t } = this.props;
+    const { t, navigation } = this.props;
     let isInWizzard = this.props.navigation.getParam('isInWizzard', false)
 
     let actions = [
@@ -63,7 +62,7 @@ class AddressScreen extends Component {
 
     return (
       <Container>
-        <HeaderComponent t={t} title={t('register:addressTitle', { user: registerStore.user })} />
+        <HeaderComponent t={t} navigation={navigation} title={t('register:addressTitle', { user: registerStore.user })} supportContext={supportContexts.REGISTER} />
         <Content padder>
           <Form>
             <Item stackedLabel>
@@ -123,7 +122,6 @@ class AddressScreen extends Component {
             </Item>
           </Form>
         </Content>
-        <ActionSupportComponent onPress={() => this.props.navigation.navigate(screens.SUPPORT, { context: screens.REGISTER_ADDRESS })} />
         <ActionBarComponent actions={actions} />
       </Container>
     );
