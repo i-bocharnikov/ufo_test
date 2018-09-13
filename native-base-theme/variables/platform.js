@@ -90,7 +90,7 @@ export default {
 
 
   // Card
-  cardDefaultBg: colors.BACKGROUND.string(), //"#fff",
+  cardDefaultBg: colors.CARD_BACKGROUND.string(), //"#fff",
   cardBorderColor: colors.ACTIVE.string(),//"#ccc",
   cardBorderRadius: 2,
   cardItemPadding: platform === "ios" ? 10 : 12,
@@ -125,7 +125,7 @@ export default {
 
   // Font
   DefaultFontSize: 16,
-  fontFamily: platform === "ios" ? "System" : "Roboto",
+  fontFamily: "Mostardesign - SofiaProRegular",//platform === "ios" ? "System" : "Roboto",
   fontSizeBase: 15,
   get fontSizeH1() {
     return this.fontSizeBase * 1.8;
@@ -152,13 +152,13 @@ export default {
 
   // Header
   toolbarBtnColor: colors.BACKGROUND.string(),//platform === "ios" ? "#007aff" : "#fff",
-  toolbarDefaultBg: colors.BACKGROUND.string(),//platform === "ios" ? "#F8F8F8" : "#3F51B5",
+  toolbarDefaultBg: colors.HEADER_BACKGROUND.string(),//platform === "ios" ? "#F8F8F8" : "#3F51B5",
   toolbarHeight: platform === "ios" ? 64 : 56,
   toolbarSearchIconSize: platform === "ios" ? 20 : 23,
-  toolbarInputColor: colors.TEXT.string(), //platform === "ios" ? "#CECDD2" : "#fff",
+  toolbarInputColor: colors.HEADER_TEXT.string(), //platform === "ios" ? "#CECDD2" : "#fff",
   searchBarHeight: platform === "ios" ? 30 : 40,
   searchBarInputHeight: platform === "ios" ? 30 : 50,
-  toolbarBtnTextColor: colors.TEXT.string(), //platform === "ios" ? "#007aff" : "#fff",
+  toolbarBtnTextColor: colors.HEADER_TEXT.string(), //platform === "ios" ? "#007aff" : "#fff",
   toolbarDefaultBorder: platform === "ios" ? "#a7a6ab" : "#3F51B5",
   iosStatusbar: "light-content",//platform === "ios" ? "dark-content" : "light-content",
   get statusBarColor() {
@@ -254,8 +254,8 @@ export default {
   titleFontfamily: platform === "ios" ? "System" : "Roboto_medium",
   titleFontSize: platform === "ios" ? 17 : 19,
   subTitleFontSize: platform === "ios" ? 11 : 14,
-  subtitleColor: colors.TEXT.string(),//platform === "ios" ? "#8e8e93" : "#FFF",
-  titleFontColor: colors.TEXT.string(),//platform === "ios" ? "#000" : "#FFF",
+  subtitleColor: colors.HEADER_TEXT.string(),//platform === "ios" ? "#8e8e93" : "#FFF",
+  titleFontColor: colors.HEADER_TEXT.string(),//platform === "ios" ? "#000" : "#FFF",
 
   // Other
   borderRadiusBase: platform === "ios" ? 5 : 2,

@@ -3,9 +3,9 @@ package com.driverapp;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import org.reactnative.camera.RNCameraPackage;
 import com.rf1804.jivochat.RNJivochatPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
-import org.reactnative.camera.RNCameraPackage;
 import com.brentvatne.react.ReactVideoPackage;
 import com.i18n.reactnativei18n.ReactNativeI18n;
 import com.imagepicker.ImagePickerPackage;

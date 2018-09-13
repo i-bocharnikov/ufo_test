@@ -49,7 +49,7 @@ export default class HeaderComponent extends React.Component {
             </View>
         )
         return (
-            <Header style={{ backgroundColor: colors.BACKGROUND.alpha(alpha).string() }} noShadow>
+            <Header style={{ backgroundColor: colors.HEADER_BACKGROUND.alpha(alpha).string() }} noShadow>
                 <Left >{left}</Left>
                 <Body >
                     {title}
@@ -61,6 +61,3 @@ export default class HeaderComponent extends React.Component {
         );
     }
 }
-
-        /*                 
- */

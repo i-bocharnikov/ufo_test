@@ -60,6 +60,19 @@
 		ED855B4EA1BB43B2AAC8DE17 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 914F449DF8E249B4A066C414 /* Entypo.ttf */; };
 		F35A65AB082F496482EEFAD0 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FDD6C0E564104784BEF4D1AC /* FontAwesome.ttf */; };
 		72F572C199FE48D0ABB7F280 /* libRNJivochat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FCEA9CD9CD74001BAE0AD50 /* libRNJivochat.a */; };
+		04A91559B5E14BFBAE32E63A /* Merriweather-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DABA225B85004ACF8914B01F /* Merriweather-Black.ttf */; };
+		ABF32DF05E254759A296BD76 /* Merriweather-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 62EB02ADCAB74D329E9914D4 /* Merriweather-BlackItalic.ttf */; };
+		5A5628F9E90A412E9D4166FB /* Merriweather-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DB93F91ECAB04680A5DCC528 /* Merriweather-Bold.ttf */; };
+		5604B871E87A47D391180B79 /* Merriweather-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 89417DDA8B3D4A26A14666AA /* Merriweather-BoldItalic.ttf */; };
+		D872C70621944FBEA776447B /* Merriweather-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F98DF19216244A9AAD66317D /* Merriweather-Italic.ttf */; };
+		4D52242A78D74EF3A413260F /* Merriweather-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1BE071AF90FA45BBB315A9B4 /* Merriweather-Light.ttf */; };
+		D531484957564C3D9D7F761F /* Merriweather-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4B489933BE5E40E382E47392 /* Merriweather-LightItalic.ttf */; };
+		C10FD3B247A549788980CEA3 /* Merriweather-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 53CF459179F84EF8B7A48A6C /* Merriweather-Regular.ttf */; };
+		1A16BADE3D18411F958F4127 /* Mostardesign - SofiaPro-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = FD96ADDE4D6943EFAF0D0DBA /* Mostardesign - SofiaPro-Bold.otf */; };
+		0653C50E52FE433AADE7CCCC /* Mostardesign - SofiaProLight.otf in Resources */ = {isa = PBXBuildFile; fileRef = 7EDE8A03306847A8B0BB6526 /* Mostardesign - SofiaProLight.otf */; };
+		ED4876F5FC584FF9A3123736 /* Mostardesign - SofiaProMedium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 00D20AD0B56B40D09306BFE1 /* Mostardesign - SofiaProMedium.otf */; };
+		4B6F2350CA7B4236840ABE49 /* Mostardesign - SofiaProRegular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 556C9D4BFB7446FA9CECDDA6 /* Mostardesign - SofiaProRegular.otf */; };
+		FAA5B3B990CD4247BA2B03D4 /* Mostardesign - SofiaProSemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3B70A2AA66824C3C9FF3CE39 /* Mostardesign - SofiaProSemiBold.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -468,6 +481,19 @@
 		FDD6C0E564104784BEF4D1AC /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/native-base/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		52AE1648120349C5877F56E1 /* RNJivochat.xcodeproj */ = {isa = PBXFileReference; name = "RNJivochat.xcodeproj"; path = "../node_modules/react-native-jivochat/ios/RNJivochat.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		6FCEA9CD9CD74001BAE0AD50 /* libRNJivochat.a */ = {isa = PBXFileReference; name = "libRNJivochat.a"; path = "libRNJivochat.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		DABA225B85004ACF8914B01F /* Merriweather-Black.ttf */ = {isa = PBXFileReference; name = "Merriweather-Black.ttf"; path = "../src/assets/fonts/Merriweather-Black.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		62EB02ADCAB74D329E9914D4 /* Merriweather-BlackItalic.ttf */ = {isa = PBXFileReference; name = "Merriweather-BlackItalic.ttf"; path = "../src/assets/fonts/Merriweather-BlackItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		DB93F91ECAB04680A5DCC528 /* Merriweather-Bold.ttf */ = {isa = PBXFileReference; name = "Merriweather-Bold.ttf"; path = "../src/assets/fonts/Merriweather-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		89417DDA8B3D4A26A14666AA /* Merriweather-BoldItalic.ttf */ = {isa = PBXFileReference; name = "Merriweather-BoldItalic.ttf"; path = "../src/assets/fonts/Merriweather-BoldItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		F98DF19216244A9AAD66317D /* Merriweather-Italic.ttf */ = {isa = PBXFileReference; name = "Merriweather-Italic.ttf"; path = "../src/assets/fonts/Merriweather-Italic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		1BE071AF90FA45BBB315A9B4 /* Merriweather-Light.ttf */ = {isa = PBXFileReference; name = "Merriweather-Light.ttf"; path = "../src/assets/fonts/Merriweather-Light.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		4B489933BE5E40E382E47392 /* Merriweather-LightItalic.ttf */ = {isa = PBXFileReference; name = "Merriweather-LightItalic.ttf"; path = "../src/assets/fonts/Merriweather-LightItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		53CF459179F84EF8B7A48A6C /* Merriweather-Regular.ttf */ = {isa = PBXFileReference; name = "Merriweather-Regular.ttf"; path = "../src/assets/fonts/Merriweather-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		FD96ADDE4D6943EFAF0D0DBA /* Mostardesign - SofiaPro-Bold.otf */ = {isa = PBXFileReference; name = "Mostardesign - SofiaPro-Bold.otf"; path = "../src/assets/fonts/Mostardesign - SofiaPro-Bold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		7EDE8A03306847A8B0BB6526 /* Mostardesign - SofiaProLight.otf */ = {isa = PBXFileReference; name = "Mostardesign - SofiaProLight.otf"; path = "../src/assets/fonts/Mostardesign - SofiaProLight.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		00D20AD0B56B40D09306BFE1 /* Mostardesign - SofiaProMedium.otf */ = {isa = PBXFileReference; name = "Mostardesign - SofiaProMedium.otf"; path = "../src/assets/fonts/Mostardesign - SofiaProMedium.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		556C9D4BFB7446FA9CECDDA6 /* Mostardesign - SofiaProRegular.otf */ = {isa = PBXFileReference; name = "Mostardesign - SofiaProRegular.otf"; path = "../src/assets/fonts/Mostardesign - SofiaProRegular.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		3B70A2AA66824C3C9FF3CE39 /* Mostardesign - SofiaProSemiBold.otf */ = {isa = PBXFileReference; name = "Mostardesign - SofiaProSemiBold.otf"; path = "../src/assets/fonts/Mostardesign - SofiaProSemiBold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -675,6 +701,19 @@
 				75D4AD015B5A4F4DAB9CDC1F /* rubicon-icon-font.ttf */,
 				B2F7C6CC275F4CB880747687 /* SimpleLineIcons.ttf */,
 				621B307079264883949CA405 /* Zocial.ttf */,
+				DABA225B85004ACF8914B01F /* Merriweather-Black.ttf */,
+				62EB02ADCAB74D329E9914D4 /* Merriweather-BlackItalic.ttf */,
+				DB93F91ECAB04680A5DCC528 /* Merriweather-Bold.ttf */,
+				89417DDA8B3D4A26A14666AA /* Merriweather-BoldItalic.ttf */,
+				F98DF19216244A9AAD66317D /* Merriweather-Italic.ttf */,
+				1BE071AF90FA45BBB315A9B4 /* Merriweather-Light.ttf */,
+				4B489933BE5E40E382E47392 /* Merriweather-LightItalic.ttf */,
+				53CF459179F84EF8B7A48A6C /* Merriweather-Regular.ttf */,
+				FD96ADDE4D6943EFAF0D0DBA /* Mostardesign - SofiaPro-Bold.otf */,
+				7EDE8A03306847A8B0BB6526 /* Mostardesign - SofiaProLight.otf */,
+				00D20AD0B56B40D09306BFE1 /* Mostardesign - SofiaProMedium.otf */,
+				556C9D4BFB7446FA9CECDDA6 /* Mostardesign - SofiaProRegular.otf */,
+				3B70A2AA66824C3C9FF3CE39 /* Mostardesign - SofiaProSemiBold.otf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -1409,6 +1448,19 @@
 				911A4AB8CB2649A78DAB93F0 /* rubicon-icon-font.ttf in Resources */,
 				A3FB0638AAE44E07BB6CED62 /* SimpleLineIcons.ttf in Resources */,
 				ABE9E823C40349EA980FA1BE /* Zocial.ttf in Resources */,
+				04A91559B5E14BFBAE32E63A /* Merriweather-Black.ttf in Resources */,
+				ABF32DF05E254759A296BD76 /* Merriweather-BlackItalic.ttf in Resources */,
+				5A5628F9E90A412E9D4166FB /* Merriweather-Bold.ttf in Resources */,
+				5604B871E87A47D391180B79 /* Merriweather-BoldItalic.ttf in Resources */,
+				D872C70621944FBEA776447B /* Merriweather-Italic.ttf in Resources */,
+				4D52242A78D74EF3A413260F /* Merriweather-Light.ttf in Resources */,
+				D531484957564C3D9D7F761F /* Merriweather-LightItalic.ttf in Resources */,
+				C10FD3B247A549788980CEA3 /* Merriweather-Regular.ttf in Resources */,
+				1A16BADE3D18411F958F4127 /* Mostardesign - SofiaPro-Bold.otf in Resources */,
+				0653C50E52FE433AADE7CCCC /* Mostardesign - SofiaProLight.otf in Resources */,
+				ED4876F5FC584FF9A3123736 /* Mostardesign - SofiaProMedium.otf in Resources */,
+				4B6F2350CA7B4236840ABE49 /* Mostardesign - SofiaProRegular.otf in Resources */,
+				FAA5B3B990CD4247BA2B03D4 /* Mostardesign - SofiaProSemiBold.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

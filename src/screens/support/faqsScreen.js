@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { translate } from "react-i18next";
-import { Container, Content, Text } from 'native-base';
+import { Container, Content, Text, Title, H2, H3 } from 'native-base';
 import { NavigationEvents } from 'react-navigation';
 import { SectionList, View, TouchableHighlight } from 'react-native'
 import { observer } from "mobx-react";
@@ -74,9 +74,11 @@ class SupportFaqsScreen extends Component {
     <TouchableHighlight
       key={reference}
       onPress={() => this.onPressSection(reference)}>
-      <View style={{ padding: 10, flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center', backgroundColor: colors.ACTIVE.string(), borderRadius: 5 }}>
-        <Text style={{ fontWeight: 'bold' }}>{name}</Text>
-        <Icon icon={isOpen ? icons.SEGMENT_OPEN : icons.SEGMENT_CLOSE} size={sizes.SMALL} color={colors.TEXT} />
+      <View style={{ padding: 5, flexDirection: 'column', justifyContent: 'center', alignContent: 'center' }}>
+        <View style={{ padding: 2, flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center', backgroundColor: colors.ACTIVE.string(), borderRadius: 5 }}>
+          <H3 style={{ color: colors.HEADER_TEXT.string() }}>{name}</H3>
+          <Icon icon={isOpen ? icons.SEGMENT_OPEN : icons.SEGMENT_CLOSE} size={sizes.SMALL} color={colors.TEXT} />
+        </View>
       </View>
     </TouchableHighlight >
   )
@@ -85,9 +87,9 @@ class SupportFaqsScreen extends Component {
     <TouchableHighlight
       key={reference}
       onPress={() => this.onPressItem(section.reference, reference)}>
-      <View style={{ padding: 10, flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center', }}>
+      <View style={{ padding: 5, flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center', }}>
         <Text style={{}}>{title}</Text>
-        <Icon icon={icons.NEXT} size={sizes.SMALL} color={colors.TEXT} />
+        <Icon inverted icon={icons.NEXT} size={sizes.SMALL} color={colors.TEXT} />
       </View>
     </TouchableHighlight >
   )
@@ -131,7 +133,7 @@ class SupportFaqsScreen extends Component {
     return (
       <Container>
         <NavigationEvents onWillFocus={payload => { this.onLoad(payload) }} />
-        <HeaderComponent t={t} navigation={navigation} title={t('support:supportTitle')} subTitle={this.section} currentScreen={screens.SUPPORT_FAQS} />
+        <HeaderComponent t={t} navigation={navigation} title={t('support:supportTitle')} currentScreen={screens.SUPPORT_FAQS} />
         <Content padder>
           <SectionList
             onRefresh={this.doRefresh}

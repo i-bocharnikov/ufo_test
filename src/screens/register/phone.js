@@ -123,7 +123,7 @@ class PhoneScreen extends Component {
           <Form>
             {registerStore.isConnected && (
               <Item stackedLabel>
-                <Label style={{ paddingTop: defaultPaddintTop, paddingBottom: 25 }}>{t('register:phoneNumberInputLabel')}</Label>
+                <Label style={{ paddingTop: defaultPaddintTop, paddingBottom: 25, color: colors.TEXT.string() }}>{t('register:phoneNumberInputLabel')}</Label>
                 <Input defaultValue={registerStore.user.phone_number} editable={false} />
               </Item>
 

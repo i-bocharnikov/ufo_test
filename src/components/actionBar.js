@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text } from 'native-base'
 import { translate } from "react-i18next";
 import { actionStyles, colors, icons, sizes } from '../utils/global'
 import Icon from './Icon'

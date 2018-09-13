@@ -19,7 +19,6 @@ constactionStyles = StyleSheet.create({
         borderStyle: 'dashed',
         borderColor: 'white',
         alignItems: 'center',
-        //backgroundColor: "#172c32",
         justifyContent: "flex-start"
     }
 });

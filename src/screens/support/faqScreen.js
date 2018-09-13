@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { translate } from "react-i18next";
-import { Container, Content, H2, Text } from 'native-base';
+import { Container, Content, H2, Text, Title } from 'native-base';
 import { observer } from "mobx-react";
 import { Image, View, Dimensions } from 'react-native'
 import Video from 'react-native-video';
@@ -42,7 +42,7 @@ class SupportFaqScreen extends Component {
         <View style={{ padding: 20, flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
 
           <View style={{ padding: 5, flexDirection: 'row', justifyContent: 'center', alignContent: 'center', backgroundColor: colors.ACTIVE.string(), borderRadius: 5 }}>
-            <Text style={{ fontWeight: 'bold' }}>{faq.title}</Text>
+            <Title style={{ fontWeight: 'bold' }}>{faq.title}</Title>
           </View>
           {supportStore.hasImage(faq) && (
             <View style={{ padding: 5, flexDirection: 'row', justifyContent: 'center', alignContent: 'center' }}>

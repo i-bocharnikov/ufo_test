@@ -59,5 +59,10 @@
     "react-native-video": "^3.2.0",
     "react-navigation": "^2.12.1",
     "uuid": "^3.3.2"
+  },
+  "rnpm": {
+    "assets": [
+      "./src/assets/fonts/"
+    ]
   }
 }

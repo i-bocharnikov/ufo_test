@@ -140,7 +140,7 @@ class RegisterScreen extends Component {
               </Body>
               <Right>
                 <Text>{registerStore.user.phone_number}</Text>
-                <Icon style={{ paddingLeft: 5 }} icon={icons.SELECT} size={sizes.SMALL} color={colors.TEXT} />
+                <Icon inverted style={{ paddingLeft: 5 }} icon={icons.SELECT} size={sizes.SMALL} color={colors.TEXT} />
               </Right>
             </ListItem>
             <ListItem icon onPress={() => { this.props.navigation.navigate(screens.REGISTER_EMAIL.name) }}>
@@ -154,7 +154,7 @@ class RegisterScreen extends Component {
               </Body>
               <Right>
                 <Text>{_.truncate(registerStore.user.email, { 'length': 24 })}</Text>
-                <Icon style={{ paddingLeft: 5 }} icon={icons.SELECT} size={sizes.SMALL} color={colors.TEXT} />
+                <Icon inverted style={{ paddingLeft: 5 }} icon={icons.SELECT} size={sizes.SMALL} color={colors.TEXT} />
               </Right>
             </ListItem>
             <ListItem icon onPress={() => { this.props.navigation.navigate(screens.REGISTER_ADDRESS.name) }}>
@@ -168,7 +168,7 @@ class RegisterScreen extends Component {
               </Body>
               <Right>
                 <Text >{_.truncate(registerStore.user.address, { 'length': 24 })}</Text>
-                <Icon style={{ paddingLeft: 5 }} icon={icons.SELECT} size={sizes.SMALL} color={colors.TEXT} />
+                <Icon inverted style={{ paddingLeft: 5 }} icon={icons.SELECT} size={sizes.SMALL} color={colors.TEXT} />
               </Right>
             </ListItem>
             <ListItem icon onPress={() => this.props.navigation.navigate(screens.REGISTER_IDENTIFICATION.name, { frontImageUrl: registerStore.identificationFrontDocument, backImageUrl: registerStore.identificationBackDocument })}>
@@ -182,9 +182,9 @@ class RegisterScreen extends Component {
               </Body>
               <Right >
 
-                <Thumbnail source={registerStore.identificationFrontDocument} />
-                <Thumbnail source={registerStore.identificationBackDocument} />
-                <Icon style={{ paddingLeft: 5 }} icon={icons.SELECT} size={sizes.SMALL} color={colors.TEXT} />
+                <Thumbnail source={registerStore.identificationFrontDocument} style={{ backgroundColor: colors.ACTIVE.string() }} />
+                <Thumbnail source={registerStore.identificationBackDocument} style={{ backgroundColor: colors.ACTIVE.string() }} />
+                <Icon inverted style={{ paddingLeft: 5 }} icon={icons.SELECT} size={sizes.SMALL} color={colors.TEXT} />
               </Right>
             </ListItem>
             <ListItem icon onPress={() => { this.props.navigation.navigate(screens.REGISTER_DRIVER_LICENCE.name, { frontImageUrl: registerStore.driverLicenceFrontDocument, backImageUrl: registerStore.driverLicenceBackDocument }) }}>
@@ -197,9 +197,9 @@ class RegisterScreen extends Component {
                 <Text>{t('register:driverLicenceLabel')}</Text>
               </Body>
               <Right >
-                <Thumbnail source={registerStore.driverLicenceFrontDocument} />
-                <Thumbnail source={registerStore.driverLicenceBackDocument} />
-                <Icon style={{ paddingLeft: 5 }} icon={icons.SELECT} size={sizes.SMALL} color={colors.TEXT} />
+                <Thumbnail source={registerStore.driverLicenceFrontDocument} style={{ backgroundColor: colors.ACTIVE.string() }} />
+                <Thumbnail source={registerStore.driverLicenceBackDocument} style={{ backgroundColor: colors.ACTIVE.string() }} />
+                <Icon inverted style={{ paddingLeft: 5 }} icon={icons.SELECT} size={sizes.SMALL} color={colors.TEXT} />
               </Right>
             </ListItem>
           </List>
