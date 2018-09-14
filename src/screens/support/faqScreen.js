@@ -41,16 +41,16 @@ class SupportFaqScreen extends Component {
         <HeaderComponent t={t} navigation={navigation} title={t('support:supportTitle')} currentScreen={screens.SUPPORT_FAQ} />
         <View style={{ padding: 20, flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
 
-          <View style={{ padding: 5, flexDirection: 'row', justifyContent: 'center', alignContent: 'center', backgroundColor: colors.ACTIVE.string(), borderRadius: 5 }}>
+          <View style={{ padding: 10, flexDirection: 'row', justifyContent: 'center', alignContent: 'center', backgroundColor: colors.ACTIVE.string(), borderRadius: 5 }}>
             <Title style={{ fontWeight: 'bold' }}>{faq.title}</Title>
           </View>
           {supportStore.hasImage(faq) && (
-            <View style={{ padding: 5, flexDirection: 'row', justifyContent: 'center', alignContent: 'center' }}>
+            <View style={{ padding: 10, flexDirection: 'row', justifyContent: 'center', alignContent: 'center' }}>
               <Image source={{ uri: faq.media_urn, height: MEDIA_HEIGHT, width: MEDIA_WIDTH }} resizeMode={Image.resizeMode.contain} />
             </View>
           )}
           {supportStore.hasVideo(faq) && (
-            <View style={{ padding: 5, flexDirection: 'row', justifyContent: 'center', alignContent: 'center' }}>
+            <View style={{ padding: 10, flexDirection: 'row', justifyContent: 'center', alignContent: 'center' }}>
               <Video source={{ uri: faq.media_urn }}
                 ref={(ref) => {
                   this.player = ref

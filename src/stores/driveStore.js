@@ -142,25 +142,34 @@ class driveStore {
     }
 
     @computed get findGuides() {
-        if (this.guidePacks === null || this.rental) {
+        if (this.guidePacks === null || !this.rental) {
             return []
         }
         let guidePack = this.guidePacks.find(guidePack => { return guidePack.type === GUIDE_TYPE.FIND && guidePack.locationReference === this.rental.location.reference })
-        if (guidePack) {
+
+        if (!guidePack) {
             return []
         }
-        return this.guidePacks.guides
+
+        return guidePack.guides
     }
 
     @computed get returnGuides() {
-        if (this.guidePacks === null || this.rental) {
+        if (this.guidePacks === null || !this.rental) {
             return []
         }
         let guidePack = this.guidePacks.find(guidePack => { return guidePack.type === GUIDE_TYPE.RETURN && guidePack.locationReference === this.rental.location.reference })
-        if (guidePack) {
+        if (!guidePack) {
             return []
         }
-        return this.guidePacks.guides
+        return guidePack.guides
+    }
+
+    hasImage(guide) {
+        return guide.media_type === 'image'
+    }
+    hasVideo(guide) {
+        return guide.media_type === 'video'
     }
 
 
@@ -178,11 +187,11 @@ class driveStore {
 
     @action
     async reset() {
-        return await this.listRental()
+        return await this.listRentals()
     }
 
     @action
-    async listRental() {
+    async listRentals() {
 
         const response = await getFromApi("/rentals");
         if (response && response.status === "success") {
@@ -218,19 +227,27 @@ class driveStore {
     };
 
     @action
-    async listGuides(guideType, locationReference) {
+    async listFindGuides() {
 
-        const response = await getFromApi("/guides" + guideType + "/" + locationReference);
+        if (!this.rental) {
+            return false
+        }
+
+        let guideType = GUIDE_TYPE.FIND
+        let locationReference = this.rental.location.reference
+
+        const response = await getFromApi("/guides/" + guideType + "/" + locationReference);
         if (response && response.status === "success") {
             console.info("driveStore.listGuides:", response.data);
-            let guidePack = this.guidePacks.find(guidePack => { return guidePack.type === guideType && guidePack.locationReference === locationReference })
-            if (guidePack === null) {
-                this.guidePacks.push({
-                    type: guideType,
-                    locationReference: locationReference,
-                })
+            let guidePackIndex = this.guidePacks.findIndex(guidePack => { return guidePack.type === guideType && guidePack.locationReference === locationReference })
+            if (guidePackIndex >= 0) {
+                this.guidePacks.slice(guidePackIndex, guidePackIndex + 1)
             }
+            let guidePack = new GuidePack
+            guidePack.type = guideType
+            guidePack.locationReference = locationReference
             guidePack.guides = response.data.guides
+            this.guidePacks.push(guidePack)
             return true
         }
         return false

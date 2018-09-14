@@ -60,7 +60,7 @@ class DriveScreen extends Component {
     let backgroundImageUrl = configurations.UFO_SERVER_API_URL + driveStore.rental.location.image_urn
     let carImageUrl = configurations.UFO_SERVER_API_URL + driveStore.rental.car.car_model.image_front_urn
 
-    let _RefreshControl = (<RefreshControl refreshing={this.refreshing} onRefresh={async () => await driveStore.refresh()} />)
+    let _RefreshControl = (<RefreshControl refreshing={this.refreshing} onRefresh={async () => await driveStore.listRentals()} />)
 
     return (
       <Container>
