@@ -50,6 +50,11 @@ class supportStore {
     }
 
     @action
+    async reset() {
+        return await this.list()
+    }
+
+    @action
     async list() {
 
         const response = await getFromApi("/faqs");

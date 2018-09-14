@@ -75,7 +75,7 @@ class SupportFaqsScreen extends Component {
       key={reference}
       onPress={() => this.onPressSection(reference)}>
       <View style={{ padding: 5, flexDirection: 'column', justifyContent: 'center', alignContent: 'center' }}>
-        <View style={{ padding: 2, flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center', backgroundColor: colors.ACTIVE.string(), borderRadius: 5 }}>
+        <View style={{ padding: 10, flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center', backgroundColor: colors.ACTIVE.string(), borderRadius: 5 }}>
           <H3 style={{ color: colors.HEADER_TEXT.string() }}>{name}</H3>
           <Icon icon={isOpen ? icons.SEGMENT_OPEN : icons.SEGMENT_CLOSE} size={sizes.SMALL} color={colors.TEXT} />
         </View>

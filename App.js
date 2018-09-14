@@ -18,6 +18,9 @@ import SupportFaqsScreen from './src/screens/support/faqsScreen'
 import SupportFaqScreen from './src/screens/support/faqScreen'
 import SupportChatScreen from './src/screens/support/chatScreen'
 import DriveScreen from './src/screens/drive/driveScreen'
+import FindScreen from './src/screens/drive/findScreen'
+import InspectScreen from './src/screens/drive/inspectScreen'
+import RentalAgreementScreen from './src/screens/drive/rentalAgreementSreen'
 import ReserveLocationScreen from './src/screens/reserve/locationScreen'
 import ReserveDateAndCarScreen from './src/screens/reserve/dateAndCarScreen'
 import ReservePaymentScreen from './src/screens/reserve/paymentScreen'
@@ -52,7 +55,15 @@ const DriveStack = createStackNavigator(
     Drive: {
       screen: DriveScreen
     },
-
+    Find: {
+      screen: FindScreen
+    },
+    Inspect: {
+      screen: InspectScreen
+    },
+    RentalAgreement: {
+      screen: RentalAgreementScreen
+    },
   }, { headerMode: 'none', navigationOptions: commonStackNavigationOptions }
 );
 
@@ -142,9 +153,9 @@ class App extends React.Component {
     let loadSuccess = true
     try {
       console.log("****************** LOAD SERVER DATA START *******************************")
-      let registerLoad = await registerStore.registerDevice()
-      let driveLoad = await driveStore.list()
-      let supportLoad = await supportStore.list()
+      let registerLoad = await registerStore.reset()
+      let driveLoad = await driveStore.reset()
+      let supportLoad = await supportStore.reset()
       loadSuccess = registerLoad && driveLoad && supportLoad
       console.log("****************** LOAD SERVER DATA DONE *******************************")
       if (!loadSuccess) {

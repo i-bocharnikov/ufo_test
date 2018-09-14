@@ -24,13 +24,38 @@ class DriveScreen extends Component {
 
   render() {
     const { t, navigation } = this.props;
-    let actions = [
-      {
-        style: actionStyles.ACTIVE,
-        icon: icons.HOME,
-        onPress: () => this.props.navigation.navigate(screens.HOME.name)
-      },
-    ]
+    let actions = []
+
+    if (driveStore.rental) {
+
+      if ((!driveStore.rental.car_found && !driveStore.rental.initial_inspection_done)) {
+        actions.push(
+          {
+            style: actionStyles.TODO,
+            icon: icons.FIND,
+            onPress: () => this.props.navigation.navigate(screens.FIND.name)
+          }
+        )
+      }
+      if (!driveStore.rental.initial_inspection_done) {
+        actions.push(
+          {
+            style: actionStyles.TODO,
+            icon: icons.INSPECT,
+            onPress: () => this.props.navigation.navigate(screens.INSPECT.name)
+          }
+        )
+      }
+      if (!driveStore.rental.contract_signed) {
+        actions.push(
+          {
+            style: actionStyles.TODO,
+            icon: icons.RENTAL_AGREEMENT,
+            onPress: () => this.props.navigation.navigate(screens.RENTAL_AGREEMENT.name)
+          }
+        )
+      }
+    }
 
     let backgroundImageUrl = configurations.UFO_SERVER_API_URL + driveStore.rental.location.image_urn
     let carImageUrl = configurations.UFO_SERVER_API_URL + driveStore.rental.car.car_model.image_front_urn

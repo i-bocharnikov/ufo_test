@@ -21,6 +21,11 @@ i18n.use(LanguageDetector).init({
                 "reserve": "Reserve",
                 "register": "Register",
                 "drive": "Drive",
+                "find": "Find",
+                "inspect": "Inpect",
+                "return": "Return",
+                "rentalAgreement": "Start contract",
+                "drive": "Drive",
                 "back": "Back",
                 "next": "Next",
                 "home": "Home",
@@ -87,6 +92,10 @@ i18n.use(LanguageDetector).init({
             },
             drive: {
                 "driveTitle": "Rental",
+                "inspectTitle": "Inspection",
+                "findTitle": "Where is the car",
+                "returnTitle": "How to return",
+                "rentalAgreementTitle": "Sign the agreement",
             },
         },
         fr: {

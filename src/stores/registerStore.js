@@ -78,6 +78,11 @@ class registerStore {
     }
 
     @action
+    async reset() {
+        return await this.registerDevice()
+    }
+
+    @action
     async registerDevice() {
 
         let device_uuid = await getAuthenticationUUIDFromStore();

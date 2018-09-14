@@ -8,6 +8,16 @@ import _ from 'lodash'
 import { getFromApi } from '../utils/api'
 import { dateFormats } from '../utils/global'
 
+const RENTAL_STATUS = {
+    CONFIRMED: 'confirmed',
+    ONGOING: 'ongoing',
+    CLOSED: 'closed',
+}
+const GUIDE_TYPE = {
+    FIND: 'location_find',
+    RETURN: 'location_return',
+}
+
 class Location {
     @persist @observable reference = null
     @persist @observable name = null
@@ -60,14 +70,14 @@ class Key {
 class Rental {
     @persist @observable reference = null
     @persist @observable status = null
-    @persist @observable rental_can_begin = null
-    @persist @observable car_found = null
-    @persist @observable initial_inspection_done = null
-    @persist @observable contract_signed = null
-    @persist @observable ready_for_return = null
-    @persist @observable return_late = null
-    @persist @observable final_inspection_done = null
-    @persist @observable contract_ended = null
+    @persist @observable rental_can_begin = false
+    @persist @observable car_found = false
+    @persist @observable initial_inspection_done = false
+    @persist @observable contract_signed = false
+    @persist @observable ready_for_return = false
+    @persist @observable return_late = false
+    @persist @observable final_inspection_done = false
+    @persist @observable contract_ended = false
     @persist @observable message_for_driver = null
     @persist @observable start_at = null
     @persist @observable end_at = null
@@ -76,16 +86,29 @@ class Rental {
     @persist('object', Term) @observable rental_agreement = new Term
 }
 
+class Guide {
+    @persist @observable reference = null
+    @persist @observable type = null
+    @persist @observable priority = null
+    @persist @observable title = null
+    @persist @observable description = null
+    @persist @observable media_type = null
+    @persist @observable media_urn = null
+}
+
+class GuidePack {
+    @persist @observable type = null
+    @persist @observable locationReference = null
+    @persist('list', Guide) @observable guides = []
+}
 
 
 class driveStore {
 
-    @persist('list', Rental) @observable confirmed_rentals = []
-    @persist('list', Rental) @observable ongoing_rentals = []
-    @persist('list', Rental) @observable closed_rentals = []
     @persist('list', Rental) @observable rentals = []
     @persist @observable index = -1
     @persist('object', Key) @observable key = null
+    @persist('list', Guide) @observable guidePacks = []
 
 
     format(date, format) {
@@ -118,42 +141,61 @@ class driveStore {
         return new Rental
     }
 
+    @computed get findGuides() {
+        if (this.guidePacks === null || this.rental) {
+            return []
+        }
+        let guidePack = this.guidePacks.find(guidePack => { return guidePack.type === GUIDE_TYPE.FIND && guidePack.locationReference === this.rental.location.reference })
+        if (guidePack) {
+            return []
+        }
+        return this.guidePacks.guides
+    }
+
+    @computed get returnGuides() {
+        if (this.guidePacks === null || this.rental) {
+            return []
+        }
+        let guidePack = this.guidePacks.find(guidePack => { return guidePack.type === GUIDE_TYPE.RETURN && guidePack.locationReference === this.rental.location.reference })
+        if (guidePack) {
+            return []
+        }
+        return this.guidePacks.guides
+    }
+
 
     @computed get hasRentalConfirmedOrOngoing() {
-        return this.ongoing_rentals.length !== 0 || this.confirmed_rentals.length !== 0
+        return this.rentals.find(rental => { return rental.status === RENTAL_STATUS.CONFIRMED || rental.status === RENTAL_STATUS.ONGOING }) !== null
     }
 
     @computed get hasRentalConfirmed() {
-        return this.confirmed_rentals.length !== 0
+        return this.rentals.find(rental => { return rental.status === RENTAL_STATUS.CONFIRMED }) !== null
     }
 
     @computed get hasRentalOngoing() {
-        return this.ongoing_rentals.length !== 0
+        return this.rentals.find(rental => { return rental.status === RENTAL_STATUS.ONGOING }) !== null
     }
 
     @action
     async reset() {
-        await this.list()
+        return await this.listRental()
     }
 
     @action
-    async list() {
+    async listRental() {
 
         const response = await getFromApi("/rentals");
         if (response && response.status === "success") {
             console.info("driveStore.list:", response.data);
-            this.confirmed_rentals = response.data.confirmed_rentals
-            this.ongoing_rentals = response.data.ongoing_rentals
-            this.closed_rentals = response.data.closed_rentals
             this.rentals = []
-            this.rentals = this.rentals.concat(this.closed_rentals)
-            this.rentals = this.rentals.concat(this.ongoing_rentals)
-            this.rentals = this.rentals.concat(this.confirmed_rentals)
-            if (!_.isEmpty(this.ongoing_rentals)) {
-                this.index = this.closed_rentals.length
-            } else if (!_.isEmpty(this.confirmed_rentals)) {
-                this.index = this.closed_rentals.length + this.ongoing_rentals.length
-            } else if (!_.isEmpty(this.closed_rentals)) {
+            this.rentals = this.rentals.concat(response.data.closed_rentals)
+            this.rentals = this.rentals.concat(response.data.ongoing_rentals)
+            this.rentals = this.rentals.concat(response.data.confirmed_rentals)
+            if (!_.isEmpty(response.data.ongoing_rentals)) {
+                this.index = response.data.closed_rentals.length
+            } else if (!_.isEmpty(response.data.confirmed_rentals)) {
+                this.index = response.data.closed_rentals.length + response.data.ongoing_rentals.length
+            } else if (!_.isEmpty(response.data.closed_rentals)) {
                 this.index = 0
             } else {
                 this.index = null
@@ -164,16 +206,38 @@ class driveStore {
     };
 
     @action
-    async refresh() {
+    async getRental() {
 
         const response = await getFromApi("/rentals/" + this.rental.reference);
         if (response && response.status === "success") {
-            console.info("driveStore.refresh:", response.data);
+            console.info("driveStore.getRental:", response.data);
             this.rentals[this.index] = response.data.rental
             return true
         }
         return false
     };
+
+    @action
+    async listGuides(guideType, locationReference) {
+
+        const response = await getFromApi("/guides" + guideType + "/" + locationReference);
+        if (response && response.status === "success") {
+            console.info("driveStore.listGuides:", response.data);
+            let guidePack = this.guidePacks.find(guidePack => { return guidePack.type === guideType && guidePack.locationReference === locationReference })
+            if (guidePack === null) {
+                this.guidePacks.push({
+                    type: guideType,
+                    locationReference: locationReference,
+                })
+            }
+            guidePack.guides = response.data.guides
+            return true
+        }
+        return false
+    };
+
+
+
 
 
 

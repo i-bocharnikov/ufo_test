@@ -29,7 +29,7 @@ class ReserveLocationScreen extends Component {
       <Container>
         <HeaderComponent t={t} navigation={navigation} title={t('register:reserveLocationTitle')} currentScreen={screens.RESERVE_LOCATION} />
 
-        <View style={{ flex: 1 }}>
+        {/*  <View style={{ flex: 1 }}>
           <View style={{ height: 60, backgroundColor: 'green' }} />
           <View style={{ flex: 1, flexDirection: 'row' }}>
             <View style={{ width: 60, backgroundColor: 'red' }} />
@@ -43,7 +43,7 @@ class ReserveLocationScreen extends Component {
             <View style={{ width: 60, backgroundColor: 'orange' }} />
           </View>
           <View style={{ height: 60, backgroundColor: 'blue' }} />
-        </View>
+        </View> */}
         <ActionBarComponent actions={actions} />
       </Container>
 
