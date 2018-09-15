@@ -5,7 +5,7 @@ import Color from 'color'
 
 
 //https://github.com/zhangtaii/react-native-google-place-picker
-//TODO https://github.com/leecade/react-native-swiper
+//TODO 
 //https://reactnativeexample.com/react-native-range-datepicker-inspired-by-airbnb/
 //https://github.com/monterosalondon/react-native-parallax-scroll
 //https://github.com/Tinysymphony/react-native-calendar-select
@@ -144,6 +144,8 @@ export const icons = {
     RENTAL_AGREEMENT: new Icon('create', 'icon:rentalAgreement'),
     BACK: new Icon('arrow-round-back', 'icon:back'),
     NEXT: new Icon('arrow-round-forward', 'icon:next'),
+    SLIDE_PREVIOUS: new Icon('arrow-dropleft', 'icon:slidePrevious'),
+    SLIDE_NEXT: new Icon('arrow-dropright', 'icon:slideNext'),
     HOME: new Icon('home', 'icon:home'),
     CONTINUE_LATER: new Icon('home', 'icon:continueLater'),
     PAY: new Icon('card', 'icon:pay'),

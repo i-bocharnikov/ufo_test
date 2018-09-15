@@ -2,12 +2,12 @@ import React, { Component } from "react";
 import { translate } from "react-i18next";
 import { Container, Content, H2, Text, Title } from 'native-base';
 import { observer } from "mobx-react";
-import { Image, View, Dimensions } from 'react-native'
+import { View, Dimensions } from 'react-native'
 import Video from 'react-native-video';
 
 import HeaderComponent from "../../components/header";
+import Image from "../../components/Image";
 import ActionBarComponent from '../../components/actionBar'
-import Icon from '../../components/Icon'
 import { actionStyles, icons, colors, sizes, screens, navigationParams } from '../../utils/global'
 import supportStore from "../../stores/supportStore";
 
@@ -46,12 +46,12 @@ class SupportFaqScreen extends Component {
           </View>
           {supportStore.hasImage(faq) && (
             <View style={{ padding: 10, flexDirection: 'row', justifyContent: 'center', alignContent: 'center' }}>
-              <Image source={{ uri: faq.media_urn, height: MEDIA_HEIGHT, width: MEDIA_WIDTH }} resizeMode={Image.resizeMode.contain} />
+              <Image source={{ uri: faq.media_url }} style={{ height: MEDIA_HEIGHT, width: MEDIA_WIDTH }} />
             </View>
           )}
           {supportStore.hasVideo(faq) && (
             <View style={{ padding: 10, flexDirection: 'row', justifyContent: 'center', alignContent: 'center' }}>
-              <Video source={{ uri: faq.media_urn }}
+              <Video source={{ uri: faq.media_url }}
                 ref={(ref) => {
                   this.player = ref
                 }}

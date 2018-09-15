@@ -28,6 +28,8 @@ i18n.use(LanguageDetector).init({
                 "drive": "Drive",
                 "back": "Back",
                 "next": "Next",
+                "slidePrevious": "Slide previous",
+                "slideNext": "Slide next",
                 "home": "Home",
                 "continueLater": "Continue later",
                 "connect": "Connect",

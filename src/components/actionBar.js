@@ -41,8 +41,8 @@ class ActionBarComponent extends React.Component {
                             <View style={{
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                width: 60,
-                                height: 60,
+                                width: 50,
+                                height: 50,
                                 backgroundColor: color.string(),
                                 borderRadius: 100,
                                 elevation: elevation

@@ -5,7 +5,7 @@ import { observer } from "mobx-react";
 import { translate } from "react-i18next";
 
 import registerStore from "../stores/registerStore"
-import driveStore from "../stores/driveStore"
+import rentalStore from "../stores/rentalStore"
 import ActionBarComponent from '../components/actionBar'
 import { screens, actionStyles, icons } from '../utils/global'
 import HeaderComponent from "../components/header";
@@ -19,7 +19,7 @@ class HomeScreen extends React.Component {
 
     let actions = [
       {
-        style: driveStore.hasRentalConfirmedOrOngoing ? actionStyles.ACTIVE : actionStyles.TODO,
+        style: rentalStore.hasRentalConfirmedOrOngoing ? actionStyles.ACTIVE : actionStyles.TODO,
         icon: icons.RESERVE,
         onPress: () => navigation.navigate(screens.RESERVE.name)
       },
@@ -29,7 +29,7 @@ class HomeScreen extends React.Component {
         onPress: () => navigation.navigate(screens.REGISTER.name)
       },
       {
-        style: driveStore.hasRentalOngoing ? actionStyles.TODO : driveStore.hasRentalConfirmed ? actionStyles.ACTIVE : actionStyles.DISABLE,
+        style: rentalStore.hasRentalOngoing ? actionStyles.TODO : rentalStore.hasRentalConfirmed ? actionStyles.ACTIVE : actionStyles.DISABLE,
         icon: icons.DRIVE,
         onPress: () => navigation.navigate(screens.DRIVE.name)
       }
@@ -56,7 +56,7 @@ class HomeScreen extends React.Component {
         <HeaderComponent transparent t={t} navigation={navigation} currentScreen={screens.HOME} />
         <Content padder>
           <Text>{t('home:welcome', { user: registerStore.user })}</Text>
-          <Text>{driveStore.hasRentalConfirmedOrOngoing}</Text>
+          <Text>{rentalStore.hasRentalConfirmedOrOngoing}</Text>
         </Content>
         <ActionBarComponent actions={actions} />
       </Container >

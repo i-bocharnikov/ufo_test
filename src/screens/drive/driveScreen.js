@@ -1,17 +1,16 @@
 import React, { Component } from "react";
 import { translate } from "react-i18next";
 import { Container, Text } from 'native-base';
-import { Dimensions, View, Image, StyleSheet, ScrollView, RefreshControl } from 'react-native'
+import { Dimensions, View, ScrollView, RefreshControl } from 'react-native'
 import { observer } from "mobx-react";
 import { observable } from "mobx";
 
 import HeaderComponent from "../../components/header";
+import Image from "../../components/Image";
 import ActionBarComponent from '../../components/actionBar'
 import { screens, actionStyles, icons, colors, dateFormats } from '../../utils/global'
-import configurations from "../../utils/configurations"
-import driveStore from '../../stores/driveStore'
+import rentalStore from '../../stores/rentalStore'
 
-const window = Dimensions.get('window');
 const BACKGROUND_WIDTH = Dimensions.get('window').width * 1.5
 const BACKGROUND_HEIGHT = BACKGROUND_WIDTH / 2
 const CAR_WIDTH = Dimensions.get('window').width / 2
@@ -26,9 +25,10 @@ class DriveScreen extends Component {
     const { t, navigation } = this.props;
     let actions = []
 
-    if (driveStore.rental) {
+    if (rentalStore.rental) {
 
-      if ((!driveStore.rental.car_found && !driveStore.rental.initial_inspection_done)) {
+
+      if ((!rentalStore.rental.car_found && !rentalStore.rental.initial_inspection_done)) {
         actions.push(
           {
             style: actionStyles.TODO,
@@ -37,7 +37,7 @@ class DriveScreen extends Component {
           }
         )
       }
-      if (!driveStore.rental.initial_inspection_done) {
+      if (!rentalStore.rental.initial_inspection_done) {
         actions.push(
           {
             style: actionStyles.TODO,
@@ -46,7 +46,7 @@ class DriveScreen extends Component {
           }
         )
       }
-      if (!driveStore.rental.contract_signed) {
+      if (!rentalStore.rental.contract_signed) {
         actions.push(
           {
             style: actionStyles.TODO,
@@ -55,12 +55,20 @@ class DriveScreen extends Component {
           }
         )
       }
+      if (rentalStore.rental.ready_for_return) {
+        actions.push(
+          {
+            style: actionStyles.TODO,
+            icon: icons.RETURN,
+            onPress: () => this.props.navigation.navigate(screens.RETURN.name)
+          }
+        )
+      }
     }
+    let _RefreshControl = (<RefreshControl refreshing={this.refreshing} onRefresh={async () => await rentalStore.listRentals()} />)
 
-    let backgroundImageUrl = configurations.UFO_SERVER_API_URL + driveStore.rental.location.image_urn
-    let carImageUrl = configurations.UFO_SERVER_API_URL + driveStore.rental.car.car_model.image_front_urn
-
-    let _RefreshControl = (<RefreshControl refreshing={this.refreshing} onRefresh={async () => await driveStore.listRentals()} />)
+    let location = rentalStore.rental ? rentalStore.rental.location : null
+    let carModel = rentalStore.rental ? rentalStore.rental.car ? rentalStore.rental.car.car_model : null : null
 
     return (
       <Container>
@@ -68,21 +76,25 @@ class DriveScreen extends Component {
           contentContainerStyle={{ flex: 1 }}
           refreshControl={_RefreshControl}
         >
-          <Image source={{ uri: backgroundImageUrl, width: BACKGROUND_WIDTH, height: BACKGROUND_HEIGHT }} style={{ position: 'absolute', top: 0, }} resizeMode={Image.resizeMode.cover} />
+          {location && (
+            <Image source={{ uri: location.image_url }} style={{ position: 'absolute', top: 0, width: BACKGROUND_WIDTH, height: BACKGROUND_HEIGHT }} />
+          )}
           <HeaderComponent transparent t={t} navigation={navigation} currentScreen={screens.DRIVE} />
-          <View style={{
-            flex: 1, flexDirection: 'column',
-            justifyContent: 'flex-start',
-            alignItems: 'center', backgroundColor: colors.BACKGROUND.alpha(0.8).string()
-          }}>
-            <Text style={{ paddingTop: 50, paddingBottom: 20 }}>{driveStore.rental.reference}</Text>
-            <Text style={{ paddingBottom: 20 }}>{driveStore.format(driveStore.rental.start_at, dateFormats.FULL)}</Text>
-            <Text style={{ paddingBottom: 30 }}>{driveStore.format(driveStore.rental.end_at, dateFormats.FULL)}</Text>
-            <Text style={{ paddingBottom: 30 }}>{driveStore.rental.location.name}</Text>
-            <Image style={{}} source={{ uri: carImageUrl, width: CAR_WIDTH, height: CAR_HEIGHT }} resizeMode={Image.resizeMode.cover} />
-            <Text style={{ paddingTop: 10 }}>{driveStore.rental.car.car_model.manufacturer + " " + driveStore.rental.car.car_model.name + " - " + driveStore.rental.car.reference}</Text>
-          </View>
 
+          {rentalStore.rental && (
+            <View style={{
+              flex: 1, flexDirection: 'column',
+              justifyContent: 'flex-start',
+              alignItems: 'center', backgroundColor: colors.BACKGROUND.alpha(0.8).string()
+            }}>
+              <Text style={{ paddingTop: 50, paddingBottom: 20 }}>{rentalStore.rental.reference}</Text>
+              <Text style={{ paddingBottom: 20 }}>{rentalStore.format(rentalStore.rental.start_at, dateFormats.FULL)}</Text>
+              <Text style={{ paddingBottom: 30 }}>{rentalStore.format(rentalStore.rental.end_at, dateFormats.FULL)}</Text>
+              <Text style={{ paddingBottom: 30 }}>{rentalStore.rental.location.name}</Text>
+              <Image style={{ width: CAR_WIDTH, height: CAR_HEIGHT }} source={{ uri: carModel.image_front_url }} />
+              <Text style={{ paddingTop: 10 }}>{rentalStore.rental.car.car_model.manufacturer + " " + rentalStore.rental.car.car_model.name + " - " + rentalStore.rental.car.reference}</Text>
+            </View>
+          )}
 
 
         </ScrollView >

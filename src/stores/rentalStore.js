@@ -13,10 +13,7 @@ const RENTAL_STATUS = {
     ONGOING: 'ongoing',
     CLOSED: 'closed',
 }
-const GUIDE_TYPE = {
-    FIND: 'location_find',
-    RETURN: 'location_return',
-}
+
 
 class Location {
     @persist @observable reference = null
@@ -24,10 +21,10 @@ class Location {
     @persist @observable address = null
     @persist @observable latitude = null
     @persist @observable longitude = null
-    @persist @observable image_urn = null
+    @persist @observable image_url = null
     @persist @observable message = null
     @persist @observable description = null
-    @persist @observable description_urn = null
+    @persist @observable description_url = null
     @persist @observable timezone = null
 }
 
@@ -36,12 +33,12 @@ class CarModel {
     @persist @observable name = null
     @persist @observable manufacturer = null
     @persist @observable production_year = null
-    @persist @observable image_front_urn = null
-    @persist @observable image_side_urn = null
-    @persist @observable image_top_h_urn = null
-    @persist @observable image_top_v_urn = null
+    @persist @observable image_front_url = null
+    @persist @observable image_side_url = null
+    @persist @observable image_top_h_url = null
+    @persist @observable image_top_v_url = null
     @persist @observable description = null
-    @persist @observable description_urn = null
+    @persist @observable description_url = null
 }
 
 
@@ -86,29 +83,12 @@ class Rental {
     @persist('object', Term) @observable rental_agreement = new Term
 }
 
-class Guide {
-    @persist @observable reference = null
-    @persist @observable type = null
-    @persist @observable priority = null
-    @persist @observable title = null
-    @persist @observable description = null
-    @persist @observable media_type = null
-    @persist @observable media_urn = null
-}
 
-class GuidePack {
-    @persist @observable type = null
-    @persist @observable locationReference = null
-    @persist('list', Guide) @observable guides = []
-}
-
-
-class driveStore {
+class rentalStore {
 
     @persist('list', Rental) @observable rentals = []
     @persist @observable index = -1
     @persist('object', Key) @observable key = null
-    @persist('list', Guide) @observable guidePacks = []
 
 
     format(date, format) {
@@ -132,45 +112,12 @@ class driveStore {
         if (this.index === null) {
             return null
         }
-        if (this.index < 0 || this.index > this.rentals.length) {
-            throw new error("INVALID STATE")
+        if (this.index < 0 || this.index >= this.rentals.length) {
+            return null
         }
-        if (this.index >= 0) {
-            return this.rentals[this.index]
-        }
-        return new Rental
+        return this.rentals[this.index]
     }
 
-    @computed get findGuides() {
-        if (this.guidePacks === null || !this.rental) {
-            return []
-        }
-        let guidePack = this.guidePacks.find(guidePack => { return guidePack.type === GUIDE_TYPE.FIND && guidePack.locationReference === this.rental.location.reference })
-
-        if (!guidePack) {
-            return []
-        }
-
-        return guidePack.guides
-    }
-
-    @computed get returnGuides() {
-        if (this.guidePacks === null || !this.rental) {
-            return []
-        }
-        let guidePack = this.guidePacks.find(guidePack => { return guidePack.type === GUIDE_TYPE.RETURN && guidePack.locationReference === this.rental.location.reference })
-        if (!guidePack) {
-            return []
-        }
-        return guidePack.guides
-    }
-
-    hasImage(guide) {
-        return guide.media_type === 'image'
-    }
-    hasVideo(guide) {
-        return guide.media_type === 'video'
-    }
 
 
     @computed get hasRentalConfirmedOrOngoing() {
@@ -195,7 +142,7 @@ class driveStore {
 
         const response = await getFromApi("/rentals");
         if (response && response.status === "success") {
-            console.info("driveStore.list:", response.data);
+            console.info("rentalStore.list:", response.data);
             this.rentals = []
             this.rentals = this.rentals.concat(response.data.closed_rentals)
             this.rentals = this.rentals.concat(response.data.ongoing_rentals)
@@ -219,50 +166,15 @@ class driveStore {
 
         const response = await getFromApi("/rentals/" + this.rental.reference);
         if (response && response.status === "success") {
-            console.info("driveStore.getRental:", response.data);
+            console.info("rentalStore.getRental:", response.data);
             this.rentals[this.index] = response.data.rental
             return true
         }
         return false
     };
-
-    @action
-    async listFindGuides() {
-
-        if (!this.rental) {
-            return false
-        }
-
-        let guideType = GUIDE_TYPE.FIND
-        let locationReference = this.rental.location.reference
-
-        const response = await getFromApi("/guides/" + guideType + "/" + locationReference);
-        if (response && response.status === "success") {
-            console.info("driveStore.listGuides:", response.data);
-            let guidePackIndex = this.guidePacks.findIndex(guidePack => { return guidePack.type === guideType && guidePack.locationReference === locationReference })
-            if (guidePackIndex >= 0) {
-                this.guidePacks.slice(guidePackIndex, guidePackIndex + 1)
-            }
-            let guidePack = new GuidePack
-            guidePack.type = guideType
-            guidePack.locationReference = locationReference
-            guidePack.guides = response.data.guides
-            this.guidePacks.push(guidePack)
-            return true
-        }
-        return false
-    };
-
-
-
-
-
-
-
-
 }
 
-export default driveStore = new driveStore();
+export default rentalStore = new rentalStore();
 
 
 

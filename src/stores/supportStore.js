@@ -20,14 +20,12 @@ class Faq {
     @persist @observable reference = null
     @persist @observable title = null
     @persist @observable media_type = null
-    @persist @observable media_urn = null
+    @persist @observable media_url = null
     @persist @observable text = null
     @persist @observable priority = null
 
 
 }
-
-
 
 class supportStore {
 

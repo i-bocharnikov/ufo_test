@@ -19,6 +19,7 @@ import SupportFaqScreen from './src/screens/support/faqScreen'
 import SupportChatScreen from './src/screens/support/chatScreen'
 import DriveScreen from './src/screens/drive/driveScreen'
 import FindScreen from './src/screens/drive/findScreen'
+import ReturnScreen from './src/screens/drive/returnScreen'
 import InspectScreen from './src/screens/drive/inspectScreen'
 import RentalAgreementScreen from './src/screens/drive/rentalAgreementSreen'
 import ReserveLocationScreen from './src/screens/reserve/locationScreen'
@@ -31,11 +32,11 @@ import RegisterPhoneScreen from './src/screens/register/phone'
 import RegisterIdentificationScreen from './src/screens/register/identification'
 import RegisterDriverLicenceScreen from './src/screens/register/driverLicence'
 import { hydrate } from './src/utils/store'
-import registerStore from "./src/stores/registerStore"
-import driveStore from "./src/stores/driveStore"
 import getTheme from './native-base-theme/components';
 import { screens, colors } from './src/utils/global'
 import supportStore from "./src/stores/supportStore";
+import registerStore from "./src/stores/registerStore"
+import rentalStore from "./src/stores/rentalStore"
 
 const commonStackNavigationOptions = {};
 
@@ -57,6 +58,9 @@ const DriveStack = createStackNavigator(
     },
     Find: {
       screen: FindScreen
+    },
+    Return: {
+      screen: ReturnScreen
     },
     Inspect: {
       screen: InspectScreen
@@ -154,9 +158,9 @@ class App extends React.Component {
     try {
       console.log("****************** LOAD SERVER DATA START *******************************")
       let registerLoad = await registerStore.reset()
-      let driveLoad = await driveStore.reset()
+      let rentalLoad = await rentalStore.reset()
       let supportLoad = await supportStore.reset()
-      loadSuccess = registerLoad && driveLoad && supportLoad
+      loadSuccess = registerLoad && rentalLoad && supportLoad
       console.log("****************** LOAD SERVER DATA DONE *******************************")
       if (!loadSuccess) {
         console.log("****************** LOAD SERVER DATA FAILED *******************************")
@@ -170,7 +174,7 @@ class App extends React.Component {
       console.log("****************** LOAD LOCAL DATA START *******************************")
       try {
         await hydrate('register', registerStore).then(() => console.log('registerStore hydrated'))
-        await hydrate('drive', driveStore).then(() => console.log('driveStore hydrated'))
+        await hydrate('drive', rentalStore).then(() => console.log('rentalStore hydrated'))
         await hydrate('support', supportStore).then(() => console.log('supportStore hydrated'))
       } catch (error) {
         console.log("****************** LOAD LOCAL DATA FAILED *******************************", error)

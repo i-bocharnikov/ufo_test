@@ -7,7 +7,7 @@ import uuid from "uuid";
 import configurations from "../utils/configurations";
 import { clearAuthenticationsFromStore, getAuthenticationUUIDFromStore, setAuthenticationUUIDInStore, setAuthenticationPasswordInStore, getAuthenticationPasswordFromStore, setAuthenticationTokenInStore } from "../utils/authentications"
 import { useTokenInApi, postToApi, putToApi, downloadFromApi, uploadToApi } from '../utils/api'
-import driveStore from './driveStore'
+import rentalStore from './rentalStore'
 import { confirm } from '../utils/interaction';
 
 const USER_STATUS_REGISTERED = "registered"
@@ -123,7 +123,7 @@ class registerStore {
             await useTokenInApi(response.data.token);
             this.user = response.data.user
 
-            await driveStore.reset()
+            await rentalStore.reset()
 
             return true
         }

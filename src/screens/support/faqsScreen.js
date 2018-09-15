@@ -12,7 +12,7 @@ import ActionBarComponent from '../../components/actionBar'
 import Icon from '../../components/Icon'
 import { actionStyles, icons, colors, sizes, navigationParams, screens } from '../../utils/global'
 import supportStore from "../../stores/supportStore";
-import driveStore from "../../stores/driveStore";
+import rentalStore from "../../stores/rentalStore";
 
 const SUPPORT_FAQ = navigationParams.SUPPORT_FAQ
 const SUPPORT_FAQ_CATEGORY = navigationParams.SUPPORT_FAQ_CATEGORY
@@ -74,7 +74,7 @@ class SupportFaqsScreen extends Component {
     <TouchableHighlight
       key={reference}
       onPress={() => this.onPressSection(reference)}>
-      <View style={{ padding: 5, flexDirection: 'column', justifyContent: 'center', alignContent: 'center' }}>
+      <View style={{ padding: 8, flexDirection: 'column', justifyContent: 'center', alignContent: 'center' }}>
         <View style={{ padding: 10, flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center', backgroundColor: colors.ACTIVE.string(), borderRadius: 5 }}>
           <H3 style={{ color: colors.HEADER_TEXT.string() }}>{name}</H3>
           <Icon icon={isOpen ? icons.SEGMENT_OPEN : icons.SEGMENT_CLOSE} size={sizes.SMALL} color={colors.TEXT} />
@@ -87,7 +87,7 @@ class SupportFaqsScreen extends Component {
     <TouchableHighlight
       key={reference}
       onPress={() => this.onPressItem(section.reference, reference)}>
-      <View style={{ padding: 5, flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center', }}>
+      <View style={{ padding: 8, flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center', }}>
         <Text style={{}}>{title}</Text>
         <Icon inverted icon={icons.NEXT} size={sizes.SMALL} color={colors.TEXT} />
       </View>
@@ -107,11 +107,11 @@ class SupportFaqsScreen extends Component {
       onPress: () => this.doBack(navigation)
     })
 
-    if (driveStore.emergencyNumber) {
+    if (rentalStore.emergencyNumber) {
       actions.push({
         style: actionStyles.TODO,
         icon: icons.EMERGENCY_CALL,
-        onPress: () => this.doCall(driveStore.emergencyNumber)
+        onPress: () => this.doCall(rentalStore.emergencyNumber)
       })
     }
 
