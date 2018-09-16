@@ -17,6 +17,12 @@ allprojects {
     repositories {
         mavenLocal()
         jcenter()
+        maven {
+            credentials {
+                username "ufodrive"
+                password "wnyT3jPN"
+            }
+            url "https://otakeys.jfrog.io/otakeys/android-keycore" }
         maven { url "https://jitpack.io" }
         maven { url 'https://maven.google.com' }
         maven {

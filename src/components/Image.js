@@ -12,8 +12,7 @@ export default class ImageComponent extends React.Component {
         if (source.uri) {
             source.headers = {} //TODO add authentication if we secure resources
             source.priority = FastImage.priority.normal
-            console.log("*****************FastImage", source)
-            return (                
+            return (
                 <FastImage source={source} style={style} resizeMode={resizeMode} />
             );
         } else {

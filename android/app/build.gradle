@@ -143,6 +143,9 @@ configurations.all {
 }
 
 dependencies {
+    compile(group: 'com.otakeys.sdk', name: 'otakeys-sdk', version: '3.8.0', ext: 'aar') {
+        transitive = true;
+    }
     compile project(':react-native-fast-image')
     compile project(':rn-fetch-blob')
     compile (project(':react-native-camera')) {
