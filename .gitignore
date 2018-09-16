@@ -5,6 +5,7 @@
 .DS_Store
 
 .vscode/.react 
+ios/Pods/
 
 # expo
 .expo/

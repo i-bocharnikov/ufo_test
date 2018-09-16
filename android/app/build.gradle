@@ -94,8 +94,8 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion '27.0.3'
+    compileSdkVersion 26
+    buildToolsVersion '26.0.3'
 
     defaultConfig {
         applicationId "com.driverapp"
@@ -143,7 +143,8 @@ configurations.all {
 }
 
 dependencies {
-    compile project(':react-native-fetch-blob')
+    compile project(':react-native-fast-image')
+    compile project(':rn-fetch-blob')
     compile (project(':react-native-camera')) {
         exclude group: "com.google.android.gms"
         exclude group: "com.android.support"
@@ -152,12 +153,11 @@ dependencies {
             force = true
         }
     }
-    compile project(':react-native-image-picker')
     compile project(':react-native-device-info')
     compile project(':react-native-locale-detector')
     compile fileTree(dir: "libs", include: ["*.jar"])
     compile project(':react-native-video')
-    compile "com.android.support:appcompat-v7:23.0.1"
+    compile "com.android.support:appcompat-v7:27.0.1"
     compile "com.facebook.react:react-native:+"  // From node_modules
 }
 
@@ -167,7 +167,4 @@ task copyDownloadableDepsToLibs(type: Copy) {
     from configurations.compile
     into 'libs'
 }
-task copyDownloadableDepsToLibs2(type: Copy) {
-    from configurations.implementation
-    into 'libs'
-}
+

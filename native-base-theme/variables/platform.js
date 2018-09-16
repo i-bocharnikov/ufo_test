@@ -35,7 +35,7 @@ export default {
   badgePadding: platform === "ios" ? 3 : 0,
 
   // Button
-  btnFontFamily: platform === "ios" ? "System" : "Roboto_medium",
+  btnFontFamily: "Sofia Pro",//platform === "ios" ? "System" : "Roboto_medium",
   btnDisabledBg: "#b5b5b5",
   buttonPadding: 6,
   get btnPrimaryBg() {
@@ -125,7 +125,7 @@ export default {
 
   // Font
   DefaultFontSize: 16,
-  fontFamily: "Mostardesign - SofiaProRegular",//platform === "ios" ? "System" : "Roboto",
+  fontFamily: "Sofia Pro",//platform === "ios" ? "System" : "Roboto",
   fontSizeBase: 15,
   get fontSizeH1() {
     return this.fontSizeBase * 1.8;

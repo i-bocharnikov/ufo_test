@@ -75,19 +75,7 @@
 		<string>rubicon-icon-font.ttf</string>
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
-		<string>Merriweather-Black.ttf</string>
-		<string>Merriweather-BlackItalic.ttf</string>
-		<string>Merriweather-Bold.ttf</string>
-		<string>Merriweather-BoldItalic.ttf</string>
-		<string>Merriweather-Italic.ttf</string>
-		<string>Merriweather-Light.ttf</string>
-		<string>Merriweather-LightItalic.ttf</string>
-		<string>Merriweather-Regular.ttf</string>
-		<string>Mostardesign - SofiaPro-Bold.otf</string>
-		<string>Mostardesign - SofiaProLight.otf</string>
-		<string>Mostardesign - SofiaProMedium.otf</string>
-		<string>Mostardesign - SofiaProRegular.otf</string>
-		<string>Mostardesign - SofiaProSemiBold.otf</string>
+		<string>Sofia Pro.otf</string>
 	</array>
 </dict>
 </plist>

@@ -157,20 +157,21 @@ class App extends React.Component {
     let loadSuccess = true
     try {
       console.log("****************** LOAD SERVER DATA START *******************************")
-      let registerLoad = await registerStore.reset()
-      let rentalLoad = await rentalStore.reset()
-      let supportLoad = await supportStore.reset()
-      loadSuccess = registerLoad && rentalLoad && supportLoad
+      let remoteLoadSuccess = await registerStore.reset()
+      if (registerLoad) {
+        await rentalStore.reset()
+        await supportStore.reset()
+      }
       console.log("****************** LOAD SERVER DATA DONE *******************************")
-      if (!loadSuccess) {
+      if (!remoteLoadSuccess) {
         console.log("****************** LOAD SERVER DATA FAILED *******************************")
       }
     } catch (error) {
       console.log("****************** LOAD SERVER DATA FAILED *******************************", error)
-      loadSuccess = false
+      remoteLoadSuccess = false
     }
 
-    if (!loadSuccess) {
+    if (!remoteLoadSuccess) {
       console.log("****************** LOAD LOCAL DATA START *******************************")
       try {
         await hydrate('register', registerStore).then(() => console.log('registerStore hydrated'))
