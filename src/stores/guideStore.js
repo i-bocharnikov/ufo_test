@@ -5,6 +5,8 @@ import rentalStore from './rentalStore'
 
 import { getFromApi } from '../utils/api'
 
+const DEBUG = false
+
 const GUIDE_TYPE = {
     FIND: 'location_find',
     RETURN: 'location_return',
@@ -89,7 +91,8 @@ class guideStore {
 
         const response = await getFromApi("/guides/" + guideType + "/" + locationReference);
         if (response && response.status === "success") {
-            console.info("guideStore.listGuides:", response.data);
+            if (DEBUG)
+                console.info("guideStore.listGuides:", response.data);
             let guidePackIndex = this.guidePacks.findIndex(guidePack => { return guidePack.type === guideType && guidePack.locationReference === locationReference })
             if (guidePackIndex >= 0) {
                 this.guidePacks.slice(guidePackIndex, guidePackIndex + 1)

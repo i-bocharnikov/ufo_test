@@ -3,7 +3,6 @@ import { createBottomTabNavigator, createStackNavigator } from 'react-navigation
 import { Root, StyleProvider } from "native-base";
 import { translate } from "react-i18next";
 import { observer } from "mobx-react";
-import { observable } from "mobx";
 import { StyleSheet, View, ActivityIndicator } from 'react-native';
 
 //Temporary ignore warning comming from react-native
@@ -31,14 +30,11 @@ import RegisterAddressScreen from './src/screens/register/address'
 import RegisterPhoneScreen from './src/screens/register/phone'
 import RegisterIdentificationScreen from './src/screens/register/identification'
 import RegisterDriverLicenceScreen from './src/screens/register/driverLicence'
-import { hydrate } from './src/utils/store'
+
 import getTheme from './native-base-theme/components';
 import { screens, colors } from './src/utils/global'
-import supportStore from "./src/stores/supportStore";
-import registerStore from "./src/stores/registerStore"
-import rentalStore from "./src/stores/rentalStore"
-import { checkConnectivity } from './src/utils/api'
-import OTAKeyStore from './src/stores/otaKeyStore'
+import AppStore from './src/stores/appStore'
+
 
 const commonStackNavigationOptions = {};
 
@@ -151,58 +147,15 @@ const RootStack = createBottomTabNavigator(
 @observer
 class App extends React.Component {
 
-
-  @observable isReady = false
-
   async componentDidMount() {
 
-    console.log("****************** INITIALISE APPLICATION *******************************")
-
-    let remoteLoadSuccess = false
-    if (checkConnectivity()) {
-      try {
-        console.log("******************  GET OTA DEVICE IDENTIFICATION ***********************")
-        let keyAccessDeviceIdentifier = await OTAKeyStore.getKeyAccessDeviceIdentifier()
-
-        console.log("****************** OPEN SESSION ON SERVER *******************************")
-
-        let keyAccessDeviceToken = await registerStore.registerDevice(keyAccessDeviceIdentifier)
-        if (keyAccessDeviceToken) {
-          console.log("****************** OPEN SESSION IN OTA *******************************")
-          await OTAKeyStore.openSession(keyAccessDeviceToken)
-          console.log("****************** LOAD SERVER DATA *******************************")
-          await rentalStore.reset()
-          await supportStore.reset()
-          remoteLoadSuccess = true
-          console.log("****************** LOAD SERVER DATA DONE *******************************")
-        } else {
-          remoteLoadSuccess = false
-          console.log("****************** LOAD SERVER DATA FAILED *******************************")
-        }
-      } catch (error) {
-        console.log("****************** LOAD SERVER DATA FAILED *******************************", error)
-        remoteLoadSuccess = false
-      }
-    }
-
-    if (!remoteLoadSuccess) {
-      console.log("****************** FALLBACK: LOAD LOCAL DATA START *******************************")
-      try {
-        await hydrate('register', registerStore).then(() => console.log('registerStore hydrated'))
-        await hydrate('drive', rentalStore).then(() => console.log('rentalStore hydrated'))
-        await hydrate('support', supportStore).then(() => console.log('supportStore hydrated'))
-      } catch (error) {
-        console.log("****************** LOAD LOCAL DATA FAILED *******************************", error)
-      }
-      console.log("****************** LOAD LOCAL DATA DONE *******************************")
-    }
-    this.isReady = true
+    await AppStore.initialise(this.props.t)
   }
 
   render() {
     const { t } = this.props;
 
-    if (!this.isReady) {
+    if (!appStore.isAppReady) {
       return (
         <View style={{ flex: 1, backgroundColor: colors.BACKGROUND.string() }}>
           <ActivityIndicator style={styles.centered} size="large" color={colors.ACTIVE} />

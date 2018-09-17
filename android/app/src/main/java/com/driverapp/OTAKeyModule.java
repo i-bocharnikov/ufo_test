@@ -57,22 +57,11 @@ import javax.annotation.Nullable;
 
 public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListener {
 
-    private int idBleEvent = 97019701;
-
     public OTAKeyModule(ReactApplicationContext reactContext) {
         super(reactContext);
-        getOtaSdk().setOnListenService(new ServiceStateCallback() { @Override
-            public void onServiceReady(OtaKeysService service) {
-
-                Toast.makeText(getReactApplicationContext(), "OtaKeysService started!", Toast.LENGTH_LONG).show();
-
-            }
-        });
-        getOtaSdk().getBle().registerBleEvents(idBleEvent, this);
-
     }
 
-    public OtaKeysApplication getOtaSdk() {
+    private OtaKeysApplication getOtaSdk() {
         return ((OtaKeysApplication) getReactApplicationContext().getApplicationContext());
     }
 
@@ -80,6 +69,22 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
     public String getName() {
         return "OTAKeyModule";
     }
+
+    @ReactMethod
+    public void register(int registrationNumber, final Promise promise) {
+        try {
+            getOtaSdk().setOnListenService(new ServiceStateCallback() { @Override
+                public void onServiceReady(OtaKeysService service) {
+                    Toast.makeText(getReactApplicationContext(), "OtaKeysService started!", Toast.LENGTH_LONG).show();
+                }
+            });
+            getOtaSdk().getBle().registerBleEvents(registrationNumber, this);
+        }catch(Exception e) {
+            promise.reject(e);
+        }
+        return;
+    }
+
 
     /**
      * Return an instance of Access Device Token.
@@ -100,8 +105,6 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
             promise.reject(e);
         }
         return;
-
-
     }
 
 

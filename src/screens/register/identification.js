@@ -15,6 +15,7 @@ import { showWarning } from '../../utils/interaction'
 import { observable, action } from "mobx";
 
 
+
 const DEVICE_WIDTH = Dimensions.get("window").width
 const DEVICE_HEIGHT = Dimensions.get("window").height
 const CARD_RATIO = 1.586

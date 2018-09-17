@@ -1,5 +1,6 @@
 import axios from "axios";
 import configurations from "../utils/configurations"
+import { errors } from '../utils/global'
 import activitiesStore from '../stores/activitiesStore'
 import { showError } from './interaction'
 import RNFetchBlob from 'rn-fetch-blob'
@@ -102,7 +103,7 @@ export async function putToApi(path, body, suppressToastBox = false, usePublicAp
 export async function uploadToApi(domain, format, type, sub_type, uri, suppressToastBox = false) {
     try {
         if (!await checkConnectivity()) {
-            throw new Error("No internet access")
+            throw errors.INTERNET_CONNECTION_REQUIRED
         }
         let fileType = "image/jpeg"
         let fileName = domain + sub_type + ".jpg"
@@ -142,7 +143,7 @@ export async function uploadToApi(domain, format, type, sub_type, uri, suppressT
 export async function downloadFromApi(reference, thumbnail = true, suppressToastBox = false) {
     try {
         if (!await checkConnectivity()) {
-            throw new Error("No internet access")
+            throw errors.INTERNET_CONNECTION_REQUIRED
         }
         let path = thumbnail ? "thumbnail/" : "documents/"
         let url = configurations.UFO_SERVER_API_URL + "api/" + configurations.UFO_SERVER_API_VERSION + "/" + path + reference
@@ -192,16 +193,7 @@ function formatApiError(error) {
     ) {
         message = error.response.data.data.message;
         key = error.response.data.status ? error.response.data.status : "api";
-        if (key === "401") {
-            message =
-                "We detect connectivity issues, please reload the application";
-        }
-    } else {
-        if (message === "Network Error") {
-            message =
-                "We detect connection issues, please reload the application";
-        }
-    }
 
+    }
     return { code: key, message: message };
 };

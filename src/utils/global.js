@@ -176,4 +176,19 @@ export const icons = {
     WRONG: new Icon('bomfire', 'icon:wrong')
 }
 
+class UFOError extends Error {
 
+    constructor(i18nKey) {
+        super(i18nKey)
+        i18nKey = i18nKey;
+        i18nValue = {}
+    }
+    i18nKey = "error:missing"
+    i18nValue = {}
+}
+
+export const errors = {
+    INTERNET_CONNECTION_REQUIRED: new UFOError('error:internetConnectionRequired'),
+    BLUETOOTH_CONNECTION_REQUIRED: new UFOError('error:bluetoothConnectionRequired'),
+    UNEXPECTED_SERVER_REPONSE: new UFOError('error:unexpectedServerResponse')
+}

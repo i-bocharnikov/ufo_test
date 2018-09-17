@@ -7,7 +7,9 @@ import uuid from "uuid";
 import configurations from "../utils/configurations";
 import { clearAuthenticationsFromStore, getAuthenticationUUIDFromStore, setAuthenticationUUIDInStore, setAuthenticationPasswordInStore, getAuthenticationPasswordFromStore, setAuthenticationTokenInStore } from "../utils/authentications"
 import { useTokenInApi, postToApi, putToApi, downloadFromApi, uploadToApi } from '../utils/api'
-import { confirm } from '../utils/interaction';
+
+const DEBUG = false
+
 
 const USER_STATUS_REGISTERED = "registered"
 const USER_STATUS_REGISTRATION_PENDING = "registration_pending"
@@ -77,11 +79,6 @@ class registerStore {
     }
 
     @action
-    async reset() {
-        return await this.registerDevice()
-    }
-
-    @action
     async registerDevice(keyAccessDeviceIdentifier) {
 
         let device_uuid = await getAuthenticationUUIDFromStore();
@@ -116,13 +113,13 @@ class registerStore {
             );
 
         if (response && response.status === "success" && response.data && response.data.token && response.data.user) {
-            console.info("registerStore.registerDevice:", response.data);
+            if (DEBUG)
+                console.info("registerStore.registerDevice:", response.data);
             await setAuthenticationUUIDInStore(device_uuid);
             await setAuthenticationPasswordInStore(device_pwd);
             await setAuthenticationTokenInStore(response.data.token);
             await useTokenInApi(response.data.token);
             this.user = response.data.user
-            console.log("--------------------------------------this.keyAccessDeviceToke", response.data.key_access_device_token)
             return response.data.key_access_device_token
         }
         return null
@@ -133,7 +130,8 @@ class registerStore {
 
         const response = await postToApi("/users/validation/phone_number/" + this.user.phone_number, {});
         if (response && response.status === "success" && response.data && response.data.notification) {
-            console.info("registerStore.requestCode:", response.data);
+            if (DEBUG)
+                console.info("registerStore.requestCode:", response.data);
             this.acknowledge_uri = response.data.notification.acknowledge_uri
             return true
         }
@@ -141,39 +139,36 @@ class registerStore {
     };
 
     @action
-    async connect(code) {
+    async connect(code: string): Promise<boolean> {
 
         const response = await postToApi("/" + this.acknowledge_uri, { validation_code: code });
         if (response && response.status === "success") {
-            console.info("registerStore.connect:", response.data);
-            return await this.registerDevice()
+            if (DEBUG)
+                console.info("registerStore.connect:", response.data);
+            return true
         }
         return false
 
     };
 
     @action
-    async doDisconnect() {
+    async disconnect() {
         //TODO add logout service on server so we can unmap device and user in place of recreating new device
         await clearAuthenticationsFromStore();
         this.identificationFrontDocument = null
         this.identificationBackDocument = null
         this.driverLicenceFrontDocument = null
         this.driverLicenceBackDocument = null
-        return await this.registerDevice()
     }
 
-    @action
-    async disconnect(t) {
-        confirm(t('global:confirmationTitle'), t('register:disconnectConfirmationMessage'), () => this.doDisconnect())
-    };
 
     @action
     async save() {
 
         const response = await putToApi("/users/" + this.user.reference, { ...this.user });
         if (response && response.status === "success") {
-            console.info("registerStore.save:", response.data);
+            if (DEBUG)
+                console.info("registerStore.save:", response.data);
             this.user = response.data.user
             return true
         }
@@ -191,7 +186,8 @@ class registerStore {
 
         const response = await uploadToApi(domain, format, type, sub_type, uri);
         if (response && response.status === "success") {
-            console.info("registerStore.uploadDocument:", response.data);
+            if (DEBUG)
+                console.info("registerStore.uploadDocument:", response.data);
             return response.data.document
         }
         return null

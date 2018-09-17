@@ -1,36 +1,41 @@
-import { AsyncStorage } from 'react-native';
+import SInfo from 'react-native-sensitive-info';
 
-const AUTHENTICATION_TOKEN_STORAGE_KEY = 'driverState:AuthenticationToken';
-const AUTHENTICATION_UUID_STORAGE_KEY = 'driverState:AuthenticationUUID';
-const AUTHENTICATION_PASSWORD_STORAGE_KEY = 'driverState:AuthenticationPASSWORD';
+const AUTHENTICATION_TOKEN_STORAGE_KEY: string = "AT";
+const AUTHENTICATION_UUID_STORAGE_KEY: string = "AU";
+const AUTHENTICATION_PASSWORD_STORAGE_KEY: string = "AP";
 
-export function getAuthenticationTokenFromStore() {
-  return AsyncStorage.getItem(AUTHENTICATION_TOKEN_STORAGE_KEY);
+const options = {
+  sharedPreferencesName: 'myUFOPrefs',
+  keychainService: 'myUFOKeychain'
 }
 
-export async function setAuthenticationTokenInStore(token) {
-  return AsyncStorage.setItem(AUTHENTICATION_TOKEN_STORAGE_KEY, token);
+export async function getAuthenticationTokenFromStore() {
+  return await SInfo.getItem(AUTHENTICATION_TOKEN_STORAGE_KEY, options);
 }
 
-export function getAuthenticationUUIDFromStore() {
-  return AsyncStorage.getItem(AUTHENTICATION_UUID_STORAGE_KEY);
+export async function setAuthenticationTokenInStore(token: string) {
+  return await SInfo.setItem(AUTHENTICATION_TOKEN_STORAGE_KEY, token, options);
 }
 
-export async function setAuthenticationUUIDInStore(uuid) {
-  return AsyncStorage.setItem(AUTHENTICATION_UUID_STORAGE_KEY, uuid);
+export async function getAuthenticationUUIDFromStore() {
+  return await SInfo.getItem(AUTHENTICATION_UUID_STORAGE_KEY, options);
 }
 
-export function getAuthenticationPasswordFromStore() {
-  return AsyncStorage.getItem(AUTHENTICATION_PASSWORD_STORAGE_KEY);
+export async function setAuthenticationUUIDInStore(uuid: string) {
+  return await SInfo.setItem(AUTHENTICATION_UUID_STORAGE_KEY, uuid, options);
 }
 
-export async function setAuthenticationPasswordInStore(password) {
-  return AsyncStorage.setItem(AUTHENTICATION_PASSWORD_STORAGE_KEY, password);
+export async function getAuthenticationPasswordFromStore() {
+  return await SInfo.getItem(AUTHENTICATION_PASSWORD_STORAGE_KEY, options);
+}
+
+export async function setAuthenticationPasswordInStore(password: string) {
+  return await SInfo.setItem(AUTHENTICATION_PASSWORD_STORAGE_KEY, password, options);
 }
 
 export async function clearAuthenticationsFromStore() {
-  await AsyncStorage.removeItem(AUTHENTICATION_TOKEN_STORAGE_KEY);
-  await AsyncStorage.removeItem(AUTHENTICATION_UUID_STORAGE_KEY);
-  await AsyncStorage.removeItem(AUTHENTICATION_PASSWORD_STORAGE_KEY);
+  await SInfo.deleteItem(AUTHENTICATION_TOKEN_STORAGE_KEY, options);
+  await SInfo.deleteItem(AUTHENTICATION_UUID_STORAGE_KEY, options);
+  await SInfo.deleteItem(AUTHENTICATION_PASSWORD_STORAGE_KEY, options);
   return
 }

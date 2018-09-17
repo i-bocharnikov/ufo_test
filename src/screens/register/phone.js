@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import registerStore from '../../stores/registerStore';
 import { observer } from 'mobx-react';
 import { observable, action } from 'mobx';
 import { translate } from "react-i18next";
@@ -11,6 +10,8 @@ import { Container, Content, Form, Item, Label, Input, Text } from 'native-base'
 import _ from 'lodash'
 
 import HeaderComponent from "../../components/header";
+import appStore from '../../stores/appStore';
+import registerStore from '../../stores/registerStore';
 import ActionBarComponent from '../../components/actionBar'
 import { screens, actionStyles, icons, colors } from '../../utils/global'
 
@@ -34,7 +35,7 @@ class PhoneScreen extends Component {
 
   selectCountry = (country) => {
     this.phoneInput.selectCountry(country.cca2.toLowerCase())
-    countryCode = country.cca2
+    this.countryCode = country.cca2
   }
 
   onChangePhoneNumber = (phoneNumber) => {
@@ -54,13 +55,14 @@ class PhoneScreen extends Component {
   @action
   doDisconnect = async (t, isInWizzard) => {
     this.isCodeRequested = false;
-    await registerStore.disconnect(t)
+    await appStore.disconnect(t)
   }
 
   @action
   doConnect = async (isInWizzard) => {
-    if (await registerStore.connect(this.code)) {
+    if (await appStore.connect(this.code)) {
       this.code = null
+      console.log("************after connect", isInWizzard, registerStore.user.email)
       if (isInWizzard && _.isEmpty(registerStore.user.email)) {
         this.props.navigation.navigate(screens.REGISTER_EMAIL.name, { 'isInWizzard': isInWizzard })
         return

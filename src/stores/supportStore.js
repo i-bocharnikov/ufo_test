@@ -7,6 +7,7 @@ import _ from 'lodash'
 
 import { getFromApi } from '../utils/api'
 
+const DEBUG = false
 
 class FaqCategory {
     @persist @observable reference = null
@@ -57,7 +58,8 @@ class supportStore {
 
         const response = await getFromApi("/faqs");
         if (response && response.status === "success") {
-            console.info("supportStore.list:", response.data);
+            if (DEBUG)
+                console.info("supportStore.list:", response.data);
             this.faqCategories = response.data.faq_categories
             return true
         }

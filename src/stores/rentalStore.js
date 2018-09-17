@@ -8,6 +8,8 @@ import _ from 'lodash'
 import { getFromApi } from '../utils/api'
 import { dateFormats } from '../utils/global'
 
+const DEBUG = false
+
 const RENTAL_STATUS = {
     CONFIRMED: 'confirmed',
     ONGOING: 'ongoing',
@@ -142,7 +144,8 @@ class rentalStore {
 
         const response = await getFromApi("/rentals");
         if (response && response.status === "success") {
-            console.info("rentalStore.list:", response.data);
+            if (DEBUG)
+                console.info("rentalStore.list:", response.data);
             this.rentals = []
             this.rentals = this.rentals.concat(response.data.closed_rentals)
             this.rentals = this.rentals.concat(response.data.ongoing_rentals)
@@ -166,7 +169,8 @@ class rentalStore {
 
         const response = await getFromApi("/rentals/" + this.rental.reference);
         if (response && response.status === "success") {
-            console.info("rentalStore.getRental:", response.data);
+            if (DEBUG)
+                console.info("rentalStore.getRental:", response.data);
             this.rentals[this.index] = response.data.rental
             return true
         }

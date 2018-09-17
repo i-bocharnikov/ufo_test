@@ -1,10 +1,12 @@
 import React from "react";
 import { Container, Content, Text } from 'native-base';
 import Video from 'react-native-video';
-import { Button } from 'react-native';
+import { Button, ScrollView, RefreshControl } from 'react-native';
 import { observer } from "mobx-react";
+import { observable } from "mobx";
 import { translate } from "react-i18next";
 
+import appStore from '../stores/appStore'
 import registerStore from "../stores/registerStore"
 import rentalStore from "../stores/rentalStore"
 import ActionBarComponent from '../components/actionBar'
@@ -15,6 +17,11 @@ const video = require('../assets/UFOdrive.mp4')
 @observer
 class HomeScreen extends React.Component {
 
+  @observable refreshing = false
+
+  refresh = async () => {
+    await appStore.initialise()
+  }
 
   render() {
     const { t, navigation } = this.props;
@@ -37,9 +44,16 @@ class HomeScreen extends React.Component {
       }
     ]
 
+    let _RefreshControl = (<RefreshControl refreshing={this.refreshing} onRefresh={this.refresh} />)
+
+
     return (
       <Container>
-        {/*  <Video source={video}
+        <ScrollView
+          contentContainerStyle={{ flex: 1 }}
+          refreshControl={_RefreshControl}
+        >
+          {/*  <Video source={video}
           ref={(ref) => {
             this.player = ref
           }}
@@ -55,12 +69,13 @@ class HomeScreen extends React.Component {
           paused={false}
           muted={true}
         /> */}
-        <HeaderComponent transparent t={t} navigation={navigation} currentScreen={screens.HOME} />
-        <Content padder>
-          <Text>{t('home:welcome', { user: registerStore.user })}</Text>
+          <HeaderComponent transparent t={t} navigation={navigation} currentScreen={screens.HOME} />
+          <Content padder>
+            <Text>{t('home:welcome', { user: registerStore.user })}</Text>
 
-        </Content>
-        <ActionBarComponent actions={actions} />
+          </Content>
+          <ActionBarComponent actions={actions} />
+        </ScrollView>
       </Container >
     );
   }

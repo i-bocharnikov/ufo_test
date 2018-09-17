@@ -77,7 +77,7 @@ class SupportFaqsScreen extends Component {
       <View style={{ padding: 8, flexDirection: 'column', justifyContent: 'center', alignContent: 'center' }}>
         <View style={{ padding: 10, flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center', backgroundColor: colors.ACTIVE.string(), borderRadius: 5 }}>
           <H3 style={{ color: colors.HEADER_TEXT.string() }}>{name}</H3>
-          <Icon icon={isOpen ? icons.SEGMENT_OPEN : icons.SEGMENT_CLOSE} size={sizes.SMALL} color={colors.TEXT} />
+          <Icon icon={isOpen ? icons.SEGMENT_OPEN : icons.SEGMENT_CLOSE} size={sizes.SMALL} />
         </View>
       </View>
     </TouchableHighlight >
@@ -89,7 +89,7 @@ class SupportFaqsScreen extends Component {
       onPress={() => this.onPressItem(section.reference, reference)}>
       <View style={{ padding: 8, flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center', }}>
         <Text style={{}}>{title}</Text>
-        <Icon inverted icon={icons.NEXT} size={sizes.SMALL} color={colors.TEXT} />
+        <Icon inverted icon={icons.NEXT} size={sizes.SMALL} />
       </View>
     </TouchableHighlight >
   )

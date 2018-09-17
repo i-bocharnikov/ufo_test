@@ -7,8 +7,8 @@ export function confirm(title, message, action) {
         title,
         message,
         [
-            { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
-            { text: 'OK', onPress: () => { console.log('OK Pressed'), action() } },
+            { text: 'Cancel', onPress: () => { }, style: 'cancel' },
+            { text: 'OK', onPress: () => { action() } },
         ],
         { cancelable: true }
     )

@@ -61,21 +61,8 @@ class VehicleData {
 
 class OTAKeyStore {
 
-
-    constructor() {
-
-        DeviceEventEmitter.addListener('onOtaVehicleDataUpdated', function (e: Event) {
-            console.log("**********************onOtaVehicleDataUpdated", e)
-        });
-        DeviceEventEmitter.addListener('onOtaActionPerformed', function (e: Event) {
-            console.log("**********************onOtaVehicleDataUpdated", e)
-        });
-        DeviceEventEmitter.addListener('onOtaBluetoothStateChanged', function (e: Event) {
-            console.log("**********************onOtaVehicleDataUpdated", e)
-        });
-    }
-
     ota = NativeModules.OTAKeyModule
+    keyAccessDeviceRegistrationNumber: Number
     keyAccessDeviceIdentifier: string
     keyAccessDeviceToken: string
 
@@ -88,14 +75,39 @@ class OTAKeyStore {
         this.otaLog = this.otaLog + '\n' + message
     }
 
+    async register(keyAccessDeviceRegistrationNumber: Number): Promise<boolean> {
 
-    async getKeyAccessDeviceIdentifier(): Promise<string> {
         try {
-            this.debug(`-> this.ota.getAccessDeviceToken(false) start`)
-            this.keyAccessDeviceIdentifier = await this.ota.getAccessDeviceToken(false)
-            this.debug(`<- this.ota.getAccessDeviceToken(false) return ${this.keyAccessDeviceIdentifier}`)
+            this.keyAccessDeviceRegistrationNumber = keyAccessDeviceRegistrationNumber
+            this.debug(`-> this.ota.register(${String(this.keyAccessDeviceRegistrationNumber)}) start`)
+            let result = await this.ota.register(keyAccessDeviceRegistrationNumber)
+            this.debug(`<- this.ota.register(${String(this.keyAccessDeviceRegistrationNumber)}) return ${result}`)
+
+            DeviceEventEmitter.addListener('onOtaVehicleDataUpdated', function (e: Event) {
+                console.log("**********************onOtaVehicleDataUpdated", e)
+            });
+            DeviceEventEmitter.addListener('onOtaActionPerformed', function (e: Event) {
+                console.log("**********************onOtaVehicleDataUpdated", e)
+            });
+            DeviceEventEmitter.addListener('onOtaBluetoothStateChanged', function (e: Event) {
+                console.log("**********************onOtaVehicleDataUpdated", e)
+            });
+
+
+            return result
         } catch (error) {
-            this.debug(`<- this.ota.getAccessDeviceToken(false) failed ${error}`)
+            this.debug(`<- this.ota.register(${String(this.keyAccessDeviceRegistrationNumber)}) failed ${error}`)
+            return false
+        }
+    }
+
+    async getKeyAccessDeviceIdentifier(force: boolean = false): Promise<string> {
+        try {
+            this.debug(`-> this.ota.getAccessDeviceToken(${String(force)}) start`)
+            this.keyAccessDeviceIdentifier = await this.ota.getAccessDeviceToken(force)
+            this.debug(`<- this.ota.getAccessDeviceToken(${String(force)}) return ${this.keyAccessDeviceIdentifier}`)
+        } catch (error) {
+            this.debug(`<- this.ota.getAccessDeviceToken(${String(force)}) failed ${error}`)
         }
         return this.keyAccessDeviceIdentifier
     }
