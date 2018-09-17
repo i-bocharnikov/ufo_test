@@ -54,18 +54,7 @@ const DriveStack = createStackNavigator(
     Drive: {
       screen: DriveScreen
     },
-    Find: {
-      screen: FindScreen
-    },
-    Return: {
-      screen: ReturnScreen
-    },
-    Inspect: {
-      screen: InspectScreen
-    },
-    RentalAgreement: {
-      screen: RentalAgreementScreen
-    },
+
   }, { headerMode: 'none', navigationOptions: commonStackNavigationOptions }
 );
 
@@ -132,6 +121,18 @@ const RootStack = createBottomTabNavigator(
     },
     Drive: {
       screen: DriveStack
+    },
+    Find: {
+      screen: FindScreen
+    },
+    Return: {
+      screen: ReturnScreen
+    },
+    Inspect: {
+      screen: InspectScreen
+    },
+    RentalAgreement: {
+      screen: RentalAgreementScreen
     },
     Support: {
       screen: SupportStack

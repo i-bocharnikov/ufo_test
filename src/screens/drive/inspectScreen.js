@@ -28,7 +28,7 @@ class TermScreen extends Component {
       {
         style: actionStyles.ACTIVE,
         icon: icons.BACK,
-        onPress: () => this.props.navigation.pop()
+        onPress: () => this.props.navigation.navigate(screens.DRIVE.name)
       },
     ]
 

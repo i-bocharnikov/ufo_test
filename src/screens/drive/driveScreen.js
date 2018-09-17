@@ -58,6 +58,16 @@ class DriveScreen extends Component {
           }
         )
       }
+      if (rentalStore.rental.contract_signed) {
+        actions.push(
+          {
+            style: actionStyles.TODO,
+            icon: icons.RENTAL_AGREEMENT,
+            onPress: () => this.props.navigation.navigate(screens.RENTAL_AGREEMENT.name)
+          }
+        )
+      }
+
       if (rentalStore.rental.ready_for_return) {
         actions.push(
           {
