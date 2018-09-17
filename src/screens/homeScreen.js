@@ -1,6 +1,7 @@
 import React from "react";
 import { Container, Content, Text } from 'native-base';
 import Video from 'react-native-video';
+import { Button } from 'react-native';
 import { observer } from "mobx-react";
 import { translate } from "react-i18next";
 
@@ -13,6 +14,7 @@ const video = require('../assets/UFOdrive.mp4')
 
 @observer
 class HomeScreen extends React.Component {
+
 
   render() {
     const { t, navigation } = this.props;
@@ -56,7 +58,7 @@ class HomeScreen extends React.Component {
         <HeaderComponent transparent t={t} navigation={navigation} currentScreen={screens.HOME} />
         <Content padder>
           <Text>{t('home:welcome', { user: registerStore.user })}</Text>
-          <Text>{rentalStore.hasRentalConfirmedOrOngoing}</Text>
+
         </Content>
         <ActionBarComponent actions={actions} />
       </Container >

@@ -7,7 +7,6 @@ import uuid from "uuid";
 import configurations from "../utils/configurations";
 import { clearAuthenticationsFromStore, getAuthenticationUUIDFromStore, setAuthenticationUUIDInStore, setAuthenticationPasswordInStore, getAuthenticationPasswordFromStore, setAuthenticationTokenInStore } from "../utils/authentications"
 import { useTokenInApi, postToApi, putToApi, downloadFromApi, uploadToApi } from '../utils/api'
-import rentalStore from './rentalStore'
 import { confirm } from '../utils/interaction';
 
 const USER_STATUS_REGISTERED = "registered"
@@ -83,7 +82,7 @@ class registerStore {
     }
 
     @action
-    async registerDevice() {
+    async registerDevice(keyAccessDeviceIdentifier) {
 
         let device_uuid = await getAuthenticationUUIDFromStore();
         let device_pwd = await getAuthenticationPasswordFromStore();
@@ -97,6 +96,7 @@ class registerStore {
         let body = {
             uuid: device_uuid,
             password: device_pwd,
+            key_access_device_identifier: keyAccessDeviceIdentifier,
             type: Platform.OS === 'ios' ? 'ios' : 'android',
             customer_app_name: await DeviceInfo.getBundleId(),
             customer_app_version: configurations.UFO_APP_VERSION,
@@ -122,12 +122,10 @@ class registerStore {
             await setAuthenticationTokenInStore(response.data.token);
             await useTokenInApi(response.data.token);
             this.user = response.data.user
-
-            await rentalStore.reset()
-
-            return true
+            console.log("--------------------------------------this.keyAccessDeviceToke", response.data.key_access_device_token)
+            return response.data.key_access_device_token
         }
-        return false
+        return null
     }
 
     @action

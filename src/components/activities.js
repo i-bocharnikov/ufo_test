@@ -25,8 +25,8 @@ export default class ActivitiesComponent extends React.Component {
     render() {
 
         let activities = activitiesStore.activities
-        let internetColor = activities ? activities.internetAccessFailure ? colors.ERROR : activities.internetAccessPending ? colors.ACTIVE : colors.DISABLE : colors.WRONG
-        let bluetoothColor = activities ? activities.bluetoothAccessFailure ? colors.ERROR : activities.bluetoothAccessPending ? colors.ACTIVE : colors.DISABLE : colors.WRONG
+        let internetColor = activities ? activities.internetAccessFailure ? colors.ERROR : activities.internetAccessPending ? colors.ICON : colors.DISABLE : colors.WRONG
+        let bluetoothColor = activities ? activities.bluetoothAccessFailure ? colors.ERROR : activities.bluetoothAccessPending ? colors.ICON : colors.DISABLE : colors.WRONG
 
         return (
             <View style={{

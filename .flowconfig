@@ -1,5 +1,5 @@
 [ignore]
-.*/node_modules/.*
+node_modules/.*
 .*/coverage/.*
 .*/.vscode/.*
 .*/Docker/.*
@@ -19,6 +19,12 @@
 
 [options]
 module.system.node.resolve_dirname=node_modules
+module.system.node.resolve_dirname=src
+esproposal.decorators=ignore
 
 all=true
 [strict]
+
+
+[version]
+^0.79.1

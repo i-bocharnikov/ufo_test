@@ -10,6 +10,8 @@ import Image from "../../components/Image";
 import ActionBarComponent from '../../components/actionBar'
 import { screens, actionStyles, icons, colors, dateFormats } from '../../utils/global'
 import rentalStore from '../../stores/rentalStore'
+import otaKeyStore from '../../stores/otaKeyStore'
+
 
 const BACKGROUND_WIDTH = Dimensions.get('window').width * 1.5
 const BACKGROUND_HEIGHT = BACKGROUND_WIDTH / 2
@@ -19,6 +21,9 @@ const CAR_HEIGHT = CAR_WIDTH / 2
 @observer
 class DriveScreen extends Component {
 
+  componentDidMount() {
+  }
+
   @observable refreshing = false
 
   render() {
@@ -26,8 +31,6 @@ class DriveScreen extends Component {
     let actions = []
 
     if (rentalStore.rental) {
-
-
       if ((!rentalStore.rental.car_found && !rentalStore.rental.initial_inspection_done)) {
         actions.push(
           {

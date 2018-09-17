@@ -12,7 +12,7 @@ YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTIm
 YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
 
 
-import DeveloperMenu from './src/components/developerMenu/ui'
+import DeveloperMenu from './src/components/developerMenu'
 import HomeScreen from './src/screens/homeScreen'
 import SupportFaqsScreen from './src/screens/support/faqsScreen'
 import SupportFaqScreen from './src/screens/support/faqScreen'
@@ -37,6 +37,8 @@ import { screens, colors } from './src/utils/global'
 import supportStore from "./src/stores/supportStore";
 import registerStore from "./src/stores/registerStore"
 import rentalStore from "./src/stores/rentalStore"
+import { checkConnectivity } from './src/utils/api'
+import OTAKeyStore from './src/stores/otaKeyStore'
 
 const commonStackNavigationOptions = {};
 
@@ -154,25 +156,37 @@ class App extends React.Component {
 
   async componentDidMount() {
 
-    let loadSuccess = true
-    try {
-      console.log("****************** LOAD SERVER DATA START *******************************")
-      let remoteLoadSuccess = await registerStore.reset()
-      if (registerLoad) {
-        await rentalStore.reset()
-        await supportStore.reset()
+    console.log("****************** INITIALISE APPLICATION *******************************")
+
+    let remoteLoadSuccess = false
+    if (checkConnectivity()) {
+      try {
+        console.log("******************  GET OTA DEVICE IDENTIFICATION ***********************")
+        let keyAccessDeviceIdentifier = await OTAKeyStore.getKeyAccessDeviceIdentifier()
+
+        console.log("****************** OPEN SESSION ON SERVER *******************************")
+
+        let keyAccessDeviceToken = await registerStore.registerDevice(keyAccessDeviceIdentifier)
+        if (keyAccessDeviceToken) {
+          console.log("****************** OPEN SESSION IN OTA *******************************")
+          await OTAKeyStore.openSession(keyAccessDeviceToken)
+          console.log("****************** LOAD SERVER DATA *******************************")
+          await rentalStore.reset()
+          await supportStore.reset()
+          remoteLoadSuccess = true
+          console.log("****************** LOAD SERVER DATA DONE *******************************")
+        } else {
+          remoteLoadSuccess = false
+          console.log("****************** LOAD SERVER DATA FAILED *******************************")
+        }
+      } catch (error) {
+        console.log("****************** LOAD SERVER DATA FAILED *******************************", error)
+        remoteLoadSuccess = false
       }
-      console.log("****************** LOAD SERVER DATA DONE *******************************")
-      if (!remoteLoadSuccess) {
-        console.log("****************** LOAD SERVER DATA FAILED *******************************")
-      }
-    } catch (error) {
-      console.log("****************** LOAD SERVER DATA FAILED *******************************", error)
-      remoteLoadSuccess = false
     }
 
     if (!remoteLoadSuccess) {
-      console.log("****************** LOAD LOCAL DATA START *******************************")
+      console.log("****************** FALLBACK: LOAD LOCAL DATA START *******************************")
       try {
         await hydrate('register', registerStore).then(() => console.log('registerStore hydrated'))
         await hydrate('drive', rentalStore).then(() => console.log('rentalStore hydrated'))

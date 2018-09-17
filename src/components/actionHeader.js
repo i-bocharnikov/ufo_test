@@ -36,7 +36,7 @@ class ActionHeaderComponent extends React.Component {
                     borderRadius: 40,
                     elevation: actionStyle.elevation
                 }}>
-                    <Icon icon={icon} size={sizes.SMALL} color={colors.TEXT} />
+                    <Icon icon={icon} size={sizes.SMALL} />
                 </View>
             </TouchableOpacity>
 

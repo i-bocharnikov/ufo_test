@@ -1,6 +1,10 @@
 package com.driverapp;
 
 import android.app.Application;
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
 
 import com.facebook.react.ReactApplication;
 import com.dylanvann.fastimage.FastImageViewPackage;
@@ -13,11 +17,14 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.otakeys.sdk.OtaKeysApplication;
+import com.otakeys.sdk.service.OtaKeysService;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class MainApplication extends Application implements ReactApplication {
+public class MainApplication extends OtaKeysApplication implements ReactApplication {
+
 
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
     @Override
@@ -33,6 +40,7 @@ public class MainApplication extends Application implements ReactApplication {
             new RNCameraPackage(),
             new RNFetchBlobPackage(),
             new ReactVideoPackage(),
+            new OTAKeyPackage(),
             new ReactNativeI18n(),
             new RNDeviceInfo()
       );
@@ -54,4 +62,6 @@ public class MainApplication extends Application implements ReactApplication {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
   }
+
+
 }

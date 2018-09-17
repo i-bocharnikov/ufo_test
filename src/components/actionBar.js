@@ -47,7 +47,7 @@ class ActionBarComponent extends React.Component {
                                 borderRadius: 100,
                                 elevation: elevation
                             }}>
-                                <Icon icon={icon} size={sizes.LARGE} color={colors.TEXT} />
+                                <Icon icon={icon} size={sizes.LARGE} />
                             </View>
                             <Text style={{ color: colors.TEXT.string(), fontWeight: 'bold' }}>{t(icon.i18nKey)}</Text>
                         </TouchableOpacity>

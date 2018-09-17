@@ -38,9 +38,7 @@ export async function getFromApi(path, suppressToastBox = false, usePublicApi = 
 
     let api = usePublicApi ? ufodrive_server_public_api : ufodrive_server_api
     try {
-        if (!await checkConnectivity()) {
-            throw new Error("No internet access")
-        }
+
         activitiesStore.activities.registerInternetStart()
         let response = await api.get(path)
         activitiesStore.activities.registerInternetStopSuccess()
@@ -62,9 +60,7 @@ export async function getFromApi(path, suppressToastBox = false, usePublicApi = 
 export async function postToApi(path, body, suppressToastBox = false, usePublicApi = false) {
     let api = usePublicApi ? ufodrive_server_public_api : ufodrive_server_api
     try {
-        if (!await checkConnectivity()) {
-            throw new Error("No internet access")
-        }
+
         activitiesStore.activities.registerInternetStart()
         let response = await api.post(path, body)
         activitiesStore.activities.registerInternetStopSuccess()
@@ -86,9 +82,7 @@ export async function postToApi(path, body, suppressToastBox = false, usePublicA
 export async function putToApi(path, body, suppressToastBox = false, usePublicApi = false) {
     let api = usePublicApi ? ufodrive_server_public_api : ufodrive_server_api
     try {
-        if (!await checkConnectivity()) {
-            throw new Error("No internet access")
-        }
+
         activitiesStore.activities.registerInternetStart()
         let response = await api.put(path, body)
         activitiesStore.activities.registerInternetStopSuccess()
