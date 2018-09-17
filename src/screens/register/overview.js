@@ -99,6 +99,13 @@ class RegisterScreen extends Component {
         icon: icons.DISCONNECT,
         onPress: async () => await this.disconnect(t)
       })
+
+      actions.push({
+        style: registerStore.isConnected ? actionStyles.ACTIVE : actionStyles.DISABLE,
+        icon: icons.SAVE,
+        onPress: () => this.props.navigation.navigate(screens.HOME.name)
+      })
+
     } else {
       actions.push({
         style: actionStyles.ACTIVE,

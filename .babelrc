@@ -1,15 +1,13 @@
 {
   "presets": [
-    "react-native-stage-0"
+    "module:metro-react-native-babel-preset"
   ],
   "plugins": [
-    "transform-decorators-legacy"
-  ],
-  "env": {
-    "development": {
-      "plugins": [
-        "transform-react-jsx-source"
-      ]
-    }
-  }
+    [
+      "@babel/plugin-proposal-decorators",
+      {
+        "legacy": true
+      }
+    ]
+  ]
 }

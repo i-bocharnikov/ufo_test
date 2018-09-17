@@ -5,7 +5,7 @@ import activitiesStore from '../stores/activitiesStore'
 import { showError } from './interaction'
 import RNFetchBlob from 'rn-fetch-blob'
 
-const SAVE_TOKEN = null
+let SAVE_TOKEN = null
 
 export const ufodrive_server_connectivity_test_api = axios.create({
     baseURL: configurations.UFO_SERVER_PUBLIC_API_URL,

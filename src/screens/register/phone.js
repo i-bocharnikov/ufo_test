@@ -116,6 +116,8 @@ class PhoneScreen extends Component {
         onPress: async () => await this.doDisconnect(t, isInWizzard)
       })
     }
+
+
     let defaultPaddintTop = (Dimensions.get("window").height / 10)
 
     return (

@@ -28,8 +28,6 @@ class SupportFaqsScreen extends Component {
 
 
   onLoad = async (payload) => {
-    console.log('will focus', payload)
-    console.log("**************", payload)
     if (payload && payload.state && payload.state.routeName !== 'SupportFaqs') {
       return
     }
