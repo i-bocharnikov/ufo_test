@@ -10,11 +10,11 @@ class ActionBarComponent extends React.Component {
 
         const { t } = this.props;
         let actions = this.props.actions ? this.props.actions : []
-
+        let bottom = this.props.bottom ? this.props.bottom : 0
         return (
             <View style={{
                 position: 'absolute',
-                bottom: 0,
+                bottom: bottom,
                 flexDirection: 'row',
                 justifyContent: 'space-evenly',
                 alignItems: 'center',

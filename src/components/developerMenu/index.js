@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 
 import {
     View,
-    Text,
+    TextInput,
     TouchableOpacity,
-    StyleSheet, ScrollView
+    StyleSheet, ScrollView, Text
 } from 'react-native';
 
 import otaKeyStore from '../../stores/otaKeyStore'
@@ -25,8 +25,7 @@ class DeveloperMenu extends Component {
 
     clearLogs = async () => {
 
-        otaKeyStore.otaLog = ""
-        this.closeMenu();
+        otaKeyStore.otaLog = " "
     };
 
     closeMenu = () => {
@@ -68,9 +67,13 @@ class DeveloperMenu extends Component {
             <View style={{ flex: 1, flexDirection: "column", justifyContent: 'flex-start', alignContent: 'flex-start' }}>
 
                 <ScrollView style={{ flex: 1, }}>
-                    <Text style={{ alignSelf: 'flex-start', fontSize: 10, color: 'black' }}>
+                    <TextInput style={{ alignSelf: 'flex-start', fontSize: 10, color: 'white', backgroundColor: 'black', width: '100%' }} underlineColorAndroid="transparent"
+                        numberOfLines={20}
+                        multiline={true}
+                        editable={false}
+                    >
                         {otaKeyStore.otaLog}
-                    </Text>
+                    </TextInput>
                 </ScrollView>
                 <View style={styles.menu}>
                     {buttons}
@@ -88,10 +91,10 @@ const styles = StyleSheet.create({
         width: 10,
         height: 10,
         borderRadius: 5,
-        backgroundColor: '#fff'
+        backgroundColor: 'black'
     },
     menu: {
-        backgroundColor: 'white',
+        backgroundColor: 'black',
         position: 'absolute',
         left: 0,
         right: 0,
@@ -102,12 +105,13 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         borderTopWidth: 1,
-        borderTopColor: '#eee',
+        borderTopColor: 'white',
         padding: 10,
         height: 60
     },
     menuItemText: {
-        fontSize: 20
+        fontSize: 20,
+        color: 'white'
     }
 });
 

@@ -3,7 +3,7 @@ import { createBottomTabNavigator, createStackNavigator } from 'react-navigation
 import { Root, StyleProvider } from "native-base";
 import { translate } from "react-i18next";
 import { observer } from "mobx-react";
-import { StyleSheet, View, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, ActivityIndicator, Platform } from 'react-native';
 
 //Temporary ignore warning comming from react-native
 import { YellowBox } from 'react-native';
@@ -19,7 +19,7 @@ import SupportChatScreen from './src/screens/support/chatScreen'
 import DriveScreen from './src/screens/drive/driveScreen'
 import FindScreen from './src/screens/drive/findScreen'
 import ReturnScreen from './src/screens/drive/returnScreen'
-import InspectScreen from './src/screens/drive/inspectScreen'
+import InspectScreen from './src/screens/inspect/inspectScreen'
 import RentalAgreementScreen from './src/screens/drive/rentalAgreementSreen'
 import ReserveLocationScreen from './src/screens/reserve/locationScreen'
 import ReserveDateAndCarScreen from './src/screens/reserve/dateAndCarScreen'
@@ -35,6 +35,40 @@ import getTheme from './native-base-theme/components';
 import { screens, colors } from './src/utils/global'
 import AppStore from './src/stores/appStore'
 
+
+
+import { setJSExceptionHandler, setNativeExceptionHandler } from 'react-native-exception-handler';
+
+const instructions = Platform.select({
+  ios: 'Press Cmd+R to reload,\n' +
+    'Cmd+D or shake for dev menu',
+  android: 'Double tap R on your keyboard to reload,\n' +
+    'Shake or press menu button for dev menu',
+});
+
+
+const errorHandler = (e, isFatal) => {
+  if (isFatal) {
+    Alert.alert(
+      'Unexpected error occurred',
+      `
+        Error: ${(isFatal) ? 'Fatal:' : ''} ${e.name} ${e.message}
+        We have reported this to our team ! Please close the app and start again!
+        `,
+      [{
+        text: 'Close'
+      }]
+    );
+  } else {
+    console.log(e); // So that we can see it in the ADB logs in case of Android if needed
+  }
+};
+
+setJSExceptionHandler(errorHandler, true);
+
+setNativeExceptionHandler((errorString) => {
+  console.log('setNativeExceptionHandler');
+});
 
 const commonStackNavigationOptions = {};
 

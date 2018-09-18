@@ -12,7 +12,7 @@ import ActionBarComponent from '../../components/actionBar'
 import Icon from '../../components/Icon'
 import { actionStyles, icons, colors, sizes, navigationParams, screens } from '../../utils/global'
 import supportStore from "../../stores/supportStore";
-import rentalStore from "../../stores/rentalStore";
+import driveStore from "../../stores/driveStore";
 
 const SUPPORT_FAQ = navigationParams.SUPPORT_FAQ
 const SUPPORT_FAQ_CATEGORY = navigationParams.SUPPORT_FAQ_CATEGORY
@@ -105,11 +105,11 @@ class SupportFaqsScreen extends Component {
       onPress: () => this.doBack(navigation)
     })
 
-    if (rentalStore.emergencyNumber) {
+    if (driveStore.emergencyNumber) {
       actions.push({
         style: actionStyles.TODO,
         icon: icons.EMERGENCY_CALL,
-        onPress: () => this.doCall(rentalStore.emergencyNumber)
+        onPress: () => this.doCall(driveStore.emergencyNumber)
       })
     }
 

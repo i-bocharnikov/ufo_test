@@ -1,5 +1,5 @@
 // @flow  
-import { NativeModules, DeviceEventEmitter } from 'react-native';
+import { NativeModules, RCTDeviceEventEmitter } from 'react-native';
 import { observable } from 'mobx';
 import moment from 'moment';
 
@@ -19,7 +19,7 @@ class Key {
     @observable endDate: Moment;
     @observable mileageLimit: Number;
     @observable vehicle: Vehicle = new Vehicle;
-    @observable otaId: Number;
+    @observable keyId: Number;
     @observable extId: String;
     @observable isEnabled: boolean;
     @observable isUsed: boolean;
@@ -61,39 +61,45 @@ class VehicleData {
 
 class OTAKeyStore {
 
+
+    constructor() {
+        this.register()
+    }
+
+    keyAccessDeviceRegistrationNumber = 970101
+
     ota = NativeModules.OTAKeyModule
     keyAccessDeviceRegistrationNumber: Number
     keyAccessDeviceIdentifier: string
     keyAccessDeviceToken: string
 
-    @observable otaLog: string = "OTA LOGS:"
+    @observable otaLog: string = ""
 
     @observable key: Key = new Key
     @observable vehicleData = new VehicleData
 
     debug(message: string): void {
-        this.otaLog = this.otaLog + '\n' + message
+        let date = moment()
+        console.log(date.format("HH:mm:ss:SSS") + message)
+        this.otaLog = date.format("HH:mm:ss:SSS") + message + '\n' + this.otaLog
     }
 
-    async register(keyAccessDeviceRegistrationNumber: Number): Promise<boolean> {
+    async register(): Promise<boolean> {
 
         try {
-            this.keyAccessDeviceRegistrationNumber = keyAccessDeviceRegistrationNumber
             this.debug(`-> this.ota.register(${String(this.keyAccessDeviceRegistrationNumber)}) start`)
-            let result = await this.ota.register(keyAccessDeviceRegistrationNumber)
+            let result = await this.ota.register(this.keyAccessDeviceRegistrationNumber)
             this.debug(`<- this.ota.register(${String(this.keyAccessDeviceRegistrationNumber)}) return ${result}`)
 
-            DeviceEventEmitter.addListener('onOtaVehicleDataUpdated', function (e: Event) {
-                console.log("**********************onOtaVehicleDataUpdated", e)
+            RCTDeviceEventEmitter.addListener('onOtaVehicleDataUpdated', function (e: Event) {
+                this.debug(`">> onOtaVehicleDataUpdated : ${String(e)}`)
             });
-            DeviceEventEmitter.addListener('onOtaActionPerformed', function (e: Event) {
-                console.log("**********************onOtaVehicleDataUpdated", e)
+            RCTDeviceEventEmitter.addListener('onOtaActionPerformed: ', function (e: Event) {
+                this.debug(`">> onOtaActionPerformed : ${String(e)}`)
             });
-            DeviceEventEmitter.addListener('onOtaBluetoothStateChanged', function (e: Event) {
-                console.log("**********************onOtaVehicleDataUpdated", e)
+            RCTDeviceEventEmitter.addListener('onOtaBluetoothStateChanged', function (e: Event) {
+                this.debug(`">> onOtaBluetoothStateChanged : ${String(e)}`)
             });
-
-
             return result
         } catch (error) {
             this.debug(`<- this.ota.register(${String(this.keyAccessDeviceRegistrationNumber)}) failed ${error}`)
@@ -158,7 +164,7 @@ class OTAKeyStore {
         try {
             this.debug(`-> this.ota.getUsedKey(${keyId}) start`)
             this.key = await this.ota.getUsedKey(keyId)
-            this.debug(`<- this.ota.getUsedKey(${keyId}) return ${this.key}`)
+            this.debug(`<- this.ota.getUsedKey(${keyId}) return ${JSON.stringify(this.key)}`)
             return true
         } catch (error) {
             this.debug(`<- this.ota.getUsedKey(${keyId}) failed ${error}`)
@@ -172,7 +178,7 @@ class OTAKeyStore {
         try {
             this.debug(`-> this.ota.enableKey(${keyId}) start`)
             this.key = await this.ota.enableKey(keyId)
-            this.debug(`<- this.ota.enableKey(${keyId}) return ${this.key}`)
+            this.debug(`<- this.ota.enableKey(${keyId}) return ${JSON.stringify(this.key)}`)
             return true
         } catch (error) {
             this.debug(`<- this.ota.enableKey(${keyId}) failed ${error}`)
@@ -305,7 +311,7 @@ class OTAKeyStore {
 
         try {
             this.debug(`-> this.ota.unlockDoors(${String(requestVehicleData)}) start`)
-            let result = await this.ota.unlockDoors(requestVehicleData)
+            let result = await this.ota.unlockDoors(requestVehicleData, true)
             this.debug(`<- this.ota.unlockDoors(${String(requestVehicleData)}) return ${result}`)
             return result
         } catch (error) {

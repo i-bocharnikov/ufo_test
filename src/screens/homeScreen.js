@@ -8,7 +8,7 @@ import { translate } from "react-i18next";
 
 import appStore from '../stores/appStore'
 import registerStore from "../stores/registerStore"
-import rentalStore from "../stores/rentalStore"
+import driveStore from "../stores/driveStore"
 import ActionBarComponent from '../components/actionBar'
 import { screens, actionStyles, icons } from '../utils/global'
 import HeaderComponent from "../components/header";
@@ -28,7 +28,7 @@ class HomeScreen extends React.Component {
 
     let actions = [
       {
-        style: rentalStore.hasRentalConfirmedOrOngoing ? actionStyles.ACTIVE : actionStyles.TODO,
+        style: driveStore.hasRentalConfirmedOrOngoing ? actionStyles.ACTIVE : actionStyles.TODO,
         icon: icons.RESERVE,
         onPress: () => navigation.navigate(screens.RESERVE.name)
       },
@@ -38,7 +38,7 @@ class HomeScreen extends React.Component {
         onPress: () => navigation.navigate(screens.REGISTER.name)
       },
       {
-        style: rentalStore.hasRentalOngoing ? actionStyles.TODO : rentalStore.hasRentalConfirmed ? actionStyles.ACTIVE : actionStyles.DISABLE,
+        style: driveStore.hasRentalOngoing ? actionStyles.TODO : driveStore.hasRentalConfirmed ? actionStyles.ACTIVE : actionStyles.DISABLE,
         icon: icons.DRIVE,
         onPress: () => navigation.navigate(screens.DRIVE.name)
       }

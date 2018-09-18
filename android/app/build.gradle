@@ -143,6 +143,7 @@ configurations.all {
 }
 
 dependencies {
+    compile project(':react-native-exception-handler')
     compile project(':react-native-sensitive-info')
     compile(group: 'com.otakeys.sdk', name: 'otakeys-sdk', version: '3+', ext: 'aar') {
         transitive = false

@@ -30,6 +30,16 @@ class Location {
     @persist @observable timezone = null
 }
 
+class CarDamage {
+    @persist @observable reference = null
+    @persist @observable status = null
+    @persist @observable comment = null
+    @persist @observable relative_position_x = null
+    @persist @observable relative_position_y = null
+    @persist @observable document_reference = null
+
+}
+
 class CarModel {
     @persist @observable reference = null
     @persist @observable name = null
@@ -43,7 +53,6 @@ class CarModel {
     @persist @observable description_url = null
 }
 
-
 class Car {
     @persist @observable reference = null
     @persist('object', CarModel) @observable car_model = new CarModel
@@ -52,7 +61,6 @@ class Car {
     @persist @observable has_key = null
     @persist @observable support_number = null
     @persist @observable chassis_number = null
-
 }
 
 class Term {
@@ -83,14 +91,14 @@ class Rental {
     @persist('object', Location) @observable location = new Location
     @persist('object', Car) @observable car = new Car
     @persist('object', Term) @observable rental_agreement = new Term
+    @persist @observable key_id = null
 }
 
 
-class rentalStore {
+class driveStore {
 
     @persist('list', Rental) @observable rentals = []
     @persist @observable index = -1
-    @persist('object', Key) @observable key = null
 
 
     format(date, format) {
@@ -145,7 +153,7 @@ class rentalStore {
         const response = await getFromApi("/rentals");
         if (response && response.status === "success") {
             if (DEBUG)
-                console.info("rentalStore.list:", response.data);
+                console.info("driveStore.list:", response.data);
             this.rentals = []
             this.rentals = this.rentals.concat(response.data.closed_rentals)
             this.rentals = this.rentals.concat(response.data.ongoing_rentals)
@@ -170,7 +178,7 @@ class rentalStore {
         const response = await getFromApi("/rentals/" + this.rental.reference);
         if (response && response.status === "success") {
             if (DEBUG)
-                console.info("rentalStore.getRental:", response.data);
+                console.info("driveStore.getRental:", response.data);
             this.rentals[this.index] = response.data.rental
             return true
         }
@@ -178,7 +186,7 @@ class rentalStore {
     };
 }
 
-export default rentalStore = new rentalStore();
+export default driveStore = new driveStore();
 
 
 

@@ -172,6 +172,16 @@ export const icons = {
     SEGMENT_OPEN: new Icon('arrow-dropdown', 'icon:segmentOpen'),
     SEGMENT_CLOSE: new Icon('arrow-dropright', 'icon: segmentClose'),
     CHAT: new Icon('chatbubbles', 'icon:chat'),
+
+    UNLOCK: new Icon('mail-open', 'icon:unlock'),
+    LOCK: new Icon('mail', 'icon:lock'),
+    START: new Icon('trending-up', 'icon:start'),
+    STOP: new Icon('trending-down', 'icon:stop'),
+    KEY: new Icon('key', 'icon:key'),
+    CONNECT: new Icon('bluetooth', 'icon:connect'),
+
+
+
     EMERGENCY_CALL: new Icon('call', 'icon:emergencyCall'),
     WRONG: new Icon('bomfire', 'icon:wrong')
 }

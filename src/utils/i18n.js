@@ -51,6 +51,14 @@ i18n.use(LanguageDetector).init({
                 "segmentOpen": "Open",
                 "segmentClose": "Close",
                 "chat": "Chat support",
+
+                "unlock": "Unlock",
+                "lock": "Lock",
+                "start": "Start",
+                "stop": "Stop",
+                "connect": "Connect",
+                "key": "Key",
+
                 "emergencyCall": "Emergency call",
             },
             register: {
@@ -84,6 +92,10 @@ i18n.use(LanguageDetector).init({
                 "disconnectConfirmationMessage": "are you sure you want to disconnect?",
 
             },
+            inspect: {
+                "inspectTitle": "Inspection",
+                "confirmTitle": "Please confirm the car conforms to the condition described below:",
+            },
             reserve: {
                 "reserveLocationTitle": "Select the location",
                 "reserveDateAndCarTitle": "Select the date and car",
@@ -94,7 +106,6 @@ i18n.use(LanguageDetector).init({
             },
             drive: {
                 "driveTitle": "Rental",
-                "inspectTitle": "Inspection",
                 "findTitle": "Where is the car",
                 "returnTitle": "How to return",
                 "rentalAgreementTitle": "Sign the agreement",

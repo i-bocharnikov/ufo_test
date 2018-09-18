@@ -1,7 +1,7 @@
 import { observable, action, computed } from 'mobx';
 import { persist } from 'mobx-persist'
 import _ from 'lodash'
-import rentalStore from './rentalStore'
+import driveStore from './driveStore'
 
 import { getFromApi } from '../utils/api'
 
@@ -37,10 +37,10 @@ class guideStore {
 
 
     @computed get findGuides() {
-        if (this.guidePacks === null || !rentalStore.rental) {
+        if (this.guidePacks === null || !driveStore.rental) {
             return []
         }
-        let guidePack = this.guidePacks.find(guidePack => { return guidePack.type === GUIDE_TYPE.FIND && guidePack.locationReference === rentalStore.rental.location.reference })
+        let guidePack = this.guidePacks.find(guidePack => { return guidePack.type === GUIDE_TYPE.FIND && guidePack.locationReference === driveStore.rental.location.reference })
 
         if (!guidePack) {
             return []
@@ -50,10 +50,10 @@ class guideStore {
     }
 
     @computed get returnGuides() {
-        if (this.guidePacks === null || !rentalStore.rental) {
+        if (this.guidePacks === null || !driveStore.rental) {
             return []
         }
-        let guidePack = this.guidePacks.find(guidePack => { return guidePack.type === GUIDE_TYPE.RETURN && guidePack.locationReference === rentalStore.rental.location.reference })
+        let guidePack = this.guidePacks.find(guidePack => { return guidePack.type === GUIDE_TYPE.RETURN && guidePack.locationReference === driveStore.rental.location.reference })
         if (!guidePack) {
             return []
         }
@@ -83,11 +83,11 @@ class guideStore {
     @action
     async listGuides(guideType) {
 
-        if (!rentalStore.rental) {
+        if (!driveStore.rental) {
             return false
         }
 
-        let locationReference = rentalStore.rental.location.reference
+        let locationReference = driveStore.rental.location.reference
 
         const response = await getFromApi("/guides/" + guideType + "/" + locationReference);
         if (response && response.status === "success") {

@@ -12,7 +12,7 @@ import ActionBarComponent from '../../components/actionBar'
 import { screens, actionStyles, icons, colors } from '../../utils/global'
 import Image from "../../components/Image";
 import guideStore from '../../stores/guideStore'
-import rentalStore from '../../stores/rentalStore'
+import driveStore from '../../stores/driveStore'
 
 const DEVICE_WIDTH = Dimensions.get("window").width
 const DEVICE_HEIGHT = Dimensions.get("window").height
@@ -99,7 +99,7 @@ class FindScreen extends Component {
           contentContainerStyle={{ flex: 1 }}
           refreshControl={_RefreshControl}
         >
-          <HeaderComponent transparent t={t} navigation={navigation} currentScreen={screens.DRIVE} title={t('drive:findTitle', { rental: rentalStore.rental })} />
+          <HeaderComponent transparent t={t} navigation={navigation} currentScreen={screens.DRIVE} title={t('drive:findTitle', { rental: driveStore.rental })} />
           <Carousel
             ref={(c) => { this._carousel = c; }}
             data={guides}

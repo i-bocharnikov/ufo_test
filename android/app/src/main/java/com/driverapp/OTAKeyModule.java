@@ -2,21 +2,14 @@ package com.driverapp;
 
 import android.widget.Toast;
 
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.bridge.ReadableArray;
-import com.facebook.react.bridge.ReadableMap;
-import com.facebook.react.bridge.ReadableMapKeySetIterator;
-import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
-import com.facebook.react.bridge.WritableNativeArray;
-import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.otakeys.sdk.OtaKeysApplication;
 import com.otakeys.sdk.service.OtaKeysService;
 import com.otakeys.sdk.service.api.callback.AuthenticateCallback;
@@ -46,16 +39,16 @@ import com.otakeys.sdk.service.object.response.OtaOperation;
 import com.otakeys.sdk.service.object.response.OtaState;
 import com.otakeys.sdk.service.object.response.OtaVehicleData;
 
-import org.json.JSONArray;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.Iterator;
 
 import javax.annotation.Nullable;
 
 
 public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListener {
+
+    private static String DATE_TIME_ISO = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
     public OTAKeyModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -64,6 +57,68 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
     private OtaKeysApplication getOtaSdk() {
         return ((OtaKeysApplication) getReactApplicationContext().getApplicationContext());
     }
+
+    private String convert(DateTime date)  {
+        if(date == null){
+            return null;
+        }
+        return date.toString(DateTimeFormat.forPattern(DATE_TIME_ISO));
+
+    }
+
+        private WritableMap convert(OtaKey otaKey) {
+
+        WritableMap otaKeyMap = Arguments.createMap();
+        otaKeyMap.putString("keyId", String.valueOf(otaKey.getOtaId()));
+        otaKeyMap.putString("beginDate", convert(otaKey.getBeginDate()));
+        otaKeyMap.putString("endDate", convert(otaKey.getEndDate()));
+        otaKeyMap.putDouble("mileageLimit", otaKey.getMileageLimit());
+        otaKeyMap.putString("extId", otaKey.getExtId());
+        otaKeyMap.putBoolean("isEnabled", otaKey.isEnabled());
+        otaKeyMap.putBoolean("isUsed", otaKey.isUsed());
+        otaKeyMap.putString("keyArgs", otaKey.getKeyArgs());
+        otaKeyMap.putString("keySensitiveArgs", otaKey.getKeySensitiveArgs());
+        return otaKeyMap;
+    }
+
+
+    private WritableMap convert(OtaVehicleData otaVehicleData) {
+
+        WritableMap otaKeyMap = Arguments.createMap();
+        otaKeyMap.putString("date", convert(otaVehicleData.getDate()));
+        otaKeyMap.putDouble("mileageStart", otaVehicleData.getMileageStart());
+        otaKeyMap.putDouble("mileageCurrent", otaVehicleData.getMileageCurrent());
+        otaKeyMap.putString("distanceType", otaVehicleData.getDistanceType() != null ? otaVehicleData.getDistanceType().name() : null);
+        otaKeyMap.putString("energyType", otaVehicleData.getEnergyType() != null ? otaVehicleData.getEnergyType().name() : null);
+        otaKeyMap.putDouble("batteryVoltage", otaVehicleData.getBatteryVoltage());
+        otaKeyMap.putDouble("activeDtcErrorCode", otaVehicleData.getActiveDtcErrorCode());
+        otaKeyMap.putBoolean("connectedToCharger", otaVehicleData.isConnectedToCharger());
+        otaKeyMap.putDouble("energyStart", otaVehicleData.getEnergyStart());
+        otaKeyMap.putDouble("energyCurrent", otaVehicleData.getEnergyCurrent());
+        otaKeyMap.putBoolean("engineRunning", otaVehicleData.isEngineRunning());
+        otaKeyMap.putBoolean("doorsLocked", otaVehicleData.isDoorsLocked());
+        otaKeyMap.putBoolean("malfunctionIndicatorLamp", otaVehicleData.isMalfunctionIndicatorLamp());
+        otaKeyMap.putDouble("gpsLatitude", otaVehicleData.getGpsLatitude());
+        otaKeyMap.putDouble("gpsLongitude", otaVehicleData.getGpsLongitude());
+        otaKeyMap.putDouble("gpsAccuracy", otaVehicleData.getGpsAccuracy());
+        otaKeyMap.putString("gpsCaptureDate", convert(otaVehicleData.getGpsCaptureDate()));
+        otaKeyMap.putDouble("mileageCurrent", otaVehicleData.getMileageCurrent());
+        otaKeyMap.putDouble("mileageCurrent", otaVehicleData.getMileageCurrent());
+        otaKeyMap.putDouble("sdkGpsLatitude", otaVehicleData.getSdkGpsLatitude());
+        otaKeyMap.putDouble("sdkGpsLongitude", otaVehicleData.getSdkGpsLongitude());
+        otaKeyMap.putDouble("sdkGpsAccuracy", otaVehicleData.getSdkGpsAccuracy());
+        otaKeyMap.putString("sdkGpsCaptureDate", convert(otaVehicleData.getSdkGpsCaptureDate()));
+        otaKeyMap.putString("fuelUnit", otaVehicleData.getFuelUnit() != null ? otaVehicleData.getFuelUnit().name() : null);
+        otaKeyMap.putString("odometerUnit", otaVehicleData.getOdometerUnit() != null ? otaVehicleData.getOdometerUnit().name() : null);
+        otaKeyMap.putBoolean("isBleCaptured", otaVehicleData.isBleCaptured());
+        otaKeyMap.putString("operationCode", otaVehicleData.getOperationCode() != null ? otaVehicleData.getOperationCode().name() : null);
+        otaKeyMap.putString("doorsState", otaVehicleData.getDoorsState() != null ? otaVehicleData.getDoorsState().name() : null);
+        otaKeyMap.putString("operationState", otaVehicleData.getOperationState() != null ? otaVehicleData.getOperationState().name() : null);
+        return otaKeyMap;
+    }
+
+
+
 
     @Override
     public String getName() {
@@ -120,6 +175,12 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
     @ReactMethod
     public void openSession(String otaSessionToken, final Promise promise ) {
 
+        if(otaSessionToken == null){
+            promise.reject("Input Invalid", "otaSessionToken ["+otaSessionToken+"] is required");
+            return;
+        }
+
+
         OtaSessionRequest otaSessionRequest = new OtaSessionRequest.AccessDeviceBuilder(otaSessionToken).create();
         getOtaSdk().getCore().openSession(
                 otaSessionRequest,
@@ -149,22 +210,25 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
      * Internet Connectivity Required
      */
     @ReactMethod
-    public void getKey(Long otaKeyId, final Promise promise ) {
+    public void getKey(String otaKeyId, final Promise promise ) {
 
-        OtaKeyRequest otaKeyRequest = new OtaKeyRequest.EnableKeyBuilder(otaKeyId).create();
+        if(otaKeyId == null){
+            promise.reject("Input Invalid", "otaKeyId ["+otaKeyId+"] is required");
+            return;
+        }
+
+
+        OtaKeyRequest otaKeyRequest = new OtaKeyRequest.EnableKeyBuilder(Long.parseLong(otaKeyId)).create();
         getOtaSdk().getApi().getKey(otaKeyRequest, new GetKeyCallback() {
             @Override
             public void onGetKey(OtaKey otaKey) {
-                try{
-                    WritableMap otaKeyMap = convertJsonToMap(new JSONObject(createDefaultGson().toJson(otaKey)));
-                    promise.resolve(otaKeyMap);
-                } catch (JSONException e) {
-                    promise.reject(e);
-                }
+                promise.resolve(convert(otaKey));
+                return;
             }
             @Override
             public void onApiError(HttpStatus httpStatus, ApiCode errorCode) {
                 promise.reject(errorCode.name(), httpStatus.name());
+                return;
             }
         });
         return;
@@ -181,18 +245,19 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
      * Internet Connectivity Required
      */
     @ReactMethod
-    public void enableKey(Long otaKeyId, final Promise promise  ) {
+    public void enableKey(String otaKeyId, final Promise promise  ) {
 
-        OtaKeyRequest otaKeyRequest = new OtaKeyRequest.EnableKeyBuilder(otaKeyId).create();
+
+        if(otaKeyId == null){
+            promise.reject("Input Invalid", "otaKeyId ["+otaKeyId+"] is required");
+            return;
+        }
+
+        OtaKeyRequest otaKeyRequest = new OtaKeyRequest.EnableKeyBuilder(Long.parseLong(otaKeyId)).create();
         getOtaSdk().getApi().enableKey(otaKeyRequest, new EnableKeyCallback() {
             @Override
             public void onEnableKey(OtaKey otaKey) {
-                try{
-                    WritableMap otaKeyMap = convertJsonToMap(new JSONObject(createDefaultGson().toJson(otaKey)));
-                    promise.resolve(otaKeyMap);
-                } catch (JSONException e) {
-                    promise.reject(e);
-                }
+                promise.resolve(convert(otaKey));
             }
             @Override
             public void onApiError(HttpStatus httpStatus, ApiCode errorCode) {
@@ -213,18 +278,19 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
      * Internet Connectivity Required
      */
     @ReactMethod
-    public void endKey(Long otaKeyId, final Promise promise  ) {
+    public void endKey(String otaKeyId, final Promise promise  ) {
 
-        OtaKeyRequest otaKeyRequest = new OtaKeyRequest.EndKeyBuilder(otaKeyId).create();
+        if(otaKeyId == null){
+            promise.reject("Input Invalid", "otaKeyId ["+otaKeyId+"] is required");
+            return;
+        }
+
+
+        OtaKeyRequest otaKeyRequest = new OtaKeyRequest.EndKeyBuilder(Long.parseLong(otaKeyId)).create();
         getOtaSdk().getApi().endKey(otaKeyRequest, new EndKeyCallback() {
             @Override
             public void onEndKey(OtaKey otaKey) {
-                try{
-                    WritableMap otaKeyMap = convertJsonToMap(new JSONObject(createDefaultGson().toJson(otaKey)));
-                    promise.resolve(otaKeyMap);
-                } catch (JSONException e) {
-                    promise.reject(e);
-                }
+                promise.resolve(convert(otaKey));
             }
             @Override
             public void onApiError(HttpStatus httpStatus, ApiCode errorCode) {
@@ -254,12 +320,7 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
             getOtaSdk().getCore().switchToKey(otaKey, new SwitchToKeyCallback() {
                 @Override
                 public void onKeySwitched(OtaKey otaKey) {
-                     try{
-                        WritableMap otaKeyMap = convertJsonToMap(new JSONObject(createDefaultGson().toJson(otaKey)));
-                        promise.resolve(otaKeyMap);
-                    } catch (JSONException e) {
-                         promise.reject(e);
-                    }
+                     promise.resolve(convert(otaKey));
                 }
 
             });
@@ -287,7 +348,8 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
             public void onVehicleDataSync() {
                 promise.resolve(true);
 
-            }            @Override
+            }
+            @Override
             public void onApiError(HttpStatus httpStatus, ApiCode errorCode) {
                 promise.reject(errorCode.name(), httpStatus.name());
             }
@@ -331,8 +393,7 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
 
         try{
             OtaKey otaKey = getOtaSdk().getCore().getUsedKey();
-            WritableMap otaKeyMap = convertJsonToMap(new JSONObject(createDefaultGson().toJson(otaKey)));
-            promise.resolve(otaKeyMap);
+            promise.resolve(convert(otaKey));
         }catch(Exception e) {
             promise.reject(e);
         }
@@ -493,13 +554,7 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
                 }
 
                 public void onVehicleDataUpdated(OtaVehicleData otaVehicleData) {
-                    try {
-                        WritableMap vehicleDataMap = convertJsonToMap(new JSONObject(createDefaultGson().toJson(otaVehicleData)));
-                        sendEvent(getReactApplicationContext(), "onOtaVehicleDataUpdated", vehicleDataMap);
-                    } catch (JSONException e) {
-                        silentException(e);
-                        e.printStackTrace();
-                    }
+                    sendEvent(getReactApplicationContext(), "onOtaVehicleDataUpdated", convert(otaVehicleData));
                 }
 
                 @Override
@@ -537,13 +592,7 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
                 }
 
                 public void onVehicleDataUpdated(OtaVehicleData otaVehicleData) {
-                    try {
-                        WritableMap vehicleDataMap = convertJsonToMap(new JSONObject(createDefaultGson().toJson(otaVehicleData)));
-                        sendEvent(getReactApplicationContext(), "onOtaVehicleDataUpdated", vehicleDataMap);
-                    } catch (JSONException e) {
-                        silentException(e);
-                        e.printStackTrace();
-                    }
+                    sendEvent(getReactApplicationContext(), "onOtaVehicleDataUpdated", convert(otaVehicleData));
                 }
 
                 @Override
@@ -579,13 +628,7 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
                 }
 
                 public void onVehicleDataUpdated(OtaVehicleData otaVehicleData) {
-                    try {
-                        WritableMap vehicleDataMap = convertJsonToMap(new JSONObject(createDefaultGson().toJson(otaVehicleData)));
-                        sendEvent(getReactApplicationContext(), "onOtaVehicleDataUpdated", vehicleDataMap);
-                    } catch (JSONException e) {
-                        silentException(e);
-                        e.printStackTrace();
-                    }
+                    sendEvent(getReactApplicationContext(), "onOtaVehicleDataUpdated", convert(otaVehicleData));
                 }
 
                 @Override
@@ -621,13 +664,7 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
                 }
 
                 public void onVehicleDataUpdated(OtaVehicleData otaVehicleData) {
-                    try {
-                        WritableMap vehicleDataMap = convertJsonToMap(new JSONObject(createDefaultGson().toJson(otaVehicleData)));
-                        sendEvent(getReactApplicationContext(), "onOtaVehicleDataUpdated", vehicleDataMap);
-                    } catch (JSONException e) {
-                        silentException(e);
-                        e.printStackTrace();
-                    }
+                    sendEvent(getReactApplicationContext(), "onOtaVehicleDataUpdated", convert(otaVehicleData));
                 }
 
                 @Override
@@ -655,15 +692,9 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
         try {
             getOtaSdk().getBle().getVehicleData(new BleVehicleDataCallback() {
 
-                public void onVehicleDataUpdated(OtaLastVehicleData otaVehicleData) {
+                public void onVehicleDataUpdated(OtaVehicleData otaVehicleData) {
                     promise.resolve(true);
-                    try {
-                        WritableMap vehicleDataMap = convertJsonToMap(new JSONObject(createDefaultGson().toJson(otaVehicleData)));
-                        sendEvent(getReactApplicationContext(), "onOtaVehicleDataUpdated", vehicleDataMap);
-                    } catch (JSONException e) {
-                        silentException(e);
-                        e.printStackTrace();
-                    }
+                    sendEvent(getReactApplicationContext(), "onOtaVehicleDataUpdated", convert(otaVehicleData));
                 }
 
                 @Override
@@ -690,140 +721,25 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
     }
 
     private void sendEvent(ReactContext reactContext, String eventName, @Nullable WritableMap params) {
+        Toast.makeText(getReactApplicationContext(), "event ["+eventName+"] sent", Toast.LENGTH_LONG).show();
+        reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, null);
         reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, params);
-    }
-
-    private static Gson createDefaultGson() {
-        GsonBuilder builder = new GsonBuilder();
-        return builder.create();
-    }
-
-    private static WritableMap convertJsonToMap(JSONObject jsonObject) throws JSONException {
-        WritableMap map = new WritableNativeMap();
-
-        Iterator<String> iterator = jsonObject.keys();
-        while (iterator.hasNext()) {
-            String key = iterator.next();
-            Object value = jsonObject.get(key);
-            if (value instanceof JSONObject) {
-                map.putMap(key, convertJsonToMap((JSONObject) value));
-            } else if (value instanceof JSONArray) {
-                map.putArray(key, convertJsonToArray((JSONArray) value));
-            } else if (value instanceof  Boolean) {
-                map.putBoolean(key, (Boolean) value);
-            } else if (value instanceof  Integer) {
-                map.putInt(key, (Integer) value);
-            } else if (value instanceof  Double) {
-                map.putDouble(key, (Double) value);
-            } else if (value instanceof String)  {
-                map.putString(key, (String) value);
-            } else {
-                map.putString(key, value.toString());
-            }
-        }
-        return map;
-    }
-
-    private static WritableArray convertJsonToArray(JSONArray jsonArray) throws JSONException {
-        WritableArray array = new WritableNativeArray();
-
-        for (int i = 0; i < jsonArray.length(); i++) {
-            Object value = jsonArray.get(i);
-            if (value instanceof JSONObject) {
-                array.pushMap(convertJsonToMap((JSONObject) value));
-            } else if (value instanceof  JSONArray) {
-                array.pushArray(convertJsonToArray((JSONArray) value));
-            } else if (value instanceof  Boolean) {
-                array.pushBoolean((Boolean) value);
-            } else if (value instanceof  Integer) {
-                array.pushInt((Integer) value);
-            } else if (value instanceof  Double) {
-                array.pushDouble((Double) value);
-            } else if (value instanceof String)  {
-                array.pushString((String) value);
-            } else {
-                array.pushString(value.toString());
-            }
-        }
-        return array;
-    }
-
-    private static JSONObject convertMapToJson(ReadableMap readableMap) throws JSONException {
-        JSONObject object = new JSONObject();
-        ReadableMapKeySetIterator iterator = readableMap.keySetIterator();
-        while (iterator.hasNextKey()) {
-            String key = iterator.nextKey();
-            switch (readableMap.getType(key)) {
-                case Null:
-                    object.put(key, JSONObject.NULL);
-                    break;
-                case Boolean:
-                    object.put(key, readableMap.getBoolean(key));
-                    break;
-                case Number:
-                    object.put(key, readableMap.getDouble(key));
-                    break;
-                case String:
-                    object.put(key, readableMap.getString(key));
-                    break;
-                case Map:
-                    object.put(key, convertMapToJson(readableMap.getMap(key)));
-                    break;
-                case Array:
-                    object.put(key, convertArrayToJson(readableMap.getArray(key)));
-                    break;
-            }
-        }
-        return object;
-    }
-
-    private static JSONArray convertArrayToJson(ReadableArray readableArray) throws JSONException {
-        JSONArray array = new JSONArray();
-        for (int i = 0; i < readableArray.size(); i++) {
-            switch (readableArray.getType(i)) {
-                case Null:
-                    break;
-                case Boolean:
-                    array.put(readableArray.getBoolean(i));
-                    break;
-                case Number:
-                    array.put(readableArray.getDouble(i));
-                    break;
-                case String:
-                    array.put(readableArray.getString(i));
-                    break;
-                case Map:
-                    array.put(convertMapToJson(readableArray.getMap(i)));
-                    break;
-                case Array:
-                    array.put(convertArrayToJson(readableArray.getArray(i)));
-                    break;
-            }
-        }
-        return array;
     }
 
     @Override
     public void onActionPerformed(OtaOperation otaOperation, OtaState otaState) {
-        try {
-            WritableMap map = convertJsonToMap(new JSONObject(createDefaultGson().toJson(otaOperation)));
-            WritableMap result = convertJsonToMap(new JSONObject(createDefaultGson().toJson(otaState)));
-            map.putMap("result", result);
-            sendEvent(getReactApplicationContext(), "onOtaActionPerformed", map);
-        } catch (JSONException e) {
-            silentException(e);
-            e.printStackTrace();
-        }
+        WritableMap map = Arguments.createMap();
+        map.putString("otaOperation", otaOperation != null ? otaOperation.name() : null);
+        map.putString("otaState", otaState != null ? otaState.name() : null);
+        sendEvent(getReactApplicationContext(), "onOtaActionPerformed", map);
     }
 
     @Override
     public void onBluetoothStateChanged(BluetoothState newBluetoothState, BluetoothState previousBluetoothState1) {
-        try {
-            WritableMap map = convertJsonToMap(new JSONObject(createDefaultGson().toJson(newBluetoothState)));
-            sendEvent(getReactApplicationContext(), "onOtaBluetoothStateChanged", map);
-        } catch (JSONException e) {
-            silentException(e);
-            e.printStackTrace();
-        }
+
+        WritableMap map = Arguments.createMap();
+        map.putString("newBluetoothState", newBluetoothState != null ? newBluetoothState.name() : null);
+        map.putString("previousBluetoothState1", previousBluetoothState1 != null ? previousBluetoothState1.name() : null);
+        sendEvent(getReactApplicationContext(), "onOtaBluetoothStateChanged", map);
     }
 }

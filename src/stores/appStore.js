@@ -2,7 +2,7 @@
 import { observable, action } from 'mobx';
 import supportStore from "../stores/supportStore";
 import registerStore from "../stores/registerStore"
-import rentalStore from "../stores/rentalStore"
+import driveStore from "../stores/driveStore"
 import OTAKeyStore from '../stores/otaKeyStore'
 import { checkConnectivity } from '../utils/api'
 import { showError } from '../utils/interaction'
@@ -48,7 +48,7 @@ class AppStore {
   async loadRemoteData(t): Promise<boolean> {
     try {
       console.log("==>  LOAD REMOTE DATA START ")
-      await rentalStore.reset()
+      await driveStore.reset()
       await supportStore.reset()
       console.log("<== LOAD REMOTE DATA DONE ")
     } catch (error) {
@@ -66,7 +66,7 @@ class AppStore {
 
     try {
       await hydrate('register', registerStore).then(() => console.log('registerStore hydrated'))
-      await hydrate('drive', rentalStore).then(() => console.log('rentalStore hydrated'))
+      await hydrate('drive', driveStore).then(() => console.log('driveStore hydrated'))
       await hydrate('support', supportStore).then(() => console.log('supportStore hydrated'))
       console.log("<== LOAD LOCAL DATA DONE ")
     } catch (error) {

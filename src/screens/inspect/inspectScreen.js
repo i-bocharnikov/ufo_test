@@ -9,7 +9,7 @@ import HeaderComponent from "../../components/header";
 import ActionBarComponent from '../../components/actionBar'
 import { screens, actionStyles, icons, colors, dateFormats } from '../../utils/global'
 import configurations from "../../utils/configurations"
-import rentalStore from '../../stores/rentalStore'
+import driveStore from '../../stores/driveStore'
 
 const window = Dimensions.get('window');
 const BACKGROUND_WIDTH = Dimensions.get('window').width * 1.5
@@ -33,7 +33,7 @@ class TermScreen extends Component {
     ]
 
 
-    let _RefreshControl = (<RefreshControl refreshing={this.refreshing} onRefresh={async () => await rentalStore.refresh()} />)
+    let _RefreshControl = (<RefreshControl refreshing={this.refreshing} onRefresh={async () => await driveStore.refresh()} />)
 
     return (
       <Container>
@@ -41,13 +41,13 @@ class TermScreen extends Component {
           contentContainerStyle={{ flex: 1 }}
           refreshControl={_RefreshControl}
         >
-          <HeaderComponent transparent t={t} navigation={navigation} currentScreen={screens.DRIVE} title={t('drive:inspectTitle', { rental: rentalStore.rental })} />
+          <HeaderComponent transparent t={t} navigation={navigation} currentScreen={screens.DRIVE} title={t('inspect:inspectTitle', { rental: driveStore.rental })} />
           <View style={{
             flex: 1, flexDirection: 'column',
             justifyContent: 'flex-start',
             alignItems: 'center', backgroundColor: colors.BACKGROUND.alpha(0.8).string()
           }}>
-            <Text style={{ paddingTop: 50, paddingBottom: 20 }}>{rentalStore.rental.reference}</Text>
+            <Text style={{ paddingTop: 50, paddingBottom: 20 }}>{t('inspect:confirmTitle')}</Text>
           </View>
 
 
