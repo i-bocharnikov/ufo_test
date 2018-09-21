@@ -2,12 +2,12 @@ import React, { Component } from "react";
 import { observer } from 'mobx-react';
 import { translate } from "react-i18next";
 import { Dimensions, Keyboard } from 'react-native';
-import { Container, Content, Form, Item, Label, Input } from 'native-base';
+import { Content, Form, Item, Label, Input } from 'native-base';
 import _ from 'lodash'
 
-import registerStore from '../../stores/registerStore';
-import HeaderComponent from "../../components/header";
-import ActionBarComponent from '../../components/actionBar'
+import UFOHeader from "../../components/header/UFOHeader";
+import UFOActionBar from "../../components/UFOActionBar";
+import { UFOContainer, UFOText, UFOIcon, UFOImage } from '../../components/common'
 import { screens, actionStyles, icons, colors } from '../../utils/global'
 import { observable, action } from "mobx";
 
@@ -78,8 +78,8 @@ class EmailScreen extends Component {
     let defaultPaddintTop = ((Dimensions.get("window").height - this.keyboardHeight) / 10)
 
     return (
-      <Container>
-        <HeaderComponent t={t} navigation={navigation} title={t('register:emailTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_EMAIL} />
+      <UFOContainer>
+        <UFOHeader t={t} navigation={navigation} title={t('register:emailTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_EMAIL} />
         <Content padder>
           <Form>
             <Item stackedLabel>
@@ -88,8 +88,8 @@ class EmailScreen extends Component {
             </Item>
           </Form>
         </Content>
-        <ActionBarComponent actions={actions} />
-      </Container>
+        <UFOActionBar actions={actions} />
+      </UFOContainer>
     );
   }
 }

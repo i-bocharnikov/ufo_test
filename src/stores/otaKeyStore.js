@@ -1,6 +1,6 @@
 // @flow  
-import { NativeModules, RCTDeviceEventEmitter } from 'react-native';
-import { observable } from 'mobx';
+import { NativeModules, DeviceEventEmitter } from 'react-native';
+import { observable, action } from 'mobx';
 import moment from 'moment';
 
 class Vehicle {
@@ -28,7 +28,11 @@ class Key {
 }
 
 class VehicleData {
-    @observable id: Number;
+    @observable engineRunning: boolean;
+    @observable doorsLocked: boolean;
+    @observable energyCurrent: Number;
+
+/*     @observable id: Number;
     @observable date: Moment;
     @observable mileageStart: Number;
     @observable mileageCurrent: Number;
@@ -39,8 +43,6 @@ class VehicleData {
     @observable connectedToCharger: boolean;
     @observable energyStart: Number;
     @observable energyCurrent: Number;
-    @observable engineRunning: boolean;
-    @observable doorsLocked: boolean;
     @observable malfunctionIndicatorLamp: boolean;
     @observable gpsLatitude: Number;
     @observable gpsLongitude: Number;
@@ -56,7 +58,7 @@ class VehicleData {
     @observable operationCode: String;
     @observable doorsState: String;
     @observable operationState: String;
-}
+ */}
 
 
 class OTAKeyStore {
@@ -76,7 +78,10 @@ class OTAKeyStore {
     @observable otaLog: string = ""
 
     @observable key: Key = new Key
-    @observable vehicleData = new VehicleData
+    @observable vehicleData = null
+
+    @observable isConnecting = false
+    @observable isConnected = false
 
     debug(message: string): void {
         let date = moment()
@@ -84,22 +89,72 @@ class OTAKeyStore {
         this.otaLog = date.format("HH:mm:ss:SSS") + message + '\n' + this.otaLog
     }
 
+    @action
+    onOtaVehicleDataUpdated = (otaVehicleData) => {
+        try {
+            this.debug(`>>onOtaVehicleDataUpdated ${otaVehicleData.doorsLocked ? "LOCKED" : "UNLOCKED"} / ${otaVehicleData.engineRunning ? "STARTED" : "STOPPED"} / ${otaVehicleData.energyCurrent + "%"}`)
+            if (!this.vehicleData) {
+                this.vehicleData = new VehicleData
+            }
+            this.vehicleData.doorsLocked = otaVehicleData.doorsLocked
+            this.vehicleData.engineRunning = otaVehicleData.engineRunning
+            this.vehicleData.energyCurrent = otaVehicleData.energyCurrent
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    @action
+    onOtaActionPerformed = (otaAction) => {
+        try {
+            this.debug(`>>onOtaActionPerformed ${otaAction.otaOperation} / ${otaAction.otaState}`)
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    @action
+    onOtaBluetoothStateChanged = async (otaBluetoothState) => {
+        try {
+            this.debug(`>>onOtaBluetoothStateChanged" ${otaBluetoothState.newBluetoothState}`)
+            if (otaBluetoothState.newBluetoothState === 'CONNECTED') {
+                this.isConnected = true
+                this.isConnecting = false
+                await this.getVehicleData()
+            } else if (otaBluetoothState.newBluetoothState === 'DISCONNECTED') {
+                this.isConnected = false
+                this.isConnecting = false
+            } else {
+                this.isConnected = false
+                this.isConnecting = true
+            }
+            /*                 09-21 14:07:48.786 18013 18078 I ReactNativeJS: 'onOtaBluetoothStateChanged', 'SCANNING'
+                            09-21 14:07:49.736 18013 18078 I ReactNativeJS: 'onOtaBluetoothStateChanged', 'DISCONNECTED'
+                            09-21 14:07:49.737 18013 18078 I ReactNativeJS: 'onOtaBluetoothStateChanged', 'CONNECTING'
+                            09-21 14:07:51.130 18013 18078 I ReactNativeJS: 'onOtaBluetoothStateChanged', 'CONNECTED'
+             */
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    @action
     async register(): Promise<boolean> {
 
         try {
             this.debug(`-> this.ota.register(${String(this.keyAccessDeviceRegistrationNumber)}) start`)
             let result = await this.ota.register(this.keyAccessDeviceRegistrationNumber)
-            this.debug(`<- this.ota.register(${String(this.keyAccessDeviceRegistrationNumber)}) return ${result}`)
 
-            RCTDeviceEventEmitter.addListener('onOtaVehicleDataUpdated', function (e: Event) {
-                this.debug(`">> onOtaVehicleDataUpdated : ${String(e)}`)
-            });
-            RCTDeviceEventEmitter.addListener('onOtaActionPerformed: ', function (e: Event) {
-                this.debug(`">> onOtaActionPerformed : ${String(e)}`)
-            });
-            RCTDeviceEventEmitter.addListener('onOtaBluetoothStateChanged', function (e: Event) {
-                this.debug(`">> onOtaBluetoothStateChanged : ${String(e)}`)
-            });
+            DeviceEventEmitter.addListener('onOtaVehicleDataUpdated', this.onOtaVehicleDataUpdated);
+            DeviceEventEmitter.addListener('onOtaActionPerformed', this.onOtaActionPerformed);
+            DeviceEventEmitter.addListener('onOtaBluetoothStateChanged', this.onOtaBluetoothStateChanged);
+
+            if (this.isConnectedToVehicle()) {
+                this.isConnected = true
+                await this.getVehicleData()
+            }
+
+            this.debug(`<- this.ota.register(${String(this.keyAccessDeviceRegistrationNumber)}) return ${result}`)
             return result
         } catch (error) {
             this.debug(`<- this.ota.register(${String(this.keyAccessDeviceRegistrationNumber)}) failed ${error}`)
@@ -107,6 +162,7 @@ class OTAKeyStore {
         }
     }
 
+    @action
     async getKeyAccessDeviceIdentifier(force: boolean = false): Promise<string> {
         try {
             this.debug(`-> this.ota.getAccessDeviceToken(${String(force)}) start`)
@@ -118,6 +174,7 @@ class OTAKeyStore {
         return this.keyAccessDeviceIdentifier
     }
 
+    @action
     async openSession(keyAccessDeviceToken: string): Promise<boolean> {
 
         try {
@@ -132,7 +189,7 @@ class OTAKeyStore {
         }
     }
 
-
+    @action
     async getVehicleData(): Promise<boolean> {
 
         try {
@@ -146,6 +203,7 @@ class OTAKeyStore {
         }
     }
 
+    @action
     async getKey(keyId: string): Promise<boolean> {
 
         try {
@@ -159,6 +217,7 @@ class OTAKeyStore {
         }
     }
 
+    @action
     async getUsedKey(keyId: string): Promise<boolean> {
 
         try {
@@ -172,7 +231,7 @@ class OTAKeyStore {
         }
     }
 
-
+    @action
     async enableKey(keyId: string): Promise<boolean> {
 
         try {
@@ -186,6 +245,7 @@ class OTAKeyStore {
         }
     }
 
+    @action
     async endKey(keyId: string): Promise<boolean> {
 
         try {
@@ -199,7 +259,7 @@ class OTAKeyStore {
         }
     }
 
-
+    @action
     async switchToKey(): Promise<boolean> {
 
         try {
@@ -213,6 +273,7 @@ class OTAKeyStore {
         }
     }
 
+    @action
     async syncVehicleData(): Promise<boolean> {
 
         try {
@@ -227,6 +288,7 @@ class OTAKeyStore {
     }
 
 
+    @action
     async configureNetworkTimeouts(connectTimeout: Number, readTimeout: Number): Promise<boolean> {
 
         try {

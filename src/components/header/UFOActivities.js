@@ -1,13 +1,14 @@
 import React from "react";
 import { View } from 'react-native';
-import Icon from './Icon';
-import { sizes, colors, icons } from '../utils/global'
-import activitiesStore from '../stores/activitiesStore'
 import { observer } from "mobx-react";
-import { showActivitiesState } from "../utils/interaction";
+
+import { UFOIcon } from '../common'
+import { sizes, colors, icons } from '../../utils/global'
+import { showActivitiesState } from "../../utils/interaction";
+import activitiesStore from '../../stores/activitiesStore'
 
 @observer
-export default class ActivitiesComponent extends React.Component {
+export default class UFOActivities extends React.Component {
 
 
     componentDidMount() {
@@ -34,8 +35,8 @@ export default class ActivitiesComponent extends React.Component {
                 right: -10,
                 width: 16,
             }}>
-                <Icon size={sizes.SMALL} color={bluetoothColor} icon={icons.BLUETOOTH}></Icon>
-                <Icon size={sizes.SMALL} color={internetColor} icon={icons.WIFI}></Icon>
+                <UFOIcon size={sizes.SMALL} color={bluetoothColor} icon={icons.BLUETOOTH}></UFOIcon>
+                <UFOIcon size={sizes.SMALL} color={internetColor} icon={icons.WIFI}></UFOIcon>
             </View >
         );
     }

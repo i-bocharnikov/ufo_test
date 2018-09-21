@@ -1,17 +1,17 @@
 import React, { Component } from "react";
-import { Container, Content, Button, Text, ListItem, Left, Body, Right, Card, CardItem, List } from 'native-base';
+import { Content, Button, ListItem, Left, Body, Right, Card, CardItem, List } from 'native-base';
 import { NavigationEvents } from 'react-navigation';
 import { observer } from 'mobx-react';
 import { translate } from "react-i18next";
 import _ from 'lodash'
 
-import Thumbnail from '../../components/thumbnail'
-import HeaderComponent from "../../components/header";
-import ActionBarComponent from '../../components/actionBar'
+import UFOHeader from "../../components/header/UFOHeader";
+import UFOActionBar from "../../components/UFOActionBar";
+import { UFOContainer, UFOText, UFOIcon, UFOThumbnail, UFOImage } from '../../components/common'
+
 import registerStore from '../../stores/registerStore';
 import appStore from '../../stores/appStore';
 import { screens, actionStyles, icons, colors, sizes } from '../../utils/global'
-import Icon from '../../components/Icon'
 
 
 @observer
@@ -96,7 +96,7 @@ class RegisterScreen extends Component {
     if (registerStore.isConnected) {
       actions.push({
         style: actionStyles.ACTIVE,
-        icon: icons.DISCONNECT,
+        icon: icons.LOGOUT,
         onPress: async () => await this.disconnect(t)
       })
 
@@ -109,7 +109,7 @@ class RegisterScreen extends Component {
     } else {
       actions.push({
         style: actionStyles.ACTIVE,
-        icon: icons.CONNECT,
+        icon: icons.LOGIN,
         onPress: async () => {
           this.props.navigation.navigate(screens.REGISTER_PHONE.name)
         }
@@ -121,9 +121,9 @@ class RegisterScreen extends Component {
     let identificationColor = this.getColorForStatus(registerStore.user.identification_status)
     let driverLicenceColor = this.getColorForStatus(registerStore.user.driver_licence_status)
     return (
-      <Container>
+      <UFOContainer>
         <NavigationEvents onWillFocus={payload => { this.onLoad(payload) }} />
-        <HeaderComponent t={t} navigation={navigation} title={t('register:overviewTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_OVERVIEW} />
+        <UFOHeader t={t} navigation={navigation} title={t('register:overviewTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_OVERVIEW} />
         <Content padder>
           <List>
             <ListItem>
@@ -131,9 +131,9 @@ class RegisterScreen extends Component {
                 <Card >
                   <CardItem>
                     <Body>
-                      <Text>
+                      <UFOText>
                         {registerStore.user.registration_message}
-                      </Text>
+                      </UFOText>
                     </Body>
                   </CardItem>
                 </Card>
@@ -142,80 +142,80 @@ class RegisterScreen extends Component {
             <ListItem icon onPress={() => { this.props.navigation.navigate(screens.REGISTER_PHONE.name) }}>
               <Left>
                 <Button style={{ backgroundColor: phoneNumberColor }}>
-                  <Icon icon={icons.PHONE} size={sizes.SMALL} />
+                  <UFOIcon icon={icons.PHONE} size={sizes.SMALL} />
                 </Button>
               </Left>
               <Body>
-                <Text>{t('register:phoneNumberLabel')}</Text>
+                <UFOText>{t('register:phoneNumberLabel')}</UFOText>
               </Body>
               <Right>
-                <Text>{registerStore.user.phone_number}</Text>
-                <Icon inverted style={{ paddingLeft: 5 }} icon={icons.SELECT} size={sizes.SMALL} />
+                <UFOText>{registerStore.user.phone_number}</UFOText>
+                <UFOIcon inverted style={{ paddingLeft: 5 }} icon={icons.SELECT} size={sizes.SMALL} />
               </Right>
             </ListItem>
             <ListItem icon onPress={() => { this.props.navigation.navigate(screens.REGISTER_EMAIL.name) }}>
               <Left>
                 <Button style={{ backgroundColor: emailColor }}>
-                  <Icon icon={icons.EMAIL} size={sizes.SMALL} />
+                  <UFOIcon icon={icons.EMAIL} size={sizes.SMALL} />
                 </Button>
               </Left>
               <Body>
-                <Text>{t('register:emailLabel')}</Text>
+                <UFOText>{t('register:emailLabel')}</UFOText>
               </Body>
               <Right>
-                <Text>{_.truncate(registerStore.user.email, { 'length': 24 })}</Text>
-                <Icon inverted style={{ paddingLeft: 5 }} icon={icons.SELECT} size={sizes.SMALL} />
+                <UFOText>{_.truncate(registerStore.user.email, { 'length': 24 })}</UFOText>
+                <UFOIcon inverted style={{ paddingLeft: 5 }} icon={icons.SELECT} size={sizes.SMALL} />
               </Right>
             </ListItem>
             <ListItem icon onPress={() => { this.props.navigation.navigate(screens.REGISTER_ADDRESS.name) }}>
               <Left>
                 <Button style={{ backgroundColor: addressColor }}>
-                  <Icon icon={icons.ADDRESS} size={sizes.SMALL} />
+                  <UFOIcon icon={icons.ADDRESS} size={sizes.SMALL} />
                 </Button>
               </Left>
               <Body>
-                <Text>{t('register:addressLabel')}</Text>
+                <UFOText>{t('register:addressLabel')}</UFOText>
               </Body>
               <Right>
-                <Text >{_.truncate(registerStore.user.address, { 'length': 24 })}</Text>
-                <Icon inverted style={{ paddingLeft: 5 }} icon={icons.SELECT} size={sizes.SMALL} />
+                <UFOText >{_.truncate(registerStore.user.address, { 'length': 24 })}</UFOText>
+                <UFOIcon inverted style={{ paddingLeft: 5 }} icon={icons.SELECT} size={sizes.SMALL} />
               </Right>
             </ListItem>
             <ListItem icon onPress={() => this.props.navigation.navigate(screens.REGISTER_IDENTIFICATION.name, { frontImageUrl: registerStore.identificationFrontDocument, backImageUrl: registerStore.identificationBackDocument })}>
               <Left>
                 <Button style={{ backgroundColor: identificationColor }}>
-                  <Icon icon={icons.IDENTIFICATION} size={sizes.SMALL} />
+                  <UFOIcon icon={icons.IDENTIFICATION} size={sizes.SMALL} />
                 </Button>
               </Left>
               <Body>
-                <Text>{t('register:identificationLabel')}</Text>
+                <UFOText>{t('register:identificationLabel')}</UFOText>
               </Body>
               <Right >
 
-                <Thumbnail source={registerStore.identificationFrontDocument} style={{ backgroundColor: colors.ACTIVE.string() }} />
-                <Thumbnail source={registerStore.identificationBackDocument} style={{ backgroundColor: colors.ACTIVE.string() }} />
-                <Icon inverted style={{ paddingLeft: 5 }} icon={icons.SELECT} size={sizes.SMALL} />
+                <UFOImage source={{ uri: registerStore.identificationFrontDocument }} style={{ width: 40, height: 40 }} />
+                <UFOImage source={{ uri: registerStore.identificationBackDocument }} style={{ width: 40, height: 40 }} />
+                <UFOIcon inverted style={{ paddingLeft: 5 }} icon={icons.SELECT} size={sizes.SMALL} />
               </Right>
             </ListItem>
             <ListItem icon onPress={() => { this.props.navigation.navigate(screens.REGISTER_DRIVER_LICENCE.name, { frontImageUrl: registerStore.driverLicenceFrontDocument, backImageUrl: registerStore.driverLicenceBackDocument }) }}>
               <Left>
                 <Button style={{ backgroundColor: driverLicenceColor }}>
-                  <Icon icon={icons.DRIVER_LICENCE} size={sizes.SMALL} />
+                  <UFOIcon icon={icons.DRIVER_LICENCE} size={sizes.SMALL} />
                 </Button>
               </Left>
               <Body>
-                <Text>{t('register:driverLicenceLabel')}</Text>
+                <UFOText>{t('register:driverLicenceLabel')}</UFOText>
               </Body>
               <Right >
-                <Thumbnail source={registerStore.driverLicenceFrontDocument} style={{ backgroundColor: colors.ACTIVE.string() }} />
-                <Thumbnail source={registerStore.driverLicenceBackDocument} style={{ backgroundColor: colors.ACTIVE.string() }} />
-                <Icon inverted style={{ paddingLeft: 5 }} icon={icons.SELECT} size={sizes.SMALL} />
+                <UFOImage source={{ uri: registerStore.driverLicenceFrontDocument }} style={{ width: 40, height: 40 }} />
+                <UFOImage source={{ uri: registerStore.driverLicenceBackDocument }} style={{ width: 40, height: 40 }} />
+                <UFOIcon inverted style={{ paddingLeft: 5 }} icon={icons.SELECT} size={sizes.SMALL} />
               </Right>
             </ListItem>
           </List>
         </Content>
-        <ActionBarComponent actions={actions} />
-      </Container>
+        <UFOActionBar actions={actions} />
+      </UFOContainer>
     );
   }
 

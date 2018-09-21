@@ -1,9 +1,8 @@
-import React, { Component } from "react";
+import React from "react";
 import { Thumbnail } from 'native-base';
 
-import CaptureImage from '../assets/UFOCamera.png'
-import LoadingImage from '../assets/loading.png'
-import { sizes, colors, icons } from '../utils/global'
+import CaptureImage from '../../assets/UFOCamera.png'
+import LoadingImage from '../../assets/loading.png'
 
 
 export default class UFOThumbnail extends React.Component {

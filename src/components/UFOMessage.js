@@ -1,12 +1,13 @@
-import React, { Component } from "react";
-import { View, StyleSheet, Text } from 'react-native';
+import React from "react";
+import { View, StyleSheet } from 'react-native';
+import { UFOText } from './common'
 
-export default class MessageComponent extends React.Component {
+export default class UFOMessageComponent extends React.Component {
     render() {
 
         let text = this.props.text ? this.props.text : ""
         return (
-            <View style={styles.message}><Text style={{ color: 'white' }}>{text}</Text></View>
+            <View style={styles.message}><UFOText inverted>{text}</UFOText></View>
         );
     }
 }

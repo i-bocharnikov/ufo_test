@@ -1,17 +1,18 @@
 import React from "react";
-import { Container, Content, Text } from 'native-base';
+import { Content } from 'native-base';
 import Video from 'react-native-video';
-import { Button, ScrollView, RefreshControl } from 'react-native';
+import { ScrollView, RefreshControl } from 'react-native';
 import { observer } from "mobx-react";
 import { observable } from "mobx";
 import { translate } from "react-i18next";
 
+import UFOHeader from "../components/header/UFOHeader";
+import UFOActionBar from "../components/UFOActionBar";
+import { UFOContainer, UFOText, UFOTextInput } from '../components/common'
 import appStore from '../stores/appStore'
 import registerStore from "../stores/registerStore"
 import driveStore from "../stores/driveStore"
-import ActionBarComponent from '../components/actionBar'
 import { screens, actionStyles, icons } from '../utils/global'
-import HeaderComponent from "../components/header";
 const video = require('../assets/UFOdrive.mp4')
 
 @observer
@@ -48,7 +49,7 @@ class HomeScreen extends React.Component {
 
 
     return (
-      <Container>
+      <UFOContainer>
         <ScrollView
           contentContainerStyle={{ flex: 1 }}
           refreshControl={_RefreshControl}
@@ -69,14 +70,13 @@ class HomeScreen extends React.Component {
           paused={false}
           muted={true}
         /> */}
-          <HeaderComponent transparent t={t} navigation={navigation} currentScreen={screens.HOME} />
+          <UFOHeader transparent t={t} navigation={navigation} currentScreen={screens.HOME} />
           <Content padder>
-            <Text>{t('home:welcome', { user: registerStore.user })}</Text>
-
+            <UFOText>{t('home:welcome', { user: registerStore.user })}</UFOText>
           </Content>
-          <ActionBarComponent actions={actions} />
+          <UFOActionBar actions={actions} />
         </ScrollView>
-      </Container >
+      </UFOContainer >
     );
   }
 }

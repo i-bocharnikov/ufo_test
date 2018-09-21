@@ -2,8 +2,8 @@
 import { Toast } from 'native-base';
 import { Alert } from 'react-native';
 
-export function confirm(title, message, action) {
-    Alert.alert(
+export async function confirm(title, message, action) {
+    await Alert.alert(
         title,
         message,
         [

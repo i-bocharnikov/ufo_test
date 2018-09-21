@@ -1,19 +1,17 @@
 import React, { Component } from "react";
 import { observer } from 'mobx-react';
 import { translate } from "react-i18next";
-import { NavigationEvents } from 'react-navigation';
-import { Image, StyleSheet, View, Dimensions, ImageEditor, ImageStore } from 'react-native';
-import { Container, Content, Form, Text, Row, Grid, Card, CardItem, Body, List, ListItem, Thumbnail } from 'native-base';
+import { Image, StyleSheet, View, Dimensions, ImageEditor } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import _ from 'lodash'
 
-import HeaderComponent from "../../components/header";
+import UFOHeader from "../../components/header/UFOHeader";
+import UFOActionBar from "../../components/UFOActionBar";
+import { UFOContainer, UFOText, UFOIcon, UFOImage } from '../../components/common'
 import registerStore from '../../stores/registerStore';
-import ActionBarComponent from '../../components/actionBar'
 import { screens, actionStyles, icons, colors } from '../../utils/global'
 import { showWarning } from '../../utils/interaction'
 import { observable, action } from "mobx";
-
 
 
 const DEVICE_WIDTH = Dimensions.get("window").width
@@ -188,7 +186,7 @@ class IdentificationScreen extends Component {
     let showCamera = this.captureState !== captureStates.VALIDATE && this.captureState !== captureStates.PREVIEW
 
     return (
-      <Container>
+      <UFOContainer>
         {showCamera && (
           <View style={styles.container}>
             <RNCamera
@@ -211,16 +209,16 @@ class IdentificationScreen extends Component {
               justifyContent: 'center',
               alignContent: 'center'
             }}>
-              <Text style={{ color: colors.TEXT.string(), textAlign: 'center' }}>{t(inputLabel)}</Text>
+              <UFOText style={{ color: colors.TEXT.string(), textAlign: 'center' }}>{t(inputLabel)}</UFOText>
             </View>
-            <HeaderComponent t={t} navigation={navigation} title={t('register:identificationTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_IDENTIFICATION} />
+            <UFOHeader t={t} navigation={navigation} title={t('register:identificationTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_IDENTIFICATION} />
           </View>
         )}
         {!showCamera && (
           <View>
-            <HeaderComponent t={t} navigation={navigation} title={t('register:identificationTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_IDENTIFICATION} />
+            <UFOHeader t={t} navigation={navigation} title={t('register:identificationTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_IDENTIFICATION} />
             <View>
-              < Text style={{ color: colors.TEXT.string(), padding: 20 }}>{t('register:identificationCheckLabel')}</Text>
+              <UFOText style={{ color: colors.TEXT.string(), padding: 20 }}>{t('register:identificationCheckLabel')}</UFOText>
               <Image source={{ uri: this.frontImageUrl }} style={{
                 width: CARD_WIDTH, height: CARD_HEIGHT, position: 'absolute',
                 top: PADDING_HEIGHT - (CARD_HEIGHT / 2) - 5,
@@ -235,8 +233,8 @@ class IdentificationScreen extends Component {
           </View>
         )
         }
-        <ActionBarComponent actions={actions} />
-      </Container >
+        <UFOActionBar actions={actions} />
+      </UFOContainer >
     );
   }
 }

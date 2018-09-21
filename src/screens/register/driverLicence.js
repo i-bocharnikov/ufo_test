@@ -2,16 +2,16 @@ import React, { Component } from "react";
 import { observer } from 'mobx-react';
 import { translate } from "react-i18next";
 import { Image, StyleSheet, View, Dimensions, ImageEditor, ImageStore } from 'react-native';
-import { Container, Content, Form, Text, Row, Grid, Card, CardItem, Body, List, ListItem, Thumbnail } from 'native-base';
 import { RNCamera } from 'react-native-camera';
 import _ from 'lodash'
-
-import HeaderComponent from "../../components/header";
-import registerStore from '../../stores/registerStore';
-import ActionBarComponent from '../../components/actionBar'
-import { screens, actionStyles, icons, colors } from '../../utils/global'
-import { showWarning } from '../../utils/interaction'
 import { observable, action } from "mobx";
+
+import UFOHeader from "../../components/header/UFOHeader";
+import UFOActionBar from "../../components/UFOActionBar";
+import { UFOContainer, UFOText, UFOIcon, UFOImage } from '../../components/common'
+import { screens, actionStyles, icons, colors } from '../../utils/global'
+import registerStore from '../../stores/registerStore';
+import { showWarning } from '../../utils/interaction'
 
 
 const DEVICE_WIDTH = Dimensions.get("window").width
@@ -181,7 +181,7 @@ class DriverLicenceScreen extends Component {
     let showCamera = this.captureState !== captureStates.VALIDATE && this.captureState !== captureStates.PREVIEW
 
     return (
-      <Container>
+      <UFOContainer>
         {showCamera && (
           <View style={styles.container}>
             <RNCamera
@@ -204,16 +204,16 @@ class DriverLicenceScreen extends Component {
               justifyContent: 'center',
               alignContent: 'center'
             }}>
-              <Text style={{ color: colors.TEXT.string(), textAlign: 'center' }}>{t(inputLabel)}</Text>
+              <UFOText style={{ color: colors.TEXT.string(), textAlign: 'center' }}>{t(inputLabel)}</UFOText>
             </View>
-            <HeaderComponent t={t} navigation={navigation} title={t('register:driverLicenceTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_DRIVER_LICENCE} />
+            <UFOHeader t={t} navigation={navigation} title={t('register:driverLicenceTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_DRIVER_LICENCE} />
           </View>
         )}
         {!showCamera && (
           <View>
-            <HeaderComponent t={t} navigation={navigation} title={t('register:driverLicenceTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_DRIVER_LICENCE} />
+            <UFOHeader t={t} navigation={navigation} title={t('register:driverLicenceTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_DRIVER_LICENCE} />
             <View>
-              < Text style={{ color: colors.TEXT.string(), padding: 20 }}>{t('register:driverLicenceCheckLabel')}</Text>
+              <UFOText style={{ color: colors.TEXT.string(), padding: 20 }}>{t('register:driverLicenceCheckLabel')}</UFOText>
               <Image source={{ uri: this.frontImageUrl }} style={{
                 width: CARD_WIDTH, height: CARD_HEIGHT, position: 'absolute',
                 top: PADDING_HEIGHT - (CARD_HEIGHT / 2) - 5,
@@ -228,8 +228,8 @@ class DriverLicenceScreen extends Component {
           </View>
         )
         }
-        <ActionBarComponent actions={actions} />
-      </Container >
+        <UFOActionBar actions={actions} />
+      </UFOContainer >
     );
   }
 }

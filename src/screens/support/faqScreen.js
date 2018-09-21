@@ -1,13 +1,12 @@
 import React, { Component } from "react";
 import { translate } from "react-i18next";
-import { Container, Content, H2, Text, Title } from 'native-base';
 import { observer } from "mobx-react";
 import { View, Dimensions } from 'react-native'
 import Video from 'react-native-video';
 
-import HeaderComponent from "../../components/header";
-import Image from "../../components/Image";
-import ActionBarComponent from '../../components/actionBar'
+import UFOHeader from "../../components/header/UFOHeader";
+import UFOActionBar from "../../components/UFOActionBar";
+import { UFOContainer, UFOText, UFOIcon, UFOImage } from '../../components/common'
 import { actionStyles, icons, colors, sizes, screens, navigationParams } from '../../utils/global'
 import supportStore from "../../stores/supportStore";
 
@@ -37,16 +36,16 @@ class SupportFaqScreen extends Component {
       },
     ]
     return (
-      <Container>
-        <HeaderComponent t={t} navigation={navigation} title={t('support:supportTitle')} currentScreen={screens.SUPPORT_FAQ} />
+      <UFOContainer>
+        <UFOHeader t={t} navigation={navigation} title={t('support:supportTitle')} currentScreen={screens.SUPPORT_FAQ} />
         <View style={{ padding: 20, flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
 
           <View style={{ padding: 10, flexDirection: 'row', justifyContent: 'center', alignContent: 'center', backgroundColor: colors.ACTIVE.string(), borderRadius: 5 }}>
-            <Title style={{ fontWeight: 'bold' }}>{faq.title}</Title>
+            <UFOText h2 inverted>{faq.title}</UFOText>
           </View>
           {supportStore.hasImage(faq) && (
             <View style={{ padding: 10, flexDirection: 'row', justifyContent: 'center', alignContent: 'center' }}>
-              <Image source={{ uri: faq.media_url }} style={{ height: MEDIA_HEIGHT, width: MEDIA_WIDTH }} />
+              <UFOImage source={{ uri: faq.media_url }} style={{ height: MEDIA_HEIGHT, width: MEDIA_WIDTH }} />
             </View>
           )}
           {supportStore.hasVideo(faq) && (
@@ -63,10 +62,10 @@ class SupportFaqScreen extends Component {
               />
             </View>
           )}
-          <Text>{faq.text}</Text>
+          <UFOText>{faq.text}</UFOText>
         </View>
-        <ActionBarComponent actions={actions} />
-      </Container>
+        <UFOActionBar actions={actions} />
+      </UFOContainer>
     );
   }
 }

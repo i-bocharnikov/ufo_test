@@ -1,18 +1,13 @@
 import React, { Component } from 'react';
-
-import {
-    View,
-    TextInput,
-    TouchableOpacity,
-    StyleSheet, ScrollView, Text
-} from 'react-native';
-
-import otaKeyStore from '../../stores/otaKeyStore'
 import { observer } from "mobx-react";
 
+import { View, TouchableOpacity, StyleSheet, ScrollView } from 'react-native'
+import otaKeyStore from '../stores/otaKeyStore'
+import { UFOText } from './common'
+
 @observer
-class DeveloperMenu extends Component {
-    static displayName = 'DeveloperMenu';
+class UFOAdminMenu extends Component {
+    static displayName = 'UFOAdminMenu';
 
     constructor(props) {
         super(props);
@@ -39,7 +34,7 @@ class DeveloperMenu extends Component {
                 onPress={onPress}
                 style={styles.menuItem}
             >
-                <Text style={styles.menuItemText}>{text}</Text>
+                <UFOText inverted style={styles.menuItemText}>{text}</UFOText>
             </TouchableOpacity>
         );
     }
@@ -64,16 +59,12 @@ class DeveloperMenu extends Component {
         ];
 
         return (
-            <View style={{ flex: 1, flexDirection: "column", justifyContent: 'flex-start', alignContent: 'flex-start' }}>
+            <View style={{ flex: 1, flexDirection: "column", justifyContent: 'flex-start', alignContent: 'flex-start', backgroundColor: 'black' }}>
 
-                <ScrollView style={{ flex: 1, }}>
-                    <TextInput style={{ alignSelf: 'flex-start', fontSize: 10, color: 'white', backgroundColor: 'black', width: '100%' }} underlineColorAndroid="transparent"
-                        numberOfLines={20}
-                        multiline={true}
-                        editable={false}
-                    >
+                <ScrollView style={{ flex: 1 }}>
+                    <UFOText inverted log>
                         {otaKeyStore.otaLog}
-                    </TextInput>
+                    </UFOText>
                 </ScrollView>
                 <View style={styles.menu}>
                     {buttons}
@@ -115,4 +106,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default DeveloperMenu;
+export default UFOAdminMenu;

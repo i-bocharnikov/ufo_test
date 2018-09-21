@@ -1,15 +1,16 @@
 import React from "react";
-import { Header, Left, Right, Body, Title, Subtitle, View } from 'native-base';
+import { Header, Left, Right, Body, View } from 'native-base';
 
-import ActivitiesComponent from "./activities"
-import LogoComponent from "./logo"
-import { colors, icons, actionStyles, screens, navigationParams } from '../utils/global'
-import ActionHeaderComponent from './actionHeader'
+import UFOActivities from "./UFOActivities"
+import UFOLogo from "./UFOLogo"
+import { UFOText } from '../common'
+import { colors, icons, actionStyles, screens, navigationParams } from '../../utils/global'
+import UFOActionHeader from './UFOActionHeader'
 
 const SUPPORT_FAQ_CATEGORY = navigationParams.SUPPORT_FAQ_CATEGORY
 const PREVIOUS_SCREEN = navigationParams.PREVIOUS_SCREEN
 
-export default class HeaderComponent extends React.Component {
+export default class UFOHeader extends React.Component {
 
     missing = () => console.log('Missing action method')
     goToHome = () => this.props.navigation.navigate(screens.HOME.name)
@@ -25,11 +26,11 @@ export default class HeaderComponent extends React.Component {
                 height: 50,
                 width: 50,
             }}>
-                <ActionHeaderComponent icon={icons.HOME} actionStyle={actionStyles.ACTIVE} onPress={this.props.navigation ? this.goToHome : this.missing} />
+                <UFOActionHeader icon={icons.HOME} actionStyle={actionStyles.ACTIVE} onPress={this.props.navigation ? this.goToHome : this.missing} />
             </View >)
-        let title = this.props.title ? (<Title>{this.props.title}</Title>) : null
-        let subTitle = this.props.subTitle ? (<Subtitle>{this.props.subTitle}</Subtitle>) : null
-        let logo = title ? null : (<LogoComponent />)
+        let title = this.props.title ? (<UFOText inverted h1>{this.props.title}</UFOText>) : null
+        let subTitle = this.props.subTitle ? (<UFOText inverted h2>{this.props.subTitle}</UFOText>) : null
+        let logo = title ? null : (<UFOLogo />)
         let alpha = this.props.transparent ? 0.8 : 1
         let currentScreen = this.props.currentScreen ? this.props.currentScreen : screens.HOME
 
@@ -43,9 +44,9 @@ export default class HeaderComponent extends React.Component {
                 width: 50,
             }}>
                 {(isSupport &&
-                    <ActionHeaderComponent icon={icons.HELP} actionStyle={actionStyles.TODO} onPress={this.props.navigation ? () => this.goToSupport(currentScreen) : this.missing} />
+                    <UFOActionHeader icon={icons.HELP} actionStyle={actionStyles.TODO} onPress={this.props.navigation ? () => this.goToSupport(currentScreen) : this.missing} />
                 )}
-                <ActivitiesComponent t={t} />
+                <UFOActivities t={t} />
             </View>
         )
         return (

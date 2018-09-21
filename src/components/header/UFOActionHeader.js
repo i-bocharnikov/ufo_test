@@ -1,11 +1,12 @@
-import React, { Component } from "react";
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import React from "react";
+import { View, TouchableOpacity } from 'react-native';
 import { translate } from "react-i18next";
-import { screens, sizes, actionStyles, colors, icons } from '../utils/global'
-import Icon from './Icon'
+
+import { sizes, actionStyles, colors, icons } from '../../utils/global'
+import { UFOIcon } from '../common'
 
 
-class ActionHeaderComponent extends React.Component {
+class UFOActionHeader extends React.Component {
 
 
     missing = () => console.error('missing')
@@ -36,7 +37,7 @@ class ActionHeaderComponent extends React.Component {
                     borderRadius: 40,
                     elevation: actionStyle.elevation
                 }}>
-                    <Icon icon={icon} size={sizes.SMALL} />
+                    <UFOIcon icon={icon} size={sizes.SMALL} />
                 </View>
             </TouchableOpacity>
 
@@ -45,4 +46,4 @@ class ActionHeaderComponent extends React.Component {
 }
 
 
-export default translate("translations")(ActionHeaderComponent);
+export default translate("translations")(UFOActionHeader);

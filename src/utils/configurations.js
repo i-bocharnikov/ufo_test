@@ -1,8 +1,8 @@
 import packageJson from "../../package.json";
 
 //const localhost = "127.0.0.1"
-//const localhost = "192.168.178.27" //Office
-const localhost = "192.168.178.97" //Pfafenthall
+const localhost = "192.168.178.27" //Office
+//const localhost = "192.168.178.97" //Pfafenthall
 //const localhost = "192.168.1.107"
 
 const development = {

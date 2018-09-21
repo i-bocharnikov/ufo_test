@@ -1,13 +1,12 @@
 import React, { Component } from "react";
 import { translate } from "react-i18next";
-import { Container, Content, H2, Text } from 'native-base';
 import { observer } from "mobx-react";
-import { Image, View, Dimensions } from 'react-native'
+import { View, Dimensions } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
-import HeaderComponent from "../../components/header";
-import ActionBarComponent from '../../components/actionBar'
-import Icon from '../../components/Icon'
+import UFOHeader from "../../components/header/UFOHeader";
+import UFOActionBar from "../../components/UFOActionBar";
+import { UFOContainer, UFOText, UFOIcon, UFOImage } from '../../components/common'
 import { actionStyles, icons, colors, sizes, screens, navigationParams } from '../../utils/global'
 import registerStore from "../../stores/registerStore";
 import { WebView } from 'react-native';
@@ -77,8 +76,8 @@ class ChatScreen extends Component {
       },
     ]
     return (
-      <Container>
-        <HeaderComponent t={t} navigation={navigation} currentScreen={screens.SUPPORT_CHAT} />
+      <UFOContainer>
+        <UFOHeader t={t} navigation={navigation} currentScreen={screens.SUPPORT_CHAT} />
         <View style={{ paddingTop: 10, paddingBottom: 100, flex: 1, flexDirection: 'column', justifyContent: 'center', alignContent: 'center' }}>
           <WebView
             ref={(ref) => { this.webView = ref; }}
@@ -88,8 +87,8 @@ class ChatScreen extends Component {
             javaScriptEnabled={true}
           />
         </View>
-        <ActionBarComponent actions={actions} />
-      </Container>
+        <UFOActionBar actions={actions} />
+      </UFOContainer>
     );
   }
 }

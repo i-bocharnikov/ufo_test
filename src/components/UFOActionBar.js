@@ -1,11 +1,11 @@
-import React, { Component } from "react";
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
-import { Text } from 'native-base'
+import React from "react";
+import { View, TouchableOpacity } from 'react-native';
 import { translate } from "react-i18next";
-import { actionStyles, colors, icons, sizes } from '../utils/global'
-import Icon from './Icon'
 
-class ActionBarComponent extends React.Component {
+import { UFOText, UFOIcon } from './common'
+import { actionStyles, colors, icons, sizes } from '../utils/global'
+
+class UFOActionBar extends React.Component {
     render() {
 
         const { t } = this.props;
@@ -47,9 +47,9 @@ class ActionBarComponent extends React.Component {
                                 borderRadius: 100,
                                 elevation: elevation
                             }}>
-                                <Icon icon={icon} size={sizes.LARGE} />
+                                <UFOIcon icon={icon} size={sizes.LARGE} />
                             </View>
-                            <Text style={{ color: colors.TEXT.string(), fontWeight: 'bold' }}>{t(icon.i18nKey)}</Text>
+                            <UFOText style={{ fontWeight: 'bold' }}>{t(icon.i18nKey)}</UFOText>
                         </TouchableOpacity>
                     )
                 }
@@ -60,4 +60,4 @@ class ActionBarComponent extends React.Component {
 }
 
 
-export default translate("translations")(ActionBarComponent);
+export default translate("translations")(UFOActionBar);

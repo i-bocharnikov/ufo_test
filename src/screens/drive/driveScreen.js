@@ -1,14 +1,12 @@
 import React, { Component } from "react";
 import { translate } from "react-i18next";
-import { Container, Text } from 'native-base';
 import { Dimensions, View, ScrollView, RefreshControl } from 'react-native'
 import { observer } from "mobx-react";
 import { observable } from "mobx";
 
-import HeaderComponent from "../../components/header";
-import Image from "../../components/Image";
-import Icon from "../../components/Icon";
-import ActionBarComponent from '../../components/actionBar'
+import UFOHeader from "../../components/header/UFOHeader";
+import UFOActionBar from "../../components/UFOActionBar";
+import { UFOContainer, UFOText, UFOIcon, UFOImage } from '../../components/common'
 import { screens, actionStyles, icons, colors, dateFormats, sizes } from '../../utils/global'
 import driveStore from '../../stores/driveStore'
 import otaKeyStore from '../../stores/otaKeyStore'
@@ -115,15 +113,15 @@ class DriveScreen extends Component {
     let carModel = driveStore.rental ? driveStore.rental.car ? driveStore.rental.car.car_model : null : null
 
     return (
-      <Container>
+      <UFOContainer>
         <ScrollView
           contentContainerStyle={{ flex: 1 }}
           refreshControl={_RefreshControl}
         >
           {location && (
-            <Image source={{ uri: location.image_url }} style={{ position: 'absolute', top: 0, width: BACKGROUND_WIDTH, height: BACKGROUND_HEIGHT }} />
+            <UFOImage source={{ uri: location.image_url }} style={{ position: 'absolute', top: 0, width: BACKGROUND_WIDTH, height: BACKGROUND_HEIGHT }} />
           )}
-          <HeaderComponent transparent t={t} navigation={navigation} currentScreen={screens.DRIVE} />
+          <UFOHeader transparent t={t} navigation={navigation} currentScreen={screens.DRIVE} />
 
           {driveStore.rental && (
             <View style={{
@@ -131,29 +129,35 @@ class DriveScreen extends Component {
               justifyContent: 'flex-start',
               alignItems: 'center', backgroundColor: colors.BACKGROUND.alpha(0.8).string()
             }}>
-              <Text style={{ paddingTop: 50, paddingBottom: 20 }}>{driveStore.rental.reference}</Text>
-              <Text style={{ paddingBottom: 20 }}>{driveStore.format(driveStore.rental.start_at, dateFormats.FULL)}</Text>
-              <Text style={{ paddingBottom: 30 }}>{driveStore.format(driveStore.rental.end_at, dateFormats.FULL)}</Text>
-              <Text style={{ paddingBottom: 30 }}>{driveStore.rental.location.name}</Text>
+              <UFOText style={{ paddingTop: 50, paddingBottom: 20 }}>{driveStore.rental.reference}</UFOText>
+              <UFOText style={{ paddingBottom: 20 }}>{driveStore.format(driveStore.rental.start_at, dateFormats.FULL)}</UFOText>
+              <UFOText style={{ paddingBottom: 30 }}>{driveStore.format(driveStore.rental.end_at, dateFormats.FULL)}</UFOText>
+              <UFOText style={{ paddingBottom: 30 }}>{driveStore.rental.location.name}</UFOText>
 
               <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                <Image style={{ width: CAR_WIDTH, height: CAR_HEIGHT }} source={{ uri: carModel.image_front_url }} />
+                <UFOImage style={{ width: CAR_WIDTH, height: CAR_HEIGHT }} source={{ uri: carModel.image_front_url }} />
                 {driveStore.rental && driveStore.rental.key_id && (
                   <View style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center', paddingLeft: 20 }}>
-                    <Icon icon={icons.KEY} color={colors.DISABLE} size={sizes.SMALL} />
-                    <Icon icon={icons.BLUETOOTH} color={colors.DISABLE} size={sizes.SMALL} />
+                    <UFOIcon icon={icons.KEY} color={!otaKeyStore.key ? colors.ERROR : otaKeyStore.key.isEnabled ? colors.DONE : colors.ACTIVE} size={sizes.SMALL} />
+                    <UFOIcon icon={icons.BLUETOOTH} color={otaKeyStore.isConnected ? colors.DONE : otaKeyStore.isConnecting ? colors.ACTIVE : colors.ERROR} size={sizes.SMALL} />
+                    {otaKeyStore.isConnected && otaKeyStore.vehicleData && (
+                      <UFOIcon icon={otaKeyStore.vehicleData.doorsLocked ? icons.LOCK : icons.UNLOCK} color={otaKeyStore.vehicleData.doorsLocked ? colors.ACTIVE : colors.DONE} size={sizes.SMALL} />
+                    )}
+                    {otaKeyStore.isConnected && otaKeyStore.vehicleData && (
+                      <UFOIcon icon={otaKeyStore.vehicleData.engineRunning ? icons.START : icons.STOP} color={otaKeyStore.vehicleData.engineRunning ? colors.DONE : colors.ACTIVE} size={sizes.SMALL} />
+                    )}
                   </View>
                 )}
               </View>
-              <Text style={{ paddingTop: 10 }}>{driveStore.rental.car.car_model.manufacturer + " " + driveStore.rental.car.car_model.name + " - " + driveStore.rental.car.reference}</Text>
+              <UFOText style={{ paddingTop: 10 }}>{driveStore.rental.car.car_model.manufacturer + " " + driveStore.rental.car.car_model.name + " - " + driveStore.rental.car.reference}</UFOText>
             </View>
           )}
 
 
         </ScrollView >
-        <ActionBarComponent actions={actionKeys} bottom={100} />
-        <ActionBarComponent actions={actions} />
-      </Container >
+        <UFOActionBar actions={actionKeys} bottom={100} />
+        <UFOActionBar actions={actions} />
+      </UFOContainer >
     );
   }
 }

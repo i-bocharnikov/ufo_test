@@ -1,16 +1,15 @@
 import React, { Component } from "react";
 import { translate } from "react-i18next";
-import { Container, Text, Title } from 'native-base';
 import { Dimensions, View, ScrollView, RefreshControl } from 'react-native'
 import { observer } from "mobx-react";
 import { observable } from "mobx";
 import Video from 'react-native-video';
 import Carousel from 'react-native-snap-carousel';
 
-import HeaderComponent from "../../components/header";
-import ActionBarComponent from '../../components/actionBar'
+import UFOHeader from "../../components/header/UFOHeader";
+import UFOActionBar from "../../components/UFOActionBar";
+import { UFOContainer, UFOText, UFOIcon, UFOImage } from '../../components/common'
 import { screens, actionStyles, icons, colors } from '../../utils/global'
-import Image from "../../components/Image";
 import guideStore from '../../stores/guideStore'
 import driveStore from '../../stores/driveStore'
 
@@ -21,7 +20,7 @@ const MEDIA_WIDTH = DEVICE_WIDTH - 60
 const MEDIA_HEIGHT = MEDIA_WIDTH / MEDIA_RATIO
 
 @observer
-class FindScreen extends Component {
+class ReturnScreen extends Component {
 
   componentDidMount() {
     this.refresh()
@@ -31,7 +30,7 @@ class FindScreen extends Component {
 
 
   refresh = async () => {
-    await guideStore.listFindGuides()
+    await guideStore.listReturnGuides()
   }
 
 
@@ -40,11 +39,11 @@ class FindScreen extends Component {
     return (
       <View key={guide.reference} style={{ paddingTop: 20, flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
         <View style={{ padding: 10, flexDirection: 'row', justifyContent: 'center', alignContent: 'center', backgroundColor: colors.ACTIVE.string(), borderRadius: 5 }}>
-          <Title style={{ fontWeight: 'bold' }}>{guide.title}</Title>
+          <UFOText inverted h2>{guide.title}</UFOText>
         </View>
         {guideStore.hasImage(guide) && (
           <View style={{ padding: 10, flexDirection: 'row', justifyContent: 'center', alignContent: 'center' }}>
-            <Image source={{ uri: guide.media_url }} style={{ height: MEDIA_HEIGHT, width: MEDIA_WIDTH }} />
+            <UFOImage source={{ uri: guide.media_url }} style={{ height: MEDIA_HEIGHT, width: MEDIA_WIDTH }} />
           </View>
         )}
         {guideStore.hasVideo(guide) && (
@@ -62,7 +61,7 @@ class FindScreen extends Component {
           </View>
         )}
         <View style={{ padding: 5, flexDirection: 'row', justifyContent: 'center', alignContent: 'center' }}>
-          <Text>{guide.description}</Text>
+          <UFOText>{guide.description}</UFOText>
         </View>
       </View>
     );
@@ -90,16 +89,16 @@ class FindScreen extends Component {
 
     let _RefreshControl = (<RefreshControl refreshing={this.refreshing} onRefresh={this.refresh} />)
 
-    let guides = guideStore.findGuides
+    let guides = guideStore.returnGuides
 
 
     return (
-      <Container>
+      <UFOContainer>
         <ScrollView
           contentContainerStyle={{ flex: 1 }}
           refreshControl={_RefreshControl}
         >
-          <HeaderComponent transparent t={t} navigation={navigation} currentScreen={screens.DRIVE} title={t('drive:findTitle', { rental: driveStore.rental })} />
+          <UFOHeader transparent t={t} navigation={navigation} currentScreen={screens.DRIVE} title={t('drive:returnTitle', { rental: driveStore.rental })} />
           <Carousel
             ref={(c) => { this._carousel = c; }}
             data={guides}
@@ -109,12 +108,12 @@ class FindScreen extends Component {
           />
 
         </ScrollView >
-        <ActionBarComponent actions={actions} />
-      </Container >
+        <UFOActionBar actions={actions} />
+      </UFOContainer >
     );
   }
 }
 
 
-export default translate("translations")(FindScreen);
+export default translate("translations")(ReturnScreen);
 

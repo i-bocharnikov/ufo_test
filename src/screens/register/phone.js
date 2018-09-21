@@ -6,14 +6,17 @@ import { StyleSheet, View, Dimensions } from 'react-native';
 import PhoneInput from 'react-native-phone-input';
 import CountryPicker from 'react-native-country-picker-modal';
 import DeviceInfo from 'react-native-device-info'
-import { Container, Content, Form, Item, Label, Input, Text } from 'native-base';
+import { Content, Form, Item, Label, Input } from 'native-base';
 import _ from 'lodash'
 
-import HeaderComponent from "../../components/header";
+
+import UFOHeader from "../../components/header/UFOHeader";
+import UFOActionBar from "../../components/UFOActionBar";
+import { UFOContainer, UFOText, UFOIcon, UFOImage } from '../../components/common'
+import { screens, actionStyles, icons, colors } from '../../utils/global'
 import appStore from '../../stores/appStore';
 import registerStore from '../../stores/registerStore';
-import ActionBarComponent from '../../components/actionBar'
-import { screens, actionStyles, icons, colors } from '../../utils/global'
+
 
 const DARK_COLOR = colors.BACKGROUND.string();
 const PLACEHOLDER_COLOR = "rgba(255,255,255,0.2)";
@@ -104,7 +107,7 @@ class PhoneScreen extends Component {
     if (!registerStore.isConnected && this.isCodeRequested) {
       actions.push({
         style: !registerStore.isConnected && this.code && REGEX_CODE_VALIDATION.test(this.code) ? actionStyles.TODO : actionStyles.DISABLE,
-        icon: icons.CONNECT,
+        icon: icons.LOGIN,
         onPress: async () => await this.doConnect(isInWizzard)
       })
     }
@@ -112,7 +115,7 @@ class PhoneScreen extends Component {
     if (registerStore.isConnected) {
       actions.push({
         style: registerStore.isConnected ? actionStyles.ACTIVE : actionStyles.DISABLE,
-        icon: icons.DISCONNECT,
+        icon: icons.LOGOUT,
         onPress: async () => await this.doDisconnect(t, isInWizzard)
       })
     }
@@ -121,8 +124,8 @@ class PhoneScreen extends Component {
     let defaultPaddintTop = (Dimensions.get("window").height / 10)
 
     return (
-      <Container>
-        <HeaderComponent t={t} navigation={navigation} title={t('register:phoneTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_PHONE} />
+      <UFOContainer>
+        <UFOHeader t={t} navigation={navigation} title={t('register:phoneTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_PHONE} />
         <Content padder ref={(ref) => { this.content = ref; }}>
           <Form>
             {registerStore.isConnected && (
@@ -135,7 +138,7 @@ class PhoneScreen extends Component {
             {!registerStore.isConnected && !this.isCodeRequested && (
               <Item >
                 <View style={{ justifyContent: 'space-evenly', alignContent: 'center' }}>
-                  <Text style={{ paddingTop: defaultPaddintTop, paddingBottom: 25 }}>{t('register:phoneNumberInputLabel')}</Text>
+                  <UFOText style={{ paddingTop: defaultPaddintTop, paddingBottom: 25 }}>{t('register:phoneNumberInputLabel')}</UFOText>
                   <PhoneInput
                     ref={(ref) => { this.phoneInput = ref; }}
                     onPressFlag={this.onPressFlag}
@@ -171,8 +174,8 @@ class PhoneScreen extends Component {
           </Form>
 
         </Content>
-        <ActionBarComponent actions={actions} />
-      </Container>
+        <UFOActionBar actions={actions} />
+      </UFOContainer>
     );
   }
 }

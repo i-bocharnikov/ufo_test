@@ -1,15 +1,15 @@
 import React, { Component } from "react";
 import { translate } from "react-i18next";
-import { Container, Content, Text, Title, H2, H3 } from 'native-base';
+import { Content } from 'native-base';
 import { NavigationEvents } from 'react-navigation';
 import { SectionList, View, TouchableHighlight } from 'react-native'
 import { observer } from "mobx-react";
 import { observable } from "mobx";
 import call from 'react-native-phone-call'
 
-import HeaderComponent from "../../components/header";
-import ActionBarComponent from '../../components/actionBar'
-import Icon from '../../components/Icon'
+import UFOHeader from "../../components/header/UFOHeader";
+import UFOActionBar from "../../components/UFOActionBar";
+import { UFOContainer, UFOText, UFOIcon, UFOImage } from '../../components/common'
 import { actionStyles, icons, colors, sizes, navigationParams, screens } from '../../utils/global'
 import supportStore from "../../stores/supportStore";
 import driveStore from "../../stores/driveStore";
@@ -74,8 +74,8 @@ class SupportFaqsScreen extends Component {
       onPress={() => this.onPressSection(reference)}>
       <View style={{ padding: 8, flexDirection: 'column', justifyContent: 'center', alignContent: 'center' }}>
         <View style={{ padding: 10, flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center', backgroundColor: colors.ACTIVE.string(), borderRadius: 5 }}>
-          <H3 style={{ color: colors.HEADER_TEXT.string() }}>{name}</H3>
-          <Icon icon={isOpen ? icons.SEGMENT_OPEN : icons.SEGMENT_CLOSE} size={sizes.SMALL} />
+          <UFOText h2 inverted>{name}</UFOText>
+          <UFOIcon icon={isOpen ? icons.SEGMENT_OPEN : icons.SEGMENT_CLOSE} size={sizes.SMALL} />
         </View>
       </View>
     </TouchableHighlight >
@@ -86,8 +86,8 @@ class SupportFaqsScreen extends Component {
       key={reference}
       onPress={() => this.onPressItem(section.reference, reference)}>
       <View style={{ padding: 8, flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center', }}>
-        <Text style={{}}>{title}</Text>
-        <Icon inverted icon={icons.NEXT} size={sizes.SMALL} />
+        <UFOText style={{}}>{title}</UFOText>
+        <UFOIcon inverted icon={icons.NEXT} size={sizes.SMALL} />
       </View>
     </TouchableHighlight >
   )
@@ -129,21 +129,19 @@ class SupportFaqsScreen extends Component {
     })
 
     return (
-      <Container>
+      <UFOContainer>
         <NavigationEvents onWillFocus={payload => { this.onLoad(payload) }} />
-        <HeaderComponent t={t} navigation={navigation} title={t('support:supportTitle')} currentScreen={screens.SUPPORT_FAQS} />
-        <Content padder>
-          <SectionList
-            onRefresh={this.doRefresh}
-            refreshing={this.refreshing}
-            renderItem={this.renderItem}
-            renderSectionHeader={this.renderSection}
-            sections={sections}
-            keyExtractor={(item, index) => item + index}
-          />
-        </Content>
-        <ActionBarComponent actions={actions} />
-      </Container>
+        <UFOHeader t={t} navigation={navigation} title={t('support:supportTitle')} currentScreen={screens.SUPPORT_FAQS} />
+        <SectionList
+          onRefresh={this.doRefresh}
+          refreshing={this.refreshing}
+          renderItem={this.renderItem}
+          renderSectionHeader={this.renderSection}
+          sections={sections}
+          keyExtractor={(item, index) => item + index}
+        />
+        <UFOActionBar actions={actions} />
+      </UFOContainer>
     );
   }
 }

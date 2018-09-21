@@ -128,12 +128,13 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
     @ReactMethod
     public void register(int registrationNumber, final Promise promise) {
         try {
-            getOtaSdk().setOnListenService(new ServiceStateCallback() { @Override
-                public void onServiceReady(OtaKeysService service) {
-                    Toast.makeText(getReactApplicationContext(), "OtaKeysService started!", Toast.LENGTH_LONG).show();
-                }
-            });
             getOtaSdk().getBle().registerBleEvents(registrationNumber, this);
+            getOtaSdk().setOnListenService(new ServiceStateCallback() { 
+                @Override
+                public void onServiceReady(OtaKeysService service) {
+                    promise.resolve(true);
+                }
+            });            
         }catch(Exception e) {
             promise.reject(e);
         }
@@ -721,8 +722,7 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
     }
 
     private void sendEvent(ReactContext reactContext, String eventName, @Nullable WritableMap params) {
-        Toast.makeText(getReactApplicationContext(), "event ["+eventName+"] sent", Toast.LENGTH_LONG).show();
-        reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, null);
+        //Toast.makeText(getReactApplicationContext(), "event ["+eventName+"] sent", Toast.LENGTH_LONG).show();
         reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, params);
     }
 

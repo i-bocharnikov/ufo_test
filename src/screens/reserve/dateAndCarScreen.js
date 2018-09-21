@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import { translate } from "react-i18next";
-import { Container, Content } from 'native-base';
+import { Content } from 'native-base';
 
-import HeaderComponent from "../../components/header";
-import ActionBarComponent from '../../components/actionBar'
+import UFOHeader from "../../components/header/UFOHeader";
+import UFOActionBar from "../../components/UFOActionBar";
+import { UFOContainer, UFOText, UFOIcon, UFOImage } from '../../components/common'
 import { screens, actionStyles, icons } from '../../utils/global'
 
 class ReserveDateAndCarScreen extends Component {
@@ -30,13 +31,13 @@ class ReserveDateAndCarScreen extends Component {
       },
     ]
     return (
-      <Container>
-        <HeaderComponent t={t} navigation={navigation} title={t('register:reserveDateAndCarTitle')} currentScreen={screens.RESERVE_DATE_AND_CAR} />
+      <UFOContainer>
+        <UFOHeader t={t} navigation={navigation} title={t('register:reserveDateAndCarTitle')} currentScreen={screens.RESERVE_DATE_AND_CAR} />
 
         <Content padder>
         </Content>
-        <ActionBarComponent actions={actions} />
-      </Container>
+        <UFOActionBar actions={actions} />
+      </UFOContainer>
 
     );
   }

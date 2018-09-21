@@ -2,14 +2,13 @@ import React, { Component } from "react";
 import registerStore from '../../stores/registerStore';
 import { observer } from 'mobx-react';
 import { translate } from "react-i18next";
-import { Dimensions, Keyboard } from 'react-native';
-import { Container, Content, Form, Item, Label } from 'native-base';
-import { Text, Image } from 'react-native'
+import { Content, Form, Item, Label } from 'native-base';
 import _ from 'lodash'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
-import HeaderComponent from "../../components/header";
-import ActionBarComponent from '../../components/actionBar'
+import UFOHeader from "../../components/header/UFOHeader";
+import UFOActionBar from "../../components/UFOActionBar";
+import { UFOContainer, UFOText, UFOIcon, UFOImage } from '../../components/common'
 import { screens, actionStyles, icons, colors } from '../../utils/global'
 import { observable, action } from "mobx";
 
@@ -61,8 +60,8 @@ class AddressScreen extends Component {
     ]
 
     return (
-      <Container>
-        <HeaderComponent t={t} navigation={navigation} title={t('register:addressTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_ADDRESS} />
+      <UFOContainer>
+        <UFOHeader t={t} navigation={navigation} title={t('register:addressTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_ADDRESS} />
         <Content padder>
           <Form>
             <Item stackedLabel>
@@ -122,8 +121,8 @@ class AddressScreen extends Component {
             </Item>
           </Form>
         </Content>
-        <ActionBarComponent actions={actions} />
-      </Container>
+        <UFOActionBar actions={actions} />
+      </UFOContainer>
     );
   }
 }

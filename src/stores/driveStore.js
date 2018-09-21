@@ -98,7 +98,7 @@ class Rental {
 class driveStore {
 
     @persist('list', Rental) @observable rentals = []
-    @observable carDamages = []
+
     @persist @observable index = -1
 
 
@@ -173,18 +173,7 @@ class driveStore {
         return false
     };
 
-    @action
-    async listCarDamages() {
 
-        const response = await getFromApi("/car_damages/" + this.rental.reference);
-        if (response && response.status === "success") {
-            if (DEBUG)
-                console.info("driveStore.listCarDamages:", response.data);
-            this.carDamages = response.data.car_damages
-            return true
-        }
-        return false
-    };
 
     @action
     async getRental() {

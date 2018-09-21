@@ -11,16 +11,19 @@ YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTIm
 YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
 
 
-import DeveloperMenu from './src/components/developerMenu'
+import UFOAdminMenu from './src/components/UFOAdminMenu'
 import HomeScreen from './src/screens/homeScreen'
 import SupportFaqsScreen from './src/screens/support/faqsScreen'
 import SupportFaqScreen from './src/screens/support/faqScreen'
 import SupportChatScreen from './src/screens/support/chatScreen'
 import DriveScreen from './src/screens/drive/driveScreen'
-import FindScreen from './src/screens/drive/findScreen'
-import ReturnScreen from './src/screens/drive/returnScreen'
+import FindScreen from './src/screens/guide/findScreen'
+import ReturnScreen from './src/screens/guide/returnScreen'
 import InspectScreen from './src/screens/inspect/inspectScreen'
-import RentalAgreementScreen from './src/screens/drive/rentalAgreementSreen'
+import LocateDamage from './src/screens/inspect/locateDamage'
+import CaptureDamage from './src/screens/inspect/captureDamage'
+import CommentDamage from './src/screens/inspect/commentDamage'
+import RentalAgreementScreen from './src/screens/term/rentalAgreementSreen'
 import ReserveLocationScreen from './src/screens/reserve/locationScreen'
 import ReserveDateAndCarScreen from './src/screens/reserve/dateAndCarScreen'
 import ReservePaymentScreen from './src/screens/reserve/paymentScreen'
@@ -110,6 +113,27 @@ const ReserveStack = createStackNavigator(
   }
 );
 
+const InspectStack = createStackNavigator(
+  {
+    Inspect: {
+      screen: InspectScreen
+    },
+    InspectLocateDamage: {
+      screen: LocateDamage
+    },
+    InspectCaptureDamage: {
+      screen: CaptureDamage
+    },
+    InspectCommentDamage: {
+      screen: CommentDamage
+    },
+  }, {
+    initialRouteName: screens.INSPECT.name,
+    headerMode: 'none',
+    navigationOptions: commonStackNavigationOptions
+  }
+);
+
 const SupportStack = createStackNavigator(
   {
     SupportFaqs: {
@@ -163,7 +187,7 @@ const RootStack = createBottomTabNavigator(
       screen: ReturnScreen
     },
     Inspect: {
-      screen: InspectScreen
+      screen: InspectStack
     },
     RentalAgreement: {
       screen: RentalAgreementScreen
@@ -203,7 +227,7 @@ class App extends React.Component {
         <StyleProvider style={getTheme()}>
           <RootStack />
         </StyleProvider>
-        {__DEV__ && <DeveloperMenu />}
+        {__DEV__ && <UFOAdminMenu />}
       </Root >
     );
   }
