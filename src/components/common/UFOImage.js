@@ -14,9 +14,9 @@ export default class UFOImage extends React.Component {
 
         if (source.uri && source.uri === 'loading') {
             return (
-                <FastImage source={{ uri: "https://mir-s3-cdn-cf.behance.net/project_modules/disp/ab79a231234507.564a1d23814ef.gif" }} style={style} resizeMode={resizeMode} >
+                <FastImage source={require('../../assets/images/loading.gif')} style={style} resizeMode={resizeMode} >
                     {this.props.children}
-                </FastImage>
+                </FastImage >
 
             );
         }

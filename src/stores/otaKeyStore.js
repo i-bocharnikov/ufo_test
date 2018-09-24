@@ -148,11 +148,11 @@ class OTAKeyStore {
             DeviceEventEmitter.addListener('onOtaVehicleDataUpdated', this.onOtaVehicleDataUpdated);
             DeviceEventEmitter.addListener('onOtaActionPerformed', this.onOtaActionPerformed);
             DeviceEventEmitter.addListener('onOtaBluetoothStateChanged', this.onOtaBluetoothStateChanged);
-
+/*
             if (this.isConnectedToVehicle()) {
                 this.isConnected = true
                 await this.getVehicleData()
-            }
+            }*/
 
             this.debug(`<- this.ota.register(${String(this.keyAccessDeviceRegistrationNumber)}) return ${result}`)
             return result
