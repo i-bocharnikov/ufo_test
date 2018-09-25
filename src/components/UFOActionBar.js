@@ -10,7 +10,7 @@ class UFOActionBar extends React.Component {
 
         const { t } = this.props;
         let actions = this.props.actions ? this.props.actions : []
-        let bottom = this.props.bottom ? this.props.bottom : 0
+        let bottom = this.props.bottom ? this.props.bottom : 20
         return (
             <View style={{
                 position: 'absolute',
@@ -49,7 +49,7 @@ class UFOActionBar extends React.Component {
                             }}>
                                 <UFOIcon icon={icon} size={sizes.LARGE} />
                             </View>
-                            <UFOText style={{ fontWeight: 'bold' }}>{t(icon.i18nKey)}</UFOText>
+                            <UFOText inverted style={{ fontWeight: 'bold' }}>{t(icon.i18nKey)}</UFOText>
                         </TouchableOpacity>
                     )
                 }

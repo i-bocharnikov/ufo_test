@@ -32,7 +32,7 @@ class ReserveDateAndCarScreen extends Component {
     ]
     return (
       <UFOContainer>
-        <UFOHeader t={t} navigation={navigation} title={t('register:reserveDateAndCarTitle')} currentScreen={screens.RESERVE_DATE_AND_CAR} />
+        <UFOHeader t={t} navigation={navigation} title={t('reserve:reserveDateAndCarTitle')} currentScreen={screens.RESERVE_DATE_AND_CAR} />
 
         <Content padder>
         </Content>

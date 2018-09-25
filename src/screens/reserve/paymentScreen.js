@@ -31,7 +31,7 @@ class ReservePaymentScreen extends Component {
     ]
     return (
       <UFOContainer>
-        <UFOHeader t={t} navigation={navigation} title={t('register:reservePaymentTitle')} currentScreen={screens.RESERVE_PAYMENT} />
+        <UFOHeader t={t} navigation={navigation} title={t('reserve:reservePaymentTitle')} currentScreen={screens.RESERVE_PAYMENT} />
         <Content padder>
         </Content>
         <UFOActionBar actions={actions} />

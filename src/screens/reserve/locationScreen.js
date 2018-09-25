@@ -1,12 +1,25 @@
 import React, { Component } from "react";
 import { translate } from "react-i18next";
+import { View, Linking } from 'react-native';
 
 import UFOHeader from "../../components/header/UFOHeader";
 import UFOActionBar from "../../components/UFOActionBar";
 import { UFOContainer, UFOText, UFOIcon, UFOImage } from '../../components/common'
 import { screens, actionStyles, icons } from '../../utils/global'
 
+const bookingUrl = "https://booking.ufodrive.com"
+
 class ReserveLocationScreen extends Component {
+
+  goToURL = () => {
+    Linking.canOpenURL(bookingUrl).then(supported => {
+      if (supported) {
+        Linking.openURL(bookingUrl);
+      } else {
+        console.warn("Linking not supported for url ", bookingUrl)
+      }
+    });
+  }
 
   render() {
 
@@ -16,16 +29,17 @@ class ReserveLocationScreen extends Component {
         style: actionStyles.ACTIVE,
         icon: icons.HOME,
         onPress: () => this.props.navigation.navigate(screens.HOME.name)
-      },
-      {
-        style: actionStyles.TODO,
-        icon: icons.NEXT,
-        onPress: () => this.props.navigation.navigate(screens.RESERVE_DATE_AND_CAR.name)
-      },
+      }
     ]
     return (
-      <UFOContainer>
-        <UFOHeader t={t} navigation={navigation} title={t('register:reserveLocationTitle')} currentScreen={screens.RESERVE_LOCATION} />
+      <UFOContainer image={require("../../assets/images/background/UFOBGRESERVE001.png")}>
+        <UFOHeader t={t} navigation={navigation} title={t('reserve:reserveTitle')} currentScreen={screens.RESERVE_LOCATION} />
+        <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
+          <View style={{ paddingTop: '10%', paddingLeft: '10%', paddingRight: '10%' }} >
+            <UFOText h1 inverted center style={{ paddingTop: 10 }}>{t('reserve:bookingLink')}</UFOText>
+            <UFOText style={{ color: '#acacac', fontWeight: 'bold' }} onPress={this.goToURL}>{bookingUrl}</UFOText>
+          </View>
+        </View>
         <UFOActionBar actions={actions} />
       </UFOContainer>
 

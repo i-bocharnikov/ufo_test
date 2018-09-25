@@ -1,7 +1,5 @@
 import React from "react";
-import { Content } from 'native-base';
-import Video from 'react-native-video';
-import { ScrollView, RefreshControl } from 'react-native';
+import { ScrollView, RefreshControl, View } from 'react-native';
 import { observer } from "mobx-react";
 import { observable } from "mobx";
 import { translate } from "react-i18next";
@@ -49,31 +47,20 @@ class HomeScreen extends React.Component {
 
 
     return (
-      <UFOContainer>
+      <UFOContainer image={require("../assets/images/background/UFOBGHOME002.png")}>
         <ScrollView
           contentContainerStyle={{ flex: 1 }}
           refreshControl={_RefreshControl}
         >
-          {/*  <Video source={video}
-          ref={(ref) => {
-            this.player = ref
-          }}
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            bottom: 0,
-            right: 0,
-          }}
-          resizeMode={"cover"}
-          repeat={true}
-          paused={false}
-          muted={true}
-        /> */}
-          <UFOHeader transparent t={t} navigation={navigation} currentScreen={screens.HOME} />
-          <Content padder>
-            <UFOText>{t('home:welcome', { user: registerStore.user })}</UFOText>
-          </Content>
+          <UFOHeader transparent logo t={t} navigation={navigation} currentScreen={screens.HOME} />
+          <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
+            <View style={{ paddingTop: '10%', paddingLeft: '10%', paddingRight: '10%' }} >
+              <UFOText h1 inverted center style={{ paddingTop: 10 }}>{t('home:welcome', { user: registerStore.user })}</UFOText>
+              <UFOText h2 inverted center style={{ paddingTop: 10 }}>{t('home:reserve', { user: registerStore.user })}</UFOText>
+              <UFOText h2 inverted center style={{ paddingTop: 5 }}>{t('home:register', { user: registerStore.user })}</UFOText>
+              <UFOText h2 inverted center style={{ paddingTop: 5 }}>{t('home:drive', { user: registerStore.user })}</UFOText>
+            </View>
+          </View>
           <UFOActionBar actions={actions} />
         </ScrollView>
       </UFOContainer >

@@ -18,21 +18,28 @@ export default class UFOText extends React.Component {
         }
 
         if (this.props.h1) {
-            style.fontSize = 17
+            style.fontSize = 28
             style.fontWeight = 'bold'
         }
         if (this.props.h2) {
-            style.fontSize = 16
+            style.fontSize = 20
             style.fontWeight = 'bold'
         }
         if (this.props.h3) {
+            style.fontSize = 16
+            style.fontWeight = 'bold'
+        }
+        if (this.props.h4) {
             style.fontSize = 15
             style.fontWeight = 'bold'
         }
         if (this.props.log) {
             style.fontSize = 10
         }
+        if (this.props.center) {
+            style.textAlign = 'center'
+        }
 
-        return <Text style={style} >{this.props.children}</Text>
+        return <Text style={style} onPress={this.props.onPress} >{this.props.children}</Text>
     }
 }

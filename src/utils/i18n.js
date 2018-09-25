@@ -10,7 +10,10 @@ i18n.use(LanguageDetector).init({
                 "bluetoothAccessFailure": "Unexpected bluetooth connectivity issues. Operating in offline/degraded mode",
             },
             home: {
-                "welcome": "Hello {{user.reference}}, What is next ?",
+                "welcome": "Hello, follow those steps and enjoy the drive",
+                "reserve": "1. Reserve a car",
+                "register": "2. Register your profile",
+                "drive": "3. Drive your rented car",
             },
             global: {
                 "confirmationTitle": "Confirmation needed",
@@ -107,9 +110,11 @@ i18n.use(LanguageDetector).init({
                 "confirmInitialInspectionConfirmationMessage": "You are about to confirm car condition is conform to the description on the screen. Please note you will not be able to change it once you will have pressed 'Confirm'. thanks You."
             },
             reserve: {
+                "reserveTitle": "Book a car",
                 "reserveLocationTitle": "Select the location",
                 "reserveDateAndCarTitle": "Select the date and car",
                 "reservePaymentTitle": "Confirm",
+                "bookingLink": "This section is under development. In the meantime, please follow this link to book a car"
             },
             support: {
                 "supportTitle": "How can we help you?",
