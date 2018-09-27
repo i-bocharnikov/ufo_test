@@ -25,9 +25,10 @@ i18n.use(LanguageDetector).init({
                 "register": "Register",
                 "drive": "Drive",
                 "find": "Find",
+                "found": "Car found",
                 "inspect": "Inpect",
                 "return": "Return",
-                "rentalAgreement": "Start contract",
+                "rentalAgreement": "Start rental",
                 "drive": "Drive",
                 "back": "Back",
                 "next": "Next",
@@ -65,7 +66,7 @@ i18n.use(LanguageDetector).init({
                 "sign": "Sign",
                 "clipboard": "clipboard",
                 "browse": "Open browser",
-
+                "closeRental": "Close rental",
                 "emergencyCall": "Emergency call",
             },
             register: {
@@ -128,9 +129,12 @@ i18n.use(LanguageDetector).init({
                 "rentalStartAt": "From {{start_at}}",
                 "rentalEndAt": "Till {{end_at}}",
                 "rentalLocation": "At {{rental.location.name}}",
-                "rentalCar": "{{rental.car.car_model.manufacturer}} {{rental.car.car_model.name}} - {{rental.car.reference}}",
+                "rentalCar": "{{rental.car.reference}}",
+                "rentalCarModel": "{{rental.car.car_model.manufacturer}} {{rental.car.car_model.name}}",
                 "noRentalsTitle": "No rentals",
                 "noRentalsDescription": "After booking, the actions below will be activated and will allow you to find the car, inspect it, start the rental contract and finally lock/unlock the vehicle",
+                "confirmCloseRentalConfirmationMessage": "You are about to end your rental contract.{{keyMessage}}\nThe car will then lock automatically so please ensure you don't leave any personal belongings in the car as you will not be able to open it once you'll have pressed 'OK'.\nThank you.",
+                "confirmCloseRentalKeyMessageConfirmationMessage": "\nPLEASE PUT THE KEY BACK IN THE GLOVEBOX."
             },
             guide: {
                 "findTitle": "Where is the car",

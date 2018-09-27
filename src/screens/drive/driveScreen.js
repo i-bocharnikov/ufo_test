@@ -13,6 +13,8 @@ import { driveStore } from '../../stores'
 import otaKeyStore from '../../stores/otaKeyStore'
 import UFOCard from "../../components/UFOCard";
 import UFOSlider from "../../components/UFOSlider";
+import { Left, Body } from "native-base";
+import { confirm } from "../../utils/interaction";
 
 const DRIVE_DEVICE_WIDTH = Dimensions.get('window').width
 const DRIVE_WIDTH = DRIVE_DEVICE_WIDTH * 90 / 100
@@ -54,11 +56,14 @@ class DriveScreen extends Component {
                 t("drive:rentalLocation", { rental: rental })]}
               imageSource={{ uri: location.image_url }}
             >
-              <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                <UFOImage source={{ uri: carModel.image_front_url }} style={{ height: 60, width: null, flex: 0.4 }} resizeMode={'contain'} />
-                <View style={{ flex: 0.6, flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start' }}>
-                  <UFOText style={{ flex: 0.5 }}>{t("drive:rentalCar", { rental: rental })}</UFOText>
-                  <View style={{ flex: 0.5, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }}>
+              <Left>
+                <UFOImage source={{ uri: carModel.image_front_url }} style={{ width: 150, height: 75 }} resizeMode={'contain'} />
+              </Left>
+              <Body>
+                <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start' }}>
+                  <UFOText style={{ flex: 0.3 }}>{t("drive:rentalCarModel", { rental: rental })}</UFOText>
+                  <UFOText h4 style={{ flex: 0.3 }}>{t("drive:rentalCar", { rental: rental })}</UFOText>
+                  <View style={{ flex: 0.3, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }}>
                     <UFOIcon icon={icons.KEY} color={otaKeyStore.key ? otaKeyStore.key.isEnabled ? colors.DONE : colors.ACTIVE : colors.ERROR} size={sizes.SMALL} />
                     <UFOIcon icon={icons.BLUETOOTH} color={otaKeyStore.isConnected ? colors.DONE : otaKeyStore.isConnecting ? colors.ACTIVE : colors.ERROR} size={sizes.SMALL} />
                     {otaKeyStore.isConnected && otaKeyStore.vehicleData && (
@@ -69,7 +74,7 @@ class DriveScreen extends Component {
                     )}
                   </View>
                 </View>
-              </View>
+              </Body>
             </UFOCard>
           )
         }
@@ -86,6 +91,18 @@ class DriveScreen extends Component {
     driveStore.refreshRental()
   }
 
+  doCloseRental = async () => {
+    driveStore.closeRental()
+  }
+
+  confirmCloseRental = async (t) => {
+    let keyMessage = driveStore.rental && driveStore.rental.car && driveStore.rental.car.has_key === true ? t('drive:confirmCloseRentalKeyMessageConfirmationMessage') : ""
+    await confirm(t('global:confirmationTitle'), t('drive:confirmCloseRentalConfirmationMessage', { keyMessage: keyMessage }), async () => {
+      this.doCloseRental()
+    })
+  }
+
+
   render() {
     const { t, navigation } = this.props;
 
@@ -94,10 +111,10 @@ class DriveScreen extends Component {
 
 
     let actions = []
-    if (!driveStore.rental) {
+    if (!driveStore.hasRentalOngoing) {
       actions.push(
         {
-          style: actionStyles.TODO,
+          style: actionStyles.ACTIVE,
           icon: icons.HOME,
           onPress: () => this.props.navigation.navigate(screens.HOME.name)
         }
@@ -108,6 +125,7 @@ class DriveScreen extends Component {
     driveStore.computeActionInspect(actions, () => this.props.navigation.navigate(screens.INSPECT.name))
     driveStore.computeActionStartContract(actions, () => this.props.navigation.navigate(screens.RENTAL_AGREEMENT.name))
     driveStore.computeActionReturn(actions, () => this.props.navigation.navigate(screens.RETURN.name))
+    driveStore.computeActionCloseRental(actions, () => this.confirmCloseRental(t))
 
     otaKeyStore.computeActionEnableKey(actions, () => otaKeyStore.enableKey(driveStore.rental.key_id))
     otaKeyStore.computeActionConnect(actions, () => otaKeyStore.connect(true))

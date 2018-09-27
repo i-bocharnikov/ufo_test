@@ -45,6 +45,7 @@ export default class termStore {
         if (response && response.status === "success") {
             if (DEBUG)
                 console.info("termStore.signRentalAgreement:", response.data);
+            driveStore.rentals[driveStore.index] = response.data.rental
             this.term = new Term
             return true
         }

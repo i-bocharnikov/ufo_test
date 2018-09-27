@@ -5,7 +5,7 @@ import { observable, action, computed } from 'mobx';
 import { persist } from 'mobx-persist'
 import _ from 'lodash'
 
-import { getFromApi } from '../utils/api'
+import { getFromApi, putToApi } from '../utils/api'
 import { dateFormats, actionStyles, icons } from '../utils/global'
 
 const DEBUG = false
@@ -143,6 +143,10 @@ export default class DriveStore {
         if (!this.rental || this.rental.status !== RENTAL_STATUS.ONGOING || !this.rental.contract_signed) { return }
         actions.push({ style: this.rental.ready_for_return ? actionStyles.TODO : actionStyles.ACTIVE, icon: icons.RETURN, onPress: onPress })
     }
+    computeActionCloseRental(actions, onPress) {
+        if (!this.rental || this.rental.status !== RENTAL_STATUS.ONGOING || !this.rental.contract_signed) { return }
+        actions.push({ style: this.rental.ready_for_return ? actionStyles.TODO : actionStyles.ACTIVE, icon: icons.CLOSE_RENTAL, onPress: onPress })
+    }
 
     @action
     async reset() {
@@ -176,9 +180,9 @@ export default class DriveStore {
             if (!_.isEmpty(response.data.ongoing_rentals)) {
                 this.index = response.data.closed_rentals.length
             } else if (!_.isEmpty(response.data.confirmed_rentals)) {
-                this.index = response.data.closed_rentals.length + response.data.ongoing_rentals.length
+                this.index = response.data.closed_rentals.length + response.data.ongoing_rentals.length + response.data.confirmed_rentals.length - 1
             } else if (!_.isEmpty(response.data.closed_rentals)) {
-                this.index = 0
+                this.index = response.data.closed_rentals.length - 1
             } else {
                 this.index = null
             }
@@ -196,6 +200,32 @@ export default class DriveStore {
         if (response && response.status === "success") {
             if (DEBUG)
                 console.info("driveStore.getRental:", response.data);
+            this.rentals[this.index] = response.data.rental
+            return true
+        }
+        return false
+    };
+
+    @action
+    async carFound() {
+
+        const response = await putToApi("/rentals/" + this.rental.reference, { action: "car_found" });
+        if (response && response.status === "success") {
+            if (DEBUG)
+                console.info("driveStore.carFound:", response.data);
+            this.rentals[this.index] = response.data.rental
+            return true
+        }
+        return false
+    };
+
+    @action
+    async closeRental() {
+
+        const response = await putToApi("/rentals/" + this.rental.reference, { action: "contract_ended" });
+        if (response && response.status === "success") {
+            if (DEBUG)
+                console.info("driveStore.closeRental:", response.data);
             this.rentals[this.index] = response.data.rental
             return true
         }

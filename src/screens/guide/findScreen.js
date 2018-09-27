@@ -53,6 +53,12 @@ class FindScreen extends Component {
     this.guideIndex = index
   }
 
+  doCarFound = async (index) => {
+    if (driveStore.carFound()) {
+      this.props.navigation.navigate(screens.DRIVE.name)
+    }
+  }
+
   render() {
     const { t, navigation } = this.props;
     let actions = [
@@ -60,6 +66,11 @@ class FindScreen extends Component {
         style: actionStyles.ACTIVE,
         icon: icons.BACK,
         onPress: () => this.props.navigation.navigate(screens.DRIVE.name)
+      },
+      {
+        style: driveStore.rental ? driveStore.rental.car_found ? actionStyles.DONE : actionStyles.TODO : actionStyles.DISABLE,
+        icon: icons.FOUND,
+        onPress: this.doCarFound
       }
     ]
 
