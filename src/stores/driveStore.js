@@ -115,15 +115,15 @@ export default class DriveStore {
     }
 
     @computed get hasRentalConfirmedOrOngoing() {
-        return this.rentals.find(rental => { return rental.status === RENTAL_STATUS.CONFIRMED || rental.status === RENTAL_STATUS.ONGOING }) !== null
+        return this.rentals.find(rental => { return rental.status === RENTAL_STATUS.CONFIRMED || rental.status === RENTAL_STATUS.ONGOING })
     }
 
     @computed get hasRentalConfirmed() {
-        return this.rentals.find(rental => { return rental.status === RENTAL_STATUS.CONFIRMED }) !== null
+        return this.rentals.find(rental => { return rental.status === RENTAL_STATUS.CONFIRMED })
     }
 
     @computed get hasRentalOngoing() {
-        return this.rentals.find(rental => { return rental.status === RENTAL_STATUS.ONGOING }) !== null
+        return this.rentals.find(rental => { return rental.status === RENTAL_STATUS.ONGOING })
     }
 
 

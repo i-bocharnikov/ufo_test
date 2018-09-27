@@ -120,6 +120,29 @@ class DriveScreen extends Component {
         }
       )
     }
+    if (driveStore.rentals.length == 0) {
+      actions.push(
+        {
+          style: actionStyles.DISABLE,
+          icon: icons.FIND,
+          onPress: () => { }
+        }
+      )
+      actions.push(
+        {
+          style: actionStyles.DISABLE,
+          icon: icons.INSPECT,
+          onPress: () => { }
+        }
+      )
+      actions.push(
+        {
+          style: actionStyles.DISABLE,
+          icon: icons.RENTAL_AGREEMENT,
+          onPress: () => { }
+        }
+      )
+    }
 
     driveStore.computeActionFind(actions, () => this.props.navigation.navigate(screens.FIND.name))
     driveStore.computeActionInspect(actions, () => this.props.navigation.navigate(screens.INSPECT.name))

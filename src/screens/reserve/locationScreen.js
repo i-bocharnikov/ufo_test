@@ -31,7 +31,7 @@ class ReserveLocationScreen extends Component {
     let actions = [
       {
         style: actionStyles.ACTIVE,
-        icon: icons.BACK,
+        icon: icons.HOME,
         onPress: () => this.props.navigation.navigate(screens.HOME.name)
       },
       {

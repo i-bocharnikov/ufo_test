@@ -1,9 +1,8 @@
 import Color from 'color'
 
+//TOCHECK
 
 //https://github.com/jondot/awesome-react-native#geolocation
-
-
 //https://github.com/zhangtaii/react-native-google-place-picker
 //TODO 
 //https://reactnativeexample.com/react-native-range-datepicker-inspired-by-airbnb/
@@ -16,6 +15,10 @@ import Color from 'color'
 //https://github.com/naoufal/react-native-touch-id
 //https://github.com/oblador/react-native-keychain
 
+
+
+//TODO
+//https://github.com/react-community/react-native-platform-touchable
 
 export const dateFormats = {
     FULL: 'LLLL'

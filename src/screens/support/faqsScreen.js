@@ -103,7 +103,7 @@ class SupportFaqsScreen extends Component {
 
     actions.push({
       style: actionStyles.ACTIVE,
-      icon: icons.BACK,
+      icon: icons.HOME,
       onPress: () => this.doBack(navigation)
     })
 

@@ -7,7 +7,7 @@ import _ from 'lodash'
 
 import UFOHeader from "../../components/header/UFOHeader";
 import UFOActionBar from "../../components/UFOActionBar";
-import { UFOContainer, UFOText, UFOIcon, UFOThumbnail, UFOImage } from '../../components/common'
+import { UFOContainer, UFOText, UFOIcon, UFOImage } from '../../components/common'
 
 import registerStore from '../../stores/registerStore';
 import appStore from '../../stores/appStore';
@@ -126,11 +126,9 @@ class RegisterScreen extends Component {
         <NavigationEvents onWillFocus={payload => { this.onLoad(payload) }} />
         <UFOHeader t={t} navigation={navigation} title={t('register:overviewTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_OVERVIEW} />
         <Content padder>
-          <View style={{ flex: 1, justifyContent: 'space-around', alignContent: 'center' }} >
-            <UFOCard text={registerStore.user.registration_message} />
+          <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-evenly', alignContent: 'center' }} >
             <Card >
               <List>
-
                 <ListItem icon onPress={() => { this.props.navigation.navigate(screens.REGISTER_PHONE.name) }} >
                   <Left>
                     <Button style={{ backgroundColor: phoneNumberColor }}>
@@ -206,6 +204,7 @@ class RegisterScreen extends Component {
                 </ListItem>
               </List>
             </Card>
+            <UFOCard text={registerStore.user.registration_message} />
 
           </View >
 

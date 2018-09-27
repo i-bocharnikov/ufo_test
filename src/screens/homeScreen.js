@@ -1,18 +1,17 @@
 import React from "react";
-import { ScrollView, RefreshControl, View } from 'react-native';
+import { RefreshControl, View } from 'react-native';
 import { observer } from "mobx-react";
 import { observable } from "mobx";
 import { translate } from "react-i18next";
 
 import UFOHeader from "../components/header/UFOHeader";
 import UFOActionBar from "../components/UFOActionBar";
-import { UFOContainer, UFOText, UFOTextInput } from '../components/common'
+import { UFOContainer, UFOText } from '../components/common'
 import appStore from '../stores/appStore'
 import registerStore from "../stores/registerStore"
 import { driveStore } from "../stores"
 import { screens, actionStyles, icons } from '../utils/global'
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-const video = require('../assets/UFOdrive.mp4')
 
 @observer
 class HomeScreen extends React.Component {
@@ -38,7 +37,7 @@ class HomeScreen extends React.Component {
         onPress: () => navigation.navigate(screens.REGISTER.name)
       },
       {
-        style: driveStore.hasRentalOngoing ? actionStyles.TODO : driveStore.hasRentalConfirmed ? actionStyles.ACTIVE : actionStyles.DISABLE,
+        style: driveStore.hasRentalOngoing ? actionStyles.TODO : actionStyles.ACTIVE,
         icon: icons.DRIVE,
         onPress: () => navigation.navigate(screens.DRIVE.name)
       }
