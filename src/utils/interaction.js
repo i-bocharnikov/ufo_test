@@ -20,6 +20,7 @@ export function showError(message) {
         buttonText: 'Ok',
         type: "danger",
         duration: 5000,
+        position: "top",
         buttonTextStyle: { color: "#008000" },
         buttonStyle: { backgroundColor: "#5cb85c" }
     });
@@ -31,6 +32,8 @@ export function showInfo(message) {
         buttonText: 'Ok',
         type: "info",
         duration: 5000,
+        position: "top",
+
         buttonTextStyle: { color: "#008000" },
         buttonStyle: { backgroundColor: "#5cb85c" }
     });
@@ -42,6 +45,8 @@ export function showWarning(message) {
         buttonText: 'Ok',
         type: "warning",
         duration: 5000,
+        position: "top",
+
         buttonTextStyle: { color: "#008000" },
         buttonStyle: { backgroundColor: "#5cb85c" }
     });

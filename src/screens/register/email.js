@@ -1,16 +1,17 @@
 import React, { Component } from "react";
 import { observer } from 'mobx-react';
 import { translate } from "react-i18next";
-import { Dimensions, Keyboard } from 'react-native';
-import { Content, Form, Item, Label, Input } from 'native-base';
+import { View, Keyboard } from 'react-native';
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import _ from 'lodash'
 
 import UFOHeader from "../../components/header/UFOHeader";
 import UFOActionBar from "../../components/UFOActionBar";
-import { UFOContainer, UFOText, UFOIcon, UFOImage } from '../../components/common'
+import { UFOContainer, UFOTextInput } from '../../components/common'
 import { screens, actionStyles, icons, colors } from '../../utils/global'
 import { observable, action } from "mobx";
 import registerStore from '../../stores/registerStore';
+import UFOCard from "../../components/UFOCard";
 
 const REGEX_EMAIL_VALIDATION = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -76,19 +77,18 @@ class EmailScreen extends Component {
       },
     ]
 
-    let defaultPaddintTop = ((Dimensions.get("window").height - this.keyboardHeight) / 10)
-
     return (
       <UFOContainer image={require("../../assets/images/background/UFOBGREGISTER001.png")}>
         <UFOHeader t={t} navigation={navigation} title={t('register:emailTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_EMAIL} />
-        <Content padder>
-          <Form>
-            <Item stackedLabel>
-              <Label style={{ color: colors.TEXT.string(), paddingTop: defaultPaddintTop, paddingBottom: 25 }}>{t('register:emailInputLabel')}</Label>
-              <Input autoFocus defaultValue={registerStore.user.email} keyboardAppearance='dark' placeholder='john.doe@gmail.com' ref={(ref) => { this.emailInput = ref; }} onChangeText={(text) => this.emailValue = text} />
-            </Item>
-          </Form>
-        </Content>
+        <KeyboardAwareScrollView
+          enableOnAndroid={true}
+          resetScrollToCoords={{ x: 0, y: 0 }}>
+          <View style={{ paddingTop: "20%", paddingHorizontal: 10, flex: 0.80, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
+            <UFOCard title={t('register:emailInputLabel')}>
+              <UFOTextInput autoFocus defaultValue={registerStore.user.email} placeholder='john.doe@gmail.com' onChangeText={(text) => this.emailValue = text} />
+            </UFOCard>
+          </View>
+        </KeyboardAwareScrollView>
         <UFOActionBar actions={actions} />
       </UFOContainer>
     );

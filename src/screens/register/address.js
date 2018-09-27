@@ -2,15 +2,17 @@ import React, { Component } from "react";
 import registerStore from '../../stores/registerStore';
 import { observer } from 'mobx-react';
 import { translate } from "react-i18next";
-import { Content, Form, Item, Label } from 'native-base';
+import { View } from 'react-native';
 import _ from 'lodash'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 import UFOHeader from "../../components/header/UFOHeader";
 import UFOActionBar from "../../components/UFOActionBar";
-import { UFOContainer, UFOText, UFOIcon, UFOImage } from '../../components/common'
+import { UFOContainer } from '../../components/common'
 import { screens, actionStyles, icons, colors } from '../../utils/global'
 import { observable, action } from "mobx";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import UFOCard from "../../components/UFOCard";
 
 const GOOGLE_API = 'AIzaSyBZ11c3GCMMBlSpF3H-4DK6PioxJjaFPe0'
 
@@ -62,10 +64,13 @@ class AddressScreen extends Component {
     return (
       <UFOContainer image={require("../../assets/images/background/UFOBGREGISTER001.png")}>
         <UFOHeader t={t} navigation={navigation} title={t('register:addressTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_ADDRESS} />
-        <Content padder>
-          <Form>
-            <Item stackedLabel>
-              <Label style={{ color: colors.TEXT.string(), paddingTop: 10, paddingBottom: 25 }}>{t('register:addressInputLabel')}</Label>
+        <KeyboardAwareScrollView
+          enableOnAndroid={true}
+          resetScrollToCoords={{ x: 0, y: 0 }}
+        >
+          <View style={{ paddingTop: "20%", paddingHorizontal: 10, flex: 0.80, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
+            <UFOCard title={t('register:addressInputLabel')}>
+
               <GooglePlacesAutocomplete
                 getDefaultValue={() => registerStore.user.address ? registerStore.user.address : ''}
                 textInputProps={{
@@ -91,14 +96,15 @@ class AddressScreen extends Component {
                 }}
                 styles={{
                   textInputContainer: {
-                    backgroundColor: colors.BACKGROUND.string(),
+                    backgroundColor: 'transparent',
                     borderTopWidth: 0,
-                    borderBottomWidth: 0,
+                    borderBottomWidth: 1,
+                    borderColor: colors.ACTIVE.string(),
                     width: '100%'
 
                   },
                   textInput: {
-                    backgroundColor: colors.BACKGROUND.string(),
+                    backgroundColor: 'transparent',
                     marginLeft: 0,
                     marginRight: 0,
                     height: 38,
@@ -106,21 +112,21 @@ class AddressScreen extends Component {
                     fontSize: 16
                   },
                   listView: {
-                    backgroundColor: colors.BACKGROUND.string(),
+                    backgroundColor: colors.CARD_BACKGROUND.string(),
                   },
                   description: {
                     color: colors.TEXT.string()
                   },
                   poweredContainer: {
                     height: 0,
-                    backgroundColor: colors.BACKGROUND.string(),
                   }
                 }}
                 currentLocation={false}
               />
-            </Item>
-          </Form>
-        </Content>
+
+            </UFOCard>
+          </View>
+        </KeyboardAwareScrollView>
         <UFOActionBar actions={actions} />
       </UFOContainer>
     );

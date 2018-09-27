@@ -13,11 +13,12 @@ import _ from 'lodash'
 
 import UFOHeader from "../../components/header/UFOHeader";
 import UFOActionBar from "../../components/UFOActionBar";
-import { UFOContainer, UFOText, UFOIcon, UFOImage } from '../../components/common'
+import { UFOContainer, UFOText, UFOIcon, UFOImage, UFOTextInput } from '../../components/common'
 import { screens, actionStyles, icons, colors } from '../../utils/global'
 import appStore from '../../stores/appStore';
 import registerStore from '../../stores/registerStore';
 import UFOSimpleCard from "../../components/UFOSimpleCard";
+import UFOCard from "../../components/UFOCard";
 
 
 const DARK_COLOR = colors.BACKGROUND.string();
@@ -126,33 +127,31 @@ class PhoneScreen extends Component {
       <UFOContainer image={require("../../assets/images/background/UFOBGREGISTER001.png")}>
         <UFOHeader t={t} navigation={navigation} title={t('register:phoneTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_PHONE} />
         <KeyboardAwareScrollView
-          contentContainerStyle={{ flex: 0.85 }}>
-          {registerStore.isConnected && (
-            <Form >
-              <Item stackedLabel>
-                <Label style={{ paddingBottom: 25, color: colors.TEXT.string() }}>{t('register:phoneNumberInputLabel')}</Label>
-                <Input defaultValue={registerStore.user.phone_number} editable={false} />
-              </Item>
-            </Form>
-          )}
-          {!registerStore.isConnected && this.isCodeRequested && (
-            <Form >
-              <Item stackedLabel>
-                <Label style={{ color: colors.TEXT.string(), paddingBottom: 25 }}>{t('register:smsCodeInputLabel')}</Label>
-                <Input autoFocus maxLength={7} keyboardAppearance='dark' keyboardType='numeric' placeholder='000-000' ref={(ref) => { this.codeInput = ref; }} onChangeText={this.onChangeCode} />
-              </Item>
-            </Form>
-          )}
-          {!registerStore.isConnected && !this.isCodeRequested && (
-            <View style={{ flex: 0.80, flexDirection: 'column', justifyContent: 'center', alignContent: 'center', alignSelf: 'center' }}>
-              <UFOSimpleCard >
-                <UFOText style={{ paddingBottom: 10 }}>{t('register:phoneNumberInputLabel')}</UFOText>
+          enableOnAndroid={true}
+          resetScrollToCoords={{ x: 0, y: 0 }}>
+          <View style={{ paddingTop: "20%", paddingHorizontal: 10, flex: 0.80, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
+            {registerStore.isConnected && (
+              <UFOCard title={t('register:phoneNumberInputLabel')}>
+                <UFOTextInput defaultValue={registerStore.user.phone_number} editable={false} />
+              </UFOCard>
+            )}
+            {!registerStore.isConnected && this.isCodeRequested && (
+              <UFOCard title={t('register:smsCodeInputLabel')}>
+                <UFOTextInput autoFocus maxLength={107} keyboardAppearance='dark' keyboardType='numeric' placeholder='000-000' onChangeText={this.onChangeCode} />
+              </UFOCard>
+            )}
+            {!registerStore.isConnected && !this.isCodeRequested && (
+              <UFOCard title={t('register:phoneNumberInputLabel')}>
                 <PhoneInput
                   ref={(ref) => { this.phoneInput = ref; }}
                   onPressFlag={this.onPressFlag}
                   initialCountry={_.isEmpty(this.countryCode) ? "lu" : this.countryCode}
                   //style={{ height: 50 }}
-                  textStyle={{ color: colors.TEXT.string() }}
+                  textStyle={{
+                    color: colors.TEXT.string(),
+                    borderBottomWidth: 1,
+                    borderColor: colors.ACTIVE.string(),
+                  }}
                   defaultValue={registerStore.user.phone_number}
                   onChangePhoneNumber={this.onChangePhoneNumber}
                   offset={20}
@@ -168,12 +167,9 @@ class PhoneScreen extends Component {
                 >
                   <View></View>
                 </CountryPicker>
-              </UFOSimpleCard >
-            </View>
-
-          )}
-
-
+              </UFOCard >
+            )}
+          </View>
         </KeyboardAwareScrollView>
         <UFOActionBar actions={actions} />
       </UFOContainer>

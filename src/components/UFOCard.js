@@ -21,10 +21,10 @@ export default class UFOCard extends Component {
 
         let hasMedia = imageSource || videoSource
         let hasText = title || (texts.length > 0)
-        let hasChildren = children
+        let hasChildren = children !== undefined ? true : false
 
         let mediaStyle = hasText || hasChildren ? 'topContainer' : 'singleContainer'
-        let textStyle = hasMedia ? hasChildren ? 'middleContainer' : 'bottomContainer' : 'singleContainer'
+        let textStyle = hasMedia ? hasChildren ? 'middleContainer' : 'bottomContainer' : hasChildren ? 'topContainer' : 'singleContainer'
         let childrenStyle = hasText || hasMedia ? 'bottomContainer' : 'singleContainer'
 
         return (
@@ -50,10 +50,11 @@ export default class UFOCard extends Component {
                     </CardItem>
                 )}
                 {hasChildren && (
-                    <CardItem style={styles[childrenStyle]}>
+                    <CardItem style={[styles[childrenStyle]]}>
                         {children}
                     </CardItem>
-                )}
+                )
+                }
             </Card>
         );
     }

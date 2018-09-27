@@ -12,12 +12,14 @@ import { UFOContainer, UFOText, UFOIcon, UFOImage } from '../../components/commo
 import { screens, actionStyles, icons, colors } from '../../utils/global'
 import registerStore from '../../stores/registerStore';
 import { showWarning } from '../../utils/interaction'
-
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import UFOCard from "../../components/UFOCard";
+import { Body } from "native-base";
 
 const DEVICE_WIDTH = Dimensions.get("window").width
 const DEVICE_HEIGHT = Dimensions.get("window").height
 const CARD_RATIO = 1.586
-const CARD_WIDTH = DEVICE_WIDTH - 40
+const CARD_WIDTH = DEVICE_WIDTH - 60
 const CARD_HEIGHT = CARD_WIDTH / CARD_RATIO
 const PADDING_WIDTH = (DEVICE_WIDTH - CARD_WIDTH) / 2
 const PADDING_HEIGHT = (DEVICE_HEIGHT - CARD_HEIGHT) / 2
@@ -182,6 +184,9 @@ class DriverLicenceScreen extends Component {
 
     return (
       <UFOContainer image={require("../../assets/images/background/UFOBGREGISTER001.png")}>
+        {!showCamera && (
+          <UFOHeader t={t} navigation={navigation} title={t('register:driverLicenceTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_DRIVER_LICENCE} />
+        )}
         {showCamera && (
           <View style={styles.container}>
             <RNCamera
@@ -194,6 +199,7 @@ class DriverLicenceScreen extends Component {
               permissionDialogTitle={t('register:cameraPermissionTitle')}
               permissionDialogMessage={t('register:cameraPermissionMessage')}
             />
+            <UFOHeader t={t} transparent navigation={navigation} logo currentScreen={screens.REGISTER_DRIVER_LICENCE} />
             <View style={{
               position: 'absolute',
               top: PADDING_HEIGHT,
@@ -204,32 +210,31 @@ class DriverLicenceScreen extends Component {
               justifyContent: 'center',
               alignContent: 'center'
             }}>
-              <UFOText style={{ color: colors.TEXT.string(), textAlign: 'center' }}>{t(inputLabel)}</UFOText>
+              <UFOText upper h3 center>{t(inputLabel)}</UFOText>
             </View>
-            <UFOHeader t={t} navigation={navigation} title={t('register:driverLicenceTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_DRIVER_LICENCE} />
           </View>
         )}
         {!showCamera && (
-          <View>
-            <UFOHeader t={t} navigation={navigation} title={t('register:driverLicenceTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_DRIVER_LICENCE} />
-            <View>
-              <UFOText style={{ color: colors.TEXT.string(), padding: 20 }}>{t('register:driverLicenceCheckLabel')}</UFOText>
-              <Image source={{ uri: this.frontImageUrl }} style={{
-                width: CARD_WIDTH, height: CARD_HEIGHT, position: 'absolute',
-                top: PADDING_HEIGHT - (CARD_HEIGHT / 2) - 5,
-                left: PADDING_WIDTH,
-              }} />
-              <Image source={{ uri: this.backImageUrl }} style={{
-                width: CARD_WIDTH, height: CARD_HEIGHT, position: 'absolute',
-                top: PADDING_HEIGHT + (CARD_HEIGHT / 2) + 5,
-                left: PADDING_WIDTH,
-              }} />
+          < KeyboardAwareScrollView
+            enableOnAndroid={true}
+            resetScrollToCoords={{ x: 0, y: 0 }
+            }>
+            <View style={{ paddingTop: 10, paddingHorizontal: 10, flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
+              <UFOCard title={t('register:driverLicenceCheckLabel')}>
+                <Body>
+                  <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-evenly', alignContent: 'center' }}>
+                    <UFOImage source={{ uri: this.frontImageUrl }} style={{ width: CARD_WIDTH, height: CARD_HEIGHT }} />
+                    <UFOImage source={{ uri: this.backImageUrl }} style={{ width: CARD_WIDTH, height: CARD_HEIGHT }} />
+                  </View>
+                </Body>
+              </UFOCard>
             </View>
-          </View>
-        )
-        }
+            <View style={{ height: 100 }}></View>
+          </KeyboardAwareScrollView >
+        )}
         <UFOActionBar actions={actions} />
       </UFOContainer >
+
     );
   }
 }

@@ -1,23 +1,26 @@
 import React, { Component } from "react";
 import { observer } from 'mobx-react';
 import { translate } from "react-i18next";
-import { Image, StyleSheet, View, Dimensions, ImageEditor } from 'react-native';
+import { StyleSheet, View, Dimensions, ImageEditor } from 'react-native';
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { RNCamera } from 'react-native-camera';
 import _ from 'lodash'
 
 import UFOHeader from "../../components/header/UFOHeader";
 import UFOActionBar from "../../components/UFOActionBar";
-import { UFOContainer, UFOText, UFOIcon, UFOImage } from '../../components/common'
+import { UFOContainer, UFOText, UFOImage } from '../../components/common'
 import registerStore from '../../stores/registerStore';
 import { screens, actionStyles, icons, colors } from '../../utils/global'
 import { showWarning } from '../../utils/interaction'
 import { observable, action } from "mobx";
+import UFOCard from "../../components/UFOCard";
+import { Body } from "native-base";
 
 
 const DEVICE_WIDTH = Dimensions.get("window").width
 const DEVICE_HEIGHT = Dimensions.get("window").height
 const CARD_RATIO = 1.586
-const CARD_WIDTH = DEVICE_WIDTH - 40
+const CARD_WIDTH = DEVICE_WIDTH - 60
 const CARD_HEIGHT = CARD_WIDTH / CARD_RATIO
 const PADDING_WIDTH = (DEVICE_WIDTH - CARD_WIDTH) / 2
 const PADDING_HEIGHT = (DEVICE_HEIGHT - CARD_HEIGHT) / 2
@@ -187,6 +190,9 @@ class IdentificationScreen extends Component {
 
     return (
       <UFOContainer image={require("../../assets/images/background/UFOBGREGISTER001.png")}>
+        {!showCamera && (
+          <UFOHeader t={t} navigation={navigation} title={t('register:identificationTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_IDENTIFICATION} />
+        )}
         {showCamera && (
           <View style={styles.container}>
             <RNCamera
@@ -199,6 +205,7 @@ class IdentificationScreen extends Component {
               permissionDialogTitle={t('register:cameraPermissionTitle')}
               permissionDialogMessage={t('register:cameraPermissionMessage')}
             />
+            <UFOHeader t={t} transparent navigation={navigation} logo currentScreen={screens.REGISTER_IDENTIFICATION} />
             <View style={{
               position: 'absolute',
               top: PADDING_HEIGHT,
@@ -209,32 +216,31 @@ class IdentificationScreen extends Component {
               justifyContent: 'center',
               alignContent: 'center'
             }}>
-              <UFOText style={{ color: colors.TEXT.string(), textAlign: 'center' }}>{t(inputLabel)}</UFOText>
+              <UFOText upper h3 center>{t(inputLabel)}</UFOText>
             </View>
-            <UFOHeader t={t} navigation={navigation} title={t('register:identificationTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_IDENTIFICATION} />
           </View>
         )}
         {!showCamera && (
-          <View>
-            <UFOHeader t={t} navigation={navigation} title={t('register:identificationTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_IDENTIFICATION} />
-            <View>
-              <UFOText style={{ color: colors.TEXT.string(), padding: 20 }}>{t('register:identificationCheckLabel')}</UFOText>
-              <Image source={{ uri: this.frontImageUrl }} style={{
-                width: CARD_WIDTH, height: CARD_HEIGHT, position: 'absolute',
-                top: PADDING_HEIGHT - (CARD_HEIGHT / 2) - 5,
-                left: PADDING_WIDTH,
-              }} />
-              <Image source={{ uri: this.backImageUrl }} style={{
-                width: CARD_WIDTH, height: CARD_HEIGHT, position: 'absolute',
-                top: PADDING_HEIGHT + (CARD_HEIGHT / 2) + 5,
-                left: PADDING_WIDTH,
-              }} />
+          < KeyboardAwareScrollView
+            enableOnAndroid={true}
+            resetScrollToCoords={{ x: 0, y: 0 }
+            }>
+            <View style={{ paddingTop: 10, paddingHorizontal: 10, flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
+              <UFOCard title={t('register:identificationCheckLabel')}>
+                <Body>
+                  <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-evenly', alignContent: 'center' }}>
+                    <UFOImage source={{ uri: this.frontImageUrl }} style={{ width: CARD_WIDTH, height: CARD_HEIGHT }} />
+                    <UFOImage source={{ uri: this.backImageUrl }} style={{ width: CARD_WIDTH, height: CARD_HEIGHT }} />
+                  </View>
+                </Body>
+              </UFOCard>
             </View>
-          </View>
-        )
-        }
+            <View style={{ height: 100 }}></View>
+          </KeyboardAwareScrollView >
+        )}
         <UFOActionBar actions={actions} />
       </UFOContainer >
+
     );
   }
 }

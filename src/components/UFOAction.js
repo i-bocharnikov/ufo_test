@@ -17,23 +17,25 @@ class UFOAction extends React.Component {
         let elevation = style.elevation ? style.elevation : 0
         let icon = action.icon ? action.icon : icons.WRONG
         return (
-            <TouchableOpacity
-                style={styles.touchArea}
-                onPress={action.onPress}
-                action={action}
-                disabled={style === actionStyles.DISABLE}
+            <View
+                style={styles.area}
             >
-                <View style={[styles.button, { backgroundColor: color.string(), elevation: elevation }]}>
+                <TouchableOpacity
+                    style={[styles.button, { backgroundColor: color.string(), elevation: elevation }]}
+                    onPress={action.onPress}
+                    action={action}
+                    disabled={style === actionStyles.DISABLE}
+                >
                     <UFOIcon icon={icon} size={sizes.LARGE} />
-                </View>
+                </TouchableOpacity>
                 <UFOText inverted h10 upper>{t(icon.i18nKey)}</UFOText>
-            </TouchableOpacity>
+            </View>
         )
     }
 }
 
 const styles = StyleSheet.create({
-    touchArea: {
+    area: {
         flex: 1,
         flexDirection: 'column',
         justifyContent: 'flex-start',

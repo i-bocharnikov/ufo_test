@@ -71,6 +71,10 @@ export default class UFOText extends React.Component {
         if (this.props.center) {
             style.textAlign = 'center'
         }
+        if (this.props.underline) {
+            style.borderColor = colors.ACTIVE.string()
+            style.borderWidth = 1
+        }
 
         let text = this.props.children ? this.props.children : ""
         if (this.props.upper)

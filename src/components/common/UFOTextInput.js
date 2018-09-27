@@ -1,5 +1,5 @@
 import React from "react";
-import { View, TextInput, StyleSheet } from 'react-native'
+import { View, TextInput, Keyboard } from 'react-native'
 import { colors } from "../../utils/global";
 
 export default class UFOTextInput extends React.Component {
@@ -37,24 +37,31 @@ export default class UFOTextInput extends React.Component {
         }
         let numberOfLines = this.props.numberOfLines ? this.props.numberOfLines : 1
         let multiline = this.props.multiline ? this.props.multiline : false
-        let editable = this.props.editable ? this.props.editable : true
+        let editable = this.props.editable === false ? false : true
+        let defaultValue = this.props.defaultValue ? this.props.defaultValue : ""
+        let autoFocus = this.props.autoFocus
+        let maxLength = this.props.maxLength
+        let keyboardType = this.props.keyboardType ? this.props.keyboardType : 'default'
         let placeholder = this.props.placeholder ? this.props.placeholder : "..."
-        let onChangeText = this.props.onChangeText ? this.props.onChangeText : (text) => console.log("UFOTextInput.onChangeText not implemented. text " + text + " ignored")
         let value = this.props.value ? this.props.value : null
+        let onChangeText = this.props.onChangeText && editable ? this.props.onChangeText : (text) => console.log("UFOTextInput.onChangeText not implemented or text readonly. text " + text + " ignored")
         return (
-            <View style={{
-                elevation: 2,
-                borderRadius: 5,
-                backgroundColor: colors.CARD_BACKGROUND.string()
-            }}>
+            <View style={{ paddingHorizontal: 20, width: "100%" }}>
                 <TextInput
                     style={style}
+                    keyboardType={keyboardType}
+                    keyboardAppearance='dark'
+                    maxLength={maxLength}
+                    autoFocus={autoFocus}
                     onChangeText={onChangeText}
                     value={value}
                     placeholder={placeholder}
+                    defaultValue={defaultValue}
                     numberOfLines={numberOfLines}
                     multiline={multiline}
-                    editable={editable}>
+                    editable={editable}
+                    underlineColorAndroid={colors.ACTIVE.string()}
+                    onSubmitEditing={Keyboard.dismiss}>
                     {this.props.children}
                 </TextInput>
             </View>
