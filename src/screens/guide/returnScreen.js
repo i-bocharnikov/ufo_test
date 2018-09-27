@@ -10,8 +10,7 @@ import UFOHeader from "../../components/header/UFOHeader";
 import UFOActionBar from "../../components/UFOActionBar";
 import { UFOContainer, UFOText, UFOIcon, UFOImage } from '../../components/common'
 import { screens, actionStyles, icons, colors } from '../../utils/global'
-import guideStore from '../../stores/guideStore'
-import driveStore from '../../stores/driveStore'
+import { driveStore, guideStore } from '../../stores'
 
 const DEVICE_WIDTH = Dimensions.get("window").width
 const DEVICE_HEIGHT = Dimensions.get("window").height

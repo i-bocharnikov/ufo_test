@@ -1,7 +1,7 @@
 import { observable, action, computed } from 'mobx';
 import { persist } from 'mobx-persist'
 import _ from 'lodash'
-import driveStore from './driveStore'
+import { driveStore } from './'
 
 import { getFromApi } from '../utils/api'
 
@@ -30,11 +30,11 @@ class GuidePack {
 }
 
 
-class guideStore {
+export default class GuideStore {
+
+    constructor() { }
 
     @persist('list', Guide) @observable guidePacks = []
-
-
 
     @computed get findGuides() {
         if (this.guidePacks === null || !driveStore.rental) {
@@ -108,7 +108,6 @@ class guideStore {
     };
 }
 
-export default guideStore = new guideStore();
 
 
 

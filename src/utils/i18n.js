@@ -48,6 +48,7 @@ i18n.use(LanguageDetector).init({
                 "newCapture": "New capture",
                 "torch": "Torch",
                 "validate": "Validate",
+                "done": "Done",
                 "cancel": "Cancel",
                 "redo": "Retry",
                 "skip": "Skip",
@@ -124,7 +125,7 @@ i18n.use(LanguageDetector).init({
             drive: {
                 "driveTitle": "Rental",
                 "noRentalsTitle": "No rentals",
-                "noRentalsDescription": "After booking, the menu below will be activated and will allow you to find the car, inspect it, start the rental contract and finally lock/unlock the vehicle",
+                "noRentalsDescription": "After booking, the actions below will be activated and will allow you to find the car, inspect it, start the rental contract and finally lock/unlock the vehicle",
                 "findTitle": "Where is the car",
                 "returnTitle": "How to return",
                 "rentalAgreementTitle": "Sign the agreement",

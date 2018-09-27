@@ -12,7 +12,7 @@ import UFOActionBar from "../../components/UFOActionBar";
 import { UFOContainer, UFOText, UFOIcon, UFOImage } from '../../components/common'
 import { actionStyles, icons, colors, sizes, navigationParams, screens } from '../../utils/global'
 import supportStore from "../../stores/supportStore";
-import driveStore from "../../stores/driveStore";
+import { driveStore } from "../../stores";
 
 const SUPPORT_FAQ = navigationParams.SUPPORT_FAQ
 const SUPPORT_FAQ_CATEGORY = navigationParams.SUPPORT_FAQ_CATEGORY

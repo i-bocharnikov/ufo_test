@@ -9,8 +9,7 @@ import UFOHeader from "../../components/header/UFOHeader";
 import UFOActionBar from "../../components/UFOActionBar";
 import { UFOContainer, UFOText, UFOImage } from '../../components/common'
 import { screens, actionStyles, icons, colors } from '../../utils/global'
-import driveStore from '../../stores/driveStore'
-import inspectStore from "../../stores/inspectStore";
+import { driveStore, inspectStore } from '../../stores'
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import UFOCard from "../../components/UFOCard";
 const markerImage = require('../../assets/images/marker.png')
@@ -100,7 +99,7 @@ class LocateDamageScreen extends Component {
 
     return (
       <UFOContainer image={require('../../assets/images/background/UFOBGINSPECT001.png')}>
-        <UFOHeader transparent t={t} navigation={navigation} currentScreen={screens.DRIVE} title={t('inspect:locateDamageTitle', { rental: driveStore.rental })} />
+        <UFOHeader transparent t={t} navigation={navigation} currentScreen={screens.INSPECT_LOCATE} title={t('inspect:locateDamageTitle', { rental: driveStore.rental })} />
         <KeyboardAwareScrollView>
           <View style={{ padding: 20, flexDirection: 'column', justifyContent: 'flex-start' }}>
             <UFOCard title={t('inspect:locateGuidance')} />

@@ -2,7 +2,7 @@
 import { observable, action } from 'mobx';
 import supportStore from "../stores/supportStore";
 import registerStore from "../stores/registerStore"
-import driveStore from "../stores/driveStore"
+import { driveStore } from "../stores"
 import OTAKeyStore from '../stores/otaKeyStore'
 import { checkConnectivity } from '../utils/api'
 import { showError } from '../utils/interaction'

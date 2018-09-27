@@ -101,8 +101,8 @@ class RegisterScreen extends Component {
       })
 
       actions.push({
-        style: registerStore.isConnected ? actionStyles.ACTIVE : actionStyles.DISABLE,
-        icon: icons.SAVE,
+        style: registerStore.isConnected ? actionStyles.TODO : actionStyles.DISABLE,
+        icon: icons.DONE,
         onPress: () => this.props.navigation.navigate(screens.HOME.name)
       })
 

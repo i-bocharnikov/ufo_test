@@ -9,8 +9,7 @@ import UFOHeader from "../../components/header/UFOHeader";
 import UFOActionBar from "../../components/UFOActionBar";
 import { UFOContainer } from '../../components/common'
 import { screens, actionStyles, icons, colors } from '../../utils/global'
-import guideStore from '../../stores/guideStore'
-import driveStore from '../../stores/driveStore'
+import { driveStore, guideStore } from '../../stores'
 import UFOCard from "../../components/UFOCard";
 import UFOSlider from "../../components/UFOSlider";
 

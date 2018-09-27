@@ -9,9 +9,8 @@ import UFOHeader from "../../components/header/UFOHeader";
 import UFOActionBar from "../../components/UFOActionBar";
 import { UFOContainer, UFOImage } from '../../components/common'
 import { screens, actionStyles, icons } from '../../utils/global'
-import driveStore from '../../stores/driveStore'
+import { driveStore, inspectStore } from '../../stores'
 import UFOSlider from '../../components/UFOSlider'
-import inspectStore from "../../stores/inspectStore";
 import { confirm } from "../../utils/interaction";
 import UFOCard from "../../components/UFOCard";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -126,7 +125,7 @@ class InspectScreen extends Component {
 
     return (
       <UFOContainer image={require('../../assets/images/background/UFOBGINSPECT001.png')}>
-        <UFOHeader transparent t={t} navigation={navigation} currentScreen={screens.DRIVE} title={t('inspect:inspectTitle', { rental: driveStore.rental })} subTitle={driveStore.rental.car.reference} />
+        <UFOHeader transparent t={t} navigation={navigation} currentScreen={screens.INSPECT} title={t('inspect:inspectTitle', { rental: driveStore.rental })} subTitle={driveStore.rental.car.reference} />
         {this.renderBody(t)}
         <UFOActionBar actions={actions} />
       </UFOContainer >

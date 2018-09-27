@@ -2,8 +2,8 @@ import { observable, action } from 'mobx';
 import { persist } from 'mobx-persist'
 import _ from 'lodash'
 
-import { getFromApi, postToApi, uploadToApi, putToApi } from '../utils/api'
-import driveStore from './driveStore';
+import { getFromApi, putToApi } from '../utils/api'
+import { driveStore } from './';
 
 const DEBUG = false
 
@@ -14,10 +14,11 @@ class Term {
     @persist @observable html = null
 }
 
-class termStore {
+export default class termStore {
+
+    constructor() { }
 
     @observable term = new Term
-
 
     @action
     async getRentalAgreement() {
@@ -51,7 +52,6 @@ class termStore {
     };
 }
 
-export default termStore = new termStore();
 
 
 

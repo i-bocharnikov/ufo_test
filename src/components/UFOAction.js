@@ -12,8 +12,8 @@ class UFOAction extends React.Component {
         const { t } = this.props;
         let action = this.props.action ? this.props.action : []
 
-        let style = action.style ? action.style : actionStyles.WRONG
-        let color = style.color ? style.color : colors.WRONG
+        let style = this.props.activityPending ? actionStyles.DISABLE : action.style ? action.style : actionStyles.WRONG
+        let color = this.props.activityPending ? colors.DISABLE : style.color ? style.color : colors.WRONG
         let elevation = style.elevation ? style.elevation : 0
         let icon = action.icon ? action.icon : icons.WRONG
         return (

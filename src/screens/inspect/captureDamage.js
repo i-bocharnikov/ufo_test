@@ -1,17 +1,19 @@
 import React, { Component } from "react";
 import { translate } from "react-i18next";
-import { Dimensions, View, StyleSheet, ScrollView } from 'react-native'
+import { Dimensions, View, StyleSheet } from 'react-native'
 import { observer } from "mobx-react";
 import { observable, action } from "mobx";
 import { RNCamera } from 'react-native-camera';
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 
 import UFOHeader from "../../components/header/UFOHeader";
 import UFOActionBar from "../../components/UFOActionBar";
-import { UFOContainer, UFOText, UFOImage } from '../../components/common'
-import { screens, actionStyles, icons, colors } from '../../utils/global'
-import driveStore from '../../stores/driveStore'
-import inspectStore from "../../stores/inspectStore";
+import { UFOContainer, UFOImage } from '../../components/common'
+import { screens, actionStyles, icons } from '../../utils/global'
+import { inspectStore } from "../../stores";
+import UFOCard from "../../components/UFOCard";
+import { Body } from "native-base";
 
 
 const window = Dimensions.get('window');
@@ -52,11 +54,11 @@ class CaptureDamageScreen extends Component {
     }
   }
 
-  renderBody = (t) => {
-    return this.documentUri ? this.renderBodyCheck(t) : this.renderBodyCapture(t)
+  renderBody = (t, navigation) => {
+    return this.documentUri ? this.renderBodyCheck(t, navigation) : this.renderBodyCapture(t, navigation)
   }
 
-  renderBodyCapture = (t) => {
+  renderBodyCapture = (t, navigation) => {
     return (
       <View style={styles.container}>
         <RNCamera
@@ -71,20 +73,24 @@ class CaptureDamageScreen extends Component {
           permissionDialogTitle={t('register:cameraPermissionTitle')}
           permissionDialogMessage={t('register:cameraPermissionMessage')}
         />
+        <UFOHeader transparent t={t} navigation={navigation} currentScreen={screens.INSPECT_CAPTURE} logo />
+
       </View>
     )
   }
 
-  renderBodyCheck = (t) => {
+  renderBodyCheck = (t, navigation) => {
     return (
-      <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
-        <UFOText style={{ padding: 20 }}>{t('inspect:captureCheckGuidance')}</UFOText>
-        <View style={{ paddingLeft: DEVICE_WIDTH / 4 }}>
-          <UFOImage source={{ uri: this.documentUri }} style={{
-            width: DEVICE_WIDTH / 2, height: DEVICE_HEIGHT / 2
-          }} />
-        </View>
-      </View>
+
+      <KeyboardAwareScrollView>
+        <View style={{ padding: 20, flexDirection: 'column', justifyContent: 'flex-start' }}>
+          <UFOCard title={t('inspect:captureCheckGuidance')} >
+            <Body>
+              <UFOImage source={{ uri: this.documentUri }} style={{ width: DEVICE_WIDTH * 0.7, height: DEVICE_HEIGHT * 0.7, alignSelf: 'center' }} />
+            </Body>
+          </UFOCard >
+        </View >
+      </KeyboardAwareScrollView>
     )
   }
 
@@ -99,25 +105,32 @@ class CaptureDamageScreen extends Component {
         onPress: () => this.props.navigation.popToTop()
       },
       {
+        style: actionStyles.ACTIVE,
+        icon: icons.BACK,
+        onPress: () => this.props.navigation.pop()
+      },
+      {
         style: this.documentUri ? actionStyles.ACTIVE : actionStyles.TODO,
         icon: this.documentUri ? icons.NEW_CAPTURE : icons.CAPTURE,
         onPress: async () => {
           this.documentUri ? this.documentUri = null : this.doCapture(t)
         }
-      },
-      {
+      }
+    ]
+
+    if (this.documentUri) {
+      actions.push({
         style: this.documentUri ? actionStyles.TODO : actionStyles.DISABLE,
         icon: icons.NEXT,
         onPress: () => this.doSave(t)
-      },
-    ]
+      })
+    }
 
 
 
     return (
       <UFOContainer image={require('../../assets/images/background/UFOBGINSPECT001.png')}>
-        <UFOHeader transparent t={t} navigation={navigation} currentScreen={screens.DRIVE} title={t('inspect:captureDamageTitle', { rental: driveStore.rental })} />
-        {this.renderBody(t)}
+        {this.renderBody(t, navigation)}
         <UFOActionBar actions={actions} />
       </UFOContainer >
     );

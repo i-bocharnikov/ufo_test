@@ -6,7 +6,7 @@ import { persist } from 'mobx-persist'
 import _ from 'lodash'
 
 import { getFromApi } from '../utils/api'
-import { dateFormats } from '../utils/global'
+import { dateFormats, actionStyles, icons } from '../utils/global'
 
 const DEBUG = false
 
@@ -28,16 +28,6 @@ class Location {
     @persist @observable description = null
     @persist @observable description_url = null
     @persist @observable timezone = null
-}
-
-class CarDamage {
-    @persist @observable reference = null
-    @persist @observable status = null
-    @persist @observable comment = null
-    @persist @observable relative_position_x = null
-    @persist @observable relative_position_y = null
-    @persist @observable document_reference = null
-    @observable document = "loading"
 }
 
 class CarModel {
@@ -68,12 +58,6 @@ class Term {
     @persist @observable html = null
 }
 
-class Key {
-    @persist @observable keyId = null
-    @persist @observable begin_date = null
-    @persist @observable end_date = null
-}
-
 class Rental {
     @persist @observable reference = null
     @persist @observable status = null
@@ -95,12 +79,12 @@ class Rental {
 }
 
 
-class driveStore {
+export default class DriveStore {
+
+    constructor() { }
 
     @persist('list', Rental) @observable rentals = []
-
     @persist @observable index = -1
-
 
     format(date, format) {
         if (!date)
@@ -112,13 +96,6 @@ class driveStore {
             return moment(date).format(format)
     }
 
-    @computed get emergencyNumber() {
-        if (this.index === null || this.rental === null) {
-            return null
-        }
-        return this.rental.car.support_number
-    }
-
     @computed get rental() {
         if (this.index === null) {
             return null
@@ -126,12 +103,16 @@ class driveStore {
         if (this.index < 0 || this.index >= this.rentals.length) {
             return null
         }
-        console.log("getRental", this.index, this.rentals[this.index].reference)
-
+        console.log("**************************getRental", this.index, this.rentals[this.index].reference)
         return this.rentals[this.index]
     }
 
-
+    @computed get emergencyNumber() {
+        if (this.index === null || this.rental === null || this.rental.car === null) {
+            return null
+        }
+        return this.rental.car.support_number
+    }
 
     @computed get hasRentalConfirmedOrOngoing() {
         return this.rentals.find(rental => { return rental.status === RENTAL_STATUS.CONFIRMED || rental.status === RENTAL_STATUS.ONGOING }) !== null
@@ -143,6 +124,20 @@ class driveStore {
 
     @computed get hasRentalOngoing() {
         return this.rentals.find(rental => { return rental.status === RENTAL_STATUS.ONGOING }) !== null
+    }
+
+
+    computeActionFind(actions, onPress) {
+        if (!this.rental || this.rental.status !== RENTAL_STATUS.ONGOING || this.rental.contract_signed) { return }
+        actions.push({ style: this.rental.car_found || this.rental.initial_inspection_done ? actionStyles.ACTIVE : actionStyles.DONE, icon: icons.FIND, onPress: onPress })
+    }
+    computeActionInspect(actions, onPress) {
+        if (!this.rental || this.rental.status !== RENTAL_STATUS.ONGOING || this.rental.contract_signed) { return }
+        actions.push({ style: this.rental.initial_inspection_done ? actionStyles.DISABLE : actionStyles.TODO, icon: icons.INSPECT, onPress: onPress })
+    }
+    computeActionStartContract(actions, onPress) {
+        if (!this.rental || this.rental.status !== RENTAL_STATUS.ONGOING || this.rental.contract_signed) { return }
+        actions.push({ style: this.rental.initial_inspection_done ? this.rental.contract_signed ? actionStyles.DONE : actionStyles.TODO : actionStyles.DISABLE, icon: icons.RENTAL_AGREEMENT, onPress: onPress })
     }
 
     @action
@@ -158,7 +153,7 @@ class driveStore {
         if (index < 0 || index >= this.rentals.length) {
             return false
         }
-        console.log("setRentalIndex", index)
+        console.log("*****************************setRentalIndex", index)
         this.index = index
         return true
     }
@@ -191,7 +186,7 @@ class driveStore {
 
 
     @action
-    async getRental() {
+    async refreshRental() {
 
         const response = await getFromApi("/rentals/" + this.rental.reference);
         if (response && response.status === "success") {
@@ -204,7 +199,6 @@ class driveStore {
     };
 }
 
-export default driveStore = new driveStore();
 
 
 

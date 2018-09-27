@@ -3,11 +3,9 @@ import { persist } from 'mobx-persist'
 import _ from 'lodash'
 
 import { getFromApi, postToApi, uploadToApi, putToApi } from '../utils/api'
-import driveStore from './driveStore';
+import { driveStore } from './';
 
 const DEBUG = false
-
-
 
 class CarDamage {
     @persist @observable reference = null
@@ -18,7 +16,9 @@ class CarDamage {
     @persist @observable document_reference = null
 }
 
-class inspectStore {
+export default class InspectStore {
+
+    constructor() { }
 
     @observable carDamages = []
 
@@ -68,6 +68,7 @@ class inspectStore {
         return false
     };
 
+    @action
     async uploadDamageDocument() {
 
         const response = await uploadToApi("car_damage", "one_side", "car_damage", "front_side", this.documentUri);
@@ -86,7 +87,7 @@ class inspectStore {
         if (response && response.status === "success") {
             if (DEBUG)
                 console.info("inspectStore.confirmInitialInspection:", response.data);
-            driveStore.rentals[this.index] = response.data.rental
+            driveStore.rentals[driveStore.index] = response.data.rental
             console.log("***** inspectStore.doConfirmInitialInspection ", true)
             return true
         }
@@ -94,7 +95,6 @@ class inspectStore {
     };
 }
 
-export default inspectStore = new inspectStore();
 
 
 

@@ -9,7 +9,7 @@ import UFOActionBar from "../components/UFOActionBar";
 import { UFOContainer, UFOText, UFOTextInput } from '../components/common'
 import appStore from '../stores/appStore'
 import registerStore from "../stores/registerStore"
-import driveStore from "../stores/driveStore"
+import { driveStore } from "../stores"
 import { screens, actionStyles, icons } from '../utils/global'
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 const video = require('../assets/UFOdrive.mp4')

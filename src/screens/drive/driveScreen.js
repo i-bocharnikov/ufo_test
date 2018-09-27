@@ -9,7 +9,7 @@ import UFOHeader from "../../components/header/UFOHeader";
 import UFOActionBar from "../../components/UFOActionBar";
 import { UFOContainer, UFOText, UFOIcon, UFOImage } from '../../components/common'
 import { screens, actionStyles, icons, colors, dateFormats, sizes } from '../../utils/global'
-import driveStore from '../../stores/driveStore'
+import { driveStore } from '../../stores'
 import otaKeyStore from '../../stores/otaKeyStore'
 import UFOCard from "../../components/UFOCard";
 import UFOSlider from "../../components/UFOSlider";
@@ -64,8 +64,12 @@ class DriveScreen extends Component {
       </UFOCard>);
   }
 
-  onSnapToItem = async (index) => {
+  selectRental = async (index) => {
     driveStore.selectRental(index)
+  }
+
+  refreshRental = async () => {
+    driveStore.refreshRental()
   }
 
   render() {
@@ -85,33 +89,11 @@ class DriveScreen extends Component {
         }
       )
     }
-    if (!driveStore.rental || (!driveStore.rental.car_found && !driveStore.rental.initial_inspection_done)) {
-      actions.push(
-        {
-          style: driveStore.rental ? actionStyles.TODO : actionStyles.DISABLE,
-          icon: icons.FIND,
-          onPress: () => this.props.navigation.navigate(screens.FIND.name)
-        }
-      )
-    }
-    if (!driveStore.rental || !driveStore.rental.initial_inspection_done) {
-      actions.push(
-        {
-          style: driveStore.rental ? actionStyles.TODO : actionStyles.DISABLE,
-          icon: icons.INSPECT,
-          onPress: () => this.props.navigation.navigate(screens.INSPECT.name)
-        }
-      )
-    }
-    if (!driveStore.rental || !driveStore.rental.contract_signed) {
-      actions.push(
-        {
-          style: driveStore.rental ? actionStyles.TODO : actionStyles.DISABLE,
-          icon: icons.RENTAL_AGREEMENT,
-          onPress: () => this.props.navigation.navigate(screens.RENTAL_AGREEMENT.name)
-        }
-      )
-    }
+
+    driveStore.computeActionFind(actions, () => this.props.navigation.navigate(screens.FIND.name))
+    driveStore.computeActionInspect(actions, () => this.props.navigation.navigate(screens.INSPECT.name))
+    driveStore.computeActionStartContract(actions, () => this.props.navigation.navigate(screens.RENTAL_AGREEMENT.name))
+
 
     if (driveStore.rental && driveStore.rental.contract_signed) {
       actions.push(
@@ -157,11 +139,7 @@ class DriveScreen extends Component {
         }
       ]
     }
-
-
-
-    let _RefreshControl = (<RefreshControl refreshing={this.refreshing} onRefresh={async () => await driveStore.listRentals()} />)
-
+    let _RefreshControl = (<RefreshControl refreshing={this.refreshing} onRefresh={this.refreshRental} />)
 
     return (
       <UFOContainer image={require('../../assets/images/background/UFOBGDRIVE001.png')}>
@@ -169,7 +147,7 @@ class DriveScreen extends Component {
         <KeyboardAwareScrollView refreshControl={_RefreshControl}>
           {driveStore.rental && (
             <View style={{ paddingTop: "10%" }}>
-              <UFOSlider data={driveStore.rentals} renderItem={this.renderRental} onSnapToItem={this.onSnapToItem} />
+              <UFOSlider data={driveStore.rentals} renderItem={this.renderRental} onSnapToItem={this.selectRental} firstItem={driveStore.index} />
             </View>
           )}
           {!driveStore.rental && (
@@ -184,7 +162,6 @@ class DriveScreen extends Component {
     );
   }
 }
-
 
 export default translate("translations")(DriveScreen);
 

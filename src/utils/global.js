@@ -170,6 +170,7 @@ export const icons = {
     NEW_CAPTURE: new Icon('camera', 'icon:newCapture'),
     TORCH: new Icon('flashlight', 'icon:torch'),
     VALIDATE: new Icon('checkmark', 'icon:validate'),
+    DONE: new Icon('checkmark', 'icon:done'),
     CANCEL: new Icon('close', 'icon:cancel'),
     SAVE: new Icon('checkmark', 'icon:save'),
     REDO: new Icon('repeat', 'icon:redo'),

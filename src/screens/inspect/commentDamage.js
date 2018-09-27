@@ -9,8 +9,8 @@ import UFOHeader from "../../components/header/UFOHeader";
 import UFOActionBar from "../../components/UFOActionBar";
 import { UFOContainer, UFOText, UFOImage, UFOTextInput } from '../../components/common'
 import { screens, actionStyles, icons, colors } from '../../utils/global'
-import driveStore from '../../stores/driveStore'
-import inspectStore from "../../stores/inspectStore";
+import { driveStore, inspectStore } from '../../stores'
+import UFOCard from "../../components/UFOCard";
 const markerImage = require('../../assets/images/marker.png')
 
 const window = Dimensions.get('window');
@@ -22,19 +22,18 @@ const CAR_HEIGHT = CAR_WIDTH / 2
 @observer
 class CommentDamageScreen extends Component {
 
-  @observable comment = ""
+  @observable comment = null
 
   componentDidMount() {
-    comment = ""
+    comment = null
   }
 
   renderBody(t) {
 
     let carModel = driveStore.rental ? driveStore.rental.car ? driveStore.rental.car.car_model : null : null
     return (
-      <View>
-        <UFOText style={{ padding: 20 }}>{t('inspect:commentGuidance')}</UFOText>
-        <View>
+      <UFOCard title={t('inspect:commentGuidance')}>
+        <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignContent: 'center' }}>
             <UFOImage source={{ reference: inspectStore.documentReference }} style={{
               width: DEVICE_WIDTH / 3, height: DEVICE_HEIGHT / 3
@@ -49,11 +48,11 @@ class CommentDamageScreen extends Component {
               }} source={markerImage} />
             </UFOImage>
           </View>
+          <View style={{ paddingTop: 10 }} >
+            <UFOTextInput value={this.comment} placeholder={t('inspect:commentPlaceholder')} multiline={true} numberOfLines={4} onChangeText={(text) => this.comment = text} />
+          </View>
         </View>
-        <View style={{ padding: 20 }} >
-          <UFOTextInput value={this.comment} placeholder={t('inspect:commentPlaceholder')} multiline={true} numberOfLines={4} onChangeText={(text) => this.comment = text} />
-        </View>
-      </View>
+      </UFOCard>
     )
   }
 
@@ -80,7 +79,7 @@ class CommentDamageScreen extends Component {
         onPress: () => this.props.navigation.pop()
       },
       {
-        style: actionStyles.ACTIVE,
+        style: this.comment ? actionStyles.TODO : actionStyles.DISABLE,
         icon: icons.SAVE,
         onPress: () => this.doSave(t)
       },

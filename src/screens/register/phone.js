@@ -2,11 +2,10 @@ import React, { Component } from "react";
 import { observer } from 'mobx-react';
 import { observable, action } from 'mobx';
 import { translate } from "react-i18next";
-import { StyleSheet, View, Dimensions } from 'react-native';
+import { StyleSheet, View, ActivityIndicator } from 'react-native';
 import PhoneInput from 'react-native-phone-input';
 import CountryPicker from 'react-native-country-picker-modal';
 import DeviceInfo from 'react-native-device-info'
-import { Content, Form, Item, Label, Input, Card } from 'native-base';
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import _ from 'lodash'
 
@@ -17,11 +16,9 @@ import { UFOContainer, UFOText, UFOIcon, UFOImage, UFOTextInput } from '../../co
 import { screens, actionStyles, icons, colors } from '../../utils/global'
 import appStore from '../../stores/appStore';
 import registerStore from '../../stores/registerStore';
-import UFOSimpleCard from "../../components/UFOSimpleCard";
 import UFOCard from "../../components/UFOCard";
 
 
-const DARK_COLOR = colors.BACKGROUND.string();
 const PLACEHOLDER_COLOR = "rgba(255,255,255,0.2)";
 const LIGHT_COLOR = "#FFF";
 
@@ -34,6 +31,7 @@ class PhoneScreen extends Component {
   @observable countryCode = DeviceInfo.getDeviceCountry().toLowerCase()
   @observable isCodeRequested = false
   @observable code = null
+  @observable activityPending = false
 
   onPressFlag = () => {
     this.countryPicker.openModal()
@@ -60,19 +58,24 @@ class PhoneScreen extends Component {
 
   @action
   doDisconnect = async (t, isInWizzard) => {
+    this.activityPending = true
     this.isCodeRequested = false;
     await appStore.disconnect(t)
+    this.activityPending = false
   }
 
   @action
   doConnect = async (isInWizzard) => {
+    this.activityPending = true
     if (await appStore.connect(this.code)) {
       this.code = null
       if (isInWizzard && _.isEmpty(registerStore.user.email)) {
         this.props.navigation.navigate(screens.REGISTER_EMAIL.name, { 'isInWizzard': isInWizzard })
+        this.activityPending = false
         return
       } else {
         this.props.navigation.pop()
+        this.activityPending = false
         return
       }
     }
@@ -130,17 +133,20 @@ class PhoneScreen extends Component {
           enableOnAndroid={true}
           resetScrollToCoords={{ x: 0, y: 0 }}>
           <View style={{ paddingTop: "20%", paddingHorizontal: 10, flex: 0.80, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
-            {registerStore.isConnected && (
+            {this.activityPending && (
+              <ActivityIndicator style={styles.centered} size="large" color={colors.ACTIVE} />
+            )}
+            {!this.activityPending && registerStore.isConnected && (
               <UFOCard title={t('register:phoneNumberInputLabel')}>
                 <UFOTextInput defaultValue={registerStore.user.phone_number} editable={false} />
               </UFOCard>
             )}
-            {!registerStore.isConnected && this.isCodeRequested && (
+            {!this.activityPending && !registerStore.isConnected && this.isCodeRequested && (
               <UFOCard title={t('register:smsCodeInputLabel')}>
                 <UFOTextInput autoFocus maxLength={107} keyboardAppearance='dark' keyboardType='numeric' placeholder='000-000' onChangeText={this.onChangeCode} />
               </UFOCard>
             )}
-            {!registerStore.isConnected && !this.isCodeRequested && (
+            {!this.activityPending && !registerStore.isConnected && !this.isCodeRequested && (
               <UFOCard title={t('register:phoneNumberInputLabel')}>
                 <PhoneInput
                   ref={(ref) => { this.phoneInput = ref; }}
@@ -163,7 +169,7 @@ class PhoneScreen extends Component {
                   onChange={(value) => this.selectCountry(value)}
                   translation={i18n.language}
                   cca2={this.countryCode}
-                  actionStyles={darkTheme}
+                  actionStyles={styles}
                 >
                   <View></View>
                 </CountryPicker>
@@ -171,7 +177,7 @@ class PhoneScreen extends Component {
             )}
           </View>
         </KeyboardAwareScrollView>
-        <UFOActionBar actions={actions} />
+        <UFOActionBar actions={actions} activityPending={this.activityPending} />
       </UFOContainer>
     );
   }
@@ -179,29 +185,33 @@ class PhoneScreen extends Component {
 
 
 
-const darkTheme = StyleSheet.create({
+const styles = StyleSheet.create({
   modalContainer: {
-    backgroundColor: DARK_COLOR
+    backgroundColor: colors.TRANSITION_BACKGROUND.string()
   },
   contentContainer: {
-    backgroundColor: DARK_COLOR
+    backgroundColor: colors.TRANSITION_BACKGROUND.string()
   },
   header: {
-    backgroundColor: DARK_COLOR
+    backgroundColor: colors.TRANSITION_BACKGROUND.string()
   },
   itemCountryName: {
     borderBottomWidth: 0
   },
   countryName: {
-    color: LIGHT_COLOR
+    color: colors.HEADER_TEXT.string()
   },
   letterText: {
-    color: LIGHT_COLOR
+    color: colors.HEADER_TEXT.string()
   },
   input: {
-    color: LIGHT_COLOR,
+    color: colors.HEADER_TEXT.string(),
     borderBottomWidth: 1,
-    borderColor: LIGHT_COLOR
+    borderColor: colors.HEADER_TEXT.string()
+  },
+  centered: {
+    flex: 1,
+    alignSelf: 'center'
   }
 });
 
