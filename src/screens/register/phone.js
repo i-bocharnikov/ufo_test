@@ -6,7 +6,8 @@ import { StyleSheet, View, Dimensions } from 'react-native';
 import PhoneInput from 'react-native-phone-input';
 import CountryPicker from 'react-native-country-picker-modal';
 import DeviceInfo from 'react-native-device-info'
-import { Content, Form, Item, Label, Input } from 'native-base';
+import { Content, Form, Item, Label, Input, Card } from 'native-base';
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import _ from 'lodash'
 
 
@@ -16,6 +17,7 @@ import { UFOContainer, UFOText, UFOIcon, UFOImage } from '../../components/commo
 import { screens, actionStyles, icons, colors } from '../../utils/global'
 import appStore from '../../stores/appStore';
 import registerStore from '../../stores/registerStore';
+import UFOSimpleCard from "../../components/UFOSimpleCard";
 
 
 const DARK_COLOR = colors.BACKGROUND.string();
@@ -65,7 +67,6 @@ class PhoneScreen extends Component {
   doConnect = async (isInWizzard) => {
     if (await appStore.connect(this.code)) {
       this.code = null
-      console.log("************after connect", isInWizzard, registerStore.user.email)
       if (isInWizzard && _.isEmpty(registerStore.user.email)) {
         this.props.navigation.navigate(screens.REGISTER_EMAIL.name, { 'isInWizzard': isInWizzard })
         return
@@ -121,59 +122,59 @@ class PhoneScreen extends Component {
     }
 
 
-    let defaultPaddintTop = (Dimensions.get("window").height / 10)
-
     return (
-      <UFOContainer>
+      <UFOContainer image={require("../../assets/images/background/UFOBGREGISTER001.png")}>
         <UFOHeader t={t} navigation={navigation} title={t('register:phoneTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_PHONE} />
-        <Content padder ref={(ref) => { this.content = ref; }}>
-          <Form>
-            {registerStore.isConnected && (
+        <KeyboardAwareScrollView
+          contentContainerStyle={{ flex: 0.85 }}>
+          {registerStore.isConnected && (
+            <Form >
               <Item stackedLabel>
-                <Label style={{ paddingTop: defaultPaddintTop, paddingBottom: 25, color: colors.TEXT.string() }}>{t('register:phoneNumberInputLabel')}</Label>
+                <Label style={{ paddingBottom: 25, color: colors.TEXT.string() }}>{t('register:phoneNumberInputLabel')}</Label>
                 <Input defaultValue={registerStore.user.phone_number} editable={false} />
               </Item>
-
-            )}
-            {!registerStore.isConnected && !this.isCodeRequested && (
-              <Item >
-                <View style={{ justifyContent: 'space-evenly', alignContent: 'center' }}>
-                  <UFOText style={{ paddingTop: defaultPaddintTop, paddingBottom: 25 }}>{t('register:phoneNumberInputLabel')}</UFOText>
-                  <PhoneInput
-                    ref={(ref) => { this.phoneInput = ref; }}
-                    onPressFlag={this.onPressFlag}
-                    initialCountry={_.isEmpty(this.countryCode) ? "lu" : this.countryCode}
-                    style={{ height: 50 }}
-                    textStyle={{ color: colors.TEXT.string() }}
-                    defaultValue={registerStore.user.phone_number}
-                    onChangePhoneNumber={this.onChangePhoneNumber}
-                    offset={20}
-                    autoFocus={true}
-                  />
-
-                  <CountryPicker
-                    ref={(ref) => { this.countryPicker = ref; }}
-                    filterPlaceholderTextColor={PLACEHOLDER_COLOR}
-                    onChange={(value) => this.selectCountry(value)}
-                    translation={i18n.language}
-                    cca2={this.countryCode}
-                    actionStyles={darkTheme}
-                  >
-                    <View></View>
-                  </CountryPicker>
-                </View>
-              </Item>
-            )}
-
-            {!registerStore.isConnected && this.isCodeRequested && (
+            </Form>
+          )}
+          {!registerStore.isConnected && this.isCodeRequested && (
+            <Form >
               <Item stackedLabel>
-                <Label style={{ color: colors.TEXT.string(), paddingTop: defaultPaddintTop, paddingBottom: 25 }}>{t('register:smsCodeInputLabel')}</Label>
+                <Label style={{ color: colors.TEXT.string(), paddingBottom: 25 }}>{t('register:smsCodeInputLabel')}</Label>
                 <Input autoFocus maxLength={7} keyboardAppearance='dark' keyboardType='numeric' placeholder='000-000' ref={(ref) => { this.codeInput = ref; }} onChangeText={this.onChangeCode} />
               </Item>
-            )}
-          </Form>
+            </Form>
+          )}
+          {!registerStore.isConnected && !this.isCodeRequested && (
+            <View style={{ flex: 0.80, flexDirection: 'column', justifyContent: 'center', alignContent: 'center', alignSelf: 'center' }}>
+              <UFOSimpleCard >
+                <UFOText style={{ paddingBottom: 10 }}>{t('register:phoneNumberInputLabel')}</UFOText>
+                <PhoneInput
+                  ref={(ref) => { this.phoneInput = ref; }}
+                  onPressFlag={this.onPressFlag}
+                  initialCountry={_.isEmpty(this.countryCode) ? "lu" : this.countryCode}
+                  //style={{ height: 50 }}
+                  textStyle={{ color: colors.TEXT.string() }}
+                  defaultValue={registerStore.user.phone_number}
+                  onChangePhoneNumber={this.onChangePhoneNumber}
+                  offset={20}
+                  autoFocus={true}
+                />
+                <CountryPicker
+                  ref={(ref) => { this.countryPicker = ref; }}
+                  filterPlaceholderTextColor={PLACEHOLDER_COLOR}
+                  onChange={(value) => this.selectCountry(value)}
+                  translation={i18n.language}
+                  cca2={this.countryCode}
+                  actionStyles={darkTheme}
+                >
+                  <View></View>
+                </CountryPicker>
+              </UFOSimpleCard >
+            </View>
 
-        </Content>
+          )}
+
+
+        </KeyboardAwareScrollView>
         <UFOActionBar actions={actions} />
       </UFOContainer>
     );

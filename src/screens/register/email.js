@@ -10,6 +10,7 @@ import UFOActionBar from "../../components/UFOActionBar";
 import { UFOContainer, UFOText, UFOIcon, UFOImage } from '../../components/common'
 import { screens, actionStyles, icons, colors } from '../../utils/global'
 import { observable, action } from "mobx";
+import registerStore from '../../stores/registerStore';
 
 const REGEX_EMAIL_VALIDATION = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -78,7 +79,7 @@ class EmailScreen extends Component {
     let defaultPaddintTop = ((Dimensions.get("window").height - this.keyboardHeight) / 10)
 
     return (
-      <UFOContainer>
+      <UFOContainer image={require("../../assets/images/background/UFOBGREGISTER001.png")}>
         <UFOHeader t={t} navigation={navigation} title={t('register:emailTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_EMAIL} />
         <Content padder>
           <Form>

@@ -3,7 +3,7 @@ import { createBottomTabNavigator, createStackNavigator } from 'react-navigation
 import { Root, StyleProvider } from "native-base";
 import { translate } from "react-i18next";
 import { observer } from "mobx-react";
-import { StyleSheet, View, ActivityIndicator, Platform } from 'react-native';
+import { StyleSheet, View, ActivityIndicator, Platform, StatusBar } from 'react-native';
 
 //Temporary ignore warning comming from react-native
 import { YellowBox } from 'react-native';
@@ -216,7 +216,7 @@ class App extends React.Component {
 
     if (!appStore.isAppReady) {
       return (
-        <View style={{ flex: 1, backgroundColor: colors.BACKGROUND.string() }}>
+        <View style={{ flex: 1, backgroundColor: colors.TRANSITION_BACKGROUND.string() }}>
           <ActivityIndicator style={styles.centered} size="large" color={colors.ACTIVE} />
         </View>
       );
@@ -224,6 +224,10 @@ class App extends React.Component {
 
     return (
       <Root>
+        <StatusBar
+          backgroundColor='black'
+          barStyle="light-content"
+        />
         <StyleProvider style={getTheme()}>
           <RootStack />
         </StyleProvider>

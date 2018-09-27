@@ -186,7 +186,7 @@ class IdentificationScreen extends Component {
     let showCamera = this.captureState !== captureStates.VALIDATE && this.captureState !== captureStates.PREVIEW
 
     return (
-      <UFOContainer>
+      <UFOContainer image={require("../../assets/images/background/UFOBGREGISTER001.png")}>
         {showCamera && (
           <View style={styles.container}>
             <RNCamera

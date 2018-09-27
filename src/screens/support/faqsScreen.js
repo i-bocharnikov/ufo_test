@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { translate } from "react-i18next";
-import { Content } from 'native-base';
 import { NavigationEvents } from 'react-navigation';
-import { SectionList, View, TouchableHighlight } from 'react-native'
+import { View, TouchableOpacity } from 'react-native'
 import { observer } from "mobx-react";
 import { observable } from "mobx";
+import { KeyboardAwareSectionList } from "react-native-keyboard-aware-scroll-view";
 import call from 'react-native-phone-call'
 
 import UFOHeader from "../../components/header/UFOHeader";
@@ -32,7 +32,7 @@ class SupportFaqsScreen extends Component {
       return
     }
     await this.doRefresh()
-    this.section = this.props.navigation.getParam(navigationParams.SUPPORT_FAQ_CATEGORY);
+    this.section = this.props.navigation.getParam(navigationParams.SUPPORT_FAQ_CATEGORY, this.section);
   }
 
   onPressSection = (reference) => {
@@ -69,27 +69,29 @@ class SupportFaqsScreen extends Component {
 
 
   renderSection = ({ section: { reference, name, isOpen } }) => (
-    <TouchableHighlight
-      key={reference}
-      onPress={() => this.onPressSection(reference)}>
-      <View style={{ padding: 8, flexDirection: 'column', justifyContent: 'center', alignContent: 'center' }}>
+    <View style={{ paddingHorizontal: 20, paddingVertical: 10, flexDirection: 'column', justifyContent: 'center', alignContent: 'center' }}>
+      <TouchableOpacity
+        key={reference}
+        onPress={() => this.onPressSection(reference)}>
         <View style={{ padding: 10, flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center', backgroundColor: colors.ACTIVE.string(), borderRadius: 5 }}>
-          <UFOText h2 inverted>{name}</UFOText>
+          <UFOText h3 inverted>{name}</UFOText>
           <UFOIcon icon={isOpen ? icons.SEGMENT_OPEN : icons.SEGMENT_CLOSE} size={sizes.SMALL} />
         </View>
-      </View>
-    </TouchableHighlight >
+      </TouchableOpacity >
+    </View>
   )
 
   renderItem = ({ item: { reference, title }, index, section }) => (
-    <TouchableHighlight
-      key={reference}
-      onPress={() => this.onPressItem(section.reference, reference)}>
-      <View style={{ padding: 8, flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center', }}>
-        <UFOText style={{}}>{title}</UFOText>
-        <UFOIcon inverted icon={icons.NEXT} size={sizes.SMALL} />
-      </View>
-    </TouchableHighlight >
+    <View style={{ paddingHorizontal: 20, }}>
+      <TouchableOpacity
+        key={reference}
+        onPress={() => this.onPressItem(section.reference, reference)}>
+        <View style={{ backgroundColor: colors.CARD_BACKGROUND.string(), paddingHorizontal: 10, paddingVertical: 5, flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center', }}>
+          <UFOText style={{ flex: 0.95 }}>{title}</UFOText>
+          <UFOIcon style={{ flex: 0.05 }} inverted icon={icons.NEXT} size={sizes.SMALL} />
+        </View>
+      </TouchableOpacity >
+    </View>
   )
 
 
@@ -129,16 +131,16 @@ class SupportFaqsScreen extends Component {
     })
 
     return (
-      <UFOContainer>
+      <UFOContainer image={require('../../assets/images/background/UFOBGSUPPORT001.png')}>
         <NavigationEvents onWillFocus={payload => { this.onLoad(payload) }} />
         <UFOHeader t={t} navigation={navigation} title={t('support:supportTitle')} currentScreen={screens.SUPPORT_FAQS} />
-        <SectionList
+        <KeyboardAwareSectionList
           onRefresh={this.doRefresh}
           refreshing={this.refreshing}
           renderItem={this.renderItem}
           renderSectionHeader={this.renderSection}
           sections={sections}
-          keyExtractor={(item, index) => item + index}
+          keyExtractor={(item, index) => item.reference}
         />
         <UFOActionBar actions={actions} />
       </UFOContainer>

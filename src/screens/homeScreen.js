@@ -11,6 +11,7 @@ import appStore from '../stores/appStore'
 import registerStore from "../stores/registerStore"
 import driveStore from "../stores/driveStore"
 import { screens, actionStyles, icons } from '../utils/global'
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 const video = require('../assets/UFOdrive.mp4')
 
 @observer
@@ -27,7 +28,7 @@ class HomeScreen extends React.Component {
 
     let actions = [
       {
-        style: driveStore.hasRentalConfirmedOrOngoing ? actionStyles.ACTIVE : actionStyles.TODO,
+        style: driveStore.hasRentalConfirmedOrOngoing ? actionStyles.DONE : actionStyles.TODO,
         icon: icons.RESERVE,
         onPress: () => navigation.navigate(screens.RESERVE.name)
       },
@@ -48,7 +49,7 @@ class HomeScreen extends React.Component {
 
     return (
       <UFOContainer image={require("../assets/images/background/UFOBGHOME002.png")}>
-        <ScrollView
+        <KeyboardAwareScrollView
           contentContainerStyle={{ flex: 1 }}
           refreshControl={_RefreshControl}
         >
@@ -61,8 +62,8 @@ class HomeScreen extends React.Component {
               <UFOText h2 inverted center style={{ paddingTop: 5 }}>{t('home:drive', { user: registerStore.user })}</UFOText>
             </View>
           </View>
-          <UFOActionBar actions={actions} />
-        </ScrollView>
+        </KeyboardAwareScrollView>
+        <UFOActionBar actions={actions} />
       </UFOContainer >
     );
   }

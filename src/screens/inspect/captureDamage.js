@@ -38,9 +38,8 @@ class CaptureDamageScreen extends Component {
     const options = { quality: 1, base64: true, fixOrientation: true, doNotSave: true };
     //Take photo
     let fullImage = await this.camera.takePictureAsync(options)
-    //Crop Image
     const { uri, width, height } = fullImage;
-    inspectStore.documentUri = uri
+    this.documentUri = uri
   }
 
   @action
@@ -54,7 +53,7 @@ class CaptureDamageScreen extends Component {
   }
 
   renderBody = (t) => {
-    return tnis.documentUri ? this.renderBodyCheck(t) : this.renderBodyCapture(t)
+    return this.documentUri ? this.renderBodyCheck(t) : this.renderBodyCapture(t)
   }
 
   renderBodyCapture = (t) => {
@@ -116,7 +115,7 @@ class CaptureDamageScreen extends Component {
 
 
     return (
-      <UFOContainer>
+      <UFOContainer image={require('../../assets/images/background/UFOBGINSPECT001.png')}>
         <UFOHeader transparent t={t} navigation={navigation} currentScreen={screens.DRIVE} title={t('inspect:captureDamageTitle', { rental: driveStore.rental })} />
         {this.renderBody(t)}
         <UFOActionBar actions={actions} />

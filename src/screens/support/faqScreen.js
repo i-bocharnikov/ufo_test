@@ -1,24 +1,50 @@
 import React, { Component } from "react";
 import { translate } from "react-i18next";
 import { observer } from "mobx-react";
-import { View, Dimensions } from 'react-native'
-import Video from 'react-native-video';
+import { View } from 'react-native'
 
 import UFOHeader from "../../components/header/UFOHeader";
 import UFOActionBar from "../../components/UFOActionBar";
-import { UFOContainer, UFOText, UFOIcon, UFOImage } from '../../components/common'
-import { actionStyles, icons, colors, sizes, screens, navigationParams } from '../../utils/global'
+import { UFOContainer, UFOImage } from '../../components/common'
+import { actionStyles, icons, screens, navigationParams } from '../../utils/global'
 import supportStore from "../../stores/supportStore";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import UFOCard from "../../components/UFOCard";
+import UFOVideo from "../../components/common/UFOVideo";
 
-const DEVICE_WIDTH = Dimensions.get("window").width
-const DEVICE_HEIGHT = Dimensions.get("window").height
-const MEDIA_RATIO = 1.5
-const MEDIA_WIDTH = DEVICE_WIDTH - 40
-const MEDIA_HEIGHT = MEDIA_WIDTH / MEDIA_RATIO
+
 
 
 @observer
 class SupportFaqScreen extends Component {
+
+
+  renderImage(faq) {
+    return supportStore.hasImage(faq) ? (<UFOImage source={{ uri: faq.media_url }} />) : null
+  }
+
+  renderVideo(faq) {
+    return supportStore.hasVideo(faq) ? (<UFOVideo source={{ uri: faq.media_url }} />) : null
+  }
+
+  renderText(faq) {
+    return (
+      <View>
+        {faq.title && (
+          <UFOText h2 numberOfLines={2}
+          >
+            {title.toUpperCase()}
+          </UFOText>
+        )}
+        {faq.description && (
+          <UFOText h3 numberOfLines={2}
+          >
+            {faq.description}
+          </UFOText>
+        )}
+      </View>
+    )
+  }
 
 
   render() {
@@ -36,34 +62,17 @@ class SupportFaqScreen extends Component {
       },
     ]
     return (
-      <UFOContainer>
+      <UFOContainer image={require('../../assets/images/background/UFOBGSUPPORT001.png')}>
         <UFOHeader t={t} navigation={navigation} title={t('support:supportTitle')} currentScreen={screens.SUPPORT_FAQ} />
-        <View style={{ padding: 20, flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
-
-          <View style={{ padding: 10, flexDirection: 'row', justifyContent: 'center', alignContent: 'center', backgroundColor: colors.ACTIVE.string(), borderRadius: 5 }}>
-            <UFOText h2 inverted>{faq.title}</UFOText>
+        <KeyboardAwareScrollView>
+          <View style={{ paddingTop: "10%", paddingHorizontal: "10%" }}>
+            <UFOCard
+              title={faq.title}
+              text={faq.text}
+              imageSource={supportStore.hasImage(faq) ? { uri: faq.media_url } : null}
+              videoSource={supportStore.hasVideo(faq) ? { uri: faq.media_url } : null} />
           </View>
-          {supportStore.hasImage(faq) && (
-            <View style={{ padding: 10, flexDirection: 'row', justifyContent: 'center', alignContent: 'center' }}>
-              <UFOImage source={{ uri: faq.media_url }} style={{ height: MEDIA_HEIGHT, width: MEDIA_WIDTH }} />
-            </View>
-          )}
-          {supportStore.hasVideo(faq) && (
-            <View style={{ padding: 10, flexDirection: 'row', justifyContent: 'center', alignContent: 'center' }}>
-              <Video source={{ uri: faq.media_url }}
-                ref={(ref) => {
-                  this.player = ref
-                }}
-                style={{ height: MEDIA_HEIGHT, width: MEDIA_WIDTH }}
-                resizeMode={"cover"}
-                repeat={true}
-                paused={false}
-                muted={false}
-              />
-            </View>
-          )}
-          <UFOText>{faq.text}</UFOText>
-        </View>
+        </KeyboardAwareScrollView>
         <UFOActionBar actions={actions} />
       </UFOContainer>
     );

@@ -93,7 +93,7 @@ class ReturnScreen extends Component {
 
 
     return (
-      <UFOContainer>
+      <UFOContainer image={require('../../assets/images/background/UFOBGRETURN001.png')}>
         <ScrollView
           contentContainerStyle={{ flex: 1 }}
           refreshControl={_RefreshControl}

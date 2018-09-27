@@ -87,7 +87,7 @@ class CommentDamageScreen extends Component {
     ]
 
     return (
-      <UFOContainer>
+      <UFOContainer image={require('../../assets/images/background/UFOBGINSPECT001.png')}>
         <UFOHeader transparent t={t} navigation={navigation} currentScreen={screens.DRIVE} title={t('inspect:commentDamageTitle', { rental: driveStore.rental })} />
         {this.renderBody(t)}
         <UFOActionBar actions={actions} />

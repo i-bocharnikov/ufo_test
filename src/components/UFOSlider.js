@@ -3,11 +3,10 @@ import { translate } from "react-i18next";
 import { Dimensions, } from 'react-native'
 import Carousel from 'react-native-snap-carousel';
 
-
-import { UFOText, UFOIcon } from './common'
-import { actionStyles, colors, icons, sizes } from '../utils/global'
+import { UFOText } from './common'
 
 const DEVICE_WIDTH = Dimensions.get('window').width
+const UFOSLIDER_WIDTH = DEVICE_WIDTH * 80 / 100
 
 class UFOSliderBar extends React.Component {
 
@@ -25,7 +24,7 @@ class UFOSliderBar extends React.Component {
         let onSnapToItem = this.props.onSnapToItem ? this.props.onSnapToItem : (slideIndex) => { console.log("onSnapToItem to " + slideIndex) }
 
         let sliderWidth = DEVICE_WIDTH
-        let itemWidth = DEVICE_WIDTH - 80
+        let itemWidth = UFOSLIDER_WIDTH
         return (
             <Carousel
                 ref={(c) => { this._carousel = c; }}

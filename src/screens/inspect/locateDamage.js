@@ -11,6 +11,8 @@ import { UFOContainer, UFOText, UFOImage } from '../../components/common'
 import { screens, actionStyles, icons, colors } from '../../utils/global'
 import driveStore from '../../stores/driveStore'
 import inspectStore from "../../stores/inspectStore";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import UFOCard from "../../components/UFOCard";
 const markerImage = require('../../assets/images/marker.png')
 
 const window = Dimensions.get('window');
@@ -97,29 +99,27 @@ class LocateDamageScreen extends Component {
     let carModel = driveStore.rental ? driveStore.rental.car ? driveStore.rental.car.car_model : null : null
 
     return (
-      <UFOContainer>
+      <UFOContainer image={require('../../assets/images/background/UFOBGINSPECT001.png')}>
         <UFOHeader transparent t={t} navigation={navigation} currentScreen={screens.DRIVE} title={t('inspect:locateDamageTitle', { rental: driveStore.rental })} />
-        <View style={{
-          flex: 1, flexDirection: 'column',
-          justifyContent: 'flex-start',
-          alignItems: 'center'
-        }}>
-          <UFOText style={{ paddingTop: 20 }}>{t('inspect:locateGuidance')}</UFOText>
-          <View {...this._panResponder.panHandlers} >
-            <ImageBackground style={{ width: BODY_WIDTH, height: BODY_HEIGHT }} source={{ uri: carModel.image_top_v_url }} resizeMode='contain' >
-              {true && (
-                <UFOImage style={{
-                  position: 'relative',
-                  top: this.relativePositionY * 100 - 4 + "%",
-                  left: this.relativePositionX * 100 - 4 + "%",
-                  width: 25,
-                  height: 25
-                }}
-                  source={markerImage} />
-              )}
-            </ImageBackground >
+        <KeyboardAwareScrollView>
+          <View style={{ padding: 20, flexDirection: 'column', justifyContent: 'flex-start' }}>
+            <UFOCard title={t('inspect:locateGuidance')} />
+            <View {...this._panResponder.panHandlers} >
+              <ImageBackground style={{ width: BODY_WIDTH, height: BODY_HEIGHT }} source={{ uri: carModel.image_top_v_url }} resizeMode='contain' >
+                {true && (
+                  <UFOImage style={{
+                    position: 'relative',
+                    top: this.relativePositionY * 100 - 4 + "%",
+                    left: this.relativePositionX * 100 - 4 + "%",
+                    width: 25,
+                    height: 25
+                  }}
+                    source={markerImage} />
+                )}
+              </ImageBackground >
+            </View >
           </View >
-        </View >
+        </KeyboardAwareScrollView>
         <UFOActionBar actions={actions} />
       </UFOContainer >
     );

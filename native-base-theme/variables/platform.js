@@ -91,8 +91,8 @@ export default {
 
   // Card
   cardDefaultBg: colors.CARD_BACKGROUND.string(), //"#fff",
-  cardBorderColor: colors.ACTIVE.string(),//"#ccc",
-  cardBorderRadius: 2,
+  cardBorderColor: 'transparent',//colors.TRANSITION_BACKGROUND.string(),//"#ccc",
+  cardBorderRadius: 8,
   cardItemPadding: platform === "ios" ? 10 : 12,
 
   // CheckBox
@@ -163,12 +163,12 @@ export default {
   iosStatusbar: "light-content",//platform === "ios" ? "dark-content" : "light-content",
   get statusBarColor() {
     return color(this.toolbarDefaultBg)
-      .darken(0.2)
+      .darken(0.5)
       .hex();
   },
   get darkenHeader() {
     return color(this.tabBgColor)
-      .darken(0.03)
+      //.darken(0.03)
       .hex();
   },
 
@@ -220,10 +220,10 @@ export default {
   },
 
   // Segment
-  segmentBackgroundColor: platform === "ios" ? "#F8F8F8" : "#3F51B5",
-  segmentActiveBackgroundColor: platform === "ios" ? "#007aff" : "#fff",
+  segmentBackgroundColor: colors.CARD_BACKGROUND.string(),//platform === "ios" ? "#F8F8F8" : "#3F51B5",
+  segmentActiveBackgroundColor: colors.ACTIVE.string(),//platform === "ios" ? "#007aff" : "#fff",
   segmentTextColor: platform === colors.TEXT.string(),//"ios" ? "#007aff" : "#fff",
-  segmentActiveTextColor: platform === colors.ACTIVE.string(),//"ios" ? "#fff" : "#3F51B5",
+  segmentActiveTextColor: platform === colors.HEADER_TEXT.string(),//"ios" ? "#fff" : "#3F51B5",
   segmentBorderColor: platform === "#007aff",//"ios" ? "#007aff" : "#fff",
   segmentBorderColorMain: platform === "#a7a6ab",//"ios" ? "#a7a6ab" : "#3F51B5",
 
@@ -239,7 +239,7 @@ export default {
   topTabBarActiveBorderColor: platform === "#007aff",//"ios" ? "#007aff" : "#fff",
 
   // Tabs
-  tabBgColor: "#F8F8F8",
+  tabBgColor: colors.HEADER_BACKGROUND.string(),//"#F8F8F8",
   tabFontSize: 15,
 
   // Text

@@ -22,13 +22,14 @@ export const dateFormats = {
 }
 
 export const colors = {
-    HEADER_BACKGROUND: new Color.rgb(39, 61, 76),//new Color('#0081B5'),
+    TRANSITION_BACKGROUND: new Color.rgb(0, 0, 0),//new Color('#0081B5'),
+    HEADER_BACKGROUND: new Color.rgb(39, 61, 76).alpha(0.85),//new Color('#0081B5'),
     BACKGROUND: new Color.rgb(244, 245, 245),//new Color('#172c32'),
     HEADER_TEXT: new Color.rgb(255, 255, 255),//new Color('#fff'),
     INVERTED_TEXT: new Color.rgb(255, 255, 255),//new Color('#fff'),
     TEXT: new Color.rgb(64, 101, 125),//new Color('#fff'),
     ICON: new Color.rgb(255, 255, 255),//new Color('#fff'),
-    CARD_BACKGROUND: new Color.rgb(255, 255, 255),//new Color('#fff'),
+    CARD_BACKGROUND: new Color.rgb(255, 255, 255).alpha(0.85),//new Color('#fff'),
     TODO: new Color.rgb(234, 80, 76),//new Color('#C8102E'),
     DONE: new Color('#03DAC6'),//new Color.rgb(64, 101, 125), //
     ACTIVE: new Color.rgb(64, 101, 125), //new Color('#0081B5'),
@@ -178,6 +179,8 @@ export const icons = {
     CHAT: new Icon('chatbubbles', 'icon:chat'),
     ADD: new Icon('add', 'icon:add'),
     SIGN: new Icon('clipboard', 'icon:sign'),
+    BROWSE: new Icon('browsers', 'icon:browse'),
+    CLIPBOARD: new Icon('clipboard', 'icon:clipboard'),
 
     UNLOCK: new Icon('unlock', 'icon:unlock'),
     LOCK: new Icon('lock', 'icon:lock'),
@@ -189,7 +192,7 @@ export const icons = {
 
 
     EMERGENCY_CALL: new Icon('call', 'icon:emergencyCall'),
-    WRONG: new Icon('bomfire', 'icon:wrong')
+    WRONG: new Icon('bonfire', 'icon:wrong')
 }
 
 class UFOError extends Error {

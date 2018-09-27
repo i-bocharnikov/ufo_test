@@ -1,182 +1,88 @@
 import React, { Component } from 'react';
-import { View, TouchableOpacity } from 'react-native';
-import { StyleSheet, Dimensions, Platform } from 'react-native';
-import PropTypes from 'prop-types';
-import { ParallaxImage } from 'react-native-snap-carousel';
-
+import { StyleSheet } from 'react-native';
+import { Card, CardItem, Body, Left } from 'native-base';
 import { UFOImage, UFOText } from './common';
-import { colors } from '../utils/global';
-
-const IS_IOS = Platform.OS === 'ios';
-const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
-
-function wp(percentage) {
-    const value = (percentage * viewportWidth) / 100;
-    return Math.round(value);
-}
-
-const slideHeight = viewportHeight * 0.36;
-const slideWidth = wp(75);
-const itemHorizontalMargin = wp(2);
-
-const sliderWidth = viewportWidth;
-const itemWidth = slideWidth + itemHorizontalMargin * 2;
-
-const entryBorderRadius = 8;
-
-
+import UFOVideo from './common/UFOVideo';
+import _ from 'lodash'
 export default class UFOCard extends Component {
 
-    static propTypes = {
-        data: PropTypes.object.isRequired,
-        even: PropTypes.bool,
-        parallax: PropTypes.bool,
-        parallaxProps: PropTypes.object
-    };
 
-    get image() {
-        const { data: { source }, parallax, parallaxProps, even } = this.props;
-
-        if (parallax) {
-            return (
-                <ParallaxImage
-                    source={source}
-                    containerStyle={[styles.imageContainer, even ? styles.imageContainerEven : {}]}
-                    style={styles.image}
-                    parallaxFactor={0.35}
-                    showSpinner={true}
-                    spinnerColor={even ? 'rgba(255, 255, 255, 0.4)' : 'rgba(0, 0, 0, 0.25)'}
-                    {...parallaxProps}
-                />
-            )
-        }
-
-        return (
-            <UFOImage
-                source={source}
-                style={styles.image} />
-        )
-    }
 
     render() {
-        const { data: { title, subtitle }, even } = this.props;
 
-        const uppercaseTitle = title ? (
-            <UFOText
-                style={[styles.title, even ? styles.titleEven : {}]}
-                numberOfLines={2}
-            >
-                {title.toUpperCase()}
-            </UFOText>
-        ) : false;
+        let inverted = this.props.inverted
+        let title = this.props.title
+        let texts = this.props.texts ? this.props.texts : []
+        if (!_.isEmpty(this.props.text)) texts.push(this.props.text)
+        let imageSource = this.props.imageSource
+        let imageResizeMode = this.props.imageResizeMode
+        let videoSource = this.props.videoSource
+        let children = this.props.children
+
+        let hasMedia = imageSource || videoSource
+        let hasText = title || (texts.length > 0)
+        let hasChildren = children
+
+        let mediaStyle = hasText || hasChildren ? 'topContainer' : 'singleContainer'
+        let textStyle = hasMedia ? hasChildren ? 'middleContainer' : 'bottomContainer' : 'singleContainer'
+        let childrenStyle = hasText || hasMedia ? 'bottomContainer' : 'singleContainer'
 
         return (
-            <TouchableOpacity
-                activeOpacity={1}
-                style={styles.slideInnerContainer}
-                onPress={() => { console.log(`You've clicked '${title}'`); }}
-            >
-                <View style={styles.shadow} />
-                <View style={[styles.imageContainer, even ? styles.imageContainerEven : {}]}>
-                    {this.image}
-                    <View style={[styles.radiusMask, even ? styles.radiusMaskEven : {}]} />
-                </View>
-                <View style={[styles.textContainer, even ? styles.textContainerEven : {}]}>
-                    {title && (
-                        { uppercaseTitle }
-                    )}
-                    {subtitle && (
-                        <UFOText
-                            style={[styles.subtitle, even ? styles.subtitleEven : {}]}
-                            numberOfLines={2}
-                        >
-                            {subtitle}
-                        </UFOText>
-                    )}
-                </View>
-            </TouchableOpacity>
+            <Card style={{ backgroundColor: 'transparent' }}>
+                {hasMedia && (
+                    <CardItem cardBody style={styles[mediaStyle]}>
+                        {imageSource && (
+                            <UFOImage source={imageSource} style={{ borderTopLeftRadius: 8, borderTopRightRadius: 8, height: 200, width: null, flex: 1 }} resizeMode={imageResizeMode} />
+                        )}
+                        {videoSource && (
+                            <UFOVideo source={videoSource} style={{ borderTopLeftRadius: 8, borderTopRightRadius: 8, height: 200, width: null, flex: 1 }} resizeMode={imageResizeMode} />
+                        )}
+                    </CardItem>
+                )}
+                {hasText && (
+                    <CardItem style={styles[textStyle]}>
+                        <Left>
+                            <Body>
+                                <UFOText h5 upper>{title}</UFOText>
+                                {texts.map((text, index) => <UFOText key={index} note>{text}</UFOText>)}
+                            </Body>
+                        </Left>
+                    </CardItem>
+                )}
+                {hasChildren && (
+                    <CardItem style={styles[childrenStyle]}>
+                        {children}
+                    </CardItem>
+                )}
+            </Card>
         );
     }
 }
 
 
-
-
-styles = StyleSheet.create({
-    slideInnerContainer: {
-        width: itemWidth,
-        height: slideHeight,
-        paddingHorizontal: itemHorizontalMargin,
-        paddingBottom: 18 // needed for shadow
+const styles = StyleSheet.create({
+    topContainer: {
+        borderTopLeftRadius: 8,
+        borderTopRightRadius: 8,
+        borderBottomLeftRadius: 0,
+        borderBottomRightRadius: 0
     },
-    shadow: {
-        position: 'absolute',
-        top: 0,
-        left: itemHorizontalMargin,
-        right: itemHorizontalMargin,
-        bottom: 18,
-        shadowColor: colors.TEXT.string(),
-        shadowOpacity: 0.25,
-        shadowOffset: { width: 0, height: 10 },
-        shadowRadius: 10,
-        borderRadius: entryBorderRadius
+    bottomContainer: {
+        borderTopLeftRadius: 0,
+        borderTopRightRadius: 0,
+        borderBottomLeftRadius: 8,
+        borderBottomRightRadius: 8
     },
-    imageContainer: {
-        flex: 1,
-        marginBottom: IS_IOS ? 0 : -1, // Prevent a random Android rendering issue
-        backgroundColor: 'white',
-        borderTopLeftRadius: entryBorderRadius,
-        borderTopRightRadius: entryBorderRadius
+    middleContainer: {
+        borderTopLeftRadius: 0,
+        borderTopRightRadius: 0,
+        borderBottomLeftRadius: 0,
+        borderBottomRightRadius: 0
     },
-    imageContainerEven: {
-        backgroundColor: colors.TEXT.string()
-    },
-    image: {
-        ...StyleSheet.absoluteFillObject,
-        borderRadius: IS_IOS ? entryBorderRadius : 0,
-        borderTopLeftRadius: entryBorderRadius,
-        borderTopRightRadius: entryBorderRadius
-    },
-    // image's border radius is buggy on iOS; let's hack it!
-    radiusMask: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        height: entryBorderRadius,
-        backgroundColor: 'white'
-    },
-    radiusMaskEven: {
-        backgroundColor: colors.TEXT.string()
-    },
-    textContainer: {
-        justifyContent: 'center',
-        paddingTop: 20 - entryBorderRadius,
-        paddingBottom: 20,
-        paddingHorizontal: 16,
-        backgroundColor: 'white',
-        borderBottomLeftRadius: entryBorderRadius,
-        borderBottomRightRadius: entryBorderRadius
-    },
-    textContainerEven: {
-        backgroundColor: colors.TEXT.string()
-    },
-    title: {
-        color: colors.TEXT.string(),
-        fontSize: 13,
-        fontWeight: 'bold',
-        letterSpacing: 0.5
-    },
-    titleEven: {
-        color: 'white'
-    },
-    subtitle: {
-        marginTop: 6,
-        color: colors.DISABLE.string(),
-        fontSize: 12,
-        fontStyle: 'italic'
-    },
-    subtitleEven: {
-        color: 'rgba(255, 255, 255, 0.7)'
+    singleContainer: {
+        borderTopLeftRadius: 8,
+        borderTopRightRadius: 8,
+        borderBottomLeftRadius: 8,
+        borderBottomRightRadius: 8
     }
-});
+})

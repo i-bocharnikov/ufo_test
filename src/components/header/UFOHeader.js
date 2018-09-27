@@ -31,7 +31,7 @@ export default class UFOHeader extends React.Component {
         let title = this.props.title ? (<UFOText inverted h3>{this.props.title}</UFOText>) : null
         let subTitle = this.props.subTitle ? (<UFOText inverted h4>{this.props.subTitle}</UFOText>) : null
         let logo = this.props.logo ? (<UFOLogo />) : null
-        let alpha = this.props.transparent ? 0.2 : 0.7
+        let alpha = this.props.transparent ? 0 : 0.7
         let currentScreen = this.props.currentScreen ? this.props.currentScreen : screens.HOME
 
         let isSupport = currentScreen.supportFaqCategory !== null

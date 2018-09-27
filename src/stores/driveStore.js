@@ -105,7 +105,7 @@ class driveStore {
     format(date, format) {
         if (!date)
             return ""
-        let timezone = this.rental.location.timezone
+        let timezone = this.rental && this.rental.location ? this.rental.location.timezone : "UTC"
         if (timezone)
             return moment(date).tz(timezone).format(format)
         else
@@ -126,6 +126,8 @@ class driveStore {
         if (this.index < 0 || this.index >= this.rentals.length) {
             return null
         }
+        console.log("getRental", this.index, this.rentals[this.index].reference)
+
         return this.rentals[this.index]
     }
 
@@ -146,6 +148,19 @@ class driveStore {
     @action
     async reset() {
         return await this.listRentals()
+    }
+
+    @action
+    async selectRental(index) {
+        if (index === null) {
+            return false
+        }
+        if (index < 0 || index >= this.rentals.length) {
+            return false
+        }
+        console.log("setRentalIndex", index)
+        this.index = index
+        return true
     }
 
     @action

@@ -16,7 +16,6 @@ export default class UFOText extends React.Component {
         if (!style.fontSize) {
             style.fontSize = 14
         }
-
         if (this.props.h1) {
             style.fontSize = 28
             style.fontWeight = 'bold'
@@ -33,13 +32,50 @@ export default class UFOText extends React.Component {
             style.fontSize = 15
             style.fontWeight = 'bold'
         }
+        if (this.props.h5) {
+            style.fontWeight = 'bold'
+        }
+        if (this.props.h6) {
+            style.fontWeight = 'bold'
+            style.fontSize = 14
+        }
+        if (this.props.h7) {
+            style.fontWeight = 'bold'
+            style.fontSize = 13
+        }
+        if (this.props.h8) {
+            style.fontWeight = 'bold'
+            style.fontSize = 12
+        }
+        if (this.props.h9) {
+            style.fontWeight = 'bold'
+            style.fontSize = 11
+        }
+        if (this.props.h10) {
+            style.fontWeight = 'bold'
+            style.fontSize = 10
+        }
+        if (this.props.link) {
+            style.color = colors.DONE.string()
+            style.textDecorationLine = 'underline'
+        }
+        if (this.props.note) {
+            style.color = this.props.inverted ? colors.DISABLE.string() : colors.TRANSITION_BACKGROUND.string()
+            style.fontSize = 13
+            style.fontStyle = 'italic'
+        }
         if (this.props.log) {
             style.fontSize = 10
+
         }
         if (this.props.center) {
             style.textAlign = 'center'
         }
 
-        return <Text style={style} onPress={this.props.onPress} >{this.props.children}</Text>
+        let text = this.props.children ? this.props.children : ""
+        if (this.props.upper)
+            text = text.toUpperCase()
+
+        return <Text style={style} onPress={this.props.onPress} >{text}</Text>
     }
 }

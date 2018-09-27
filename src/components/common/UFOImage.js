@@ -20,7 +20,6 @@ export default class UFOImage extends React.Component {
 
             );
         }
-        //                < Image source={require('../../assets/loading.png')} style={style} resizeMode={resizeMode} />
 
         if (source.reference) {
             let url = configurations.UFO_SERVER_API_URL + "api/" + configurations.UFO_SERVER_API_VERSION + "/documents/" + source.reference

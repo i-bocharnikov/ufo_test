@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import { translate } from "react-i18next";
 import { observer } from "mobx-react";
-import { View, Dimensions } from 'react-native'
+import { View, Dimensions, ScrollView } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import UFOHeader from "../../components/header/UFOHeader";
 import UFOActionBar from "../../components/UFOActionBar";
@@ -12,26 +13,17 @@ import registerStore from "../../stores/registerStore";
 import { WebView } from 'react-native';
 import { observable } from "mobx";
 
-const DEVICE_WIDTH = Dimensions.get("window").width
-const DEVICE_HEIGHT = Dimensions.get("window").height
-const MEDIA_RATIO = 1.5
-const MEDIA_WIDTH = DEVICE_WIDTH - 40
-const MEDIA_HEIGHT = MEDIA_WIDTH / MEDIA_RATIO
-
-
 @observer
 class ChatScreen extends Component {
 
   @observable
-  webViewOpacity = 0
+  webViewOpacity = 1
 
   async componentDidMount() {
 
-    await this.sleep(500);
-    this.webViewOpacity = 1;
   }
 
-  sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+  //sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
 
   injectjs() {
 
@@ -60,7 +52,7 @@ class ChatScreen extends Component {
     let jsCode = `
       setTimeout(() => {
         window.jivo_api.${method}(${data});
-      }, 1000)`;
+      }, 500)`;
 
     return jsCode;
   }
@@ -76,9 +68,12 @@ class ChatScreen extends Component {
       },
     ]
     return (
-      <UFOContainer>
-        <UFOHeader t={t} navigation={navigation} currentScreen={screens.SUPPORT_CHAT} />
-        <View style={{ paddingTop: 10, paddingBottom: 100, flex: 1, flexDirection: 'column', justifyContent: 'center', alignContent: 'center' }}>
+      <UFOContainer image={require('../../assets/images/background/UFOBGSUPPORT001.png')}>
+        <UFOHeader transparent logo t={t} navigation={navigation} currentScreen={screens.SUPPORT_CHAT} style={{ backgroundColor: 'transparent' }} />
+        <KeyboardAwareScrollView
+          contentContainerStyle={{ flex: 1, paddingBottom: 120 }}
+        >
+
           <WebView
             ref={(ref) => { this.webView = ref; }}
             injectedJavaScript={this.injectjs()}
@@ -86,7 +81,7 @@ class ChatScreen extends Component {
             style={{ opacity: this.webViewOpacity }}
             javaScriptEnabled={true}
           />
-        </View>
+        </KeyboardAwareScrollView>
         <UFOActionBar actions={actions} />
       </UFOContainer>
     );

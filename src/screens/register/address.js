@@ -60,7 +60,7 @@ class AddressScreen extends Component {
     ]
 
     return (
-      <UFOContainer>
+      <UFOContainer image={require("../../assets/images/background/UFOBGREGISTER001.png")}>
         <UFOHeader t={t} navigation={navigation} title={t('register:addressTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_ADDRESS} />
         <Content padder>
           <Form>

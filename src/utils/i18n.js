@@ -62,6 +62,8 @@ i18n.use(LanguageDetector).init({
                 "connect": "Connect",
                 "key": "Key",
                 "sign": "Sign",
+                "clipboard": "clipboard",
+                "browse": "Open browser",
 
                 "emergencyCall": "Emergency call",
             },
@@ -110,17 +112,19 @@ i18n.use(LanguageDetector).init({
                 "confirmInitialInspectionConfirmationMessage": "You are about to confirm car condition is conform to the description on the screen. Please note you will not be able to change it once you will have pressed 'Confirm'. thanks You."
             },
             reserve: {
-                "reserveTitle": "Book a car",
+                "reserveTitle": "Reserve",
                 "reserveLocationTitle": "Select the location",
                 "reserveDateAndCarTitle": "Select the date and car",
                 "reservePaymentTitle": "Confirm",
-                "bookingLink": "This section is under development. In the meantime, please follow this link to book a car"
+                "bookingLink": "This section is still in development for this platform. In the meantime, please follow this link to book a car"
             },
             support: {
                 "supportTitle": "How can we help you?",
             },
             drive: {
                 "driveTitle": "Rental",
+                "noRentalsTitle": "No rentals",
+                "noRentalsDescription": "After booking, the menu below will be activated and will allow you to find the car, inspect it, start the rental contract and finally lock/unlock the vehicle",
                 "findTitle": "Where is the car",
                 "returnTitle": "How to return",
                 "rentalAgreementTitle": "Sign the agreement",
