@@ -8,7 +8,7 @@ import { UFOText } from './common'
 const UFOSLIDER_DEVICE_WIDTH = Dimensions.get('window').width
 const UFOSLIDER_WIDTH = UFOSLIDER_DEVICE_WIDTH * 85 / 100
 
-class UFOSliderBar extends React.Component {
+class UFOSlider extends React.Component {
 
     renderItem({ item, index }) {
         return (
@@ -28,7 +28,7 @@ class UFOSliderBar extends React.Component {
 
         return (
             <Carousel
-                ref={(c) => { this._carousel = c; }}
+                ref={(c) => { this.carousel = c; }}
                 data={data}
                 firstItem={firstItem}
                 renderItem={renderItem}
@@ -43,4 +43,4 @@ class UFOSliderBar extends React.Component {
 }
 
 
-export default translate("translations")(UFOSliderBar);
+export default translate("translations")(UFOSlider);

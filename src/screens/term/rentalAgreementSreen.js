@@ -10,6 +10,7 @@ import UFOActionBar from "../../components/UFOActionBar";
 import { UFOContainer, UFOText, UFOIcon, UFOImage } from '../../components/common'
 import { screens, actionStyles, icons, colors, dateFormats } from '../../utils/global'
 import { driveStore, termStore } from '../../stores'
+import { confirm } from "../../utils/interaction";
 
 const window = Dimensions.get('window');
 const BACKGROUND_WIDTH = Dimensions.get('window').width * 1.5
@@ -35,10 +36,17 @@ class InspectScreen extends Component {
   }
 
   @action
-  sign = async () => {
+  doSign = async (t) => {
     if (await termStore.signRentalAgreement()) {
+      await driveStore.refreshRental()
       this.props.navigation.navigate(screens.DRIVE.name)
     }
+  }
+
+  confirmContractSignature = async (t) => {
+    await confirm(t('global:confirmationTitle'), t('term:confirmContractSignatureConfirmationMessage'), async () => {
+      this.doSign(t)
+    })
   }
 
 
@@ -53,7 +61,7 @@ class InspectScreen extends Component {
       {
         style: termStore.term.html ? actionStyles.TODO : actionStyles.DISABLE,
         icon: icons.SIGN,
-        onPress: this.sign
+        onPress: () => this.confirmContractSignature(t)
       },
     ]
 
@@ -61,21 +69,12 @@ class InspectScreen extends Component {
 
     return (
       <UFOContainer image={require('../../assets/images/background/UFOBGDRIVE001.png')}>
-        <UFOHeader t={t} navigation={navigation} currentScreen={screens.DRIVE} title={t('drive:rentalAgreementTitle', { rental: driveStore.rental })} />
-        <KeyboardAwareScrollView
-          enableOnAndroid={true}
-          resetScrollToCoords={{ x: 0, y: 0 }}
-          refreshControl={_RefreshControl}>
-          <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center', alignContent: 'center', backgroundColor: 'green' }}>
-            <WebView
-              ref={(ref) => { this.webView = ref; }}
-              source={{ html: termStore.term.html }}
-              style={{ backgroundColor: 'red' }}
-            //javaScriptEnabled={true}
-            />
-          </View>
-        </KeyboardAwareScrollView >
-        <UFOActionBar actions={actions} />
+        <UFOHeader t={t} navigation={navigation} currentScreen={screens.DRIVE} title={t('term:rentalAgreementTitle', { rental: driveStore.rental })} />
+        <WebView
+          ref={(ref) => { this.webView = ref; }}
+          source={{ html: termStore.term.html }}
+        />
+        <UFOActionBar actions={actions} inverted />
       </UFOContainer >
     );
   }

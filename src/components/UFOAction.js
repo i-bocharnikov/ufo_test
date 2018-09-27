@@ -16,6 +16,7 @@ class UFOAction extends React.Component {
         let color = this.props.activityPending ? colors.DISABLE : style.color ? style.color : colors.WRONG
         let elevation = style.elevation ? style.elevation : 0
         let icon = action.icon ? action.icon : icons.WRONG
+        let inverted = this.props.inverted ? this.props.inverted : false
         return (
             <View
                 style={styles.area}
@@ -28,7 +29,7 @@ class UFOAction extends React.Component {
                 >
                     <UFOIcon icon={icon} size={sizes.LARGE} />
                 </TouchableOpacity>
-                <UFOText inverted h10 upper>{t(icon.i18nKey)}</UFOText>
+                <UFOText h10 upper inverted={!inverted}>{t(icon.i18nKey)}</UFOText>
             </View>
         )
     }

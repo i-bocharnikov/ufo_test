@@ -139,6 +139,10 @@ export default class DriveStore {
         if (!this.rental || this.rental.status !== RENTAL_STATUS.ONGOING || this.rental.contract_signed) { return }
         actions.push({ style: this.rental.initial_inspection_done ? this.rental.contract_signed ? actionStyles.DONE : actionStyles.TODO : actionStyles.DISABLE, icon: icons.RENTAL_AGREEMENT, onPress: onPress })
     }
+    computeActionReturn(actions, onPress) {
+        if (!this.rental || this.rental.status !== RENTAL_STATUS.ONGOING || !this.rental.contract_signed) { return }
+        actions.push({ style: this.rental.ready_for_return ? actionStyles.TODO : actionStyles.ACTIVE, icon: icons.RETURN, onPress: onPress })
+    }
 
     @action
     async reset() {

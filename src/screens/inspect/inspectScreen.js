@@ -3,6 +3,7 @@ import { translate } from "react-i18next";
 import { Dimensions, View, RefreshControl } from 'react-native'
 import { observer } from "mobx-react";
 import { observable, action } from "mobx";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 
 import UFOHeader from "../../components/header/UFOHeader";
@@ -13,7 +14,6 @@ import { driveStore, inspectStore } from '../../stores'
 import UFOSlider from '../../components/UFOSlider'
 import { confirm } from "../../utils/interaction";
 import UFOCard from "../../components/UFOCard";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 const markerImage = require('../../assets/images/marker.png')
 
 const INSPECT_DEVICE_WIDTH = Dimensions.get('window').width
@@ -52,6 +52,7 @@ class InspectScreen extends Component {
 
   doConfirmInitialInspection = async (t) => {
     if (await inspectStore.confirmInitialInspection(t)) {
+      driveStore.refreshRental()
       this.props.navigation.navigate(screens.DRIVE.name)
     }
   }

@@ -65,11 +65,12 @@ class UFOActionBar extends React.Component {
         let actions = this.props.actions ? this.props.actions : []
         let moveUp = this.props.moveUp ? this.props.moveUp : 0
         let activityPending = this.props.activityPending ? this.props.activityPending : false
+        let inverted = this.props.inverted ? this.props.inverted : false
         return (
             <Animated.View style={[styles.actionBarContainer, { bottom: bottomAnimatedPosition, opacity: fadeAnim }]}>
                 <View style={styles.actionBar}>
                     {actions.map((action, index) => (
-                        <UFOAction action={action} key={index} activityPending={activityPending} />
+                        <UFOAction action={action} key={index} activityPending={activityPending} inverted={inverted} />
                     ))}
                 </View>
             </Animated.View>

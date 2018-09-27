@@ -12,6 +12,7 @@ import { UFOContainer, UFOText, UFOIcon, UFOThumbnail, UFOImage } from '../../co
 import registerStore from '../../stores/registerStore';
 import appStore from '../../stores/appStore';
 import { screens, actionStyles, icons, colors, sizes } from '../../utils/global'
+import UFOCard from "../../components/UFOCard";
 
 
 @observer
@@ -126,15 +127,7 @@ class RegisterScreen extends Component {
         <UFOHeader t={t} navigation={navigation} title={t('register:overviewTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_OVERVIEW} />
         <Content padder>
           <View style={{ flex: 1, justifyContent: 'space-around', alignContent: 'center' }} >
-            <Card >
-              <CardItem>
-                <Body>
-                  <UFOText>
-                    {registerStore.user.registration_message}
-                  </UFOText>
-                </Body>
-              </CardItem>
-            </Card>
+            <UFOCard text={registerStore.user.registration_message} />
             <Card >
               <List>
 

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { translate } from "react-i18next";
+import { translate, I18n } from "react-i18next";
 import { Dimensions, View, RefreshControl } from 'react-native'
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { observer } from "mobx-react";
@@ -28,6 +28,8 @@ class DriveScreen extends Component {
   @observable refreshing = false
 
   renderRental({ item, index }) {
+
+
     let rental = item
 
     let location = rental ? rental.location : null
@@ -40,29 +42,41 @@ class DriveScreen extends Component {
     }
 
     return (
-      <UFOCard
-        title={rental.reference}
-        texts={[driveStore.format(rental.start_at, dateFormats.FULL), driveStore.format(rental.end_at, dateFormats.FULL), location.name]}
-        imageSource={{ uri: location.image_url }}
-      >
-        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-          <UFOImage source={{ uri: carModel.image_front_url }} style={{ height: 50, width: null, flex: 0.4 }} resizeMode={'contain'} />
-          <View style={{ flex: 0.6, flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start' }}>
-            <UFOText style={{ flex: 0.5 }}>{carModel.manufacturer + " " + carModel.name + " - " + car.reference}</UFOText>
-            <View style={{ flex: 0.5, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }}>
-              <UFOIcon icon={icons.KEY} color={!otaKeyStore.key ? colors.ERROR : otaKeyStore.key.isEnabled ? colors.DONE : colors.ACTIVE} size={sizes.SMALL} />
-              <UFOIcon icon={icons.BLUETOOTH} color={otaKeyStore.isConnected ? colors.DONE : otaKeyStore.isConnecting ? colors.ACTIVE : colors.ERROR} size={sizes.SMALL} />
-              {otaKeyStore.isConnected && otaKeyStore.vehicleData && (
-                <UFOIcon icon={otaKeyStore.vehicleData.doorsLocked ? icons.LOCK : icons.UNLOCK} color={otaKeyStore.vehicleData.doorsLocked ? colors.ACTIVE : colors.DONE} size={sizes.SMALL} />
-              )}
-              {otaKeyStore.isConnected && otaKeyStore.vehicleData && (
-                <UFOIcon icon={otaKeyStore.vehicleData.engineRunning ? icons.START : icons.STOP} color={otaKeyStore.vehicleData.engineRunning ? colors.DONE : colors.ACTIVE} size={sizes.SMALL} />
-              )}
-            </View>
-          </View>
-        </View>
-      </UFOCard>);
+      <I18n>
+        {
+          (t, { }) => (
+
+            <UFOCard
+              title={t("drive:rentalReference", { rental: rental })}
+              texts={[
+                t("drive:rentalStartAt", { start_at: driveStore.format(rental.start_at, dateFormats.FULL) }),
+                t("drive:rentalEndAt", { end_at: driveStore.format(rental.end_at, dateFormats.FULL) }),
+                t("drive:rentalLocation", { rental: rental })]}
+              imageSource={{ uri: location.image_url }}
+            >
+              <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                <UFOImage source={{ uri: carModel.image_front_url }} style={{ height: 60, width: null, flex: 0.4 }} resizeMode={'contain'} />
+                <View style={{ flex: 0.6, flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start' }}>
+                  <UFOText style={{ flex: 0.5 }}>{t("drive:rentalCar", { rental: rental })}</UFOText>
+                  <View style={{ flex: 0.5, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }}>
+                    <UFOIcon icon={icons.KEY} color={otaKeyStore.key ? otaKeyStore.key.isEnabled ? colors.DONE : colors.ACTIVE : colors.ERROR} size={sizes.SMALL} />
+                    <UFOIcon icon={icons.BLUETOOTH} color={otaKeyStore.isConnected ? colors.DONE : otaKeyStore.isConnecting ? colors.ACTIVE : colors.ERROR} size={sizes.SMALL} />
+                    {otaKeyStore.isConnected && otaKeyStore.vehicleData && (
+                      <UFOIcon icon={otaKeyStore.vehicleData.doorsLocked ? icons.LOCK : icons.UNLOCK} color={otaKeyStore.vehicleData.doorsLocked ? colors.ACTIVE : colors.DONE} size={sizes.SMALL} />
+                    )}
+                    {otaKeyStore.isConnected && otaKeyStore.vehicleData && (
+                      <UFOIcon icon={otaKeyStore.vehicleData.engineRunning ? icons.START : icons.STOP} color={otaKeyStore.vehicleData.engineRunning ? colors.DONE : colors.ACTIVE} size={sizes.SMALL} />
+                    )}
+                  </View>
+                </View>
+              </View>
+            </UFOCard>
+          )
+        }
+      </I18n>
+    )
   }
+
 
   selectRental = async (index) => {
     driveStore.selectRental(index)
@@ -93,52 +107,15 @@ class DriveScreen extends Component {
     driveStore.computeActionFind(actions, () => this.props.navigation.navigate(screens.FIND.name))
     driveStore.computeActionInspect(actions, () => this.props.navigation.navigate(screens.INSPECT.name))
     driveStore.computeActionStartContract(actions, () => this.props.navigation.navigate(screens.RENTAL_AGREEMENT.name))
+    driveStore.computeActionReturn(actions, () => this.props.navigation.navigate(screens.RETURN.name))
 
+    otaKeyStore.computeActionEnableKey(actions, () => otaKeyStore.enableKey(driveStore.rental.key_id))
+    otaKeyStore.computeActionConnect(actions, () => otaKeyStore.connect(true))
+    otaKeyStore.computeActionUnlock(actions, () => otaKeyStore.unlockDoors(true))
+    otaKeyStore.computeActionLock(actions, () => otaKeyStore.lockDoors(true))
+    otaKeyStore.computeActionStart(actions, () => otaKeyStore.enableEngine(true))
+    otaKeyStore.computeActionStop(actions, () => otaKeyStore.disableEngine(true))
 
-    if (driveStore.rental && driveStore.rental.contract_signed) {
-      actions.push(
-        {
-          style: driveStore.rental.ready_for_return ? actionStyles.TODO : actionStyles.DISABLE,
-          icon: icons.RETURN,
-          onPress: () => this.props.navigation.navigate(screens.RETURN.name)
-        }
-      )
-    }
-
-    if (driveStore.rental && driveStore.rental.contract_signed && !driveStore.rental.final_inspection_done) {
-      actionKeys = [
-        {
-          style: actionStyles.ACTIVE,
-          icon: icons.KEY,
-          onPress: () => otaKeyStore.enableKey(driveStore.rental.key_id)
-        },
-        {
-          style: actionStyles.ACTIVE,
-          icon: icons.CONNECT,
-          onPress: () => otaKeyStore.connect(true)
-        },
-        {
-          style: actionStyles.ACTIVE,
-          icon: icons.UNLOCK,
-          onPress: () => otaKeyStore.unlockDoors(true)
-        },
-        {
-          style: actionStyles.ACTIVE,
-          icon: icons.LOCK,
-          onPress: () => otaKeyStore.lockDoors(true)
-        },
-        {
-          style: actionStyles.ACTIVE,
-          icon: icons.START,
-          onPress: () => otaKeyStore.enableEngine(true)
-        },
-        {
-          style: actionStyles.ACTIVE,
-          icon: icons.STOP,
-          onPress: () => otaKeyStore.disableEngine(true)
-        }
-      ]
-    }
     let _RefreshControl = (<RefreshControl refreshing={this.refreshing} onRefresh={this.refreshRental} />)
 
     return (
@@ -153,6 +130,11 @@ class DriveScreen extends Component {
           {!driveStore.rental && (
             <View style={{ paddingHorizontal: DRIVE_PADDING_HORIZONTAL, flex: 1, flexDirection: 'column', justifyContent: 'center', alignContent: 'center' }}>
               <UFOCard title={t('drive:noRentalsTitle')} text={t('drive:noRentalsDescription')} />
+            </View>
+          )}
+          {driveStore.rental && (
+            <View style={{ paddingHorizontal: 30 }}>
+              <UFOCard text={driveStore.rental.message_for_driver} />
             </View>
           )}
         </KeyboardAwareScrollView >

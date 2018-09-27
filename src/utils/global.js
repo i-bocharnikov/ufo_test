@@ -179,7 +179,7 @@ export const icons = {
     SEGMENT_CLOSE: new Icon('arrow-dropright', 'icon: segmentClose'),
     CHAT: new Icon('chatbubbles', 'icon:chat'),
     ADD: new Icon('add', 'icon:add'),
-    SIGN: new Icon('clipboard', 'icon:sign'),
+    SIGN: new Icon('paw', 'icon:sign'),
     BROWSE: new Icon('browsers', 'icon:browse'),
     CLIPBOARD: new Icon('clipboard', 'icon:clipboard'),
 

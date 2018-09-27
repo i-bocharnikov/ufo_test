@@ -73,7 +73,7 @@ class FindScreen extends Component {
         <KeyboardAwareScrollView
           refreshControl={_RefreshControl}
         >
-          <UFOHeader t={t} navigation={navigation} currentScreen={screens.DRIVE} title={t('drive:findTitle', { rental: driveStore.rental })} />
+          <UFOHeader t={t} navigation={navigation} currentScreen={screens.DRIVE} title={t('guide:findTitle', { rental: driveStore.rental })} />
           <View style={{ paddingTop: "20%" }}>
             <UFOSlider data={guides} renderItem={this.renderGuide} onSnapToItem={this.onSnapToItem} />
           </View>

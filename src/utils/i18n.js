@@ -124,11 +124,21 @@ i18n.use(LanguageDetector).init({
             },
             drive: {
                 "driveTitle": "Rental",
+                "rentalReference": "Rental {{rental.reference}} {{rental.status}}",
+                "rentalStartAt": "From {{start_at}}",
+                "rentalEndAt": "Till {{end_at}}",
+                "rentalLocation": "At {{rental.location.name}}",
+                "rentalCar": "{{rental.car.car_model.manufacturer}} {{rental.car.car_model.name}} - {{rental.car.reference}}",
                 "noRentalsTitle": "No rentals",
                 "noRentalsDescription": "After booking, the actions below will be activated and will allow you to find the car, inspect it, start the rental contract and finally lock/unlock the vehicle",
+            },
+            guide: {
                 "findTitle": "Where is the car",
                 "returnTitle": "How to return",
+            },
+            term: {
                 "rentalAgreementTitle": "Sign the agreement",
+                "confirmContractSignatureConfirmationMessage": "By signing, I certify that I have read and fully accepted the terms and conditions."
             },
         },
         fr: {

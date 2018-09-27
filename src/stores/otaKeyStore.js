@@ -2,6 +2,14 @@
 import { NativeModules, DeviceEventEmitter } from 'react-native';
 import { observable, action } from 'mobx';
 import moment from 'moment';
+import { driveStore } from '.';
+import { actionStyles, icons } from '../utils/global';
+
+const RENTAL_STATUS = {
+    CONFIRMED: 'confirmed',
+    ONGOING: 'ongoing',
+    CLOSED: 'closed',
+}
 
 class Vehicle {
     @observable vin: String;
@@ -89,6 +97,35 @@ class OTAKeyStore {
         this.otaLog = date.format("HH:mm:ss:SSS") + message + '\n' + this.otaLog
     }
 
+
+    computeActionEnableKey(actions, onPress) {
+        if (!driveStore.rental || driveStore.rental.status !== RENTAL_STATUS.ONGOING || !driveStore.rental.contract_signed || !driveStore.rental.key_id || (this.key && this.key.isEnabled)) { return }
+        actions.push({ style: this.key && this.key.isEnabled ? actionStyles.DONE : actionStyles.TODO, icon: icons.KEY, onPress: onPress })
+    }
+
+    computeActionConnect(actions, onPress) {
+        if (!driveStore.rental || driveStore.rental.status !== RENTAL_STATUS.ONGOING || !driveStore.rental.contract_signed || !driveStore.rental.key_id || !this.key || !this.key.isEnabled || this.isConnected) { return }
+        actions.push({ style: this.isConnecting ? actionStyles.DISABLE : actionStyles.TODO, icon: icons.CONNECT, onPress: onPress })
+    }
+
+    computeActionUnlock(actions, onPress) {
+        if (!driveStore.rental || driveStore.rental.status !== RENTAL_STATUS.ONGOING || !driveStore.rental.contract_signed || !driveStore.rental.key_id || !this.key || !this.key.isEnabled || !this.isConnected) { return }
+        actions.push({ style: this.isConnected ? actionStyles.ACTIVE : actionStyles.DISABLE, icon: icons.UNLOCK, onPress: onPress })
+    }
+    computeActionLock(actions, onPress) {
+        if (!driveStore.rental || driveStore.rental.status !== RENTAL_STATUS.ONGOING || !driveStore.rental.contract_signed || !driveStore.rental.key_id || !this.key || !this.key.isEnabled || !this.isConnected) { return }
+        actions.push({ style: this.isConnected ? actionStyles.ACTIVE : actionStyles.DISABLE, icon: icons.LOCK, onPress: onPress })
+    }
+    computeActionStart(actions, onPress) {
+        if (!driveStore.rental || driveStore.rental.status !== RENTAL_STATUS.ONGOING || !driveStore.rental.contract_signed || !driveStore.rental.key_id || !this.key || !this.key.isEnabled || !this.isConnected) { return }
+        actions.push({ style: this.isConnected ? actionStyles.ACTIVE : actionStyles.DISABLE, icon: icons.START, onPress: onPress })
+    }
+    computeActionStop(actions, onPress) {
+        if (!driveStore.rental || driveStore.rental.status !== RENTAL_STATUS.ONGOING || !driveStore.rental.contract_signed || !driveStore.rental.key_id || !this.key || !this.key.isEnabled || !this.isConnected) { return }
+        actions.push({ style: this.isConnected ? actionStyles.ACTIVE : actionStyles.DISABLE, icon: icons.STOP, onPress: onPress })
+    }
+
+
     @action
     onOtaVehicleDataUpdated = (otaVehicleData) => {
         try {
@@ -148,11 +185,11 @@ class OTAKeyStore {
             DeviceEventEmitter.addListener('onOtaVehicleDataUpdated', this.onOtaVehicleDataUpdated);
             DeviceEventEmitter.addListener('onOtaActionPerformed', this.onOtaActionPerformed);
             DeviceEventEmitter.addListener('onOtaBluetoothStateChanged', this.onOtaBluetoothStateChanged);
-/*
-            if (this.isConnectedToVehicle()) {
-                this.isConnected = true
-                await this.getVehicleData()
-            }*/
+            /*
+                        if (this.isConnectedToVehicle()) {
+                            this.isConnected = true
+                            await this.getVehicleData()
+                        }*/
 
             this.debug(`<- this.ota.register(${String(this.keyAccessDeviceRegistrationNumber)}) return ${result}`)
             return result

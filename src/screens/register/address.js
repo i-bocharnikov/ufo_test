@@ -112,10 +112,10 @@ class AddressScreen extends Component {
                     fontSize: 16
                   },
                   listView: {
-                    backgroundColor: colors.CARD_BACKGROUND.string(),
+                    backgroundColor: 'transparent',
                   },
                   description: {
-                    color: colors.TEXT.string()
+                    color: colors.DISABLE.string()
                   },
                   poweredContainer: {
                     height: 0,

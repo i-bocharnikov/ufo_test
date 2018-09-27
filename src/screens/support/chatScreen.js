@@ -71,6 +71,8 @@ class ChatScreen extends Component {
       <UFOContainer image={require('../../assets/images/background/UFOBGSUPPORT001.png')}>
         <UFOHeader transparent logo t={t} navigation={navigation} currentScreen={screens.SUPPORT_CHAT} style={{ backgroundColor: 'transparent' }} />
         <KeyboardAwareScrollView
+          enableOnAndroid={true}
+          resetScrollToCoords={{ x: 0, y: 0 }}
           contentContainerStyle={{ flex: 1, paddingBottom: 120 }}
         >
 
