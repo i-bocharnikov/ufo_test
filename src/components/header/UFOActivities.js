@@ -31,8 +31,8 @@ export default class UFOActivities extends React.Component {
 
         return (
             <View style={{
-                top: 0,
-                right: -10,
+                // top: 0,
+                // right: -10,
                 width: 16,
             }}>
                 <UFOIcon size={sizes.SMALL} color={bluetoothColor} icon={icons.BLUETOOTH}></UFOIcon>

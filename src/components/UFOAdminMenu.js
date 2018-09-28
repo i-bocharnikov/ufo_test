@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { observer } from "mobx-react";
 
-import { View, TouchableOpacity, StyleSheet, ScrollView } from 'react-native'
+import { View, StyleSheet, ScrollView } from 'react-native'
+import Touchable from 'react-native-platform-touchable';
 import otaKeyStore from '../stores/otaKeyStore'
 import { UFOText } from './common'
 
@@ -29,13 +30,13 @@ class UFOAdminMenu extends Component {
 
     renderMenuItem(text, onPress) {
         return (
-            <TouchableOpacity
+            <Touchable
                 key={text}
                 onPress={onPress}
                 style={styles.menuItem}
             >
                 <UFOText inverted style={styles.menuItemText}>{text}</UFOText>
-            </TouchableOpacity>
+            </Touchable>
         );
     }
 
@@ -46,10 +47,10 @@ class UFOAdminMenu extends Component {
 
         if (!this.state.isVisible) {
             return (
-                <TouchableOpacity
+                <Touchable
                     style={styles.circle}
                     onPress={this.showDeveloperMenu}
-                />
+                ><View /></Touchable>
             );
         }
 

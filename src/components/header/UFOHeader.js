@@ -4,8 +4,8 @@ import { Header, Left, Right, Body, View } from 'native-base';
 import UFOActivities from "./UFOActivities"
 import UFOLogo from "./UFOLogo"
 import { UFOText } from '../common'
-import { colors, icons, actionStyles, screens, navigationParams } from '../../utils/global'
-import UFOActionHeader from './UFOActionHeader'
+import { colors, icons, actionStyles, screens, navigationParams, sizes } from '../../utils/global'
+import UFOAction from "../UFOAction";
 
 const SUPPORT_FAQ_CATEGORY = navigationParams.SUPPORT_FAQ_CATEGORY
 const PREVIOUS_SCREEN = navigationParams.PREVIOUS_SCREEN
@@ -21,12 +21,17 @@ export default class UFOHeader extends React.Component {
         let t = this.props.t
         let left = (
             <View style={{
+                flex: 1,
+                flexDirection: 'row',
                 alignItems: 'center',
-                justifyContent: 'center',
-                height: 50,
-                width: 50,
+                justifyContent: 'flex-start',
             }}>
-                <UFOActionHeader icon={icons.HOME} actionStyle={actionStyles.ACTIVE} onPress={this.props.navigation ? this.goToHome : this.missing} />
+                <UFOAction action={{
+                    style: actionStyles.ACTIVE,
+                    icon: icons.HOME,
+                    onPress: this.goToHome
+
+                }} size={sizes.SMALL} noText />
             </View >)
         let title = this.props.title ? (<UFOText inverted h3>{this.props.title}</UFOText>) : null
         let subTitle = this.props.subTitle ? (<UFOText inverted h4>{this.props.subTitle}</UFOText>) : null
@@ -35,18 +40,24 @@ export default class UFOHeader extends React.Component {
         let currentScreen = this.props.currentScreen ? this.props.currentScreen : screens.HOME
 
         let isSupport = currentScreen.supportFaqCategory !== null
+
         let right = (
             <View style={{
-                flexDirection: 'row',
+                flex: 1,
+                flexDirection: 'row-reverse',
                 alignItems: 'center',
-                justifyContent: 'center',
-                height: 50,
-                width: 50,
+                justifyContent: 'flex-start',
             }}>
+                <UFOActivities style={{ flex: 0.1 }} t={t} />
                 {(isSupport &&
-                    <UFOActionHeader icon={icons.HELP} actionStyle={actionStyles.TODO} onPress={this.props.navigation ? () => this.goToSupport(currentScreen) : this.missing} />
+                    <UFOAction action={{
+                        style: actionStyles.TODO,
+                        icon: icons.HELP,
+                        onPress: () => this.goToSupport(currentScreen)
+
+                    }} size={sizes.SMALL} noText style={{ flex: 0.1 }} />
                 )}
-                <UFOActivities t={t} />
+                <View style={{ flex: 0.8 }} />
             </View>
         )
         return (

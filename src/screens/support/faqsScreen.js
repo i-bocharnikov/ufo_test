@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { translate } from "react-i18next";
 import { NavigationEvents } from 'react-navigation';
-import { View, TouchableOpacity } from 'react-native'
+import { View } from 'react-native'
+import Touchable from 'react-native-platform-touchable';
 import { observer } from "mobx-react";
 import { observable } from "mobx";
 import { KeyboardAwareSectionList } from "react-native-keyboard-aware-scroll-view";
@@ -70,27 +71,27 @@ class SupportFaqsScreen extends Component {
 
   renderSection = ({ section: { reference, name, isOpen } }) => (
     <View style={{ paddingHorizontal: 20, paddingVertical: 10, flexDirection: 'column', justifyContent: 'center', alignContent: 'center' }}>
-      <TouchableOpacity
+      <Touchable
         key={reference}
         onPress={() => this.onPressSection(reference)}>
         <View style={{ padding: 10, flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center', backgroundColor: colors.ACTIVE.string(), borderRadius: 5 }}>
           <UFOText h3 inverted>{name}</UFOText>
           <UFOIcon icon={isOpen ? icons.SEGMENT_OPEN : icons.SEGMENT_CLOSE} size={sizes.SMALL} />
         </View>
-      </TouchableOpacity >
+      </Touchable >
     </View>
   )
 
   renderItem = ({ item: { reference, title }, index, section }) => (
     <View style={{ paddingHorizontal: 20, }}>
-      <TouchableOpacity
+      <Touchable
         key={reference}
         onPress={() => this.onPressItem(section.reference, reference)}>
         <View style={{ backgroundColor: colors.CARD_BACKGROUND.string(), paddingHorizontal: 10, paddingVertical: 5, flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center', }}>
           <UFOText style={{ flex: 0.95 }}>{title}</UFOText>
           <UFOIcon style={{ flex: 0.05 }} inverted icon={icons.NEXT} size={sizes.SMALL} />
         </View>
-      </TouchableOpacity >
+      </Touchable >
     </View>
   )
 

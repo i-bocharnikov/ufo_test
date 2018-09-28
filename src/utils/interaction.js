@@ -1,6 +1,6 @@
 
 import { Toast } from 'native-base';
-import { Alert } from 'react-native';
+import { Alert, Vibration } from 'react-native';
 
 export async function confirm(title, message, action) {
     await Alert.alert(
@@ -15,6 +15,7 @@ export async function confirm(title, message, action) {
 }
 
 export function showError(message) {
+    Vibration.vibrate()
     Toast.show({
         text: message,
         buttonText: 'Ok',
