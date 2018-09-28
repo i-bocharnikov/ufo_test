@@ -8,6 +8,7 @@ i18n.use(LanguageDetector).init({
             activities: {
                 "internetAccessFailure": "Unexpected internet connectivity issues. Operating in offline/degraded mode",
                 "bluetoothAccessFailure": "Unexpected bluetooth connectivity issues. Operating in offline/degraded mode",
+                "internetbluetoothAccessFailure": "Unexpected internet and bluetooth connectivity issues. Operating in offline/degraded mode",
             },
             home: {
                 "welcome": "Hello, follow those steps and enjoy the drive",
@@ -19,6 +20,11 @@ i18n.use(LanguageDetector).init({
                 "confirmationTitle": "Confirmation needed",
                 "confirmationOk": "OK",
                 "confirmationCancel": "Cancel",
+            },
+            error: {
+                "internetConnectionRequired": "This operation requires a internet connection",
+                "bluetoothConnectionRequired": "This operation requires a blootooth connection",
+                "unexpectedServerResponse": "Oops, this was not supposed to happen. Please apologise us for the inconvenience",
             },
             icon: {
                 "reserve": "Reserve",

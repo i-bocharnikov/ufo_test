@@ -1,6 +1,6 @@
 import axios from "axios";
 import configurations from "../utils/configurations"
-import { errors } from '../utils/global'
+import { errors, UFOError } from '../utils/global'
 import activitiesStore from '../stores/activitiesStore'
 import { showError } from './interaction'
 import RNFetchBlob from 'rn-fetch-blob'
@@ -177,14 +177,19 @@ function handleError(error, suppressToastBox) {
     let ufoError = formatApiError(error);
     console.debug("api.get error.stack: ", error);
     if (!suppressToastBox) {
-        showError(ufoError.message)
+        showError(ufoError.key, ufoError.message)
     }
 }
 
 
 function formatApiError(error) {
-    let key = "api";
+
+    if (error instanceof UFOError) {
+        return { key: error.i18nKey, message: error.i18nValue };
+    }
+    let key = "error:api";
     let message = error.message;
+
     if (
         error.response &&
         error.response.data &&
@@ -195,5 +200,10 @@ function formatApiError(error) {
         key = error.response.data.status ? error.response.data.status : "api";
 
     }
-    return { code: key, message: message };
+
+    if (message === 'Network Error') {
+        return { key: 'error:internetConnectionRequired', message: message };
+    }
+
+    return { key: key, message: message };
 };

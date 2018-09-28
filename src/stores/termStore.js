@@ -23,6 +23,8 @@ export default class termStore {
     @action
     async getRentalAgreement() {
 
+        if (!driveStore.rental) return false
+
         const response = await getFromApi("/terms/" + driveStore.rental.reference);
         if (response && response.status === "success") {
             if (DEBUG)
@@ -35,6 +37,8 @@ export default class termStore {
 
     @action
     async signRentalAgreement() {
+
+        if (!driveStore.rental) return false
 
         let body = {
             term: this.term,

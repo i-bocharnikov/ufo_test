@@ -14,8 +14,9 @@ export async function confirm(title, message, action) {
     )
 }
 
-export function showError(message) {
+export function showError(key, message) {
     Vibration.vibrate()
+    //TODO TRANSLATION with key
     Toast.show({
         text: message,
         buttonText: 'Ok',

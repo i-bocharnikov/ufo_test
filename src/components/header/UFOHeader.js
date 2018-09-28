@@ -1,5 +1,7 @@
 import React from "react";
-import { Header, Left, Right, Body, View } from 'native-base';
+import { View, StyleSheet } from 'react-native';
+import { Header, Left, Right, Body } from 'native-base';
+import { observer } from "mobx-react";
 
 import UFOActivities from "./UFOActivities"
 import UFOLogo from "./UFOLogo"
@@ -10,6 +12,7 @@ import UFOAction from "../UFOAction";
 const SUPPORT_FAQ_CATEGORY = navigationParams.SUPPORT_FAQ_CATEGORY
 const PREVIOUS_SCREEN = navigationParams.PREVIOUS_SCREEN
 
+@observer
 export default class UFOHeader extends React.Component {
 
     missing = () => console.log('Missing action method')
@@ -20,12 +23,7 @@ export default class UFOHeader extends React.Component {
 
         let t = this.props.t
         let left = (
-            <View style={{
-                flex: 1,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'flex-start',
-            }}>
+            <View style={styles.left}>
                 <UFOAction action={{
                     style: actionStyles.ACTIVE,
                     icon: icons.HOME,
@@ -42,12 +40,7 @@ export default class UFOHeader extends React.Component {
         let isSupport = currentScreen.supportFaqCategory !== null
 
         let right = (
-            <View style={{
-                flex: 1,
-                flexDirection: 'row-reverse',
-                alignItems: 'center',
-                justifyContent: 'flex-start',
-            }}>
+            <View style={styles.right}>
                 <UFOActivities style={{ flex: 0.1 }} t={t} />
                 {(isSupport &&
                     <UFOAction action={{
@@ -60,16 +53,60 @@ export default class UFOHeader extends React.Component {
                 <View style={{ flex: 0.8 }} />
             </View>
         )
+
+
+        let activities = activitiesStore.activities
+        let activitiesMessage = null
+        if (activities.internetAccessFailure && activities.bluetoothAccessFailure) {
+            activitiesMessage = t('activities:internetbluetoothAccessFailure')
+        } else if (activities.internetAccessFailure) {
+            activitiesMessage = t('activities:internetAccessFailure')
+        } else if (activities.bluetoothAccessFailure) {
+            activitiesMessage = t('activities:bluetoothAccessFailure')
+        }
+
         return (
-            <Header style={{ backgroundColor: colors.HEADER_BACKGROUND.alpha(alpha).string() }} noShadow>
-                <Left >{left}</Left>
-                <Body >
-                    {title}
-                    {subTitle}
-                    {logo}
-                </Body>
-                <Right >{right}</Right>
-            </Header>
+            <View style={styles.headerContainer}>
+                {activitiesMessage && (
+                    <View style={styles.activityMessages}>
+                        <UFOText h10 inverted center>{activitiesMessage}</UFOText>
+                    </View>
+                )}
+                <Header style={{ width: "100%", backgroundColor: colors.HEADER_BACKGROUND.alpha(alpha).string() }} noShadow>
+                    <Left >{left}</Left>
+                    <Body >
+                        {title}
+                        {subTitle}
+                        {logo}
+                    </Body>
+                    <Right >{right}</Right>
+                </Header>
+            </View>
         );
     }
 }
+
+const styles = StyleSheet.create({
+    left: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+    },
+    right: {
+        flex: 1,
+        flexDirection: 'row-reverse',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+    },
+    headerContainer: {
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+    },
+    activityMessages: {
+        backgroundColor: colors.ERROR.string(),
+        height: 15,
+        width: "100%",
+    }
+});

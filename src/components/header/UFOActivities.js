@@ -10,19 +10,6 @@ import activitiesStore from '../../stores/activitiesStore'
 @observer
 export default class UFOActivities extends React.Component {
 
-
-    componentDidMount() {
-
-        let activities = activitiesStore.activities
-        let t = this.props.t
-        if (activities.internetAccessFailure) {
-            showActivitiesState(t('activities:internetAccessFailure'))
-        }
-        if (activities.bluetoothAccessFailure) {
-            showActivitiesState(t('activities:bluetoothAccessFailure'))
-        }
-    }
-
     render() {
 
         let activities = activitiesStore.activities

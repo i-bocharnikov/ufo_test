@@ -32,6 +32,8 @@ export default class InspectStore {
     @action
     async listCarDamages() {
 
+        if (!driveStore.rental) return false
+
         const response = await getFromApi("/car_damages/" + driveStore.rental.reference);
         if (response && response.status === "success") {
             if (DEBUG)
@@ -44,6 +46,8 @@ export default class InspectStore {
 
     @action
     async addCarDamage() {
+
+        if (!driveStore.rental) return false
 
         let body = {
             car_reference: driveStore.rental.car.reference,
@@ -83,6 +87,9 @@ export default class InspectStore {
 
     @action
     async confirmInitialInspection(t) {
+
+        if (!driveStore.rental) return false
+
         const response = await putToApi("/rentals/" + driveStore.rental.reference, { action: 'initial_inspection_done' });
         if (response && response.status === "success") {
             if (DEBUG)

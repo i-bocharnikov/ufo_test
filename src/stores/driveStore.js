@@ -103,7 +103,6 @@ export default class DriveStore {
         if (this.index < 0 || this.index >= this.rentals.length) {
             return null
         }
-        console.log("**************************getRental", this.index, this.rentals[this.index].reference)
         return this.rentals[this.index]
     }
 
@@ -128,16 +127,16 @@ export default class DriveStore {
 
 
     computeActionFind(actions, onPress) {
-        if (!this.rental || this.rental.status !== RENTAL_STATUS.ONGOING || this.rental.contract_signed) { return }
+        if (!this.rental || (this.rental.status !== RENTAL_STATUS.ONGOING && this.rental.status !== RENTAL_STATUS.CONFIRMED) || this.rental.contract_signed) { return }
         actions.push({ style: this.rental.car_found || this.rental.initial_inspection_done ? actionStyles.ACTIVE : actionStyles.DONE, icon: icons.FIND, onPress: onPress })
     }
     computeActionInspect(actions, onPress) {
-        if (!this.rental || this.rental.status !== RENTAL_STATUS.ONGOING || this.rental.contract_signed) { return }
-        actions.push({ style: this.rental.initial_inspection_done ? actionStyles.DISABLE : actionStyles.TODO, icon: icons.INSPECT, onPress: onPress })
+        if (!this.rental || (this.rental.status !== RENTAL_STATUS.ONGOING && this.rental.status !== RENTAL_STATUS.CONFIRMED) || this.rental.contract_signed) { return }
+        actions.push({ style: !this.rental.rental_can_begin ? actionStyles.DISABLE : this.rental.initial_inspection_done ? actionStyles.DISABLE : actionStyles.TODO, icon: icons.INSPECT, onPress: onPress })
     }
     computeActionStartContract(actions, onPress) {
-        if (!this.rental || this.rental.status !== RENTAL_STATUS.ONGOING || this.rental.contract_signed) { return }
-        actions.push({ style: this.rental.initial_inspection_done ? this.rental.contract_signed ? actionStyles.DONE : actionStyles.TODO : actionStyles.DISABLE, icon: icons.RENTAL_AGREEMENT, onPress: onPress })
+        if (!this.rental || (this.rental.status !== RENTAL_STATUS.ONGOING && this.rental.status !== RENTAL_STATUS.CONFIRMED) || this.rental.contract_signed) { return }
+        actions.push({ style: !this.rental.rental_can_begin ? actionStyles.DISABLE : this.rental.initial_inspection_done ? this.rental.contract_signed ? actionStyles.DONE : actionStyles.TODO : actionStyles.DISABLE, icon: icons.RENTAL_AGREEMENT, onPress: onPress })
     }
     computeActionReturn(actions, onPress) {
         if (!this.rental || this.rental.status !== RENTAL_STATUS.ONGOING || !this.rental.contract_signed) { return }
@@ -161,7 +160,6 @@ export default class DriveStore {
         if (index < 0 || index >= this.rentals.length) {
             return false
         }
-        console.log("*****************************setRentalIndex", index)
         this.index = index
         return true
     }
@@ -196,6 +194,8 @@ export default class DriveStore {
     @action
     async refreshRental() {
 
+        if (!this.rental) return false
+
         const response = await getFromApi("/rentals/" + this.rental.reference);
         if (response && response.status === "success") {
             if (DEBUG)
@@ -209,6 +209,8 @@ export default class DriveStore {
     @action
     async carFound() {
 
+        if (!this.rental) return false
+
         const response = await putToApi("/rentals/" + this.rental.reference, { action: "car_found" });
         if (response && response.status === "success") {
             if (DEBUG)
@@ -221,6 +223,8 @@ export default class DriveStore {
 
     @action
     async closeRental() {
+
+        if (!this.rental) return false
 
         const response = await putToApi("/rentals/" + this.rental.reference, { action: "contract_ended" });
         if (response && response.status === "success") {

@@ -7,7 +7,6 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 
 import com.facebook.react.ReactApplication;
-import com.hieuvp.fingerprint.ReactNativeFingerprintScannerPackage;
 import com.masteratul.exceptionhandler.ReactNativeExceptionHandlerPackage;
 import br.com.classapp.RNSensitiveInfo.RNSensitiveInfoPackage;
 import com.dylanvann.fastimage.FastImageViewPackage;
@@ -39,7 +38,6 @@ public class MainApplication extends OtaKeysApplication implements ReactApplicat
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new ReactNativeFingerprintScannerPackage(),
             new ReactNativeExceptionHandlerPackage(),
             new RNSensitiveInfoPackage(),
             new FastImageViewPackage(),

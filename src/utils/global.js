@@ -201,7 +201,7 @@ export const icons = {
     WRONG: new Icon('bonfire', 'icon:wrong')
 }
 
-class UFOError extends Error {
+export class UFOError extends Error {
 
     constructor(i18nKey) {
         super(i18nKey)
