@@ -38,6 +38,8 @@ class IdentificationScreen extends Component {
   @observable captureState = null // state 0 = capture front; 1 = capture back; 2 = validate front & back
   @observable frontImageUrl = null
   @observable backImageUrl = null
+  @observable activityPending = false
+
 
   @action
   doCancel = async (isInWizzard) => {
@@ -58,7 +60,7 @@ class IdentificationScreen extends Component {
       showWarning(t("Registration:CameraNotAvailable"))
       return
     }
-
+    this.activityPending = true
     const options = { quality: 1, base64: true };
     //Take photo
     let fullImage = await this.camera.takePictureAsync(options)
@@ -74,16 +76,24 @@ class IdentificationScreen extends Component {
       if (this.captureState === captureStates.CAPTURE_FRONT) {
         this.frontImageUrl = url
         this.captureState = captureStates.CAPTURE_BACK
+        this.activityPending = false
+
         return
       }
       if (this.captureState === captureStates.CAPTURE_BACK) {
         this.backImageUrl = url
         this.captureState = captureStates.VALIDATE
+        this.activityPending = false
+
         return
       }
-    }, error =>
-        showWarning(t("Registration:CameraProcessingError", { message: error.message }))
+    }, error => {
+      this.activityPending = false
+      showWarning(t("Registration:CameraProcessingError", { message: error.message }))
+    }
     )
+
+
   }
 
   @action
@@ -94,6 +104,8 @@ class IdentificationScreen extends Component {
 
   @action
   doSave = async (t, isInWizzard) => {
+    this.activityPending = true
+
     let type = this.frontImageUrl && this.backImageUrl ? "two_side" : "one_side"
     if (this.frontImageUrl) {
       let document = await registerStore.uploadDocument("identification", type, "id", "front_side", this.frontImageUrl)
@@ -110,9 +122,11 @@ class IdentificationScreen extends Component {
     if (await registerStore.save()) {
       if (isInWizzard) {
         this.props.navigation.navigate(screens.REGISTER_DRIVER_LICENCE.name, { 'isInWizzard': isInWizzard })
+        this.activityPending = false
         return
       } else {
         this.props.navigation.popToTop()
+        this.activityPending = false
         return
       }
     }
@@ -163,15 +177,15 @@ class IdentificationScreen extends Component {
       )
     }
 
-    if (this.captureState === captureStates.CAPTURE_BACK) {
-
-      actions.push({
-        style: actionStyles.ACTIVE,
-        icon: icons.SKIP,
-        onPress: () => this.doskip(isInWizzard)
-      })
-    }
-
+    /*  if (this.captureState === captureStates.CAPTURE_BACK) {
+ 
+       actions.push({
+         style: actionStyles.ACTIVE,
+         icon: icons.SKIP,
+         onPress: () => this.doskip(isInWizzard)
+       })
+     }
+  */
     if (this.captureState === captureStates.CAPTURE_FRONT || this.captureState === captureStates.CAPTURE_BACK) {
 
       actions.push({
@@ -238,7 +252,7 @@ class IdentificationScreen extends Component {
             <View style={{ height: 100 }}></View>
           </KeyboardAwareScrollView >
         )}
-        <UFOActionBar actions={actions} />
+        <UFOActionBar actions={actions} activityPending={this.activityPending} />
       </UFOContainer >
 
     );

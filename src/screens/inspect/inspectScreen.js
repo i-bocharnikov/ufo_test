@@ -27,6 +27,8 @@ class InspectScreen extends Component {
   @observable damageIndex = 0
   @observable isReady = false
   @observable refreshing = false
+  @observable activityPending = false
+
 
   componentDidMount() {
     this.refresh()
@@ -128,7 +130,7 @@ class InspectScreen extends Component {
       <UFOContainer image={require('../../assets/images/background/UFOBGINSPECT001.png')}>
         <UFOHeader transparent t={t} navigation={navigation} currentScreen={screens.INSPECT} title={t('inspect:inspectTitle', { rental: driveStore.rental })} subTitle={driveStore.rental.car.reference} />
         {this.renderBody(t)}
-        <UFOActionBar actions={actions} />
+        <UFOActionBar actions={actions} activityPending={this.activityPending} />
       </UFOContainer >
     );
   }

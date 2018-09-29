@@ -85,7 +85,7 @@ class EmailScreen extends Component {
           resetScrollToCoords={{ x: 0, y: 0 }}>
           <View style={{ paddingTop: "20%", paddingHorizontal: 10, flex: 0.80, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
             <UFOCard title={t('register:emailInputLabel')}>
-              <UFOTextInput autoFocus defaultValue={registerStore.user.email} placeholder='john.doe@gmail.com' onChangeText={(text) => this.emailValue = text} />
+              <UFOTextInput autoFocus keyboardType='email-address' defaultValue={registerStore.user.email} placeholder='john.doe@gmail.com' onChangeText={(text) => this.emailValue = text} />
             </UFOCard>
           </View>
         </KeyboardAwareScrollView>

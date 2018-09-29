@@ -24,6 +24,7 @@ const DEVICE_HEIGHT = window.height
 class CaptureDamageScreen extends Component {
 
   @observable documentUri = null
+  @observable activityPending = false
 
   componentDidMount() {
     this.documentUri = null
@@ -36,22 +37,25 @@ class CaptureDamageScreen extends Component {
       showWarning(t("Registration:CameraNotAvailable"))
       return
     }
-
+    this.activityPending = true
     const options = { quality: 1, base64: true, fixOrientation: true, doNotSave: true };
     //Take photo
     let fullImage = await this.camera.takePictureAsync(options)
     const { uri, width, height } = fullImage;
     this.documentUri = uri
+    this.activityPending = false
   }
 
   @action
   doSave = async (t) => {
+    this.activityPending = true
     if (this.documentUri) {
       inspectStore.documentUri = this.documentUri
       if (await inspectStore.uploadDamageDocument()) {
         this.props.navigation.navigate(screens.INSPECT_COMMENT.name)
       }
     }
+    this.activityPending = false
   }
 
   renderBody = (t, navigation) => {
@@ -131,7 +135,7 @@ class CaptureDamageScreen extends Component {
     return (
       <UFOContainer image={require('../../assets/images/background/UFOBGINSPECT001.png')}>
         {this.renderBody(t, navigation)}
-        <UFOActionBar actions={actions} />
+        <UFOActionBar actions={actions} activityPending={this.activityPending} />
       </UFOContainer >
     );
   }

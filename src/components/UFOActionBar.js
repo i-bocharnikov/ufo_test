@@ -1,8 +1,9 @@
 import React from "react";
-import { View, StyleSheet, Keyboard, Animated } from 'react-native';
+import { View, StyleSheet, Keyboard, Animated, ProgressBarAndroid, Dimensions } from 'react-native';
 import { translate } from "react-i18next";
 
 import UFOAction from "./UFOAction";
+import { colors } from "../utils/global";
 
 const ACTION_BAR_HEIGTH = 90
 
@@ -73,6 +74,9 @@ class UFOActionBar extends React.Component {
                         <UFOAction action={action} key={index} activityPending={activityPending} inverted={inverted} />
                     ))}
                 </View>
+                {activityPending && (
+                    <ProgressBarAndroid style={styles.progressBar} styleAttr="Horizontal" color={colors.ACTIVE.string()} />
+                )}
             </Animated.View>
         );
     }
@@ -84,14 +88,18 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         height: ACTION_BAR_HEIGTH,
-        backgroundColor: 'transparent'
+        backgroundColor: 'transparent',
+        justifyContent: 'flex-start',
     },
     actionBar: {
-        flex: 1,
+        flex: 0.75,
         flexDirection: 'row',
         justifyContent: 'space-evenly',
-        alignItems: 'flex-start'
+        alignItems: 'flex-start',
     },
+    progressBar: {
+
+    }
 });
 
 export default translate("translations")(UFOActionBar);

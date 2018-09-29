@@ -37,6 +37,7 @@ class DriverLicenceScreen extends Component {
   @observable captureState = null // state 0 = capture front; 1 = capture back; 2 = validate front & back
   @observable frontImageUrl = null
   @observable backImageUrl = null
+  @observable activityPending = false
 
   @action
   doCancel = async (isInWizzard) => {
@@ -57,7 +58,7 @@ class DriverLicenceScreen extends Component {
       showWarning(t("Registration:CameraNotAvailable"))
       return
     }
-
+    this.activityPending = true
     const options = { quality: 1, base64: true };
     //Take photo
     let fullImage = await this.camera.takePictureAsync(options)
@@ -73,15 +74,19 @@ class DriverLicenceScreen extends Component {
       if (this.captureState === captureStates.CAPTURE_FRONT) {
         this.frontImageUrl = url
         this.captureState = captureStates.CAPTURE_BACK
+        this.activityPending = false
         return
       }
       if (this.captureState === captureStates.CAPTURE_BACK) {
         this.backImageUrl = url
         this.captureState = captureStates.VALIDATE
+        this.activityPending = false
         return
       }
-    }, error =>
-        showWarning(t("Registration:CameraProcessingError", { message: error.message }))
+    }, error => {
+      this.activityPending = false
+      showWarning(t("Registration:CameraProcessingError", { message: error.message }))
+    }
     )
   }
 
@@ -93,6 +98,7 @@ class DriverLicenceScreen extends Component {
 
   @action
   doSave = async (t, isInWizzard) => {
+    this.activityPending = true
     let type = this.frontImageUrl && this.backImageUrl ? "two_side" : "one_side"
     if (this.frontImageUrl) {
       let document = await registerStore.uploadDocument("driver_licence", type, "driver_licence", "front_side", this.frontImageUrl)
@@ -108,8 +114,11 @@ class DriverLicenceScreen extends Component {
     }
     if (await registerStore.save()) {
       this.props.navigation.popToTop()
+      this.activityPending = false
       return
     }
+    this.activityPending = false
+
   }
 
   render() {
@@ -156,15 +165,15 @@ class DriverLicenceScreen extends Component {
         }
       )
     }
-
-    if (this.captureState === captureStates.CAPTURE_BACK) {
-
-      actions.push({
-        style: actionStyles.ACTIVE,
-        icon: icons.SKIP,
-        onPress: () => this.doskip(isInWizzard)
-      })
-    }
+    /* 
+        if (this.captureState === captureStates.CAPTURE_BACK) {
+    
+          actions.push({
+            style: actionStyles.ACTIVE,
+            icon: icons.SKIP,
+            onPress: () => this.doskip(isInWizzard)
+          })
+        } */
 
     if (this.captureState === captureStates.CAPTURE_FRONT || this.captureState === captureStates.CAPTURE_BACK) {
 
@@ -232,7 +241,7 @@ class DriverLicenceScreen extends Component {
             <View style={{ height: 100 }}></View>
           </KeyboardAwareScrollView >
         )}
-        <UFOActionBar actions={actions} />
+        <UFOActionBar actions={actions} activityPending={this.activityPending} />
       </UFOContainer >
 
     );

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { observer } from 'mobx-react';
 import { observable, action } from 'mobx';
 import { translate } from "react-i18next";
-import { StyleSheet, View, ActivityIndicator } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import PhoneInput from 'react-native-phone-input';
 import CountryPicker from 'react-native-country-picker-modal';
 import DeviceInfo from 'react-native-device-info'
@@ -133,9 +133,6 @@ class PhoneScreen extends Component {
           enableOnAndroid={true}
           resetScrollToCoords={{ x: 0, y: 0 }}>
           <View style={{ paddingTop: "20%", paddingHorizontal: 10, flex: 0.80, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
-            {this.activityPending && (
-              <ActivityIndicator style={styles.centered} size="large" color={colors.ACTIVE} />
-            )}
             {!this.activityPending && registerStore.isConnected && (
               <UFOCard title={t('register:phoneNumberInputLabel')}>
                 <UFOTextInput defaultValue={registerStore.user.phone_number} editable={false} />
@@ -175,6 +172,7 @@ class PhoneScreen extends Component {
                 </CountryPicker>
               </UFOCard >
             )}
+
           </View>
         </KeyboardAwareScrollView>
         <UFOActionBar actions={actions} activityPending={this.activityPending} />
@@ -208,10 +206,6 @@ const styles = StyleSheet.create({
     color: colors.HEADER_TEXT.string(),
     borderBottomWidth: 1,
     borderColor: colors.HEADER_TEXT.string()
-  },
-  centered: {
-    flex: 1,
-    alignSelf: 'center'
   }
 });
 

@@ -39,7 +39,9 @@ export default class UFOTextInput extends React.Component {
         let multiline = this.props.multiline ? this.props.multiline : false
         let editable = this.props.editable === false ? false : true
         let defaultValue = this.props.defaultValue ? this.props.defaultValue : ""
-        let autoFocus = this.props.autoFocus
+        let autoFocus = this.props.autoFocus ? this.props.autoFocus : false
+        let autoCorrect = this.props.autoCorrect ? this.props.autoCorrect : false
+        let autoCapitalize = this.props.autoCorrect ? 'sentences' : 'none'
         let maxLength = this.props.maxLength
         let keyboardType = this.props.keyboardType ? this.props.keyboardType : 'default'
         let placeholder = this.props.placeholder ? this.props.placeholder : "..."
@@ -61,6 +63,8 @@ export default class UFOTextInput extends React.Component {
                     multiline={multiline}
                     editable={editable}
                     underlineColorAndroid={colors.ACTIVE.string()}
+                    autoCorrect={autoCorrect}
+                    autoCapitalize={autoCapitalize}
                     onSubmitEditing={Keyboard.dismiss}>
                     {this.props.children}
                 </TextInput>

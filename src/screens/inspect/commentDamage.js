@@ -49,7 +49,7 @@ class CommentDamageScreen extends Component {
             </UFOImage>
           </View>
           <View style={{ paddingTop: 10 }} >
-            <UFOTextInput value={this.comment} placeholder={t('inspect:commentPlaceholder')} multiline={true} numberOfLines={4} onChangeText={(text) => this.comment = text} />
+            <UFOTextInput autofocus value={this.comment} autoCorrect={true} placeholder={t('inspect:commentPlaceholder')} multiline={true} numberOfLines={4} onChangeText={(text) => this.comment = text} />
           </View>
         </View>
       </UFOCard>
