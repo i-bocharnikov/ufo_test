@@ -56,7 +56,6 @@ class HomeScreen extends React.Component {
           <UFOHeader transparent logo t={t} navigation={navigation} currentScreen={screens.HOME} />
           <View style={{ flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
             <View style={{ paddingTop: '10%', paddingLeft: '10%', paddingRight: '10%' }} >
-              <UFOText h1 inverted center style={{ paddingTop: 10 }}>{t('home:welcome', { user: registerStore.user })}</UFOText>
               <UFOText h2 inverted center style={{ paddingTop: 10 }}>{t('home:reserve', { user: registerStore.user })}</UFOText>
               <UFOText h2 inverted center style={{ paddingTop: 5 }}>{t('home:register', { user: registerStore.user })}</UFOText>
               <UFOText h2 inverted center style={{ paddingTop: 5 }}>{t('home:drive', { user: registerStore.user })}</UFOText>

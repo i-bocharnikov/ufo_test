@@ -57,7 +57,7 @@ class DriveScreen extends Component {
               imageSource={{ uri: location.image_url }}
             >
               <Left>
-                <UFOImage source={{ uri: carModel.image_front_url }} style={{ width: 150, height: 75 }} resizeMode={'contain'} />
+                <UFOImage source={{ uri: carModel.image_front_url }} style={{ width: 100, height: 50 }} resizeMode={'contain'} />
               </Left>
               <Body>
                 <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start' }}>
@@ -66,16 +66,16 @@ class DriveScreen extends Component {
                   <View style={{ flex: 0.3, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }}>
 
                     {driveStore.rental.key_id && (
-                      <UFOIcon icon={icons.KEY} color={otaKeyStore.key ? otaKeyStore.key.isEnabled ? colors.DONE : colors.ACTIVE : colors.ERROR} size={sizes.SMALL} />
+                      <UFOIcon icon={icons.KEY} color={otaKeyStore.key ? otaKeyStore.key.isEnabled ? colors.SUCCES : colors.ACTIVE : colors.ERROR} size={sizes.SMALL} />
                     )}
                     {driveStore.rental.key_id && (
-                      <UFOIcon icon={icons.BLUETOOTH} color={otaKeyStore.isConnected ? colors.DONE : otaKeyStore.isConnecting ? colors.ACTIVE : colors.ERROR} size={sizes.SMALL} />
+                      <UFOIcon icon={icons.BLUETOOTH} color={otaKeyStore.isConnected ? colors.SUCCES : otaKeyStore.isConnecting ? colors.ACTIVE : colors.ERROR} size={sizes.SMALL} />
                     )}
                     {otaKeyStore.isConnected && otaKeyStore.vehicleData && (
-                      <UFOIcon icon={otaKeyStore.vehicleData.doorsLocked ? icons.LOCK : icons.UNLOCK} color={otaKeyStore.vehicleData.doorsLocked ? colors.ACTIVE : colors.DONE} size={sizes.SMALL} />
+                      <UFOIcon icon={otaKeyStore.vehicleData.doorsLocked ? icons.LOCK : icons.UNLOCK} color={otaKeyStore.vehicleData.doorsLocked ? colors.ACTIVE : colors.SUCCES} size={sizes.SMALL} />
                     )}
                     {otaKeyStore.isConnected && otaKeyStore.vehicleData && (
-                      <UFOIcon icon={otaKeyStore.vehicleData.engineRunning ? icons.START : icons.STOP} color={otaKeyStore.vehicleData.engineRunning ? colors.DONE : colors.ACTIVE} size={sizes.SMALL} />
+                      <UFOIcon icon={otaKeyStore.vehicleData.engineRunning ? icons.START : icons.STOP} color={otaKeyStore.vehicleData.engineRunning ? colors.SUCCES : colors.ACTIVE} size={sizes.SMALL} />
                     )}
                   </View>
                 </View>
@@ -96,16 +96,7 @@ class DriveScreen extends Component {
     driveStore.refreshRental()
   }
 
-  doCloseRental = async () => {
-    driveStore.closeRental()
-  }
 
-  confirmCloseRental = async (t) => {
-    let keyMessage = driveStore.rental && driveStore.rental.car && driveStore.rental.car.has_key === true ? t('drive:confirmCloseRentalKeyMessageConfirmationMessage') : ""
-    await confirm(t('global:confirmationTitle'), t('drive:confirmCloseRentalConfirmationMessage', { keyMessage: keyMessage }), async () => {
-      this.doCloseRental()
-    })
-  }
 
 
   render() {
@@ -150,17 +141,16 @@ class DriveScreen extends Component {
     }
 
     driveStore.computeActionFind(actions, () => this.props.navigation.navigate(screens.FIND.name))
-    driveStore.computeActionInspect(actions, () => this.props.navigation.navigate(screens.INSPECT.name))
+    driveStore.computeActionInitialInspect(actions, () => this.props.navigation.navigate(screens.INSPECT.name))
     driveStore.computeActionStartContract(actions, () => this.props.navigation.navigate(screens.RENTAL_AGREEMENT.name))
-    driveStore.computeActionReturn(actions, () => this.props.navigation.navigate(screens.RETURN.name))
-    driveStore.computeActionCloseRental(actions, () => this.confirmCloseRental(t))
 
     otaKeyStore.computeActionEnableKey(actions, () => otaKeyStore.enableKey(driveStore.rental.key_id))
     otaKeyStore.computeActionConnect(actions, () => otaKeyStore.connect(true))
     otaKeyStore.computeActionUnlock(actions, () => otaKeyStore.unlockDoors(true))
     otaKeyStore.computeActionLock(actions, () => otaKeyStore.lockDoors(true))
-    otaKeyStore.computeActionStart(actions, () => otaKeyStore.enableEngine(true))
-    otaKeyStore.computeActionStop(actions, () => otaKeyStore.disableEngine(true))
+
+
+    driveStore.computeActionReturn(actions, () => this.props.navigation.navigate(screens.RETURN.name))
 
     let _RefreshControl = (<RefreshControl refreshing={this.refreshing} onRefresh={this.refreshRental} />)
 

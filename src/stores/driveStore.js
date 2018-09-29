@@ -130,7 +130,7 @@ export default class DriveStore {
         if (!this.rental || (this.rental.status !== RENTAL_STATUS.ONGOING && this.rental.status !== RENTAL_STATUS.CONFIRMED) || this.rental.contract_signed) { return }
         actions.push({ style: this.rental.car_found || this.rental.initial_inspection_done ? actionStyles.ACTIVE : actionStyles.DONE, icon: icons.FIND, onPress: onPress })
     }
-    computeActionInspect(actions, onPress) {
+    computeActionInitialInspect(actions, onPress) {
         if (!this.rental || (this.rental.status !== RENTAL_STATUS.ONGOING && this.rental.status !== RENTAL_STATUS.CONFIRMED) || this.rental.contract_signed) { return }
         actions.push({ style: !this.rental.rental_can_begin ? actionStyles.DISABLE : this.rental.initial_inspection_done ? actionStyles.DISABLE : actionStyles.TODO, icon: icons.INSPECT, onPress: onPress })
     }
@@ -142,9 +142,13 @@ export default class DriveStore {
         if (!this.rental || this.rental.status !== RENTAL_STATUS.ONGOING || !this.rental.contract_signed) { return }
         actions.push({ style: this.rental.ready_for_return ? actionStyles.TODO : actionStyles.ACTIVE, icon: icons.RETURN, onPress: onPress })
     }
+    computeActionFinalInspect(actions, onPress) {
+        if (!this.rental || (this.rental.status !== RENTAL_STATUS.ONGOING && this.rental.status !== RENTAL_STATUS.CONFIRMED) || this.rental.contract_signed) { return }
+        actions.push({ style: this.rental.final_inspection_done ? actionStyles.DISABLE : this.rental.ready_for_return ? actionStyles.TODO : actionStyles.ACTIVE, icon: icons.INSPECT, onPress: onPress })
+    }
     computeActionCloseRental(actions, onPress) {
         if (!this.rental || this.rental.status !== RENTAL_STATUS.ONGOING || !this.rental.contract_signed) { return }
-        actions.push({ style: this.rental.ready_for_return ? actionStyles.TODO : actionStyles.ACTIVE, icon: icons.CLOSE_RENTAL, onPress: onPress })
+        actions.push({ style: !this.rental.final_inspection_done ? actionStyles.DISABLE : this.rental.ready_for_return ? actionStyles.TODO : actionStyles.ACTIVE, icon: icons.CLOSE_RENTAL, onPress: onPress })
     }
 
     @action

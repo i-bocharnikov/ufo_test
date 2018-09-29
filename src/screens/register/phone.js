@@ -101,10 +101,10 @@ class PhoneScreen extends Component {
       onPress: async () => await this.doCancel(isInWizzard)
     })
 
-    if (!registerStore.isConnected && !this.isCodeRequested) {
+    if (!registerStore.isConnected) {
       actions.push({
         style: !registerStore.isConnected && this.phoneInput && this.phoneInput.isValidNumber() ? actionStyles.TODO : actionStyles.DISABLE,
-        icon: icons.REQUEST_CODE,
+        icon: this.isCodeRequested ? icons.RESEND_CODE : icons.VALIDATE,
         onPress: async () => await this.doRequestCode(isInWizzard)
       })
     }
