@@ -11,7 +11,6 @@ i18n.use(LanguageDetector).init({
                 "internetbluetoothAccessFailure": "Unexpected internet and bluetooth connectivity issues. Operating in offline/degraded mode",
             },
             home: {
-                "welcome": "Hello, follow those steps and enjoy the drive",
                 "reserve": "1. Reserve a car",
                 "register": "2. Register your profile",
                 "drive": "3. Drive your rented car",
@@ -44,7 +43,7 @@ i18n.use(LanguageDetector).init({
                 "continueLater": "Continue later",
                 "login": "Connect",
                 "logout": "Disconnect",
-                "requestCode": "Request code",
+                "resendCode": "Resend code",
                 "phone": "Phone Number",
                 "email": "Email",
                 "address": "Address",
@@ -124,7 +123,7 @@ i18n.use(LanguageDetector).init({
                 "reserveLocationTitle": "Select the location",
                 "reserveDateAndCarTitle": "Select the date and car",
                 "reservePaymentTitle": "Confirm",
-                "bookingLink": "This section is still in development for this platform. In the meantime, please follow this link to book a car"
+                "bookingLink": "Comming soon, please follow this link to book a car"
             },
             support: {
                 "supportTitle": "How can we help you?",

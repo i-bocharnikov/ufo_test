@@ -34,12 +34,12 @@ export const colors = {
     ICON: new Color.rgb(255, 255, 255),//new Color('#fff'),
     CARD_BACKGROUND: new Color.rgb(255, 255, 255).alpha(0.85),//new Color('#fff'),
     TODO: new Color.rgb(234, 80, 76),//new Color('#C8102E'),
-    DONE: new Color('#03DAC6'),//new Color.rgb(64, 101, 125), //
+    DONE: new Color.rgb(64, 101, 125),//new Color('#03DAC6'),//new Color.rgb(64, 101, 125), //
     ACTIVE: new Color.rgb(64, 101, 125), //new Color('#0081B5'),
     PRIMARY: new Color.rgb(64, 101, 125),
     DISABLE: new Color.rgb(151, 151, 151),
     PENDING: new Color.rgb(151, 151, 151),
-    SUCCESS: new Color.rgb(64, 101, 125),
+    SUCCESS: new Color('#03DAC6'),
     ERROR: new Color.rgb(234, 80, 76), //new Color('#C8102E'),
     WARNING: new Color.rgb(255, 87, 34),
     WRONG: new Color('yellow'),
@@ -145,7 +145,7 @@ class Icon {
 export const icons = {
     RESERVE: new Icon('add', 'icon:reserve'),
     REGISTER: new Icon('person', 'icon:register'),
-    DRIVE: new Icon('car', 'icon:drive'),
+    DRIVE: new Icon('speedometer', 'icon:drive'),
     FIND: new Icon('search', 'icon:find'),
     FOUND: new Icon('locate', 'icon:found'),
     RETURN: new Icon('navigate', 'icon:return'),
@@ -160,7 +160,7 @@ export const icons = {
     PAY: new Icon('card', 'icon:pay'),
     LOGIN: new Icon('log-in', 'icon:login'),
     LOGOUT: new Icon('log-out', 'icon:logout'),
-    REQUEST_CODE: new Icon('key', 'icon:requestCode'),
+    RESEND_CODE: new Icon('refresh', 'icon:resendCode'),
     HELP: new Icon('help', 'icon:help'),
     WIFI: new Icon('wifi', 'icon:wifi'),
     BLUETOOTH: new Icon('bluetooth', 'icon:bluetooth'),

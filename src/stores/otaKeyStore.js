@@ -109,11 +109,11 @@ class OTAKeyStore {
     }
 
     computeActionUnlock(actions, onPress) {
-        if (!driveStore.rental || driveStore.rental.status !== RENTAL_STATUS.ONGOING || !driveStore.rental.contract_signed || !driveStore.rental.key_id || !this.key || !this.key.isEnabled || !this.isConnected) { return }
+        if (!driveStore.rental || driveStore.rental.status !== RENTAL_STATUS.ONGOING || !driveStore.rental.contract_signed || !driveStore.rental.key_id || !this.key) { return }
         actions.push({ style: this.isConnected ? actionStyles.ACTIVE : actionStyles.DISABLE, icon: icons.UNLOCK, onPress: onPress })
     }
     computeActionLock(actions, onPress) {
-        if (!driveStore.rental || driveStore.rental.status !== RENTAL_STATUS.ONGOING || !driveStore.rental.contract_signed || !driveStore.rental.key_id || !this.key || !this.key.isEnabled || !this.isConnected) { return }
+        if (!driveStore.rental || driveStore.rental.status !== RENTAL_STATUS.ONGOING || !driveStore.rental.contract_signed || !driveStore.rental.key_id || !this.key) { return }
         actions.push({ style: this.isConnected ? actionStyles.ACTIVE : actionStyles.DISABLE, icon: icons.LOCK, onPress: onPress })
     }
     computeActionStart(actions, onPress) {
@@ -409,6 +409,11 @@ class OTAKeyStore {
     async unlockDoors(requestVehicleData: boolean): Promise<boolean> {
 
         try {
+
+            //if(this.key)
+
+
+
             this.debug(`-> this.ota.unlockDoors(${String(requestVehicleData)}) start`)
             let result = await this.ota.unlockDoors(requestVehicleData, true)
             this.debug(`<- this.ota.unlockDoors(${String(requestVehicleData)}) return ${result}`)

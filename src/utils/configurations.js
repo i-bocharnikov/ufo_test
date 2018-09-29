@@ -5,7 +5,8 @@ import packageJson from "../../package.json";
 //const localhost = "192.168.178.97" //IMac Pfafenthall
 //const localhost = "192.168.1.107" //IMac Vellereux
 //const localhost = "192.168.178.32" //MacBook Office
-const localhost = "192.168.178.97" //IMac Pfafenthall
+const localhost = "192.168.178.21" //MacBook Pfafenthall
+//const localhost = "192.168.178.97" //IMac Pfafenthall
 //const localhost = "192.168.1.107" //IMac Vellereux
 
 const development = {
