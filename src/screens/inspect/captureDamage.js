@@ -38,7 +38,7 @@ class CaptureDamageScreen extends Component {
       return
     }
     this.activityPending = true
-    const options = { quality: 1, base64: true, fixOrientation: true, doNotSave: true };
+    const options = { quality: 1, base64: true, fixOrientation: true, doNotSave: false };
     //Take photo
     let fullImage = await this.camera.takePictureAsync(options)
     const { uri, width, height } = fullImage;

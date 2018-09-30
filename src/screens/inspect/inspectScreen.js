@@ -52,16 +52,25 @@ class InspectScreen extends Component {
     this.damageIndex = index
   }
 
-  doConfirmInitialInspection = async (t) => {
-    if (await inspectStore.confirmInitialInspection(t)) {
-      driveStore.refreshRental()
-      this.props.navigation.navigate(screens.DRIVE.name)
+  doConfirmInspection = async (t) => {
+
+    if (driveStore.rental && driveStore.rental.contract_signed) {
+
+      if (await inspectStore.confirmFinalInspection(t)) {
+        driveStore.refreshRental()
+        this.props.navigation.navigate(screens.DRIVE.name)
+      }
+    } else {
+      if (await inspectStore.confirmInitialInspection(t)) {
+        driveStore.refreshRental()
+        this.props.navigation.navigate(screens.DRIVE.name)
+      }
     }
   }
 
-  confirmInitialInspection = async (t) => {
-    await confirm(t('global:confirmationTitle'), t('inspect:confirmInitialInspectionConfirmationMessage'), async () => {
-      this.doConfirmInitialInspection(t)
+  confirmInspection = async (t) => {
+    await confirm(t('global:confirmationTitle'), t('inspect:confirmInspectionConfirmationMessage'), async () => {
+      this.doConfirmInspection(t)
     })
   }
 
@@ -122,7 +131,7 @@ class InspectScreen extends Component {
       {
         style: actionStyles.TODO,
         icon: icons.VALIDATE,
-        onPress: () => this.confirmInitialInspection(t)
+        onPress: () => this.confirmInspection(t)
       },
     ]
 

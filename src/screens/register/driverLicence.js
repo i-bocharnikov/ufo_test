@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { observer } from 'mobx-react';
 import { translate } from "react-i18next";
-import { Image, StyleSheet, View, Dimensions, ImageEditor, ImageStore } from 'react-native';
+import { Image, StyleSheet, View, Dimensions, ImageEditor, ImageBackground } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import _ from 'lodash'
 import { observable, action } from "mobx";
@@ -191,6 +191,8 @@ class DriverLicenceScreen extends Component {
 
     let showCamera = this.captureState !== captureStates.VALIDATE && this.captureState !== captureStates.PREVIEW
 
+    let sample = this.captureState === captureStates.CAPTURE_FRONT ? require('../../assets/images/scan/dl-front.jpg') : require('../../assets/images/scan/dl-back.jpg')
+
     return (
       <UFOContainer image={require("../../assets/images/background/UFOBGREGISTER001.png")}>
         {!showCamera && (
@@ -209,18 +211,18 @@ class DriverLicenceScreen extends Component {
               permissionDialogMessage={t('register:cameraPermissionMessage')}
             />
             <UFOHeader t={t} transparent navigation={navigation} logo currentScreen={screens.REGISTER_DRIVER_LICENCE} />
-            <View style={{
+            <ImageBackground source={sample} style={{
               position: 'absolute',
               top: PADDING_HEIGHT,
               left: PADDING_WIDTH,
               bottom: PADDING_HEIGHT,
               right: PADDING_WIDTH,
-              backgroundColor: colors.BACKGROUND.alpha(0.7).string(),
-              justifyContent: 'center',
-              alignContent: 'center'
+              width: CARD_WIDTH, height: CARD_HEIGHT, justifyContent: 'center',
+              alignContent: 'center',
+              opacity: 0.4
             }}>
-              <UFOText upper h3 center>{t(inputLabel)}</UFOText>
-            </View>
+              <UFOText upper h2 inverted center>{t(inputLabel)}</UFOText>
+            </ImageBackground>
           </View>
         )}
         {!showCamera && (

@@ -63,7 +63,7 @@ class Screen {
 }
 
 export const screens = {
-    HOME: new Screen('Home', ''),
+    HOME: new Screen('Drive', ''),
     RESERVE: new Screen('Reserve', 'RESERVE'),
     RESERVE_LOCATION: new Screen('Location', 'RESERVE'),
     RESERVE_DATE_AND_CAR: new Screen('DateAndCar', 'RESERVE'),
@@ -148,7 +148,8 @@ export const icons = {
     DRIVE: new Icon('speedometer', 'icon:drive'),
     FIND: new Icon('search', 'icon:find'),
     FOUND: new Icon('locate', 'icon:found'),
-    RETURN: new Icon('navigate', 'icon:return'),
+    RETURN: new Icon('flag', 'icon:return'),
+    WHERE: new Icon('locate', 'icon:where'),
     INSPECT: new Icon('checkbox-outline', 'icon:inspect'),
     RENTAL_AGREEMENT: new Icon('create', 'icon:rentalAgreement'),
     BACK: new Icon('arrow-round-back', 'icon:back'),

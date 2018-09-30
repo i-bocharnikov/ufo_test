@@ -100,6 +100,23 @@ export default class InspectStore {
         }
         return false
     };
+
+    @action
+    async confirmFinalInspection(t) {
+
+        if (!driveStore.rental) return false
+
+        const response = await putToApi("/rentals/" + driveStore.rental.reference, { action: 'final_inspection_done' });
+        if (response && response.status === "success") {
+            if (DEBUG)
+                console.info("inspectStore.confirmFinalInspection:", response.data);
+            driveStore.rentals[driveStore.index] = response.data.rental
+            console.log("***** inspectStore.confirmFinalInspection ", true)
+            return true
+        }
+        return false
+    };
+
 }
 
 

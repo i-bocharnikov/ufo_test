@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import { Container } from 'native-base'
 import { ImageBackground, Dimensions } from 'react-native'
 
@@ -24,10 +23,6 @@ class UFOContainer extends Component {
         );
     }
 }
-
-UFOContainer.propTypes = {
-    style: PropTypes.oneOfType([PropTypes.object, PropTypes.number, PropTypes.array]),
-};
 
 
 export default UFOContainer;

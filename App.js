@@ -12,7 +12,6 @@ YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTIm
 
 
 import UFOAdminMenu from './src/components/UFOAdminMenu'
-import HomeScreen from './src/screens/homeScreen'
 import SupportFaqsScreen from './src/screens/support/faqsScreen'
 import SupportFaqScreen from './src/screens/support/faqScreen'
 import SupportChatScreen from './src/screens/support/chatScreen'
@@ -74,17 +73,6 @@ setNativeExceptionHandler((errorString) => {
 });
 
 const commonStackNavigationOptions = {};
-
-
-const HomeStack = createStackNavigator(
-  {
-    Home: {
-      screen: HomeScreen
-    },
-
-
-  }, { headerMode: 'none', navigationOptions: commonStackNavigationOptions }
-);
 
 const DriveStack = createStackNavigator(
   {
@@ -168,17 +156,14 @@ const RegisterStack = createStackNavigator(
 
 const RootStack = createBottomTabNavigator(
   {
-    Home: {
-      screen: HomeStack
+    Drive: {
+      screen: DriveStack
     },
     Reserve: {
       screen: ReserveStack
     },
     Register: {
       screen: RegisterStack
-    },
-    Drive: {
-      screen: DriveStack
     },
     Find: {
       screen: FindScreen
@@ -197,7 +182,7 @@ const RootStack = createBottomTabNavigator(
     }
   },
   {
-    initialRouteName: screens.HOME.name,
+    initialRouteName: screens.DRIVE.name,
     navigationOptions: ({ navigation }) => ({ tabBarVisible: false }
     )
   })

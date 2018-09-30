@@ -113,6 +113,11 @@ export default class DriveStore {
         return this.rental.car.support_number
     }
 
+    @computed get hasRentals() {
+        return this.rentals.length !== 0
+    }
+
+
     @computed get hasRentalConfirmedOrOngoing() {
         return this.rentals.find(rental => { return rental.status === RENTAL_STATUS.CONFIRMED || rental.status === RENTAL_STATUS.ONGOING })
     }
@@ -140,10 +145,10 @@ export default class DriveStore {
     }
     computeActionReturn(actions, onPress) {
         if (!this.rental || this.rental.status !== RENTAL_STATUS.ONGOING || !this.rental.contract_signed) { return }
-        actions.push({ style: this.rental.ready_for_return ? actionStyles.TODO : actionStyles.ACTIVE, icon: icons.RETURN, onPress: onPress })
+        actions.push({ style: this.rental.ready_for_return ? actionStyles.TODO : actionStyles.ACTIVE, icon: icons.WHERE, onPress: onPress })
     }
     computeActionFinalInspect(actions, onPress) {
-        if (!this.rental || (this.rental.status !== RENTAL_STATUS.ONGOING && this.rental.status !== RENTAL_STATUS.CONFIRMED) || this.rental.contract_signed) { return }
+        if (!this.rental || (this.rental.status !== RENTAL_STATUS.ONGOING && this.rental.status !== RENTAL_STATUS.CONFIRMED) || !this.rental.contract_signed) { return }
         actions.push({ style: this.rental.final_inspection_done ? actionStyles.DISABLE : this.rental.ready_for_return ? actionStyles.TODO : actionStyles.ACTIVE, icon: icons.INSPECT, onPress: onPress })
     }
     computeActionCloseRental(actions, onPress) {

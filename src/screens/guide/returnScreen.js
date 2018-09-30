@@ -54,16 +54,7 @@ class ReturnScreen extends Component {
     this.guideIndex = index
   }
 
-  doCloseRental = async () => {
-    driveStore.closeRental()
-  }
 
-  confirmCloseRental = async (t) => {
-    let keyMessage = driveStore.rental && driveStore.rental.car && driveStore.rental.car.has_key === true ? t('drive:confirmCloseRentalKeyMessageConfirmationMessage') : ""
-    await confirm(t('global:confirmationTitle'), t('drive:confirmCloseRentalConfirmationMessage', { keyMessage: keyMessage }), async () => {
-      this.doCloseRental()
-    })
-  }
 
   render() {
     const { t, navigation } = this.props;
@@ -74,9 +65,6 @@ class ReturnScreen extends Component {
         onPress: () => this.props.navigation.navigate(screens.DRIVE.name)
       }
     ]
-    driveStore.computeActionFinalInspect(actions, () => this.props.navigation.navigate(screens.INSPECT.name))
-
-    driveStore.computeActionCloseRental(actions, () => this.confirmCloseRental(t))
 
 
     let _RefreshControl = (<RefreshControl refreshing={this.refreshing} onRefresh={this.refresh} />)

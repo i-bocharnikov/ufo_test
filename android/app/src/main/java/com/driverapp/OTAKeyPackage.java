@@ -1,4 +1,4 @@
-package com.driverapp;
+package com.ufodrive.app;
 
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;

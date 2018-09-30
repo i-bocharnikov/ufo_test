@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { observer } from 'mobx-react';
 import { translate } from "react-i18next";
-import { StyleSheet, View, Dimensions, ImageEditor } from 'react-native';
+import { ImageBackground, View, Dimensions, ImageEditor, StyleSheet } from 'react-native';
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { RNCamera } from 'react-native-camera';
 import _ from 'lodash'
@@ -19,7 +19,7 @@ import { Body } from "native-base";
 
 const DEVICE_WIDTH = Dimensions.get("window").width
 const DEVICE_HEIGHT = Dimensions.get("window").height
-const CARD_RATIO = 1.586
+const CARD_RATIO = 1024 / 639
 const CARD_WIDTH = DEVICE_WIDTH - 60
 const CARD_HEIGHT = CARD_WIDTH / CARD_RATIO
 const PADDING_WIDTH = (DEVICE_WIDTH - CARD_WIDTH) / 2
@@ -202,6 +202,8 @@ class IdentificationScreen extends Component {
 
     let showCamera = this.captureState !== captureStates.VALIDATE && this.captureState !== captureStates.PREVIEW
 
+    let sample = this.captureState === captureStates.CAPTURE_FRONT ? require('../../assets/images/scan/id-front.jpg') : require('../../assets/images/scan/id-back.jpg')
+
     return (
       <UFOContainer image={require("../../assets/images/background/UFOBGREGISTER001.png")}>
         {!showCamera && (
@@ -220,18 +222,18 @@ class IdentificationScreen extends Component {
               permissionDialogMessage={t('register:cameraPermissionMessage')}
             />
             <UFOHeader t={t} transparent navigation={navigation} logo currentScreen={screens.REGISTER_IDENTIFICATION} />
-            <View style={{
+            <ImageBackground source={sample} style={{
               position: 'absolute',
               top: PADDING_HEIGHT,
               left: PADDING_WIDTH,
               bottom: PADDING_HEIGHT,
               right: PADDING_WIDTH,
-              backgroundColor: colors.BACKGROUND.alpha(0.7).string(),
-              justifyContent: 'center',
-              alignContent: 'center'
+              width: CARD_WIDTH, height: CARD_HEIGHT, justifyContent: 'center',
+              alignContent: 'center',
+              opacity: 0.4
             }}>
-              <UFOText upper h3 center>{t(inputLabel)}</UFOText>
-            </View>
+              <UFOText upper h2 inverted center>{t(inputLabel)}</UFOText>
+            </ImageBackground>
           </View>
         )}
         {!showCamera && (

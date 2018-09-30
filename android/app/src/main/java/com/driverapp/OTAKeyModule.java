@@ -1,4 +1,4 @@
-package com.driverapp;
+package com.ufodrive.app;
 
 import android.widget.Toast;
 

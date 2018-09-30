@@ -98,14 +98,14 @@ class OTAKeyStore {
     }
 
 
-    computeActionEnableKey(actions, onPress) {
+    /*computeActionEnableKey(actions, onPress) {
         if (!driveStore.rental || driveStore.rental.status !== RENTAL_STATUS.ONGOING || !driveStore.rental.contract_signed || !driveStore.rental.key_id || (this.key && this.key.isEnabled)) { return }
         actions.push({ style: this.key && this.key.isEnabled ? actionStyles.DONE : actionStyles.TODO, icon: icons.KEY, onPress: onPress })
-    }
+    }*/
 
     computeActionConnect(actions, onPress) {
-        if (!driveStore.rental || driveStore.rental.status !== RENTAL_STATUS.ONGOING || !driveStore.rental.contract_signed || !driveStore.rental.key_id || !this.key || !this.key.isEnabled || this.isConnected) { return }
-        actions.push({ style: this.isConnecting ? actionStyles.DISABLE : actionStyles.TODO, icon: icons.CONNECT, onPress: onPress })
+        if (!driveStore.rental || driveStore.rental.status !== RENTAL_STATUS.ONGOING || !driveStore.rental.contract_signed || !driveStore.rental.key_id || !this.key) { return }
+        actions.push({ style: this.isConnecting || this.isConnected ? actionStyles.DISABLE : actionStyles.TODO, icon: icons.CONNECT, onPress: onPress })
     }
 
     computeActionUnlock(actions, onPress) {
@@ -227,6 +227,27 @@ class OTAKeyStore {
     }
 
     @action
+    async connectCar(): Promise<boolean> {
+
+        try {
+            this.debug(`-> this.ota.connectCar() start`)
+            if (!await this.ota.isConnectedToVehicle()) {
+                if (!this.key.isEnabled) {
+                    await this.ota.enableKey(driveStore.rental.key_id)
+                    //await this.ota.switchToKey()
+                }
+                await this.ota.connect(true)
+            }
+            this.debug(`<- this.ota.connectCar() return ${result}`)
+            return true
+        } catch (error) {
+            this.debug(`<- this.ota.connectCar() failed ${error}`)
+            return false
+        }
+    }
+
+
+    @action
     async getVehicleData(): Promise<boolean> {
 
         try {
@@ -301,7 +322,7 @@ class OTAKeyStore {
 
         try {
             this.debug(`-> this.ota.switchToKey(${String(this.key)}) start`)
-            this.key = await this.ota.endKey(this.key)
+            this.key = await this.ota.switchToKey(this.key)
             this.debug(`<- this.ota.switchToKey(${String(this.key)}) return ${String(this.key)}`)
             return true
         } catch (error) {

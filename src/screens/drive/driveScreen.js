@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { translate, I18n } from "react-i18next";
+import { translate } from "react-i18next";
 import { Dimensions, View, RefreshControl } from 'react-native'
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { observer } from "mobx-react";
@@ -7,13 +7,15 @@ import { observable } from "mobx";
 
 import UFOHeader from "../../components/header/UFOHeader";
 import UFOActionBar from "../../components/UFOActionBar";
-import { UFOContainer, UFOText, UFOIcon, UFOImage } from '../../components/common'
-import { screens, actionStyles, icons, colors, dateFormats, sizes } from '../../utils/global'
+import { UFOContainer, UFOText, } from '../../components/common'
+import { screens, actionStyles, icons, } from '../../utils/global'
 import { driveStore } from '../../stores'
 import otaKeyStore from '../../stores/otaKeyStore'
+import registerStore from "../../stores/registerStore"
 import UFOCard from "../../components/UFOCard";
 import UFOSlider from "../../components/UFOSlider";
-import { Left, Body } from "native-base";
+import DriveCard from "./driveCard";
+import appStore from "../../stores/appStore";
 import { confirm } from "../../utils/interaction";
 
 const DRIVE_DEVICE_WIDTH = Dimensions.get('window').width
@@ -27,154 +29,105 @@ class DriveScreen extends Component {
   componentDidMount() {
   }
 
+  @observable driveSelected = false
+  @observable returnSelected = false
   @observable refreshing = false
 
   renderRental({ item, index }) {
 
-
     let rental = item
 
-    let location = rental ? rental.location : null
-    let car = rental ? rental.car : null
-    let carModel = car ? car.car_model : null
-
-
-    if (!rental || !carModel || !location) {
+    if (rental) {
+      return <DriveCard rental={rental} />
+    } else {
       return (null)
     }
-
-    return (
-      <I18n>
-        {
-          (t, { }) => (
-
-            <UFOCard
-              title={t("drive:rentalReference", { rental: rental })}
-              texts={[
-                t("drive:rentalStartAt", { start_at: driveStore.format(rental.start_at, dateFormats.FULL) }),
-                t("drive:rentalEndAt", { end_at: driveStore.format(rental.end_at, dateFormats.FULL) }),
-                t("drive:rentalLocation", { rental: rental })]}
-              imageSource={{ uri: location.image_url }}
-            >
-              <Left>
-                <UFOImage source={{ uri: carModel.image_front_url }} style={{ width: 100, height: 50 }} resizeMode={'contain'} />
-              </Left>
-              <Body>
-                <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start' }}>
-                  <UFOText style={{ flex: 0.3 }}>{t("drive:rentalCarModel", { rental: rental })}</UFOText>
-                  <UFOText h4 style={{ flex: 0.3 }}>{t("drive:rentalCar", { rental: rental })}</UFOText>
-                  <View style={{ flex: 0.3, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }}>
-
-                    {driveStore.rental.key_id && (
-                      <UFOIcon icon={icons.KEY} color={otaKeyStore.key ? otaKeyStore.key.isEnabled ? colors.SUCCES : colors.ACTIVE : colors.ERROR} size={sizes.SMALL} />
-                    )}
-                    {driveStore.rental.key_id && (
-                      <UFOIcon icon={icons.BLUETOOTH} color={otaKeyStore.isConnected ? colors.SUCCES : otaKeyStore.isConnecting ? colors.ACTIVE : colors.ERROR} size={sizes.SMALL} />
-                    )}
-                    {otaKeyStore.isConnected && otaKeyStore.vehicleData && (
-                      <UFOIcon icon={otaKeyStore.vehicleData.doorsLocked ? icons.LOCK : icons.UNLOCK} color={otaKeyStore.vehicleData.doorsLocked ? colors.ACTIVE : colors.SUCCES} size={sizes.SMALL} />
-                    )}
-                    {otaKeyStore.isConnected && otaKeyStore.vehicleData && (
-                      <UFOIcon icon={otaKeyStore.vehicleData.engineRunning ? icons.START : icons.STOP} color={otaKeyStore.vehicleData.engineRunning ? colors.SUCCES : colors.ACTIVE} size={sizes.SMALL} />
-                    )}
-                  </View>
-                </View>
-              </Body>
-            </UFOCard>
-          )
-        }
-      </I18n>
-    )
   }
-
 
   selectRental = async (index) => {
     driveStore.selectRental(index)
   }
 
   refreshRental = async () => {
-    driveStore.refreshRental()
+    appStore.initialise()
   }
 
+  doCloseRental = async () => {
+    driveStore.closeRental()
+  }
 
-
+  confirmCloseRental = async (t) => {
+    let keyMessage = driveStore.rental && driveStore.rental.car && driveStore.rental.car.has_key === true ? t('drive:confirmCloseRentalKeyMessageConfirmationMessage') : ""
+    await confirm(t('global:confirmationTitle'), t('drive:confirmCloseRentalConfirmationMessage', { keyMessage: keyMessage }), async () => {
+      this.doCloseRental()
+    })
+  }
 
   render() {
     const { t, navigation } = this.props;
-
-
-    let actionKeys = []
-
-
     let actions = []
-    if (!driveStore.hasRentalOngoing) {
-      actions.push(
-        {
-          style: actionStyles.ACTIVE,
-          icon: icons.HOME,
-          onPress: () => this.props.navigation.navigate(screens.HOME.name)
+
+    if (!this.driveSelected) {
+      actions.push({ style: driveStore.hasRentalConfirmedOrOngoing ? actionStyles.DONE : actionStyles.TODO, icon: icons.RESERVE, onPress: () => navigation.navigate(screens.RESERVE.name) })
+      actions.push({ style: registerStore.isUserRegistered ? actionStyles.DONE : actionStyles.TODO, icon: icons.REGISTER, onPress: () => navigation.navigate(screens.REGISTER.name) })
+      actions.push({ style: driveStore.hasRentalOngoing ? actionStyles.TODO : actionStyles.ACTIVE, icon: icons.DRIVE, onPress: () => this.driveSelected = true })
+    } else if (this.driveSelected && !this.returnSelected) {
+      actions.push({ style: actionStyles.ACTIVE, icon: icons.BACK, onPress: () => this.driveSelected = false })
+      if (!driveStore.hasRentals) {
+        actions.push({ style: actionStyles.DISABLE, icon: icons.FIND, onPress: () => { } })
+        actions.push({ style: actionStyles.DISABLE, icon: icons.INSPECT, onPress: () => { } })
+        actions.push({ style: actionStyles.DISABLE, icon: icons.RENTAL_AGREEMENT, onPress: () => { } })
+      } else {
+        driveStore.computeActionFind(actions, () => this.props.navigation.navigate(screens.FIND.name))
+        driveStore.computeActionInitialInspect(actions, () => this.props.navigation.navigate(screens.INSPECT.name))
+        driveStore.computeActionStartContract(actions, () => this.props.navigation.navigate(screens.RENTAL_AGREEMENT.name))
+        //        otaKeyStore.computeActionEnableKey(actions, () => otaKeyStore.enableKey(driveStore.rental.key_id))
+        otaKeyStore.computeActionConnect(actions, () => otaKeyStore.connectCar(true))
+        otaKeyStore.computeActionUnlock(actions, () => otaKeyStore.unlockDoors(true))
+        otaKeyStore.computeActionLock(actions, () => otaKeyStore.lockDoors(true))
+        if (this.rental && this.rental.status === RENTAL_STATUS.ONGOING && this.rental.contract_signed) {
+          actions.push({ style: actionStyles.ACTIVE, icon: icons.RETURN, onPress: () => this.returnSelected = true })
         }
-      )
+      }
+    } else {
+      actions.push({ style: actionStyles.ACTIVE, icon: icons.BACK, onPress: () => this.returnSelected = false })
+      driveStore.computeActionReturn(actions, () => this.props.navigation.navigate(screens.RETURN.name))
+      driveStore.computeActionFinalInspect(actions, () => this.props.navigation.navigate(screens.INSPECT.name))
+      driveStore.computeActionCloseRental(actions, () => this.confirmCloseRental(t))
     }
-    if (driveStore.rentals.length == 0) {
-      actions.push(
-        {
-          style: actionStyles.DISABLE,
-          icon: icons.FIND,
-          onPress: () => { }
-        }
-      )
-      actions.push(
-        {
-          style: actionStyles.DISABLE,
-          icon: icons.INSPECT,
-          onPress: () => { }
-        }
-      )
-      actions.push(
-        {
-          style: actionStyles.DISABLE,
-          icon: icons.RENTAL_AGREEMENT,
-          onPress: () => { }
-        }
-      )
-    }
-
-    driveStore.computeActionFind(actions, () => this.props.navigation.navigate(screens.FIND.name))
-    driveStore.computeActionInitialInspect(actions, () => this.props.navigation.navigate(screens.INSPECT.name))
-    driveStore.computeActionStartContract(actions, () => this.props.navigation.navigate(screens.RENTAL_AGREEMENT.name))
-
-    otaKeyStore.computeActionEnableKey(actions, () => otaKeyStore.enableKey(driveStore.rental.key_id))
-    otaKeyStore.computeActionConnect(actions, () => otaKeyStore.connect(true))
-    otaKeyStore.computeActionUnlock(actions, () => otaKeyStore.unlockDoors(true))
-    otaKeyStore.computeActionLock(actions, () => otaKeyStore.lockDoors(true))
-
-
-    driveStore.computeActionReturn(actions, () => this.props.navigation.navigate(screens.RETURN.name))
-
     let _RefreshControl = (<RefreshControl refreshing={this.refreshing} onRefresh={this.refreshRental} />)
 
     return (
-      <UFOContainer image={require('../../assets/images/background/UFOBGDRIVE001.png')}>
+      <UFOContainer image={driveStore.hasRentals ? require('../../assets/images/background/UFOBGDRIVE001.png') : require("../../assets/images/background/UFOBGHOME002.png")}>
         <UFOHeader transparent logo t={t} navigation={navigation} currentScreen={screens.DRIVE} />
         <KeyboardAwareScrollView refreshControl={_RefreshControl}>
-          {driveStore.rental && (
+          {!this.driveSelected && !driveStore.hasRentals && (
+            <View style={{ flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
+              <View style={{ paddingTop: '10%', paddingLeft: '10%', paddingRight: '10%' }} >
+                <UFOText h2 inverted center style={{ paddingTop: 10 }}>{t('home:reserve', { user: registerStore.user })}</UFOText>
+                <UFOText h2 inverted center style={{ paddingTop: 5 }}>{t('home:register', { user: registerStore.user })}</UFOText>
+                <UFOText h2 inverted center style={{ paddingTop: 5 }}>{t('home:drive', { user: registerStore.user })}</UFOText>
+                <View style={{ height: 100 }}></View>
+              </View>
+            </View>
+          )}
+
+          {driveStore.hasRentals && driveStore.rental && (
             <View style={{ paddingTop: "10%" }}>
               <UFOSlider data={driveStore.rentals} renderItem={this.renderRental} onSnapToItem={this.selectRental} firstItem={driveStore.index} />
             </View>
           )}
-          {!driveStore.rental && (
+          {this.driveSelected && !driveStore.rental && (
             <View style={{ paddingHorizontal: DRIVE_PADDING_HORIZONTAL, flex: 1, flexDirection: 'column', justifyContent: 'center', alignContent: 'center' }}>
               <UFOCard title={t('drive:noRentalsTitle')} text={t('drive:noRentalsDescription')} />
             </View>
           )}
-          {driveStore.rental && (
+          {driveStore.hasRentals && driveStore.rental && (
             <View style={{ paddingHorizontal: 30 }}>
               <UFOCard text={driveStore.rental.message_for_driver} />
             </View>
           )}
         </KeyboardAwareScrollView >
-        <UFOActionBar actions={actionKeys} up={100} />
         <UFOActionBar actions={actions} />
       </UFOContainer >
     );

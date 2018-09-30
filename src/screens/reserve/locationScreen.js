@@ -39,11 +39,6 @@ class ReserveLocationScreen extends Component {
         icon: icons.BROWSE,
         onPress: this.goToURL
       },
-      {
-        style: actionStyles.TODO,
-        icon: icons.CLIPBOARD,
-        onPress: this.copyToClipboard
-      }
     ]
     return (
       <UFOContainer image={require("../../assets/images/background/UFOBGRESERVE001.png")}>
