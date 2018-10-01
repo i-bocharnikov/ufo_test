@@ -18,24 +18,27 @@ export default class UFOCard extends Component {
         let imageResizeMode = this.props.imageResizeMode
         let videoSource = this.props.videoSource
         let children = this.props.children
+        let message = this.props.message
 
         let hasMedia = imageSource || videoSource
         let hasText = title || (texts.length > 0)
         let hasChildren = children !== undefined ? true : false
+        let hasMessage = message !== undefined ? true : false
 
-        let mediaStyle = hasText || hasChildren ? 'topContainer' : 'singleContainer'
-        let textStyle = hasMedia ? hasChildren ? 'middleContainer' : 'bottomContainer' : hasChildren ? 'topContainer' : 'singleContainer'
-        let childrenStyle = hasText || hasMedia ? 'bottomContainer' : 'singleContainer'
+        let mediaStyle = hasText || hasChildren || hasMessage ? 'topContainer' : 'singleContainer'
+        let textStyle = hasMedia ? hasChildren || hasMessage ? 'middleContainer' : 'bottomContainer' : hasChildren || hasMessage ? 'topContainer' : 'singleContainer'
+        let childrenStyle = hasMedia || hasText ? hasMessage ? 'middleContainer' : 'bottomContainer' : hasMessage ? 'topContainer' : 'singleContainer'
+        let messageStyle = hasMedia || hasText || hasChildren ? 'bottomContainer' : 'singleContainer'
 
         return (
             <Card style={{ backgroundColor: 'transparent' }}>
                 {hasMedia && (
                     <CardItem cardBody style={styles[mediaStyle]}>
                         {imageSource && (
-                            <UFOImage source={imageSource} style={{ borderTopLeftRadius: 8, borderTopRightRadius: 8, height: 200, width: null, flex: 1 }} resizeMode={imageResizeMode} />
+                            <UFOImage source={imageSource} style={{ borderTopLeftRadius: 8, borderTopRightRadius: 8, height: 150, width: null, flex: 1 }} resizeMode={imageResizeMode} />
                         )}
                         {videoSource && (
-                            <UFOVideo source={videoSource} style={{ borderTopLeftRadius: 8, borderTopRightRadius: 8, height: 200, width: null, flex: 1 }} resizeMode={imageResizeMode} />
+                            <UFOVideo source={videoSource} style={{ borderTopLeftRadius: 8, borderTopRightRadius: 8, height: 150, width: null, flex: 1 }} resizeMode={imageResizeMode} />
                         )}
                     </CardItem>
                 )}
@@ -52,6 +55,12 @@ export default class UFOCard extends Component {
                 {hasChildren && (
                     <CardItem style={[styles[childrenStyle]]}>
                         {children}
+                    </CardItem>
+                )
+                }
+                {hasMessage && (
+                    <CardItem style={[styles[messageStyle]]}>
+                        <UFOText h5 note>{message}</UFOText>
                     </CardItem>
                 )
                 }

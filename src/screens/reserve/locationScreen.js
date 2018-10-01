@@ -16,7 +16,7 @@ class ReserveLocationScreen extends Component {
       if (supported) {
         Linking.openURL(bookingUrl);
       } else {
-        console.warn("Linking not supported for url ", bookingUrl)
+        console.log("Linking not supported for url ", bookingUrl)
       }
     });
   }

@@ -1,15 +1,9 @@
-import React from 'react';
-import { AppRegistry } from 'react-native';
-import App from './App';
-import { I18nextProvider } from 'react-i18next';
-import i18n from './src/utils/i18n'; // initialized i18next instance
+import applyDecoratedDescriptor from '@babel/runtime/helpers/esm/applyDecoratedDescriptor'
+import initializerDefineProperty from '@babel/runtime/helpers/esm/initializerDefineProperty'
 
-const DriverApp = () => (
-    <I18nextProvider i18n={i18n}>
-        <App />
-    </I18nextProvider>
-);
+Object.assign(babelHelpers, {
+    applyDecoratedDescriptor,
+    initializerDefineProperty,
+});
 
-AppRegistry.registerComponent('driverApp', () => DriverApp);
-
-
+require('./src');

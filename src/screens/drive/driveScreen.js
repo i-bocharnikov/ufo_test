@@ -122,11 +122,7 @@ class DriveScreen extends Component {
               <UFOCard title={t('drive:noRentalsTitle')} text={t('drive:noRentalsDescription')} />
             </View>
           )}
-          {driveStore.hasRentals && driveStore.rental && (
-            <View style={{ paddingHorizontal: 30 }}>
-              <UFOCard text={driveStore.rental.message_for_driver} />
-            </View>
-          )}
+
         </KeyboardAwareScrollView >
         <UFOActionBar actions={actions} />
       </UFOContainer >

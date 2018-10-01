@@ -26,7 +26,12 @@
         </intent-filter>
       </activity>
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
-
+      <provider
+        android:name="com.activeandroid.content.ContentProvider"
+        android:authorities="com.ufodrive.app"
+        android:enabled="true"
+        android:exported="false">
+      </provider>
     </application>
 
 </manifest>

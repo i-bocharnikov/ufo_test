@@ -69,14 +69,16 @@ class UFOActionBar extends React.Component {
         let inverted = this.props.inverted ? this.props.inverted : false
         return (
             <Animated.View style={[styles.actionBarContainer, { bottom: bottomAnimatedPosition, opacity: fadeAnim }]}>
+                <View style={styles.progressBar}>
+                    {activityPending && (
+                        <ProgressBarAndroid style={{ height: 25 }} styleAttr="Horizontal" color={colors.SUCCESS.string()} />
+                    )}
+                </View>
                 <View style={styles.actionBar}>
                     {actions.map((action, index) => (
                         <UFOAction action={action} key={index} activityPending={activityPending} inverted={inverted} />
                     ))}
                 </View>
-                {activityPending && (
-                    <ProgressBarAndroid style={styles.progressBar} styleAttr="Horizontal" color={colors.ACTIVE.string()} />
-                )}
             </Animated.View>
         );
     }
@@ -88,17 +90,19 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         height: ACTION_BAR_HEIGTH,
+        flex: 1,
         backgroundColor: 'transparent',
+        flexDirection: 'column-reverse',
         justifyContent: 'flex-start',
     },
     actionBar: {
-        flex: 0.75,
         flexDirection: 'row',
         justifyContent: 'space-evenly',
         alignItems: 'flex-start',
+        flex: 0.6
     },
     progressBar: {
-
+        flex: 0.4,
     }
 });
 

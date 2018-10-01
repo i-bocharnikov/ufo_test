@@ -181,9 +181,8 @@ class RegisterScreen extends Component {
                     <UFOText>{t('register:identificationLabel')}</UFOText>
                   </Body>
                   <Right >
-
-                    <UFOImage source={{ uri: registerStore.identificationFrontDocument }} style={{ width: 40, height: 40 }} />
-                    <UFOImage source={{ uri: registerStore.identificationBackDocument }} style={{ width: 40, height: 40 }} />
+                    <UFOImage source={{ uri: registerStore.identificationFrontDocument }} style={{ width: 60, height: 37.5 }} />
+                    <UFOImage source={{ uri: registerStore.identificationBackDocument }} style={{ width: 60, height: 37.5, marginLeft: 10 }} />
                     <UFOIcon inverted style={{ paddingLeft: 5 }} icon={icons.SELECT} size={sizes.SMALL} />
                   </Right>
                 </ListItem>
@@ -197,8 +196,8 @@ class RegisterScreen extends Component {
                     <UFOText>{t('register:driverLicenceLabel')}</UFOText>
                   </Body>
                   <Right >
-                    <UFOImage source={{ uri: registerStore.driverLicenceFrontDocument }} style={{ width: 40, height: 40 }} />
-                    <UFOImage source={{ uri: registerStore.driverLicenceBackDocument }} style={{ width: 40, height: 40 }} />
+                    <UFOImage source={{ uri: registerStore.driverLicenceFrontDocument }} style={{ width: 60, height: 37.5 }} />
+                    <UFOImage source={{ uri: registerStore.driverLicenceBackDocument }} style={{ width: 60, height: 37.5, marginLeft: 10 }} />
                     <UFOIcon inverted style={{ paddingLeft: 5 }} icon={icons.SELECT} size={sizes.SMALL} />
                   </Right>
                 </ListItem>

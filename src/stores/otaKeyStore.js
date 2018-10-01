@@ -137,7 +137,7 @@ class OTAKeyStore {
             this.vehicleData.engineRunning = otaVehicleData.engineRunning
             this.vehicleData.energyCurrent = otaVehicleData.energyCurrent
         } catch (error) {
-            console.error(error)
+            console.log(error)
         }
     }
 
@@ -146,7 +146,7 @@ class OTAKeyStore {
         try {
             this.debug(`>>onOtaActionPerformed ${otaAction.otaOperation} / ${otaAction.otaState}`)
         } catch (error) {
-            console.error(error)
+            console.log(error)
         }
     }
 
@@ -171,7 +171,7 @@ class OTAKeyStore {
                             09-21 14:07:51.130 18013 18078 I ReactNativeJS: 'onOtaBluetoothStateChanged', 'CONNECTED'
              */
         } catch (error) {
-            console.error(error)
+            console.log(error)
         }
     }
 

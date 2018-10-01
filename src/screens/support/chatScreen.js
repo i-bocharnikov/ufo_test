@@ -16,9 +16,6 @@ import { observable } from "mobx";
 @observer
 class ChatScreen extends Component {
 
-  @observable
-  webViewOpacity = 1
-
   async componentDidMount() {
 
   }
@@ -26,8 +23,6 @@ class ChatScreen extends Component {
   //sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
 
   injectjs() {
-
-
     let userName = registerStore.user.last_name ? (registerStore.user.first_name + registerStore.user.last_name) : registerStore.user.reference
     let userEmail = registerStore.user.email
     let userPhone = registerStore.user.phone_number
@@ -52,7 +47,7 @@ class ChatScreen extends Component {
     let jsCode = `
       setTimeout(() => {
         window.jivo_api.${method}(${data});
-      }, 500)`;
+      }, 1000)`;
 
     return jsCode;
   }
@@ -70,20 +65,16 @@ class ChatScreen extends Component {
     return (
       <UFOContainer image={require('../../assets/images/background/UFOBGSUPPORT001.png')}>
         <UFOHeader transparent logo t={t} navigation={navigation} currentScreen={screens.SUPPORT_CHAT} style={{ backgroundColor: 'transparent' }} />
-        <KeyboardAwareScrollView
-          enableOnAndroid={true}
-          resetScrollToCoords={{ x: 0, y: 0 }}
-          contentContainerStyle={{ flex: 1, paddingBottom: 120 }}
-        >
-
+        <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
           <WebView
             ref={(ref) => { this.webView = ref; }}
-            injectedJavaScript={this.injectjs()}
             source={require('../../assets/chat/index.html')}
-            style={{ opacity: this.webViewOpacity }}
+            injectedJavaScript={this.injectjs()}
             javaScriptEnabled={true}
+            style={{ flex: 0.9 }}
           />
-        </KeyboardAwareScrollView>
+          <View style={{ flex: 0.1 }} />
+        </View>
         <UFOActionBar actions={actions} />
       </UFOContainer>
     );

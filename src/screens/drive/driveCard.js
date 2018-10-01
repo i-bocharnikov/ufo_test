@@ -37,6 +37,7 @@ class DriveCard extends Component {
           t("drive:rentalEndAt", { end_at: driveStore.format(rental.end_at, dateFormats.FULL) }),
           t("drive:rentalLocation", { rental: rental })]}
         imageSource={{ uri: location.image_url }}
+        message={driveStore.rental.message_for_driver}
       >
         <Left>
           <UFOImage source={{ uri: carModel.image_front_url }} style={{ width: 100, height: 50 }} resizeMode={'contain'} />

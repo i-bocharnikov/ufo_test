@@ -140,7 +140,7 @@ class PhoneScreen extends Component {
             )}
             {!this.activityPending && !registerStore.isConnected && this.isCodeRequested && (
               <UFOCard title={t('register:smsCodeInputLabel')}>
-                <UFOTextInput autoFocus maxLength={107} keyboardAppearance='dark' keyboardType='numeric' placeholder='000-000' onChangeText={this.onChangeCode} />
+                <UFOTextInput autoFocus maxLength={107} keyboardAppearance='dark' keyboardType='number-pad' placeholder='000-000' onChangeText={this.onChangeCode} />
               </UFOCard>
             )}
             {!this.activityPending && !registerStore.isConnected && !this.isCodeRequested && (
