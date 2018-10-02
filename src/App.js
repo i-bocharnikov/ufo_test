@@ -40,6 +40,7 @@ import AppStore from './stores/appStore'
 
 
 import { setJSExceptionHandler, setNativeExceptionHandler } from 'react-native-exception-handler';
+import registerStore from "./stores/registerStore";
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' +
@@ -216,7 +217,7 @@ class App extends React.Component {
         <StyleProvider style={getTheme()}>
           <RootStack />
         </StyleProvider>
-        {__DEV__ && <UFOAdminMenu />}
+         <UFOAdminMenu />
       </Root >
     );
   }

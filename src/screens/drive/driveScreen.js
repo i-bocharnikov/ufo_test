@@ -27,6 +27,11 @@ const DRIVE_PADDING_HORIZONTAL = (DRIVE_DEVICE_WIDTH - DRIVE_WIDTH) / 2
 class DriveScreen extends Component {
 
   componentDidMount() {
+    if (driveStore.rental && driveStore.rental.key_id) {
+      if (!otaKeyStore.key || !otaKeyStore.key.isEnabled) {
+        otaKeyStore.enableKey(driveStore.rental.key_id)
+      }
+    }
   }
 
   @observable driveSelected = false
@@ -82,7 +87,7 @@ class DriveScreen extends Component {
         driveStore.computeActionInitialInspect(actions, () => this.props.navigation.navigate(screens.INSPECT.name))
         driveStore.computeActionStartContract(actions, () => this.props.navigation.navigate(screens.RENTAL_AGREEMENT.name))
         //        otaKeyStore.computeActionEnableKey(actions, () => otaKeyStore.enableKey(driveStore.rental.key_id))
-        otaKeyStore.computeActionConnect(actions, () => otaKeyStore.connectCar(true))
+        otaKeyStore.computeActionConnect(actions, () => otaKeyStore.connect(true))
         otaKeyStore.computeActionUnlock(actions, () => otaKeyStore.unlockDoors(true))
         otaKeyStore.computeActionLock(actions, () => otaKeyStore.lockDoors(true))
         if (this.rental && this.rental.status === RENTAL_STATUS.ONGOING && this.rental.contract_signed) {

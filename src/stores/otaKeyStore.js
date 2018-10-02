@@ -226,26 +226,6 @@ class OTAKeyStore {
         }
     }
 
-    @action
-    async connectCar(): Promise<boolean> {
-
-        try {
-            this.debug(`-> this.ota.connectCar() start`)
-            if (!await this.ota.isConnectedToVehicle()) {
-                if (!this.key.isEnabled) {
-                    await this.ota.enableKey(driveStore.rental.key_id)
-                    //await this.ota.switchToKey()
-                }
-                await this.ota.connect(true)
-            }
-            this.debug(`<- this.ota.connectCar() return ${result}`)
-            return true
-        } catch (error) {
-            this.debug(`<- this.ota.connectCar() failed ${error}`)
-            return false
-        }
-    }
-
 
     @action
     async getVehicleData(): Promise<boolean> {
