@@ -69,7 +69,7 @@ class DriveScreen extends Component {
 
     if (!this.driveSelected) {
       actions.push({ style: driveStore.hasRentalConfirmedOrOngoing ? actionStyles.DONE : actionStyles.TODO, icon: icons.RESERVE, onPress: () => navigation.navigate(screens.RESERVE.name) })
-      actions.push({ style: registerStore.isUserRegistered ? actionStyles.DONE : actionStyles.TODO, icon: icons.REGISTER, onPress: () => navigation.navigate(screens.REGISTER.name) })
+      actions.push({ style: registerStore.isUserRegistered ? actionStyles.DONE : actionStyles.TODO, icon: registerStore.isUserRegistered ? icons.MY_DETAILS : icons.REGISTER, onPress: () => navigation.navigate(screens.REGISTER.name) })
       actions.push({ style: driveStore.hasRentalOngoing ? actionStyles.TODO : actionStyles.ACTIVE, icon: icons.DRIVE, onPress: () => this.driveSelected = true })
     } else if (this.driveSelected && !this.returnSelected) {
       actions.push({ style: actionStyles.ACTIVE, icon: icons.BACK, onPress: () => this.driveSelected = false })

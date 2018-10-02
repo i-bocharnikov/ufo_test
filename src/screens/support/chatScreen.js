@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { translate } from "react-i18next";
 import { observer } from "mobx-react";
-import { View, Dimensions, ScrollView } from 'react-native'
+import { View, KeyboardAvoidingView, Dimensions, ScrollView } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
@@ -24,30 +24,13 @@ class ChatScreen extends Component {
 
   injectjs() {
     let userName = registerStore.user.last_name ? (registerStore.user.first_name + registerStore.user.last_name) : registerStore.user.reference
-    let userEmail = registerStore.user.email
-    let userPhone = registerStore.user.phone_number
-    let userDescription =
-      `DeviceCountry: ${DeviceInfo.getDeviceCountry()}
-    DeviceLocale: ${DeviceInfo.getDeviceLocale()}
-    DeviceName: ${DeviceInfo.getDeviceName()}
-    DeviceManufacturer: ${DeviceInfo.getManufacturer()}
-    DeviceModel: ${DeviceInfo.getModel()}
-         
-    SystemName: ${DeviceInfo.getSystemName()}
-    SystemVersion: ${DeviceInfo.getSystemVersion()}
-    SystemTimezone: ${DeviceInfo.getTimezone()}
-    IsTablet: ${DeviceInfo.isTablet()}
-
-    ApplicationID: ${DeviceInfo.getBundleId()}
-    ApplicationBuild: ${DeviceInfo.getBuildNumber()}
-    `
+    let userEmail = registerStore.user.email ? registerStore.user.email : ""
+    let userPhone = registerStore.user.phone_number ? registerStore.user.phone_number : ""
+    let userDescription = `DeviceCountry: ${DeviceInfo.getDeviceCountry()}, DeviceLocale: ${DeviceInfo.getDeviceLocale()}, DeviceName: ${DeviceInfo.getDeviceName()}, DeviceManufacturer: ${DeviceInfo.getManufacturer()}, DeviceModel: ${DeviceInfo.getModel()}, SystemName: ${DeviceInfo.getSystemName()}, SystemVersion: ${DeviceInfo.getSystemVersion()}, SystemTimezone: ${DeviceInfo.getTimezone()}, IsTablet: ${DeviceInfo.isTablet()}, ApplicationID: ${DeviceInfo.getBundleId()}, ApplicationBuild: ${DeviceInfo.getBuildNumber()}`
     let method = `setContactInfo`
     let data = `{\"client_name\": \"${userName}\", \"email\": \"${userEmail}\", \"phone\": \"${userPhone}\",\"description\": \"${userDescription}\"}`
 
-    let jsCode = `
-      setTimeout(() => {
-        window.jivo_api.${method}(${data});
-      }, 1000)`;
+    let jsCode = `setTimeout(() => {window.jivo_api.${method}(${data});}, 1000)`;
 
     return jsCode;
   }
@@ -65,15 +48,16 @@ class ChatScreen extends Component {
     return (
       <UFOContainer image={require('../../assets/images/background/UFOBGSUPPORT001.png')}>
         <UFOHeader transparent logo t={t} navigation={navigation} currentScreen={screens.SUPPORT_CHAT} style={{ backgroundColor: 'transparent' }} />
-        <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
+        <View style={{ flex: 0.5 }}>
           <WebView
             ref={(ref) => { this.webView = ref; }}
-            source={require('../../assets/chat/index.html')}
+            source={require('./assets/index.html')}
             injectedJavaScript={this.injectjs()}
             javaScriptEnabled={true}
-            style={{ flex: 0.9 }}
+            domStorageEnabled={true}
+            startInLoadingState={true}
+
           />
-          <View style={{ flex: 0.1 }} />
         </View>
         <UFOActionBar actions={actions} />
       </UFOContainer>

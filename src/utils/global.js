@@ -145,6 +145,7 @@ class Icon {
 export const icons = {
     RESERVE: new Icon('add', 'icon:reserve'),
     REGISTER: new Icon('person', 'icon:register'),
+    MY_DETAILS: new Icon('person', 'icon:myDetails'),
     DRIVE: new Icon('speedometer', 'icon:drive'),
     FIND: new Icon('search', 'icon:find'),
     FOUND: new Icon('locate', 'icon:found'),

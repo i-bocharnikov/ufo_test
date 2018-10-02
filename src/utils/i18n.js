@@ -28,6 +28,7 @@ i18n.use(LanguageDetector).init({
             icon: {
                 "reserve": "Reserve",
                 "register": "Register",
+                "myDetails": "My details",
                 "drive": "Drive",
                 "find": "Find",
                 "found": "Car found",
