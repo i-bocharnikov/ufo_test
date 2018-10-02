@@ -18,6 +18,8 @@ const STATUS_MISSING = "missing"
 const STATUS_NOT_VALIDATED = "not_validated"
 const STATUS_VALIDATED = "validated"
 
+const USER_ROLE_ADMIN = 'admin'
+
 class User {
     @persist @observable reference = null
     @persist @observable role = null
@@ -49,6 +51,11 @@ class registerStore {
     @observable driverLicenceBackDocument = "loading"
 
     acknowledge_uri = ""
+
+    @computed get isAdmin() {
+        return this.user.role === USER_ROLE_ADMIN
+    }
+
 
     @computed get isConnected() {
         return this.user.status !== USER_STATUS_REGISTRATION_MISSING

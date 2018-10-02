@@ -137,7 +137,7 @@ export default class DriveStore {
     }
     computeActionInitialInspect(actions, onPress) {
         if (!this.rental || (this.rental.status !== RENTAL_STATUS.ONGOING && this.rental.status !== RENTAL_STATUS.CONFIRMED) || this.rental.contract_signed) { return }
-        actions.push({ style: !this.rental.rental_can_begin ? actionStyles.DISABLE : this.rental.initial_inspection_done ? actionStyles.DISABLE : actionStyles.TODO, icon: icons.INSPECT, onPress: onPress })
+        actions.push({ style: !this.rental.rental_can_begin || this.rental.status !== RENTAL_STATUS.ONGOING ? actionStyles.DISABLE : this.rental.initial_inspection_done ? actionStyles.ACTIVE : actionStyles.TODO, icon: icons.INSPECT, onPress: onPress })
     }
     computeActionStartContract(actions, onPress) {
         if (!this.rental || (this.rental.status !== RENTAL_STATUS.ONGOING && this.rental.status !== RENTAL_STATUS.CONFIRMED) || this.rental.contract_signed) { return }
@@ -149,7 +149,7 @@ export default class DriveStore {
     }
     computeActionFinalInspect(actions, onPress) {
         if (!this.rental || (this.rental.status !== RENTAL_STATUS.ONGOING && this.rental.status !== RENTAL_STATUS.CONFIRMED) || !this.rental.contract_signed) { return }
-        actions.push({ style: this.rental.final_inspection_done ? actionStyles.DISABLE : this.rental.ready_for_return ? actionStyles.TODO : actionStyles.ACTIVE, icon: icons.INSPECT, onPress: onPress })
+        actions.push({ style: this.rental.contract_ended ? actionStyles.DISABLE : this.rental.ready_for_return && !this.rentals.final_inspection_done ? actionStyles.TODO : actionStyles.ACTIVE, icon: icons.INSPECT, onPress: onPress })
     }
     computeActionCloseRental(actions, onPress) {
         if (!this.rental || this.rental.status !== RENTAL_STATUS.ONGOING || !this.rental.contract_signed) { return }

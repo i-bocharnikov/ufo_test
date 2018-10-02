@@ -26,10 +26,17 @@ const DRIVE_PADDING_HORIZONTAL = (DRIVE_DEVICE_WIDTH - DRIVE_WIDTH) / 2
 @observer
 class DriveScreen extends Component {
 
-  componentDidMount() {
+  async componentDidMount() {
+
+    if (driveStore.hasRentalOngoing && registerStore.isUserRegistered) {
+      this.driveSelected = true
+    }
+
     if (driveStore.rental && driveStore.rental.key_id) {
       if (!otaKeyStore.key || !otaKeyStore.key.isEnabled) {
-        otaKeyStore.enableKey(driveStore.rental.key_id)
+        if (await otaKeyStore.enableKey(driveStore.rental.key_id)) {
+          await otaKeyStore.connect(true)
+        }
       }
     }
   }
@@ -55,6 +62,7 @@ class DriveScreen extends Component {
 
   refreshRental = async () => {
     appStore.initialise()
+    driveStore.reset()
   }
 
   doCloseRental = async () => {
@@ -86,11 +94,12 @@ class DriveScreen extends Component {
         driveStore.computeActionFind(actions, () => this.props.navigation.navigate(screens.FIND.name))
         driveStore.computeActionInitialInspect(actions, () => this.props.navigation.navigate(screens.INSPECT.name))
         driveStore.computeActionStartContract(actions, () => this.props.navigation.navigate(screens.RENTAL_AGREEMENT.name))
-        //        otaKeyStore.computeActionEnableKey(actions, () => otaKeyStore.enableKey(driveStore.rental.key_id))
+
+        otaKeyStore.computeActionEnableKey(actions, () => otaKeyStore.enableKey(driveStore.rental.key_id))
         otaKeyStore.computeActionConnect(actions, () => otaKeyStore.connect(true))
         otaKeyStore.computeActionUnlock(actions, () => otaKeyStore.unlockDoors(true))
         otaKeyStore.computeActionLock(actions, () => otaKeyStore.lockDoors(true))
-        if (this.rental && this.rental.status === RENTAL_STATUS.ONGOING && this.rental.contract_signed) {
+        if (driveStore.rental && driveStore.rental.contract_signed && !driveStore.rental.contract_ended) {
           actions.push({ style: actionStyles.ACTIVE, icon: icons.RETURN, onPress: () => this.returnSelected = true })
         }
       }

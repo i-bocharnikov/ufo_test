@@ -108,7 +108,8 @@ i18n.use(LanguageDetector).init({
 
             },
             inspect: {
-                "inspectTitle": "Initial inspection",
+                "initialInspectionTitle": "Initial inspection",
+                "finalInspectionTitle": "Declare damage(s)",
                 "inspectGuidance": "Confirm the car conforms to the condition described below:",
                 "locateDamageTitle": "Declare damage 1/3",
                 "locateGuidance": "Locate the damage on the picture below",
@@ -118,7 +119,7 @@ i18n.use(LanguageDetector).init({
                 "commentDamageTitle": "Describe damage 3/3",
                 "commentGuidance": "Add a comment",
                 "commentPlaceholder": "your comment",
-                "confirmInspectionConfirmationMessage": "You are about to confirm the car condition conforms to the description on the screen. Please note you will not be able to change it once you pres 'Confirm'. Thank you."
+                "confirmInspectionConfirmationMessage": "You are about to confirm the car condition conforms to the description on the screen.\nThank you."
             },
             reserve: {
                 "reserveTitle": "Reserve",
@@ -141,7 +142,13 @@ i18n.use(LanguageDetector).init({
                 "noRentalsTitle": "No rentals",
                 "noRentalsDescription": "After booking, the actions below will be activated and will allow you to find the car, inspect it, start the rental contract and finally lock/unlock the vehicle",
                 "confirmCloseRentalConfirmationMessage": "You are about to end your rental contract.{{keyMessage}}\nThe car will then lock automatically so please ensure you don't leave any personal belongings in the car as you will not be able to open it once you press 'OK'.\nThank you.",
-                "confirmCloseRentalKeyMessageConfirmationMessage": "\nPLEASE PUT THE KEY BACK IN THE GLOVEBOX."
+                "confirmCloseRentalKeyMessageConfirmationMessage": "\nPLEASE PUT THE KEY BACK IN THE GLOVEBOX.",
+                "noKey": "No key",
+                "notConnected": "Not connected",
+                "connecting": "Connecting...",
+                "locked": "Doors locked",
+                "unlocked": "Doors unlocked",
+                "noData": "No data",
             },
             guide: {
                 "findTitle": "Where is the car",

@@ -4,7 +4,7 @@ import { observer } from "mobx-react";
 import { View, StyleSheet, ScrollView } from 'react-native'
 import Touchable from 'react-native-platform-touchable';
 import otaKeyStore from '../stores/otaKeyStore'
-import { UFOText } from './common'
+import { UFOText, UFOTextInput } from './common'
 
 @observer
 class UFOAdminMenu extends Component {
@@ -55,21 +55,22 @@ class UFOAdminMenu extends Component {
         }
 
         const buttons = [
-            this.renderMenuItem('Clear logs', this.clearLogs),
-            this.renderMenuItem('Cancel', this.closeMenu)
+            this.renderMenuItem('Clear', this.clearLogs),
+            this.renderMenuItem('Close', this.closeMenu)
         ];
 
         return (
-            <View style={{ flex: 1, flexDirection: "column", justifyContent: 'flex-start', alignContent: 'flex-start', backgroundColor: 'black' }}>
+            <View style={styles.container}>
 
-                <ScrollView style={{ flex: 1 }}>
-                    <UFOText inverted log>
-                        {otaKeyStore.otaLog}
-                    </UFOText>
-                </ScrollView>
                 <View style={styles.menu}>
                     {buttons}
                 </View>
+                <ScrollView style={{ maxHeight: 500 }}>
+                    <UFOText inverted log disable={true} >
+                        {otaKeyStore.otaLog}
+                    </UFOText>
+                </ScrollView>
+
             </View>
         );
     }
@@ -78,19 +79,22 @@ class UFOAdminMenu extends Component {
 const styles = StyleSheet.create({
     circle: {
         position: 'absolute',
-        bottom: 5,
+        top: 5,
         right: 5,
-        width: 10,
-        height: 10,
-        borderRadius: 5,
+        width: 14,
+        height: 14,
+        borderRadius: 7,
         backgroundColor: 'black'
     },
-    menu: {
-        backgroundColor: 'black',
+    container: {
         position: 'absolute',
         left: 0,
         right: 0,
-        bottom: 0
+        top: 0,
+        flexDirection: "column", justifyContent: 'flex-start', alignContent: 'flex-start', backgroundColor: 'black'
+    },
+    menu: {
+        flexDirection: "row", justifyContent: 'space-evenly', alignContent: 'center'
     },
     menuItem: {
         flex: 1,

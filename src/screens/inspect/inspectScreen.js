@@ -134,10 +134,11 @@ class InspectScreen extends Component {
         onPress: () => this.confirmInspection(t)
       },
     ]
+    let isInitialInspection = driveStore.rental ? driveStore.rental.contract_signed ? false : true : true
 
     return (
       <UFOContainer image={require('../../assets/images/background/UFOBGINSPECT001.png')}>
-        <UFOHeader transparent t={t} navigation={navigation} currentScreen={screens.INSPECT} title={t('inspect:inspectTitle', { rental: driveStore.rental })} subTitle={driveStore.rental.car.reference} />
+        <UFOHeader transparent t={t} navigation={navigation} currentScreen={screens.INSPECT} title={isInitialInspection ? t('inspect:initialInspectionTitle', { rental: driveStore.rental }) : t('inspect:finalInspectionTitle', { rental: driveStore.rental })} subTitle={driveStore.rental ? driveStore.rental.car.reference : ""} />
         {this.renderBody(t)}
         <UFOActionBar actions={actions} activityPending={this.activityPending} />
       </UFOContainer >

@@ -217,7 +217,9 @@ class App extends React.Component {
         <StyleProvider style={getTheme()}>
           <RootStack />
         </StyleProvider>
-         <UFOAdminMenu />
+        {registerStore.isAdmin && (
+          <UFOAdminMenu />
+        )}
       </Root >
     );
   }

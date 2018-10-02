@@ -98,13 +98,13 @@ class OTAKeyStore {
     }
 
 
-    /*computeActionEnableKey(actions, onPress) {
+    computeActionEnableKey(actions, onPress) {
         if (!driveStore.rental || driveStore.rental.status !== RENTAL_STATUS.ONGOING || !driveStore.rental.contract_signed || !driveStore.rental.key_id || (this.key && this.key.isEnabled)) { return }
         actions.push({ style: this.key && this.key.isEnabled ? actionStyles.DONE : actionStyles.TODO, icon: icons.KEY, onPress: onPress })
-    }*/
+    }
 
     computeActionConnect(actions, onPress) {
-        if (!driveStore.rental || driveStore.rental.status !== RENTAL_STATUS.ONGOING || !driveStore.rental.contract_signed || !driveStore.rental.key_id || !this.key) { return }
+        if (!driveStore.rental || driveStore.rental.status !== RENTAL_STATUS.ONGOING || !driveStore.rental.contract_signed || !driveStore.rental.key_id || !this.key || (this.key && !this.key.isEnabled) || this.isConnected) { return }
         actions.push({ style: this.isConnecting || this.isConnected ? actionStyles.DISABLE : actionStyles.TODO, icon: icons.CONNECT, onPress: onPress })
     }
 
