@@ -1,5 +1,7 @@
 package com.ufodrive.app;
 
+import android.bluetooth.BluetoothAdapter;
+import android.content.Intent;
 import android.widget.Toast;
 
 import com.facebook.react.bridge.Arguments;
@@ -258,7 +260,7 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
         getOtaSdk().getApi().enableKey(otaKeyRequest, new EnableKeyCallback() {
             @Override
             public void onEnableKey(OtaKey otaKey) {
-                promise.resolve(convert(otaKey));
+                switchToKey(otaKey, promise);
             }
             @Override
             public void onApiError(HttpStatus httpStatus, ApiCode errorCode) {
@@ -478,6 +480,18 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
     void connect(boolean showNotification, final Promise promise){
 
         try {
+
+            BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            if (mBluetoothAdapter == null) {
+                promise.reject("Device not supported", "This device does not support bluetooth connection");
+                return;
+            }
+
+            if (!mBluetoothAdapter.isEnabled()) {
+                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                getCurrentActivity().startActivityForResult(enableBtIntent, 90);
+            }
+
             getOtaSdk().getBle().connect(showNotification, new BleConnectionCallback() {
                 @Override
                 public void onConnected() {

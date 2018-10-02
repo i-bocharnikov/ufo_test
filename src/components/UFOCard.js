@@ -60,7 +60,11 @@ export default class UFOCard extends Component {
                 }
                 {hasMessage && (
                     <CardItem style={[styles[messageStyle]]}>
-                        <UFOText h5 note>{message}</UFOText>
+                        <Left>
+                            <Body>
+                                <UFOText h5 note>{message}</UFOText>
+                            </Body>
+                        </Left>
                     </CardItem>
                 )
                 }

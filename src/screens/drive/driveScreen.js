@@ -33,10 +33,8 @@ class DriveScreen extends Component {
     }
 
     if (driveStore.rental && driveStore.rental.key_id) {
-      if (!otaKeyStore.key || !otaKeyStore.key.isEnabled) {
-        if (await otaKeyStore.enableKey(driveStore.rental.key_id)) {
-          await otaKeyStore.connect(true)
-        }
+      if (await otaKeyStore.enableKey(driveStore.rental.key_id)) {
+        await otaKeyStore.connect(true)
       }
     }
   }
@@ -96,7 +94,7 @@ class DriveScreen extends Component {
         driveStore.computeActionStartContract(actions, () => this.props.navigation.navigate(screens.RENTAL_AGREEMENT.name))
 
         otaKeyStore.computeActionEnableKey(actions, () => otaKeyStore.enableKey(driveStore.rental.key_id))
-        otaKeyStore.computeActionConnect(actions, () => otaKeyStore.connect(true))
+        otaKeyStore.computeActionConnect(actions, () => otaKeyStore.connect(false))
         otaKeyStore.computeActionUnlock(actions, () => otaKeyStore.unlockDoors(true))
         otaKeyStore.computeActionLock(actions, () => otaKeyStore.lockDoors(true))
         if (driveStore.rental && driveStore.rental.contract_signed && !driveStore.rental.contract_ended) {
@@ -117,7 +115,7 @@ class DriveScreen extends Component {
         <KeyboardAwareScrollView refreshControl={_RefreshControl}>
           {!this.driveSelected && !driveStore.hasRentals && (
             <View style={{ flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
-              <View style={{ paddingTop: '10%', paddingLeft: '10%', paddingRight: '10%' }} >
+              <View style={{ paddingTop: 20, paddingLeft: 20, paddingRight: 20 }} >
                 <UFOText h2 inverted center style={{ paddingTop: 10 }}>{t('home:reserve', { user: registerStore.user })}</UFOText>
                 <UFOText h2 inverted center style={{ paddingTop: 5 }}>{t('home:register', { user: registerStore.user })}</UFOText>
                 <UFOText h2 inverted center style={{ paddingTop: 5 }}>{t('home:drive', { user: registerStore.user })}</UFOText>
@@ -127,7 +125,7 @@ class DriveScreen extends Component {
           )}
 
           {driveStore.hasRentals && driveStore.rental && (
-            <View style={{ paddingTop: "10%" }}>
+            <View style={{ paddingTop: 20 }}>
               <UFOSlider data={driveStore.rentals} renderItem={this.renderRental} onSnapToItem={this.selectRental} firstItem={driveStore.index} />
             </View>
           )}

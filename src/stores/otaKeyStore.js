@@ -256,15 +256,15 @@ class OTAKeyStore {
     }
 
     @action
-    async getUsedKey(keyId: string): Promise<boolean> {
+    async getUsedKey(): Promise<boolean> {
 
         try {
-            this.debug(`-> this.ota.getUsedKey(${keyId}) start`)
-            this.key = await this.ota.getUsedKey(keyId)
-            this.debug(`<- this.ota.getUsedKey(${keyId}) return ${JSON.stringify(this.key)}`)
+            this.debug(`-> this.ota.getUsedKey() start`)
+            this.key = await this.ota.getUsedKey()
+            this.debug(`<- this.ota.getUsedKey() return ${JSON.stringify(this.key)}`)
             return true
         } catch (error) {
-            this.debug(`<- this.ota.getUsedKey(${keyId}) failed ${error}`)
+            this.debug(`<- this.ota.getUsedKey() failed ${error}`)
             return false
         }
     }
@@ -383,6 +383,8 @@ class OTAKeyStore {
     async connect(showNotification: boolean): Promise<boolean> {
 
         try {
+            await this.getUsedKey()
+
             this.debug(`-> this.ota.connect(${String(showNotification)}) start`)
             let result = await this.ota.connect(showNotification)
             this.debug(`<- this.ota.connect(${String(showNotification)}) return ${result}`)
