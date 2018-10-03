@@ -2,7 +2,7 @@ import axios from "axios";
 import configurations from "../utils/configurations"
 import { errors, UFOError } from '../utils/global'
 import activitiesStore from '../stores/activitiesStore'
-import { showError } from './interaction'
+import { showToastError } from './interaction'
 import RNFetchBlob from 'rn-fetch-blob'
 
 export let SAVE_TOKEN = null
@@ -173,11 +173,11 @@ export async function checkConnectivity() {
     }
 }
 
-function handleError(error, suppressToastBox) {
+async function handleError(error, suppressToastBox) {
     let ufoError = formatApiError(error);
     console.debug("api.get error.stack: ", error);
     if (!suppressToastBox) {
-        showError(ufoError.key, ufoError.message)
+        await showToastError(ufoError.key, ufoError.message)
     }
 }
 

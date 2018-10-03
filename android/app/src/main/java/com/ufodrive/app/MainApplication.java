@@ -1,10 +1,6 @@
 package com.ufodrive.app;
 
-import android.app.Application;
-import android.content.ComponentName;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.IBinder;
+
 
 import com.facebook.react.ReactApplication;
 import com.masteratul.exceptionhandler.ReactNativeExceptionHandlerPackage;
@@ -20,7 +16,6 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.otakeys.sdk.OtaKeysApplication;
-import com.otakeys.sdk.service.OtaKeysService;
 
 import java.util.Arrays;
 import java.util.List;

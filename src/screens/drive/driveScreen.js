@@ -34,7 +34,7 @@ class DriveScreen extends Component {
 
     if (driveStore.rental && driveStore.rental.key_id) {
       if (await otaKeyStore.enableKey(driveStore.rental.key_id)) {
-        await otaKeyStore.connect(true)
+        await otaKeyStore.connect(false, false)
       }
     }
   }
@@ -94,7 +94,7 @@ class DriveScreen extends Component {
         driveStore.computeActionStartContract(actions, () => this.props.navigation.navigate(screens.RENTAL_AGREEMENT.name))
 
         otaKeyStore.computeActionEnableKey(actions, () => otaKeyStore.enableKey(driveStore.rental.key_id))
-        otaKeyStore.computeActionConnect(actions, () => otaKeyStore.connect(false))
+        otaKeyStore.computeActionConnect(actions, () => otaKeyStore.connect(true, true))
         otaKeyStore.computeActionUnlock(actions, () => otaKeyStore.unlockDoors(true))
         otaKeyStore.computeActionLock(actions, () => otaKeyStore.lockDoors(true))
         if (driveStore.rental && driveStore.rental.contract_signed && !driveStore.rental.contract_ended) {

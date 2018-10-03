@@ -1,9 +1,11 @@
 // @flow  
-import { NativeModules, DeviceEventEmitter } from 'react-native';
+import { NativeModules, DeviceEventEmitter, AppRegistry } from 'react-native';
 import { observable, action } from 'mobx';
 import moment from 'moment';
 import { driveStore } from '.';
 import { actionStyles, icons } from '../utils/global';
+import { postToApi, checkConnectivity } from '../utils/api';
+import { showToastError } from '../utils/interaction';
 
 const RENTAL_STATUS = {
     CONFIRMED: 'confirmed',
@@ -74,6 +76,26 @@ class OTAKeyStore {
 
     constructor() {
         this.register()
+        AppRegistry.registerHeadlessTask('ExportUserExperienceTask', this.exportPendingUserExperiences);
+    }
+
+
+    userExperiences = []
+
+    async exportPendingUserExperiences(taskData) {
+        console.log("exportPendingUserExperiences started with ", taskData)
+        if (await checkConnectivity()) {
+            let isConnected = true
+            while (this.userExperiences.length > 0 && isConnected) {
+                try {
+                    await postToApi("/user_experiences", this.userExperiences.shift())
+                } catch (error) {
+                    isConnected = await checkConnectivity()
+                    console.log("exportPendingUserExperiences failed", error)
+                }
+            }
+        }
+        console.log("exportPendingUserExperiences stopped with ", taskData)
     }
 
     keyAccessDeviceRegistrationNumber = 970101
@@ -91,11 +113,36 @@ class OTAKeyStore {
     @observable isConnecting = false
     @observable isConnected = false
 
-    debug(message: string): void {
+    async trace(severity, action, code, message, description = "") {
+
         let date = moment()
-        console.log(date.format("HH:mm:ss:SSS") + message)
-        this.otaLog = date.format("HH:mm:ss:SSS") + message + '\n' + this.otaLog
+        if (severity !== "debug") {
+
+            let ue = {
+                severity: severity,
+                action: action,
+                code: code,
+                message: message,
+                description: code === 0 ? { result: description } : { error: description },
+                context: { key: this.key, vehicleData: this.vehicleData },
+                performed_at: date.toDate()
+            }
+
+            if (await checkConnectivity()) {
+                try {
+                    await postToApi("/user_experiences", ue)
+                } catch (error) {
+                    console.log("exportPendingUserExperiences failed", error)
+                }
+            } else {
+                this.userExperiences.push(ue);
+            }
+        }
+
+        console.log(date.format("HH:mm:ss") + " " + severity + " " + action + " " + message)
+        this.otaLog = date.format("HH:mm:ss") + " " + severity + " " + action + " " + message + '\n' + this.otaLog
     }
+
 
 
     computeActionEnableKey(actions, onPress) {
@@ -129,7 +176,7 @@ class OTAKeyStore {
     @action
     onOtaVehicleDataUpdated = (otaVehicleData) => {
         try {
-            this.debug(`>>onOtaVehicleDataUpdated ${otaVehicleData.doorsLocked ? "LOCKED" : "UNLOCKED"} / ${otaVehicleData.engineRunning ? "STARTED" : "STOPPED"} / ${otaVehicleData.energyCurrent + "%"}`)
+            this.trace("info", "onOtaVehicleDataUpdated", 0, `>> ${otaVehicleData.doorsLocked ? "LOCKED" : "UNLOCKED"} / ${otaVehicleData.engineRunning ? "STARTED" : "STOPPED"} / ${otaVehicleData.energyCurrent + "%"}`)
             if (!this.vehicleData) {
                 this.vehicleData = new VehicleData
             }
@@ -144,7 +191,7 @@ class OTAKeyStore {
     @action
     onOtaActionPerformed = (otaAction) => {
         try {
-            this.debug(`>>onOtaActionPerformed ${otaAction.otaOperation} / ${otaAction.otaState}`)
+            this.trace("info", "onOtaActionPerformed", 0, `>> ${otaAction.otaOperation} / ${otaAction.otaState}`)
         } catch (error) {
             console.log(error)
         }
@@ -153,7 +200,7 @@ class OTAKeyStore {
     @action
     onOtaBluetoothStateChanged = async (otaBluetoothState) => {
         try {
-            this.debug(`>>onOtaBluetoothStateChanged" ${otaBluetoothState.newBluetoothState}`)
+            this.trace("info", "onOtaBluetoothStateChanged", 0, `>> ${otaBluetoothState.newBluetoothState}`)
             if (otaBluetoothState.newBluetoothState === 'CONNECTED') {
                 this.isConnected = true
                 this.isConnecting = false
@@ -179,22 +226,17 @@ class OTAKeyStore {
     async register(): Promise<boolean> {
 
         try {
-            this.debug(`-> this.ota.register(${String(this.keyAccessDeviceRegistrationNumber)}) start`)
+            this.trace("debug", "register", 0, `-> this.ota.register(${String(this.keyAccessDeviceRegistrationNumber)}) start`)
             let result = await this.ota.register(this.keyAccessDeviceRegistrationNumber)
 
             DeviceEventEmitter.addListener('onOtaVehicleDataUpdated', this.onOtaVehicleDataUpdated);
             DeviceEventEmitter.addListener('onOtaActionPerformed', this.onOtaActionPerformed);
             DeviceEventEmitter.addListener('onOtaBluetoothStateChanged', this.onOtaBluetoothStateChanged);
-            /*
-                        if (this.isConnectedToVehicle()) {
-                            this.isConnected = true
-                            await this.getVehicleData()
-                        }*/
 
-            this.debug(`<- this.ota.register(${String(this.keyAccessDeviceRegistrationNumber)}) return ${result}`)
+            this.trace("info", "registerToOTA", 0, `<- this.ota.register(${String(this.keyAccessDeviceRegistrationNumber)}) return ${result}`, result)
             return result
         } catch (error) {
-            this.debug(`<- this.ota.register(${String(this.keyAccessDeviceRegistrationNumber)}) failed ${error}`)
+            this.trace("error", "registerToOTA", 1, `<- this.ota.register(${String(this.keyAccessDeviceRegistrationNumber)}) failed ${error}`, error)
             return false
         }
     }
@@ -202,11 +244,11 @@ class OTAKeyStore {
     @action
     async getKeyAccessDeviceIdentifier(force: boolean = false): Promise<string> {
         try {
-            this.debug(`-> this.ota.getAccessDeviceToken(${String(force)}) start`)
+            this.trace("debug", "getOTAKeyAccessDeviceIdentifier", 0, `-> this.ota.getAccessDeviceToken(${String(force)}) start`)
             this.keyAccessDeviceIdentifier = await this.ota.getAccessDeviceToken(force)
-            this.debug(`<- this.ota.getAccessDeviceToken(${String(force)}) return ${this.keyAccessDeviceIdentifier}`)
+            this.trace("info", "getOTAKeyAccessDeviceIdentifier", 0, `<- this.ota.getAccessDeviceToken(${String(force)}) return ${this.keyAccessDeviceIdentifier}`)
         } catch (error) {
-            this.debug(`<- this.ota.getAccessDeviceToken(${String(force)}) failed ${error}`)
+            this.trace("error", "getOTAKeyAccessDeviceIdentifier", 1, `<- this.ota.getAccessDeviceToken(${String(force)}) failed ${error}`, error)
         }
         return this.keyAccessDeviceIdentifier
     }
@@ -216,12 +258,12 @@ class OTAKeyStore {
 
         try {
             this.keyAccessDeviceToken = keyAccessDeviceToken
-            this.debug(`-> this.ota.openSession(${this.keyAccessDeviceToken}) start`)
+            this.trace("debug", "openOTASession", 0, `-> this.ota.openSession(${this.keyAccessDeviceToken}) start`)
             let result = await this.ota.openSession(keyAccessDeviceToken)
-            this.debug(`<- this.ota.openSession(${this.keyAccessDeviceToken}) return ${result}`)
+            this.trace("info", "openOTASession", 0, `<- this.ota.openSession(${this.keyAccessDeviceToken}) return ${result}`, result)
             return result
         } catch (error) {
-            this.debug(`<- this.ota.openSession(${this.keyAccessDeviceToken}) failed ${error}`)
+            this.trace("error", "openOTASession", 1, `<- this.ota.openSession(${this.keyAccessDeviceToken}) failed ${error}`, error)
             return false
         }
     }
@@ -231,12 +273,12 @@ class OTAKeyStore {
     async getVehicleData(): Promise<boolean> {
 
         try {
-            this.debug(`-> this.ota.getVehicleData() start`)
+            this.trace("debug", "getVehicleData", 0, `-> this.ota.getVehicleData() start`)
             let result = await this.ota.getVehicleData()
-            this.debug(`<- this.ota.getVehicleData() return ${result}`)
+            this.trace("info", "getVehicleData", 0, `<- this.ota.getVehicleData() return ${result}`, result)
             return result
         } catch (error) {
-            this.debug(`<- this.ota.getVehicleData() failed ${error}`)
+            this.trace("error", "getVehicleData", 1, `<- this.ota.getVehicleData() failed ${error}`, error)
             return false
         }
     }
@@ -245,12 +287,12 @@ class OTAKeyStore {
     async getKey(keyId: string): Promise<boolean> {
 
         try {
-            this.debug(`-> this.ota.getKey(${keyId}) start`)
+            this.trace("debug", "getKey", 0, `-> this.ota.getKey(${keyId}) start`)
             this.key = await this.ota.getKey(keyId)
-            this.debug(`<- this.ota.getKey(${keyId}) return ${this.key}`)
+            this.trace("info", "getKey", 0, `<- this.ota.getKey(${keyId}) return ${this.key}`, this.key)
             return true
         } catch (error) {
-            this.debug(`<- this.ota.getKey(${keyId}) failed ${error}`)
+            this.trace("error", "getKey", 1, `<- this.ota.getKey(${keyId}) failed ${error}`, error)
             return false
         }
     }
@@ -259,12 +301,12 @@ class OTAKeyStore {
     async getUsedKey(): Promise<boolean> {
 
         try {
-            this.debug(`-> this.ota.getUsedKey() start`)
+            this.trace("debug", "getUsedKey", 0, `-> this.ota.getUsedKey() start`)
             this.key = await this.ota.getUsedKey()
-            this.debug(`<- this.ota.getUsedKey() return ${JSON.stringify(this.key)}`)
+            this.trace("info", "getUsedKey", 0, `<- this.ota.getUsedKey() return ${JSON.stringify(this.key)}`, this.key)
             return true
         } catch (error) {
-            this.debug(`<- this.ota.getUsedKey() failed ${error}`)
+            this.trace("error", "getUsedKey", 1, `<- this.ota.getUsedKey() failed ${error}`, error)
             return false
         }
     }
@@ -273,12 +315,12 @@ class OTAKeyStore {
     async enableKey(keyId: string): Promise<boolean> {
 
         try {
-            this.debug(`-> this.ota.enableKey(${keyId}) start`)
+            this.trace("debug", "enableKey", 0, `-> this.ota.enableKey(${keyId}) start`)
             this.key = await this.ota.enableKey(keyId)
-            this.debug(`<- this.ota.enableKey(${keyId}) return ${JSON.stringify(this.key)}`)
+            this.trace("info", "enableKey", 0, `<- this.ota.enableKey(${keyId}) return ${JSON.stringify(this.key)}`, this.key)
             return true
         } catch (error) {
-            this.debug(`<- this.ota.enableKey(${keyId}) failed ${error}`)
+            this.trace("error", "enableKey", 1, `<- this.ota.enableKey(${keyId}) failed ${error}`, error)
             return false
         }
     }
@@ -287,12 +329,12 @@ class OTAKeyStore {
     async endKey(keyId: string): Promise<boolean> {
 
         try {
-            this.debug(`-> this.ota.endKey(${keyId}) start`)
+            this.trace("debug", "endKey", 0, `-> this.ota.endKey(${keyId}) start`)
             this.key = await this.ota.endKey(keyId)
-            this.debug(`<- this.ota.endKey(${keyId}) return ${this.key}`)
+            this.trace("info", "endKey", 0, `<- this.ota.endKey(${keyId}) return ${this.key}`, this.key)
             return true
         } catch (error) {
-            this.debug(`<- this.ota.endKey(${keyId}) failed ${error}`)
+            this.trace("error", "endKey", 1, `<- this.ota.endKey(${keyId}) failed ${error}`, error)
             return false
         }
     }
@@ -301,12 +343,12 @@ class OTAKeyStore {
     async switchToKey(): Promise<boolean> {
 
         try {
-            this.debug(`-> this.ota.switchToKey(${String(this.key)}) start`)
+            this.trace("debug", "switchToKey", 0, `-> this.ota.switchToKey(${String(this.key)}) start`)
             this.key = await this.ota.switchToKey(this.key)
-            this.debug(`<- this.ota.switchToKey(${String(this.key)}) return ${String(this.key)}`)
+            this.trace("info", "switchToKey", 0, `<- this.ota.switchToKey(${String(this.key)}) return ${String(this.key)}`, this.key)
             return true
         } catch (error) {
-            this.debug(`<- this.ota.switchToKey(${String(this.key)}) failed ${error}`)
+            this.trace("error", "switchToKey", 1, `<- this.ota.switchToKey(${String(this.key)}) failed ${error}`, error)
             return false
         }
     }
@@ -315,12 +357,12 @@ class OTAKeyStore {
     async syncVehicleData(): Promise<boolean> {
 
         try {
-            this.debug(`-> this.ota.syncVehicleData() start`)
+            this.trace("debug", "syncVehicleData", 0, `-> this.ota.syncVehicleData() start`)
             let result = await this.ota.syncVehicleData()
-            this.debug(`<- this.ota.syncVehicleData() return ${result}`)
+            this.trace("info", "syncVehicleData", 0, `<- this.ota.syncVehicleData() return ${result}`, result)
             return result
         } catch (error) {
-            this.debug(`<- this.ota.syncVehicleData() failed ${error}`)
+            this.trace("error", "syncVehicleData", 1, `<- this.ota.syncVehicleData() failed ${error}`, error)
             return false
         }
     }
@@ -330,12 +372,12 @@ class OTAKeyStore {
     async configureNetworkTimeouts(connectTimeout: Number, readTimeout: Number): Promise<boolean> {
 
         try {
-            this.debug(`-> this.ota.configureNetworkTimeouts(${String(connectTimeout)}, ${String(readTimeout)}) start`)
+            this.trace("debug", "configureOTANetworkTimeouts", 0, `-> this.ota.configureNetworkTimeouts(${String(connectTimeout)}, ${String(readTimeout)}) start`)
             let result = await this.ota.configureNetworkTimeouts(connectTimeout, readTimeout)
-            this.debug(`<- this.ota.configureNetworkTimeouts(${String(connectTimeout)}, ${String(readTimeout)}) return ${result}`)
+            this.trace("info", "configureOTANetworkTimeouts", 0, `<- this.ota.configureNetworkTimeouts(${String(connectTimeout)}, ${String(readTimeout)}) return ${result}`, result)
             return result
         } catch (error) {
-            this.debug(`<- this.ota.configureNetworkTimeouts(${String(connectTimeout)}, ${String(readTimeout)}) failed ${error}`)
+            this.trace("error", "configureOTANetworkTimeouts", 1, `<- this.ota.configureNetworkTimeouts(${String(connectTimeout)}, ${String(readTimeout)}) failed ${error}`, error)
             return false
         }
     }
@@ -343,12 +385,12 @@ class OTAKeyStore {
     async isConnectedToVehicle(): Promise<boolean> {
 
         try {
-            this.debug(`-> this.ota.isConnectedToVehicle() start`)
+            this.trace("debug", "isConnectedToVehicle", 0, `-> this.ota.isConnectedToVehicle() start`)
             let result = await this.ota.isConnectedToVehicle()
-            this.debug(`<- this.ota.isConnectedToVehicle() return ${result}`)
+            this.trace("info", "isConnectedToVehicle", 0, `<- this.ota.isConnectedToVehicle() return ${result}`, result)
             return result
         } catch (error) {
-            this.debug(`<- this.ota.isConnectedToVehicle() failed ${error}`)
+            this.trace("error", "isConnectedToVehicle", 1, `<- this.ota.isConnectedToVehicle() failed ${error}`, error)
             return false
         }
     }
@@ -356,12 +398,12 @@ class OTAKeyStore {
     async isOperationInProgress(): Promise<boolean> {
 
         try {
-            this.debug(`-> this.ota.isOperationInProgress() start`)
+            this.trace("debug", "isOTAOperationInProgress", 0, `-> this.ota.isOperationInProgress() start`)
             let result = await this.ota.isOperationInProgress()
-            this.debug(`<- this.ota.isOperationInProgress() return ${result}`)
+            this.trace("info", "isOTAOperationInProgress", 0, `<- this.ota.isOperationInProgress() return ${result}`, result)
             return result
         } catch (error) {
-            this.debug(`<- this.ota.isOperationInProgress() failed ${error}`)
+            this.trace("error", "isOTAOperationInProgress", 1, `<- this.ota.isOperationInProgress() failed ${error}`, error)
             return false
         }
     }
@@ -370,27 +412,28 @@ class OTAKeyStore {
     async getBluetoothState(): Promise<string> {
 
         try {
-            this.debug(`-> this.ota.getBluetoothState() start`)
+            this.trace("debug", "getBluetoothState", 0, `-> this.ota.getBluetoothState() start`)
             let result = await this.ota.getBluetoothState()
-            this.debug(`<- this.ota.getBluetoothState() return ${result}`)
+            this.trace("info", "getBluetoothState", 0, `<- this.ota.getBluetoothState() return ${result}`, result)
             return result
         } catch (error) {
-            this.debug(`<- this.ota.getBluetoothState() failed ${error}`)
+            this.trace("error", "getBluetoothState", 1, `<- this.ota.getBluetoothState() failed ${error}`, error)
             return "UNKNOWN"
         }
     }
 
-    async connect(showNotification: boolean): Promise<boolean> {
+    async connect(showNotification: boolean, showError = true): Promise<boolean> {
 
         try {
-            await this.getUsedKey()
-
-            this.debug(`-> this.ota.connect(${String(showNotification)}) start`)
+            this.trace("debug", "connectToVehicle", 0, `-> this.ota.connect(${String(showNotification)}) start`)
             let result = await this.ota.connect(showNotification)
-            this.debug(`<- this.ota.connect(${String(showNotification)}) return ${result}`)
+            this.trace("info", "connectToVehicle", 0, `<- this.ota.connect(${String(showNotification)}) return ${result}`, result)
             return result
         } catch (error) {
-            this.debug(`<- this.ota.connect(${String(showNotification)}) failed ${error}`)
+            this.trace("error", "connectToVehicle", 1, `<- this.ota.connect(${String(showNotification)}) failed ${error}`, error)
+            if (showError) {
+                showToastError(error.code, error.message)
+            }
             return false
         }
     }
@@ -399,12 +442,12 @@ class OTAKeyStore {
     async disconnect(): Promise<boolean> {
 
         try {
-            this.debug(`-> this.ota.disconnect() start`)
+            this.trace("debug", "disconnectFromVehicle", 0, `-> this.ota.disconnect() start`)
             let result = await this.ota.disconnect()
-            this.debug(`<- this.ota.disconnect() return ${result}`)
+            this.trace("info", "disconnectFromVehicle", 0, `<- this.ota.disconnect() return ${result}`, result)
             return result
         } catch (error) {
-            this.debug(`<- this.ota.disconnect() failed ${error}`)
+            this.trace("error", "disconnectFromVehicle", 1, `<- this.ota.disconnect() failed ${error}`, error)
             return false
         }
     }
@@ -412,17 +455,12 @@ class OTAKeyStore {
     async unlockDoors(requestVehicleData: boolean): Promise<boolean> {
 
         try {
-
-            //if(this.key)
-
-
-
-            this.debug(`-> this.ota.unlockDoors(${String(requestVehicleData)}) start`)
+            this.trace("debug", "unlockDoors", 0, `-> this.ota.unlockDoors(${String(requestVehicleData)}) start`)
             let result = await this.ota.unlockDoors(requestVehicleData, true)
-            this.debug(`<- this.ota.unlockDoors(${String(requestVehicleData)}) return ${result}`)
+            this.trace("info", "unlockDoors", 0, `<- this.ota.unlockDoors(${String(requestVehicleData)}) return ${result}`, result)
             return result
         } catch (error) {
-            this.debug(`<- this.ota.unlockDoors(${String(requestVehicleData)}) failed ${error}`)
+            this.trace("error", "unlockDoors", 1, `<- this.ota.unlockDoors(${String(requestVehicleData)}) failed ${error}`, error)
             return false
         }
     }
@@ -430,12 +468,12 @@ class OTAKeyStore {
     async lockDoors(requestVehicleData: boolean): Promise<boolean> {
 
         try {
-            this.debug(`-> this.ota.lockDoors(${String(requestVehicleData)}) start`)
+            this.trace("debug", "lockDoors", 0, `-> this.ota.lockDoors(${String(requestVehicleData)}) start`)
             let result = await this.ota.lockDoors(requestVehicleData)
-            this.debug(`<- this.ota.lockDoors(${String(requestVehicleData)}) return ${result}`)
+            this.trace("info", "lockDoors", 0, `<- this.ota.lockDoors(${String(requestVehicleData)}) return ${result}`, result)
             return result
         } catch (error) {
-            this.debug(`<- this.ota.lockDoors(${String(requestVehicleData)}) failed ${error}`)
+            this.trace("error", "lockDoors", 1, `<- this.ota.lockDoors(${String(requestVehicleData)}) failed ${error}`, error)
             return false
         }
     }
@@ -444,12 +482,12 @@ class OTAKeyStore {
     async enableEngine(requestVehicleData: boolean): Promise<boolean> {
 
         try {
-            this.debug(`-> this.ota.enableEngine(${String(requestVehicleData)}) start`)
+            this.trace("debug", "enableEngine", 0, `-> this.ota.enableEngine(${String(requestVehicleData)}) start`)
             let result = await this.ota.enableEngine(requestVehicleData)
-            this.debug(`<- this.ota.enableEngine(${String(requestVehicleData)}) return ${result}`)
+            this.trace("info", "enableEngine", 0, `<- this.ota.enableEngine(${String(requestVehicleData)}) return ${result}`, result)
             return result
         } catch (error) {
-            this.debug(`<- this.ota.enableEngine(${String(requestVehicleData)}) failed ${error}`)
+            this.trace("error", "enableEngine", 1, `<- this.ota.enableEngine(${String(requestVehicleData)}) failed ${error}`, error)
             return false
         }
     }
@@ -457,12 +495,12 @@ class OTAKeyStore {
     async disableEngine(requestVehicleData: boolean): Promise<boolean> {
 
         try {
-            this.debug(`-> this.ota.disableEngine(${String(requestVehicleData)}) start`)
+            this.trace("debug", "disableEngine", 0, `-> this.ota.disableEngine(${String(requestVehicleData)}) start`)
             let result = await this.ota.disableEngine(requestVehicleData)
-            this.debug(`<- this.ota.disableEngine(${String(requestVehicleData)}) return ${result}`)
+            this.trace("info", "disableEngine", 0, `<- this.ota.disableEngine(${String(requestVehicleData)}) return ${result}`, result)
             return result
         } catch (error) {
-            this.debug(`<- this.ota.disableEngine(${String(requestVehicleData)}) failed ${error}`)
+            this.trace("error", "disableEngine", 1, `<- this.ota.disableEngine(${String(requestVehicleData)}) failed ${error}`, error)
             return false
         }
     }

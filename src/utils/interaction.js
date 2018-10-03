@@ -1,6 +1,5 @@
 
-import { Toast } from 'native-base';
-import { Alert, Vibration } from 'react-native';
+import { Alert, Vibration, ToastAndroid } from 'react-native';
 
 export async function confirm(title, message, action) {
     await Alert.alert(
@@ -14,18 +13,10 @@ export async function confirm(title, message, action) {
     )
 }
 
-export function showError(key, message) {
-    Vibration.vibrate()
+export async function showToastError(key, message) {
+    await Vibration.vibrate()
     //TODO TRANSLATION with key
-    Toast.show({
-        text: message,
-        buttonText: 'Ok',
-        type: "danger",
-        duration: 5000,
-        position: "top",
-        buttonTextStyle: { color: "#008000" },
-        buttonStyle: { backgroundColor: "#5cb85c" }
-    });
+    await ToastAndroid.showWithGravity(message, ToastAndroid.LONG, ToastAndroid.TOP)
 }
 
 export function showInfo(message) {

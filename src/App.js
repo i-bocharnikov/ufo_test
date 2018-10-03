@@ -3,7 +3,7 @@ import { createBottomTabNavigator, createStackNavigator } from 'react-navigation
 import { Root, StyleProvider } from "native-base";
 import { translate } from "react-i18next";
 import { observer } from "mobx-react";
-import { StyleSheet, View, ActivityIndicator, Platform, StatusBar } from 'react-native';
+import { StyleSheet, View, ActivityIndicator, Platform, StatusBar, Alert } from 'react-native';
 
 //Temporary ignore warning comming from react-native
 import { YellowBox } from 'react-native';

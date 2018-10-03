@@ -2,6 +2,7 @@ package com.ufodrive.app;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
+import android.os.Bundle;
 import android.widget.Toast;
 
 import com.facebook.react.bridge.Arguments;
@@ -131,6 +132,15 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
     public void register(int registrationNumber, final Promise promise) {
         try {
             getOtaSdk().getBle().registerBleEvents(registrationNumber, this);
+
+            /*Intent service = new Intent(getReactApplicationContext().getApplicationContext(), ExportUserExperienceService.class);
+            Bundle bundle = new Bundle();
+
+            bundle.putString("test", "ok");
+            service.putExtras(bundle);
+
+            getReactApplicationContext().getApplicationContext().startService(service);*/
+
             getOtaSdk().setOnListenService(new ServiceStateCallback() { 
                 @Override
                 public void onServiceReady(OtaKeysService service) {

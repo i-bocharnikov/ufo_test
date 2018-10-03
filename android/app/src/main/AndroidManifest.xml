@@ -1,8 +1,8 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ufodrive.app">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.ufodrive.app">
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> 
@@ -17,6 +17,16 @@
       android:icon="@mipmap/ic_launcher"
       android:allowBackup="false"
       android:theme="@style/AppTheme">
+      <service android:name=".ExportUserExperienceService" />
+    <receiver
+        android:name=".NetworkChangeReceiver"
+        android:label="NetworkChangeReceiver" >
+        <intent-filter>
+            <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+        </intent-filter>
+    </receiver>
+
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
@@ -29,7 +39,7 @@
         </intent-filter>
       </activity>
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
-      <provider android:authorities="com.ufodrive.app" android:exported="false" android:name="com.activeandroid.content.ContentProvider"/>
-    </application>
+      <provider android:authorities="com.ufodrive.app" android:exported="false" android:name="com.activeandroid.content.ContentProvider" />
 
+    </application>
 </manifest>
