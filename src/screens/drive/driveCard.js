@@ -14,7 +14,23 @@ import { Left, Body } from "native-base";
 @observer
 class DriveCard extends Component {
 
-  componentDidMount() {
+  async componentDidMount() {
+
+    if (driveStore.rental && driveStore.rental.key_id) {
+      if (!otaKeyStore.isKeyEnabled) {
+        console.log("************$$ start enableKey")
+        //        await otaKeyStore.enableKey(driveStore.rental.key_id)
+      }
+      //await otaKeyStore.connect(false, false)
+
+      await otaKeyStore.getKey(driveStore.rental.key_id)
+      await otaKeyStore.enableKey(driveStore.rental.key_id)
+      await otaKeyStore.switchToKey()
+      await otaKeyStore.getUsedKey()
+      await otaKeyStore.syncVehicleData()
+      await otaKeyStore.connect()
+      await otaKeyStore.getVehicleData()
+    }
   }
 
   render() {

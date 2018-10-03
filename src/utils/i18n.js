@@ -158,6 +158,9 @@ i18n.use(LanguageDetector).init({
                 "rentalAgreementTitle": "Sign the agreement",
                 "confirmContractSignatureConfirmationMessage": "By signing, I certify that I have read and fully accepted the terms and conditions."
             },
+            error: {
+                "noKey": "You currently have no key. Please ask support team to have one",
+            },
         },
         fr: {
             home: {

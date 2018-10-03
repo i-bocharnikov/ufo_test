@@ -32,11 +32,6 @@ class DriveScreen extends Component {
       this.driveSelected = true
     }
 
-    if (driveStore.rental && driveStore.rental.key_id) {
-      if (await otaKeyStore.enableKey(driveStore.rental.key_id)) {
-        await otaKeyStore.connect(false, false)
-      }
-    }
   }
 
   @observable driveSelected = false

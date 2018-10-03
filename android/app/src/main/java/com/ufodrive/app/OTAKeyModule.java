@@ -2,7 +2,6 @@ package com.ufodrive.app;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
-import android.os.Bundle;
 import android.widget.Toast;
 
 import com.facebook.react.bridge.Arguments;
@@ -14,6 +13,7 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.otakeys.sdk.OtaKeysApplication;
+import com.otakeys.sdk.core.tool.OtaLogger;
 import com.otakeys.sdk.service.OtaKeysService;
 import com.otakeys.sdk.service.api.callback.AuthenticateCallback;
 import com.otakeys.sdk.service.api.callback.EnableKeyCallback;
@@ -37,14 +37,12 @@ import com.otakeys.sdk.service.core.callback.SwitchToKeyCallback;
 import com.otakeys.sdk.service.object.request.OtaKeyRequest;
 import com.otakeys.sdk.service.object.request.OtaSessionRequest;
 import com.otakeys.sdk.service.object.response.OtaKey;
-import com.otakeys.sdk.service.object.response.OtaLastVehicleData;
 import com.otakeys.sdk.service.object.response.OtaOperation;
 import com.otakeys.sdk.service.object.response.OtaState;
 import com.otakeys.sdk.service.object.response.OtaVehicleData;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
-import org.json.JSONException;
 
 import javax.annotation.Nullable;
 
@@ -52,6 +50,8 @@ import javax.annotation.Nullable;
 public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListener {
 
     private static String DATE_TIME_ISO = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+
+    private static OtaKey LAST_ENABLED_KEY = null;
 
     public OTAKeyModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -131,6 +131,8 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
     @ReactMethod
     public void register(int registrationNumber, final Promise promise) {
         try {
+            OtaLogger.setDebugMode(true);
+
             getOtaSdk().getBle().registerBleEvents(registrationNumber, this);
 
             /*Intent service = new Intent(getReactApplicationContext().getApplicationContext(), ExportUserExperienceService.class);
@@ -270,7 +272,8 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
         getOtaSdk().getApi().enableKey(otaKeyRequest, new EnableKeyCallback() {
             @Override
             public void onEnableKey(OtaKey otaKey) {
-                switchToKey(otaKey, promise);
+                LAST_ENABLED_KEY = otaKey;
+                promise.resolve(convert(otaKey));
             }
             @Override
             public void onApiError(HttpStatus httpStatus, ApiCode errorCode) {
@@ -327,10 +330,10 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
      * No Internet Connectivity Required
      */
     @ReactMethod
-    public void switchToKey(OtaKey otaKey, final Promise promise  ) {
+    public void switchToKey( final Promise promise  ) {
 
         try {
-            getOtaSdk().getCore().switchToKey(otaKey, new SwitchToKeyCallback() {
+            getOtaSdk().getCore().switchToKey(LAST_ENABLED_KEY, new SwitchToKeyCallback() {
                 @Override
                 public void onKeySwitched(OtaKey otaKey) {
                      promise.resolve(convert(otaKey));
@@ -502,20 +505,22 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
                 getCurrentActivity().startActivityForResult(enableBtIntent, 90);
             }
 
+
             getOtaSdk().getBle().connect(showNotification, new BleConnectionCallback() {
                 @Override
                 public void onConnected() {
-                    promise.resolve(true);
-
+                        promise.resolve(true);
                 }
 
                 @Override
                 public void onBleError(BleError errorCode) {
-                    promise.reject(errorCode.name(), errorCode.toString());
+                    try {
+                        promise.reject(errorCode.name(), errorCode.toString());
+                    }catch(Exception e){}
                 }
             });
         }catch(java.lang.IllegalStateException exception){
-            promise.reject(exception);
+            silentException(exception);
         }
         return;
     }
@@ -543,7 +548,7 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
                 }
             });
         }catch(java.lang.IllegalStateException exception){
-            promise.reject(exception);
+            silentException(exception);
         }
         return;
     }
@@ -588,7 +593,7 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
                 }
             });
         }catch(java.lang.IllegalStateException exception){
-            promise.reject(exception);
+            silentException(exception);
         }
         return;
     }
@@ -626,7 +631,7 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
                 }
             });
         }catch(java.lang.IllegalStateException exception){
-            promise.reject(exception);
+            silentException(exception);
         }
         return;
     }
@@ -662,7 +667,7 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
                 }
             });
         }catch(java.lang.IllegalStateException exception){
-            promise.reject(exception);
+            silentException(exception);
         }
         return;
     }
@@ -698,7 +703,7 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
                 }
             });
         }catch(java.lang.IllegalStateException exception){
-            promise.reject(exception);
+            silentException(exception);
         }
         return;
     }
@@ -724,11 +729,13 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
 
                 @Override
                 public void onBleError(BleError errorCode) {
+                    Toast.makeText(getReactApplicationContext(), "OtaKeysService started!", Toast.LENGTH_LONG).show();
                     promise.reject(errorCode.name(), errorCode.toString());
                 }
             });
         }catch(java.lang.IllegalStateException exception){
-            promise.reject(exception);
+            Toast.makeText(getReactApplicationContext(), "OtaKeysService in Error!", Toast.LENGTH_LONG).show();
+            silentException(exception);
         }
         return;
     }
