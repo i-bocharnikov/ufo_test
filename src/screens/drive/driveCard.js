@@ -1,36 +1,24 @@
 import React, { Component } from "react";
 import { translate } from "react-i18next";
-import { View } from 'react-native'
+import { View, Dimensions } from 'react-native'
 import { observer } from "mobx-react";
 
-import { UFOText, UFOIcon, UFOImage } from '../../components/common'
-import { icons, colors, dateFormats, sizes } from '../../utils/global'
+
+import { UFOText, UFOImage } from '../../components/common'
+import { dateFormats, colors } from '../../utils/global'
 import { driveStore } from '../../stores'
 import otaKeyStore from '../../stores/otaKeyStore'
 import UFOCard from "../../components/UFOCard";
 import { Left, Body } from "native-base";
 
 
+const DRIVE_CARD_WIDTH = Dimensions.get('window').width / 1.5
+const DRIVE_CARD_HEIGHT = DRIVE_CARD_WIDTH / 2
+
 @observer
 class DriveCard extends Component {
 
   async componentDidMount() {
-
-    if (driveStore.rental && driveStore.rental.key_id) {
-      if (!otaKeyStore.isKeyEnabled) {
-        console.log("************$$ start enableKey")
-        //        await otaKeyStore.enableKey(driveStore.rental.key_id)
-      }
-      //await otaKeyStore.connect(false, false)
-
-      await otaKeyStore.getKey(driveStore.rental.key_id)
-      await otaKeyStore.enableKey(driveStore.rental.key_id)
-      await otaKeyStore.switchToKey()
-      await otaKeyStore.getUsedKey()
-      await otaKeyStore.syncVehicleData()
-      await otaKeyStore.connect()
-      await otaKeyStore.getVehicleData()
-    }
   }
 
   render() {
@@ -46,42 +34,18 @@ class DriveCard extends Component {
     }
 
     return (
-      <UFOCard
-        title={t("drive:rentalReference", { rental: rental })}
-        texts={[
-          t("drive:rentalStartAt", { start_at: driveStore.format(rental.start_at, dateFormats.FULL) }),
-          t("drive:rentalEndAt", { end_at: driveStore.format(rental.end_at, dateFormats.FULL) }),
-          t("drive:rentalLocation", { rental: rental })]}
-        imageSource={{ uri: location.image_url }}
-        message={driveStore.rental.message_for_driver}
-      >
-        <Left>
-          <UFOImage source={{ uri: carModel.image_front_url }} style={{ width: 100, height: 50 }} resizeMode={'contain'} />
-        </Left>
-        <Body>
-          <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start' }}>
-            <UFOText style={{ flex: 0.3 }}>{t("drive:rentalCarModel", { rental: rental })}</UFOText>
-            <UFOText h4 style={{ flex: 0.3 }}>{t("drive:rentalCar", { rental: rental })}</UFOText>
-            {driveStore.rental && (
-              <View style={{ flex: 0.3, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: "100%" }}>
-                <UFOText h4>{(driveStore.rental && !driveStore.rental.key_id) || !otaKeyStore.key.isEnabled ? t("drive:noKey") : otaKeyStore.isConnecting ? t("drive:connecting") : !otaKeyStore.isConnected ? t("drive:notConnected") : otaKeyStore.vehicleData ? otaKeyStore.vehicleData.doorsLocked ? t("drive:locked") : t("drive:unlocked") : t("drive:noData")}</UFOText>
-                {/*driveStore.rental.key_id && (
-                  <UFOIcon icon={icons.KEY} color={otaKeyStore.key ? otaKeyStore.key.isEnabled ? colors.SUCCESS : colors.ACTIVE : colors.ERROR} size={sizes.SMALL} />
-                )}
-                {driveStore.rental.key_id && (
-                  <UFOIcon icon={icons.BLUETOOTH} color={otaKeyStore.isConnected ? colors.SUCCESS : otaKeyStore.isConnecting ? colors.ACTIVE : colors.ERROR} size={sizes.SMALL} />
-                )}
-                {otaKeyStore.isConnected && otaKeyStore.vehicleData && (
-                  <UFOIcon icon={otaKeyStore.vehicleData.doorsLocked ? icons.LOCK : icons.UNLOCK} color={otaKeyStore.vehicleData.doorsLocked ? colors.ACTIVE : colors.SUCCESS} size={sizes.SMALL} />
-                )}
-                {otaKeyStore.isConnected && otaKeyStore.vehicleData && (
-                  <UFOIcon icon={otaKeyStore.vehicleData.engineRunning ? icons.START : icons.STOP} color={otaKeyStore.vehicleData.engineRunning ? colors.SUCCESS : colors.ACTIVE} size={sizes.SMALL} />
-                )*/}
-              </View>
-            )}
-          </View>
-        </Body>
-      </UFOCard>
+      <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: 10, backgroundColor: colors.CARD_BACKGROUND.string() }}>
+        <UFOText h3 style={{}}>{t("drive:rentalReference", { rental: rental })}</UFOText>
+        <UFOImage source={{ uri: carModel.image_side_url }} style={{ width: DRIVE_CARD_WIDTH, height: DRIVE_CARD_HEIGHT }} resizeMode={'contain'} />
+        <UFOText h3 bold style={{}}>{t("drive:rentalCarModel", { rental: rental })}</UFOText>
+        <UFOText h3 bold style={{}}>{t("drive:rentalCar", { rental: rental })}</UFOText>
+        {driveStore.inUse && (
+          <UFOText h4>{(driveStore.rental && !driveStore.rental.key_id) || !otaKeyStore.key.isEnabled ? t("drive:noKey") : otaKeyStore.isConnecting ? t("drive:connecting") : !otaKeyStore.isConnected ? t("drive:notConnected") : otaKeyStore.vehicleData ? otaKeyStore.vehicleData.doorsLocked ? t("drive:locked") : t("drive:unlocked") : t("drive:noData")}</UFOText>
+        )}
+        <UFOText h3 bold style={{ marginTop: 10 }}>{t("drive:rentalStartAt", { start_at: driveStore.format(rental.start_at, dateFormats.DRIVE) })}</UFOText>
+        <UFOText h3 upper style={{}}>{t("drive:rentalLocation", { rental: rental })}</UFOText>
+        <UFOText h3 bold style={{}}>{t("drive:rentalEndAt", { end_at: driveStore.format(rental.end_at, dateFormats.DRIVE) })}</UFOText>
+      </View>
     );
   }
 }

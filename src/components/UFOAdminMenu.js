@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     circle: {
         position: 'absolute',
         top: 5,
-        right: 5,
+        left: 5,
         width: 14,
         height: 14,
         borderRadius: 7,

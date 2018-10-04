@@ -11,48 +11,45 @@ export default class UFOText extends React.Component {
             style.color = this.props.inverted ? colors.INVERTED_TEXT.string() : colors.TEXT.string()
         }
         if (!style.fontFamily) {
-            style.fontFamily = "Sofia Pro"
+            style.fontFamily = "Sofia Pro Light"
         }
         if (!style.fontSize) {
             style.fontSize = 14
         }
+        if (this.props.bold) {
+            style.fontWeight = 'bold'
+        }
+        if (this.props.italic) {
+            style.fontStyle = 'italic'
+        }
         if (this.props.h1) {
             style.fontSize = 28
-            style.fontWeight = 'bold'
         }
         if (this.props.h2) {
             style.fontSize = 20
-            style.fontWeight = 'bold'
         }
         if (this.props.h3) {
             style.fontSize = 16
-            style.fontWeight = 'bold'
         }
         if (this.props.h4) {
             style.fontSize = 15
-            style.fontWeight = 'bold'
         }
         if (this.props.h5) {
-            style.fontWeight = 'bold'
+            style.fontSize = 15
         }
         if (this.props.h6) {
-            style.fontWeight = 'bold'
             style.fontSize = 14
         }
         if (this.props.h7) {
-            style.fontWeight = 'bold'
             style.fontSize = 13
         }
         if (this.props.h8) {
-            style.fontWeight = 'bold'
             style.fontSize = 12
         }
         if (this.props.h9) {
-            style.fontWeight = 'bold'
             style.fontSize = 11
         }
         if (this.props.h10) {
-            style.fontWeight = 'bold'
             style.fontSize = 10
         }
         if (this.props.link) {
@@ -62,11 +59,9 @@ export default class UFOText extends React.Component {
         if (this.props.note) {
             style.color = this.props.inverted ? colors.DISABLE.string() : colors.TRANSITION_BACKGROUND.string()
             style.fontSize = 13
-            style.fontStyle = 'italic'
         }
         if (this.props.log) {
             style.fontSize = 10
-
         }
         if (this.props.center) {
             style.textAlign = 'center'

@@ -41,7 +41,6 @@ export default class UFOHeader extends React.Component {
 
         let right = (
             <View style={styles.right}>
-                <UFOActivities style={{ flex: 0.1 }} t={t} />
                 {(isSupport &&
                     <UFOAction action={{
                         style: actionStyles.TODO,

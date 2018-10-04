@@ -21,7 +21,8 @@ import Color from 'color'
 //https://github.com/react-community/react-native-platform-touchable
 
 export const dateFormats = {
-    FULL: 'LLLL'
+    FULL: 'LLLL',
+    DRIVE: 'dddd, MMM D - YYYY - hA'
 }
 
 export const colors = {
@@ -29,10 +30,10 @@ export const colors = {
     HEADER_BACKGROUND: new Color.rgb(39, 61, 76).alpha(0.85),//new Color('#0081B5'),
     BACKGROUND: new Color.rgb(244, 245, 245),//new Color('#172c32'),
     HEADER_TEXT: new Color.rgb(255, 255, 255),//new Color('#fff'),
-    INVERTED_TEXT: new Color.rgb(255, 255, 255),//new Color('#fff'),
-    TEXT: new Color.rgb(64, 101, 125),//new Color('#fff'),
+    TEXT: new Color.rgb(255, 255, 255),//new Color('#fff'),
+    INVERTED_TEXT: new Color.rgb(64, 101, 125),//new Color('#fff'),
     ICON: new Color.rgb(255, 255, 255),//new Color('#fff'),
-    CARD_BACKGROUND: new Color.rgb(255, 255, 255).alpha(0.85),//new Color('#fff'),
+    CARD_BACKGROUND: new Color.rgb(255, 255, 255).alpha(0.30),//new Color('#fff'),
     TODO: new Color.rgb(234, 80, 76),//new Color('#C8102E'),
     DONE: new Color.rgb(64, 101, 125),//new Color('#03DAC6'),//new Color.rgb(64, 101, 125), //
     ACTIVE: new Color.rgb(64, 101, 125), //new Color('#0081B5'),

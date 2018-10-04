@@ -130,6 +130,9 @@ export default class DriveStore {
         return this.rentals.find(rental => { return rental.status === RENTAL_STATUS.ONGOING })
     }
 
+    @computed get inUse() {
+        return this.rental.status === RENTAL_STATUS.ONGOING && this.rental.contract_signed && !this.rental.contract_ended
+    }
 
     computeActionFind(actions, onPress) {
         if (!this.rental || (this.rental.status !== RENTAL_STATUS.ONGOING && this.rental.status !== RENTAL_STATUS.CONFIRMED) || this.rental.contract_signed) { return }

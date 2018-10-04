@@ -4,6 +4,8 @@ import { Dimensions, View, RefreshControl } from 'react-native'
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { observer } from "mobx-react";
 import { observable } from "mobx";
+import DeviceInfo from 'react-native-device-info';
+
 
 import UFOHeader from "../../components/header/UFOHeader";
 import UFOActionBar from "../../components/UFOActionBar";
@@ -19,8 +21,11 @@ import appStore from "../../stores/appStore";
 import { confirm } from "../../utils/interaction";
 
 const DRIVE_DEVICE_WIDTH = Dimensions.get('window').width
+const DRIVE_DEVICE_HEIGHT = Dimensions.get('window').height
 const DRIVE_WIDTH = DRIVE_DEVICE_WIDTH * 90 / 100
 const DRIVE_PADDING_HORIZONTAL = (DRIVE_DEVICE_WIDTH - DRIVE_WIDTH) / 2
+const DRIVE_PADDING_TOP = DRIVE_DEVICE_HEIGHT / 15
+
 
 
 @observer
@@ -31,7 +36,7 @@ class DriveScreen extends Component {
     if (driveStore.hasRentalOngoing && registerStore.isUserRegistered) {
       this.driveSelected = true
     }
-
+    this.loadKeyForSelectedRental()
   }
 
   @observable driveSelected = false
@@ -51,6 +56,24 @@ class DriveScreen extends Component {
 
   selectRental = async (index) => {
     driveStore.selectRental(index)
+    this.loadKeyForSelectedRental()
+  }
+
+  loadKeyForSelectedRental = async () => {
+    if (driveStore.rental && driveStore.rental.key_id) {
+      if (!otaKeyStore.isKeyEnabled) {
+      }
+
+      await otaKeyStore.getKey(driveStore.rental.key_id)
+      await otaKeyStore.enableKey(driveStore.rental.key_id)
+      await otaKeyStore.switchToKey()
+      await otaKeyStore.getUsedKey()
+      await otaKeyStore.syncVehicleData()
+      if (!DeviceInfo.isEmulator()) {
+        await otaKeyStore.connect()
+        await otaKeyStore.getVehicleData()
+      }
+    }
   }
 
   refreshRental = async () => {
@@ -120,7 +143,7 @@ class DriveScreen extends Component {
           )}
 
           {driveStore.hasRentals && driveStore.rental && (
-            <View style={{ paddingTop: 20 }}>
+            <View style={{ paddingTop: DRIVE_PADDING_TOP }}>
               <UFOSlider data={driveStore.rentals} renderItem={this.renderRental} onSnapToItem={this.selectRental} firstItem={driveStore.index} />
             </View>
           )}
