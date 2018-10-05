@@ -20,4 +20,6 @@ target 'driverApp' do
 
   pod 'react-native-sensitive-info', :path => '../node_modules/react-native-sensitive-info'
 
+  pod 'ReactNativePermissions', :path => '../node_modules/react-native-permissions'
+
 end

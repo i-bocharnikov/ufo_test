@@ -195,6 +195,7 @@ class App extends React.Component {
   async componentDidMount() {
 
     await AppStore.initialise(this.props.t)
+
   }
 
   render() {

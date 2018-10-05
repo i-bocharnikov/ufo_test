@@ -2,6 +2,7 @@ package com.ufodrive.app;
 
 
 
+
 import com.facebook.react.ReactApplication;
 import com.masteratul.exceptionhandler.ReactNativeExceptionHandlerPackage;
 import br.com.classapp.RNSensitiveInfo.RNSensitiveInfoPackage;
@@ -59,7 +60,7 @@ public class MainApplication extends OtaKeysApplication implements ReactApplicat
   @Override
   public void onCreate() {
     super.onCreate();
-    SoLoader.init(this, /* native exopackage */ false);
+     SoLoader.init(this, /* native exopackage */ false);
   }
 
 

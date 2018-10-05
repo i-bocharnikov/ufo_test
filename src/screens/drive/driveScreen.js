@@ -19,6 +19,7 @@ import UFOSlider from "../../components/UFOSlider";
 import DriveCard from "./driveCard";
 import appStore from "../../stores/appStore";
 import { confirm } from "../../utils/interaction";
+import { checkAndRequestLocationPermission } from "../../utils/permissions";
 
 const DRIVE_DEVICE_WIDTH = Dimensions.get('window').width
 const DRIVE_DEVICE_HEIGHT = Dimensions.get('window').height
@@ -34,6 +35,7 @@ class DriveScreen extends Component {
   async componentDidMount() {
     if (driveStore.hasRentalOngoing) {
       otaKeyStore.register()
+      await checkAndRequestLocationPermission()
     }
     if (driveStore.hasRentalOngoing && registerStore.isUserRegistered) {
       this.driveSelected = true

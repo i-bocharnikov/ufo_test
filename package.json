@@ -52,6 +52,7 @@
     "react-native-google-places-autocomplete": "^1.3.9",
     "react-native-keyboard-aware-scroll-view": "^0.7.2",
     "react-native-locale-detector": "^1.0.1",
+    "react-native-permissions": "^1.1.1",
     "react-native-phone-call": "^1.0.9",
     "react-native-phone-input": "^0.2.1",
     "react-native-platform-touchable": "^1.1.1",

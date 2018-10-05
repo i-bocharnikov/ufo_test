@@ -94,15 +94,15 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion '26.0.3'
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
         applicationId "com.ufodrive.app"
-        minSdkVersion 21
-        targetSdkVersion 22
-        versionCode 5
-        versionName "1.0"
+        minSdkVersion 23
+        targetSdkVersion 27
+        versionCode 7
+        versionName "1.0.0"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -160,7 +160,7 @@ dependencies {
     compile project(':react-native-exception-handler')
     compile project(':react-native-sensitive-info')
 
-    compile(group: 'com.otakeys.sdk', name: 'otakeys-sdk', version: '3+', ext: 'aar') {
+    compile(group: 'com.otakeys.sdk', name: 'otakeys-sdk', version: '3.9.0-wl', ext: 'aar') {
         transitive = true
     } 
     compile project(':react-native-fast-image')

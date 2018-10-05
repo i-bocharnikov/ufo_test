@@ -46,6 +46,8 @@ import com.otakeys.sdk.service.object.response.OtaVehicleData;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
+import java.util.List;
+
 import javax.annotation.Nullable;
 
 
@@ -155,16 +157,7 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
             OtaLogger.setDebugMode(true);
 
             getOtaSdk().getBle().registerBleEvents(registrationNumber, this);
-
-            /*Intent service = new Intent(getReactApplicationContext().getApplicationContext(), ExportUserExperienceService.class);
-            Bundle bundle = new Bundle();
-
-            bundle.putString("test", "ok");
-            service.putExtras(bundle);
-
-            getReactApplicationContext().getApplicationContext().startService(service);*/
-
-            getOtaSdk().setOnListenService(new ServiceStateCallback() { 
+            getOtaSdk().setOnListenService(new ServiceStateCallback() {
                 @Override
                 public void onServiceReady(OtaKeysService service) {
                     promise.resolve(true);
