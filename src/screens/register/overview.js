@@ -122,11 +122,11 @@ class RegisterScreen extends Component {
     let identificationColor = this.getColorForStatus(registerStore.user.identification_status)
     let driverLicenceColor = this.getColorForStatus(registerStore.user.driver_licence_status)
     return (
-      <UFOContainer image={require("../../assets/images/background/UFOBGREGISTER001.png")}>
+      <UFOContainer image={screens.REGISTER_OVERVIEW.backgroundImage}>
         <NavigationEvents onWillFocus={payload => { this.onLoad(payload) }} />
         <UFOHeader t={t} navigation={navigation} title={t('register:overviewTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_OVERVIEW} />
         <Content padder>
-          <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-evenly', alignContent: 'center' }} >
+          <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-evenly', alignContent: 'center', paddingTop: 100 }} >
             <Card >
               <List>
                 <ListItem icon onPress={() => { this.props.navigation.navigate(screens.REGISTER_PHONE.name) }} >

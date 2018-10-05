@@ -6,6 +6,7 @@ import UFOHeader from "../../components/header/UFOHeader";
 import UFOActionBar from "../../components/UFOActionBar";
 import { UFOContainer, UFOText, UFOIcon, UFOImage } from '../../components/common'
 import { screens, actionStyles, icons } from '../../utils/global'
+import UFOCard from "../../components/UFOCard";
 
 const bookingUrl = "https://booking.ufodrive.com"
 
@@ -41,12 +42,13 @@ class ReserveLocationScreen extends Component {
       },
     ]
     return (
-      <UFOContainer image={require("../../assets/images/background/UFOBGRESERVE001.png")}>
+      <UFOContainer image={screens.RESERVE_LOCATION.backgroundImage}>
         <UFOHeader t={t} navigation={navigation} title={t('reserve:reserveTitle')} currentScreen={screens.RESERVE_LOCATION} />
         <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
           <View style={{ paddingTop: '20%', paddingLeft: '10%', paddingRight: '10%' }} >
-            <UFOText h2 inverted center style={{ paddingTop: 10 }}>{t('reserve:bookingLink')}</UFOText>
-            <UFOText link h2 center onPress={this.goToURL} style={{ paddingTop: 20 }} >{bookingUrl}</UFOText>
+            <UFOCard title={t('reserve:bookingLink')}  >
+              <UFOText link h2 center onPress={this.goToURL} style={{ paddingTop: 20 }} >{bookingUrl}</UFOText>
+            </UFOCard>
           </View>
         </View>
         <UFOActionBar actions={actions} />

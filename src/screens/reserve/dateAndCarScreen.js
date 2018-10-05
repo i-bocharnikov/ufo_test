@@ -31,7 +31,7 @@ class ReserveDateAndCarScreen extends Component {
       },
     ]
     return (
-      <UFOContainer>
+      <UFOContainer image={screens.RESERVE_DATE_AND_CAR.backgroundImage}>
         <UFOHeader t={t} navigation={navigation} title={t('reserve:reserveDateAndCarTitle')} currentScreen={screens.RESERVE_DATE_AND_CAR} />
 
         <Content padder>

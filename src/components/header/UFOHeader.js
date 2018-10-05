@@ -3,10 +3,8 @@ import { View, StyleSheet } from 'react-native';
 import { Header, Left, Right, Body } from 'native-base';
 import { observer } from "mobx-react";
 
-import UFOActivities from "./UFOActivities"
-import UFOLogo from "./UFOLogo"
-import { UFOText } from '../common'
-import { colors, icons, actionStyles, screens, navigationParams, sizes } from '../../utils/global'
+import { UFOText, UFOImage } from '../common'
+import { colors, icons, actionStyles, screens, navigationParams, sizes, logos } from '../../utils/global'
 import UFOAction from "../UFOAction";
 
 const SUPPORT_FAQ_CATEGORY = navigationParams.SUPPORT_FAQ_CATEGORY
@@ -33,7 +31,7 @@ export default class UFOHeader extends React.Component {
             </View >)
         let title = this.props.title ? (<UFOText inverted h3>{this.props.title}</UFOText>) : null
         let subTitle = this.props.subTitle ? (<UFOText inverted h4>{this.props.subTitle}</UFOText>) : null
-        let logo = this.props.logo ? (<UFOLogo />) : null
+        let logo = this.props.logo ? (<UFOImage source={logos.horizontal} style={{ width: 200, height: 34 }} />) : null
         let alpha = this.props.transparent ? 0 : 0.7
         let currentScreen = this.props.currentScreen ? this.props.currentScreen : screens.HOME
 

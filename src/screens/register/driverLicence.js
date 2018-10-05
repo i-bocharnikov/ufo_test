@@ -194,7 +194,7 @@ class DriverLicenceScreen extends Component {
     let sample = this.captureState === captureStates.CAPTURE_FRONT ? require('../../assets/images/scan/dl-front.jpg') : require('../../assets/images/scan/dl-back.jpg')
 
     return (
-      <UFOContainer image={require("../../assets/images/background/UFOBGREGISTER001.png")}>
+      <UFOContainer image={screens.REGISTER_DRIVER_LICENCE.backgroundImage}>
         {!showCamera && (
           <UFOHeader t={t} navigation={navigation} title={t('register:driverLicenceTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_DRIVER_LICENCE} />
         )}

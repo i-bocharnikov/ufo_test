@@ -47,7 +47,7 @@ class HomeScreen extends React.Component {
 
 
     return (
-      <UFOContainer image={require("../assets/images/background/UFOBGHOME002.png")}>
+      <UFOContainer image={screens.HOME.backgroundImage}>
         <KeyboardAwareScrollView
           enableOnAndroid={true}
           resetScrollToCoords={{ x: 0, y: 0 }}

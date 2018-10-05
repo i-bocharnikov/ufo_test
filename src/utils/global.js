@@ -1,4 +1,26 @@
 import Color from 'color'
+import configurations from './configurations';
+
+const THEME_UFO = 'UFO'
+const THEME_ACL = 'ACL'
+const THEME = configurations.theme
+
+const backgrounds = {
+    HOME001: THEME === THEME_UFO ? require("../assets/images/background/UFOBGHOME001.png") : require("../assets/images/background/ACLBGHOME001.png"),
+    HOME002: THEME === THEME_UFO ? require("../assets/images/background/UFOBGHOME002.png") : require("../assets/images/background/ACLBGHOME002.png"),
+    DRIVE001: THEME === THEME_UFO ? require("../assets/images/background/UFOBGDRIVE001.png") : require("../assets/images/background/ACLBGDRIVE001.png"),
+    FIND001: THEME === THEME_UFO ? require("../assets/images/background/UFOBGFIND001.png") : require("../assets/images/background/ACLBGFIND001.png"),
+    INSPECT001: THEME === THEME_UFO ? require("../assets/images/background/UFOBGINSPECT001.png") : require("../assets/images/background/ACLBGINSPECT001.png"),
+    RETURN001: THEME === THEME_UFO ? require("../assets/images/background/UFOBGRETURN001.png") : require("../assets/images/background/ACLBGRETURN001.png"),
+    SUPPORT001: THEME === THEME_UFO ? require("../assets/images/background/UFOBGSUPPORT001.png") : require("../assets/images/background/ACLBGSUPPORT001.png"),
+    REGISTER001: THEME === THEME_UFO ? require("../assets/images/background/UFOBGREGISTER001.png") : require("../assets/images/background/ACLBGREGISTER001.png"),
+    RESERVE001: THEME === THEME_UFO ? require("../assets/images/background/UFOBGRESERVE001.png") : require("../assets/images/background/ACLBGRESERVE001.png")
+}
+
+
+export const logos = {
+    horizontal: THEME === THEME_UFO ? require("../assets/images/logos/UFOLOGO_H.png") : require("../assets/images/logos/ACLLOGO_H.png"),
+}
 
 //TOCHECK
 
@@ -25,15 +47,17 @@ export const dateFormats = {
     DRIVE: 'dddd, MMM D - YYYY - hA'
 }
 
+
+
 export const colors = {
     TRANSITION_BACKGROUND: new Color.rgb(0, 0, 0),//new Color('#0081B5'),
     HEADER_BACKGROUND: new Color.rgb(39, 61, 76).alpha(0.85),//new Color('#0081B5'),
     BACKGROUND: new Color.rgb(244, 245, 245),//new Color('#172c32'),
     HEADER_TEXT: new Color.rgb(255, 255, 255),//new Color('#fff'),
-    TEXT: new Color.rgb(255, 255, 255),//new Color('#fff'),
-    INVERTED_TEXT: new Color.rgb(64, 101, 125),//new Color('#fff'),
+    INVERTED_TEXT: new Color.rgb(255, 255, 255),//new Color('#fff'),
+    TEXT: new Color.rgb(64, 101, 125),//new Color('#fff'),
     ICON: new Color.rgb(255, 255, 255),//new Color('#fff'),
-    CARD_BACKGROUND: new Color.rgb(255, 255, 255).alpha(0.30),//new Color('#fff'),
+    CARD_BACKGROUND: new Color.rgb(255, 255, 255).alpha(0.85),//new Color('#fff'),
     TODO: new Color.rgb(234, 80, 76),//new Color('#C8102E'),
     DONE: new Color.rgb(64, 101, 125),//new Color('#03DAC6'),//new Color.rgb(64, 101, 125), //
     ACTIVE: new Color.rgb(64, 101, 125), //new Color('#0081B5'),
@@ -55,39 +79,41 @@ export const navigationParams = {
 
 class Screen {
 
-    constructor(name, supportFaqCategory) {
+    constructor(name, supportFaqCategory, backgroundImage) {
         this.name = name;
         this.supportFaqCategory = supportFaqCategory;
+        this.backgroundImage = backgroundImage;
     }
     name = "missing"
     supportFaqCategory = "missing"
+    backgroundImage = null
 }
 
 export const screens = {
-    HOME: new Screen('Drive', ''),
-    RESERVE: new Screen('Reserve', 'RESERVE'),
-    RESERVE_LOCATION: new Screen('Location', 'RESERVE'),
-    RESERVE_DATE_AND_CAR: new Screen('DateAndCar', 'RESERVE'),
-    RESERVE_PAYMENT: new Screen('Payment', 'RESERVE'),
-    REGISTER: new Screen('Register', 'REGISTER'),
-    REGISTER_OVERVIEW: new Screen('Overview', 'REGISTER'),
-    REGISTER_PHONE: new Screen('Phone', 'REGISTER'),
-    REGISTER_EMAIL: new Screen('Email', 'REGISTER'),
-    REGISTER_ADDRESS: new Screen('Address', 'REGISTER'),
-    REGISTER_IDENTIFICATION: new Screen('Identification', 'REGISTER'),
-    REGISTER_DRIVER_LICENCE: new Screen('DriverLicence', 'REGISTER'),
-    DRIVE: new Screen('Drive', 'CAR'),
-    FIND: new Screen('Find', 'FIND'),
-    RETURN: new Screen('Return', 'RETURN'),
-    RENTAL_AGREEMENT: new Screen('RentalAgreement', 'TERM'),
-    INSPECT: new Screen('Inspect', 'INSPECT'),
-    INSPECT_LOCATE: new Screen('InspectLocateDamage', 'INSPECT'),
-    INSPECT_CAPTURE: new Screen('InspectCaptureDamage', 'INSPECT'),
-    INSPECT_COMMENT: new Screen('InspectCommentDamage', 'INSPECT'),
-    SUPPORT: new Screen('Support', null),
-    SUPPORT_FAQS: new Screen('SupportFaqs', null),
-    SUPPORT_FAQ: new Screen('SupportFaq', null),
-    SUPPORT_CHAT: new Screen('SupportChat', null),
+    HOME: new Screen('Drive', '', backgrounds.HOME002),
+    RESERVE: new Screen('Reserve', 'RESERVE', backgrounds.RESERVE001),
+    RESERVE_LOCATION: new Screen('Location', 'RESERVE', backgrounds.RESERVE001),
+    RESERVE_DATE_AND_CAR: new Screen('DateAndCar', 'RESERVE', backgrounds.RESERVE001),
+    RESERVE_PAYMENT: new Screen('Payment', 'RESERVE', backgrounds.RESERVE001),
+    REGISTER: new Screen('Register', 'REGISTER', backgrounds.REGISTER001),
+    REGISTER_OVERVIEW: new Screen('Overview', 'REGISTER', backgrounds.REGISTER001),
+    REGISTER_PHONE: new Screen('Phone', 'REGISTER', backgrounds.REGISTER001),
+    REGISTER_EMAIL: new Screen('Email', 'REGISTER', backgrounds.REGISTER001),
+    REGISTER_ADDRESS: new Screen('Address', 'REGISTER', backgrounds.REGISTER001),
+    REGISTER_IDENTIFICATION: new Screen('Identification', 'REGISTER', backgrounds.REGISTER001),
+    REGISTER_DRIVER_LICENCE: new Screen('DriverLicence', 'REGISTER', backgrounds.REGISTER001),
+    DRIVE: new Screen('Drive', 'CAR', backgrounds.DRIVE001),
+    FIND: new Screen('Find', 'FIND', backgrounds.FIND001),
+    RETURN: new Screen('Return', 'RETURN', backgrounds.RETURN001),
+    RENTAL_AGREEMENT: new Screen('RentalAgreement', 'TERM', backgrounds.DRIVE001),
+    INSPECT: new Screen('Inspect', 'INSPECT', backgrounds.INSPECT001),
+    INSPECT_LOCATE: new Screen('InspectLocateDamage', 'INSPECT', backgrounds.INSPECT001),
+    INSPECT_CAPTURE: new Screen('InspectCaptureDamage', 'INSPECT', backgrounds.INSPECT001),
+    INSPECT_COMMENT: new Screen('InspectCommentDamage', 'INSPECT', backgrounds.INSPECT001),
+    SUPPORT: new Screen('Support', null, backgrounds.SUPPORT001),
+    SUPPORT_FAQS: new Screen('SupportFaqs', null, backgrounds.SUPPORT001),
+    SUPPORT_FAQ: new Screen('SupportFaq', null, backgrounds.SUPPORT001),
+    SUPPORT_CHAT: new Screen('SupportChat', null, backgrounds.SUPPORT001),
 }
 
 class Size {

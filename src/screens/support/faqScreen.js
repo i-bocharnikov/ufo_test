@@ -62,7 +62,7 @@ class SupportFaqScreen extends Component {
       },
     ]
     return (
-      <UFOContainer image={require('../../assets/images/background/UFOBGSUPPORT001.png')}>
+      <UFOContainer image={screens.SUPPORT_FAQ.backgroundImage}>
         <UFOHeader t={t} navigation={navigation} title={t('support:supportTitle')} currentScreen={screens.SUPPORT_FAQ} />
         <KeyboardAwareScrollView>
           <View style={{ paddingTop: "10%", paddingHorizontal: "10%" }}>

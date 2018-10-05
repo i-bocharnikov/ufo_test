@@ -35,10 +35,10 @@ export default class UFOCard extends Component {
                 {hasMedia && (
                     <CardItem cardBody style={styles[mediaStyle]}>
                         {imageSource && (
-                            <UFOImage source={imageSource} style={{ borderTopLeftRadius: 8, borderTopRightRadius: 8, height: 150, width: null, flex: 1 }} resizeMode={imageResizeMode} />
+                            <UFOImage source={imageSource} style={{ borderTopLeftRadius: 8, borderTopRightRadius: 8, height: 250, width: null, flex: 1 }} resizeMode={imageResizeMode} />
                         )}
                         {videoSource && (
-                            <UFOVideo source={videoSource} style={{ borderTopLeftRadius: 8, borderTopRightRadius: 8, height: 150, width: null, flex: 1 }} resizeMode={imageResizeMode} />
+                            <UFOVideo source={videoSource} style={{ borderTopLeftRadius: 8, borderTopRightRadius: 8, height: 250, width: null, flex: 1 }} resizeMode={imageResizeMode} />
                         )}
                     </CardItem>
                 )}

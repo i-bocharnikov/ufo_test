@@ -46,7 +46,7 @@ class ChatScreen extends Component {
       },
     ]
     return (
-      <UFOContainer image={require('../../assets/images/background/UFOBGSUPPORT001.png')}>
+      <UFOContainer image={screens.SUPPORT_CHAT.backgroundImage}>
         <UFOHeader transparent logo t={t} navigation={navigation} currentScreen={screens.SUPPORT_CHAT} style={{ backgroundColor: 'transparent' }} />
         <View style={{ flex: 0.5 }}>
           <WebView

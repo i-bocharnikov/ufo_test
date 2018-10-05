@@ -8,6 +8,10 @@ import _ from 'lodash'
 import { getFromApi, putToApi } from '../utils/api'
 import { dateFormats, actionStyles, icons } from '../utils/global'
 
+
+//TODO MAP Answer KEY_NOT+VALID
+//TODO register is called toomuch time
+
 const DEBUG = false
 
 const RENTAL_STATUS = {
@@ -131,7 +135,7 @@ export default class DriveStore {
     }
 
     @computed get inUse() {
-        return this.rental.status === RENTAL_STATUS.ONGOING && this.rental.contract_signed && !this.rental.contract_ended
+        return this.rental && this.rental.status === RENTAL_STATUS.ONGOING && this.rental.contract_signed && !this.rental.contract_ended
     }
 
     computeActionFind(actions, onPress) {

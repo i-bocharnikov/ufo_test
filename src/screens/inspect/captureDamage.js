@@ -38,7 +38,7 @@ class CaptureDamageScreen extends Component {
       return
     }
     this.activityPending = true
-    const options = { quality: 1, base64: true, fixOrientation: true, doNotSave: false };
+    const options = { quality: 0.5, base64: true, fixOrientation: true, doNotSave: false };
     //Take photo
     let fullImage = await this.camera.takePictureAsync(options)
     const { uri, width, height } = fullImage;
@@ -133,7 +133,7 @@ class CaptureDamageScreen extends Component {
 
 
     return (
-      <UFOContainer image={require('../../assets/images/background/UFOBGINSPECT001.png')}>
+      <UFOContainer image={screens.INSPECT_CAPTURE.backgroundImage}>
         {this.renderBody(t, navigation)}
         <UFOActionBar actions={actions} activityPending={this.activityPending} />
       </UFOContainer >

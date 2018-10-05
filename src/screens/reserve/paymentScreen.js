@@ -30,7 +30,7 @@ class ReservePaymentScreen extends Component {
       },
     ]
     return (
-      <UFOContainer>
+      <UFOContainer image={screens.RESERVE_PAYMENT.backgroundImage}>
         <UFOHeader t={t} navigation={navigation} title={t('reserve:reservePaymentTitle')} currentScreen={screens.RESERVE_PAYMENT} />
         <Content padder>
         </Content>

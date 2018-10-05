@@ -205,7 +205,7 @@ class IdentificationScreen extends Component {
     let sample = this.captureState === captureStates.CAPTURE_FRONT ? require('../../assets/images/scan/id-front.jpg') : require('../../assets/images/scan/id-back.jpg')
 
     return (
-      <UFOContainer image={require("../../assets/images/background/UFOBGREGISTER001.png")}>
+      <UFOContainer image={screens.REGISTER_IDENTIFICATION.backgroundImage}>
         {!showCamera && (
           <UFOHeader t={t} navigation={navigation} title={t('register:identificationTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_IDENTIFICATION} />
         )}

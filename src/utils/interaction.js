@@ -14,7 +14,7 @@ export async function confirm(title, message, action) {
 }
 
 export async function showToastError(key, message) {
-    //await Vibration.vibrate()
+    await Vibration.vibrate()
     //TODO TRANSLATION with key
     await ToastAndroid.showWithGravity(message, ToastAndroid.LONG, ToastAndroid.TOP)
 }

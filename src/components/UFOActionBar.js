@@ -39,7 +39,6 @@ class UFOActionBar extends React.Component {
     }
 
     keyboardDidShow = (event) => {
-        console.log("************", event)
         Animated.timing(
             this.state.bottomAnimatedPosition,
             {

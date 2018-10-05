@@ -6,6 +6,7 @@ import { driveStore } from '.';
 import { actionStyles, icons } from '../utils/global';
 import { postToApi, checkConnectivity } from '../utils/api';
 import { showToastError } from '../utils/interaction';
+import { persist } from 'mobx-persist';
 
 const RENTAL_STATUS = {
     CONFIRMED: 'confirmed',
@@ -14,33 +15,33 @@ const RENTAL_STATUS = {
 }
 
 class Vehicle {
-    @observable vin: String;
-    @observable otaExtId: String;
-    @observable otaId: Number;
-    @observable model: String;
-    @observable brand: String;
-    @observable plate: String;
-    @observable isEnabled: boolean;
+    @persist @observable vin: String;
+    @persist @observable otaExtId: String;
+    @persist @observable otaId: Number;
+    @persist @observable model: String;
+    @persist @observable brand: String;
+    @persist @observable plate: String;
+    @persist @observable isEnabled: boolean;
 }
 
 
 class Key {
-    @observable beginDate: Moment;
-    @observable endDate: Moment;
-    @observable mileageLimit: Number;
-    @observable vehicle: Vehicle = new Vehicle;
-    @observable keyId: Number;
-    @observable extId: String;
-    @observable isEnabled: boolean;
-    @observable isUsed: boolean;
-    @observable keyArgs: String;
-    @observable keySensitiveArgs: String;
+    @persist @observable beginDate: Moment;
+    @persist @observable endDate: Moment;
+    @persist @observable mileageLimit: Number;
+    @persist @observable vehicle: Vehicle = new Vehicle;
+    @persist @observable keyId: Number;
+    @persist @observable extId: String;
+    @persist @observable isEnabled: boolean;
+    @persist @observable isUsed: boolean;
+    @persist @observable keyArgs: String;
+    @persist @observable keySensitiveArgs: String;
 }
 
 class VehicleData {
-    @observable engineRunning: boolean;
-    @observable doorsLocked: boolean;
-    @observable energyCurrent: Number;
+    @persist @observable engineRunning: boolean;
+    @persist @observable doorsLocked: boolean;
+    @persist @observable energyCurrent: Number;
 
 /*     @observable id: Number;
     @observable date: Moment;
@@ -75,7 +76,6 @@ class OTAKeyStore {
 
 
     constructor() {
-        this.register()
         AppRegistry.registerHeadlessTask('ExportUserExperienceTask', this.exportPendingUserExperiences);
     }
 
@@ -83,17 +83,21 @@ class OTAKeyStore {
     userExperiences = []
 
     async exportPendingUserExperiences(taskData) {
-        console.log("exportPendingUserExperiences started with ", taskData)
-        if (await checkConnectivity()) {
-            let isConnected = true
-            while (this.userExperiences.length > 0 && isConnected) {
-                try {
-                    await postToApi("/user_experiences", this.userExperiences.shift())
-                } catch (error) {
-                    isConnected = await checkConnectivity()
-                    console.log("exportPendingUserExperiences failed", error)
+        try {
+            console.log("exportPendingUserExperiences started with ", taskData)
+            if (await checkConnectivity()) {
+                let isConnected = true
+                while (this.userExperiences && this.userExperiences.length > 0 && isConnected) {
+                    try {
+                        await postToApi("/user_experiences", this.userExperiences.shift())
+                    } catch (error) {
+                        isConnected = await checkConnectivity()
+                        console.log("exportPendingUserExperiences failed", error)
+                    }
                 }
             }
+        } catch (error) {
+            console.log("exportPendingUserExperiences failed with ", error)
         }
         console.log("exportPendingUserExperiences stopped with ", taskData)
     }
@@ -101,17 +105,22 @@ class OTAKeyStore {
     keyAccessDeviceRegistrationNumber = 9706753
 
     ota = NativeModules.OTAKeyModule
-    keyAccessDeviceRegistrationNumber: Number
-    keyAccessDeviceIdentifier: string
-    keyAccessDeviceToken: string
+    @persist keyAccessDeviceRegistrationNumber: Number
+    @persist keyAccessDeviceIdentifier: string
+    @persist keyAccessDeviceToken: string
 
     @observable otaLog: string = ""
 
-    @observable key: Key = new Key
-    @observable vehicleData = null
+    @persist('object', Key) @observable key: Key = new Key
 
-    @observable isConnecting = false
-    @observable isConnected = false
+    @persist @observable isConnecting = false
+    @persist @observable isConnected = false
+
+    @persist @observable engineRunning = false
+    @persist @observable doorsLocked = true
+    @persist @observable energyCurrent = 0
+
+    @persist isRegistered = false
 
     async trace(severity, action, code, message, description = "") {
 
@@ -124,7 +133,7 @@ class OTAKeyStore {
                 code: code,
                 message: message,
                 description: code === 0 ? { result: description } : { error: description },
-                context: { key: this.key, vehicleData: this.vehicleData },
+                context: { key: this.key, doorsLocked: this.doorsLocked },
                 performed_at: date.toDate()
             }
 
@@ -146,30 +155,30 @@ class OTAKeyStore {
 
 
     computeActionEnableKey(actions, onPress) {
-        if (!driveStore.rental || driveStore.rental.status !== RENTAL_STATUS.ONGOING || !driveStore.rental.contract_signed || !driveStore.rental.key_id || (this.key && this.key.isEnabled)) { return }
+        if (!driveStore.inUse || this.isKeyEnabled) { return }
         actions.push({ style: this.key && this.key.isEnabled ? actionStyles.DONE : actionStyles.TODO, icon: icons.KEY, onPress: onPress })
     }
 
     computeActionConnect(actions, onPress) {
-        if (!driveStore.rental || driveStore.rental.status !== RENTAL_STATUS.ONGOING || !driveStore.rental.contract_signed || !driveStore.rental.key_id || !this.key || (this.key && !this.key.isEnabled) || this.isConnected) { return }
+        if (!driveStore.inUse) { return }
         actions.push({ style: this.isConnecting || this.isConnected ? actionStyles.DISABLE : actionStyles.TODO, icon: icons.CONNECT, onPress: onPress })
     }
 
     computeActionUnlock(actions, onPress) {
-        if (!driveStore.rental || driveStore.rental.status !== RENTAL_STATUS.ONGOING || !driveStore.rental.contract_signed || !driveStore.rental.key_id || !this.key) { return }
-        actions.push({ style: this.isConnected ? actionStyles.ACTIVE : actionStyles.DISABLE, icon: icons.UNLOCK, onPress: onPress })
+        if (!driveStore.inUse) { return }
+        actions.push({ style: this.isKeyEnabled ? actionStyles.ACTIVE : actionStyles.DISABLE, icon: icons.UNLOCK, onPress: onPress })
     }
     computeActionLock(actions, onPress) {
-        if (!driveStore.rental || driveStore.rental.status !== RENTAL_STATUS.ONGOING || !driveStore.rental.contract_signed || !driveStore.rental.key_id || !this.key) { return }
-        actions.push({ style: this.isConnected ? actionStyles.ACTIVE : actionStyles.DISABLE, icon: icons.LOCK, onPress: onPress })
+        if (!driveStore.inUse) { return }
+        actions.push({ style: this.isKeyEnabled ? actionStyles.ACTIVE : actionStyles.DISABLE, icon: icons.LOCK, onPress: onPress })
     }
     computeActionStart(actions, onPress) {
-        if (!driveStore.rental || driveStore.rental.status !== RENTAL_STATUS.ONGOING || !driveStore.rental.contract_signed || !driveStore.rental.key_id || !this.key || !this.key.isEnabled || !this.isConnected) { return }
-        actions.push({ style: this.isConnected ? actionStyles.ACTIVE : actionStyles.DISABLE, icon: icons.START, onPress: onPress })
+        if (!driveStore.inUse) { return }
+        actions.push({ style: this.key ? actionStyles.ACTIVE : actionStyles.DISABLE, icon: icons.START, onPress: onPress })
     }
     computeActionStop(actions, onPress) {
-        if (!driveStore.rental || driveStore.rental.status !== RENTAL_STATUS.ONGOING || !driveStore.rental.contract_signed || !driveStore.rental.key_id || !this.key || !this.key.isEnabled || !this.isConnected) { return }
-        actions.push({ style: this.isConnected ? actionStyles.ACTIVE : actionStyles.DISABLE, icon: icons.STOP, onPress: onPress })
+        if (!driveStore.inUse) { return }
+        actions.push({ style: this.key ? actionStyles.ACTIVE : actionStyles.DISABLE, icon: icons.STOP, onPress: onPress })
     }
 
 
@@ -177,12 +186,10 @@ class OTAKeyStore {
     onOtaVehicleDataUpdated = async (otaVehicleData) => {
         try {
             await this.trace("info", "onOtaVehicleDataUpdated", 0, `>> ${otaVehicleData.doorsLocked ? "LOCKED" : "UNLOCKED"} / ${otaVehicleData.engineRunning ? "STARTED" : "STOPPED"} / ${otaVehicleData.energyCurrent + "%"}`)
-            if (!this.vehicleData) {
-                this.vehicleData = new VehicleData
-            }
-            this.vehicleData.doorsLocked = otaVehicleData.doorsLocked
-            this.vehicleData.engineRunning = otaVehicleData.engineRunning
-            this.vehicleData.energyCurrent = otaVehicleData.energyCurrent
+
+            this.doorsLocked = otaVehicleData.doorsLocked === true ? true : false
+            this.engineRunning = otaVehicleData.engineRunning === true ? true : false
+            this.energyCurrent = otaVehicleData.energyCurrent
         } catch (error) {
             console.log(error)
         }
@@ -225,6 +232,11 @@ class OTAKeyStore {
     @action
     async register(): Promise<boolean> {
 
+        if (this.isRegistered) {
+            return false
+        }
+
+
         try {
             await this.trace("debug", "register", 0, `-> this.ota.register(${String(this.keyAccessDeviceRegistrationNumber)}) start`)
             let result = await this.ota.register(this.keyAccessDeviceRegistrationNumber)
@@ -234,6 +246,9 @@ class OTAKeyStore {
             DeviceEventEmitter.addListener('onOtaBluetoothStateChanged', this.onOtaBluetoothStateChanged);
 
             await this.trace("debug", "registerToOTA", 0, `<- this.ota.register(${String(this.keyAccessDeviceRegistrationNumber)}) return ${result}`, result)
+
+            this.isRegistered = true
+
             return result
         } catch (error) {
             await this.trace("debug", "registerToOTA", 1, `<- this.ota.register(${String(this.keyAccessDeviceRegistrationNumber)}) failed ${error}`, error)
@@ -330,15 +345,15 @@ class OTAKeyStore {
     }
 
     @action
-    async endKey(keyId: string): Promise<boolean> {
+    async endKey(): Promise<boolean> {
 
         try {
-            await this.trace("debug", "endKey", 0, `-> this.ota.endKey(${keyId}) start`)
-            this.key = await this.ota.endKey(keyId)
-            await this.trace("info", "endKey", 0, `<- this.ota.endKey(${keyId}) return ${JSON.stringify(this.key)}`, this.key)
+            await this.trace("debug", "endKey", 0, `-> this.ota.endKey(${this.key.keyId}) start`)
+            this.key = await this.ota.endKey(this.key.keyId)
+            await this.trace("info", "endKey", 0, `<- this.ota.endKey(${this.key.keyId}) return ${JSON.stringify(this.key)}`, this.key)
             return true
         } catch (error) {
-            await this.trace("error", "endKey", 1, `<- this.ota.endKey(${keyId}) failed ${error}`, error)
+            await this.trace("error", "endKey", 1, `<- this.ota.endKey(${this.key.keyId}) failed ${error}`, error)
             return false
         }
     }
@@ -456,7 +471,7 @@ class OTAKeyStore {
         }
     }
 
-    async unlockDoors(requestVehicleData: boolean): Promise<boolean> {
+    async unlockDoors(requestVehicleData: boolean = false): Promise<boolean> {
 
         try {
             await this.trace("debug", "unlockDoors", 0, `-> this.ota.unlockDoors(${String(requestVehicleData)}) start`)
@@ -469,7 +484,7 @@ class OTAKeyStore {
         }
     }
 
-    async lockDoors(requestVehicleData: boolean): Promise<boolean> {
+    async lockDoors(requestVehicleData: boolean = false): Promise<boolean> {
 
         try {
             await this.trace("debug", "lockDoors", 0, `-> this.ota.lockDoors(${String(requestVehicleData)}) start`)
@@ -483,7 +498,7 @@ class OTAKeyStore {
     }
 
 
-    async enableEngine(requestVehicleData: boolean): Promise<boolean> {
+    async enableEngine(requestVehicleData: boolean = false): Promise<boolean> {
 
         try {
             await this.trace("debug", "enableEngine", 0, `-> this.ota.enableEngine(${String(requestVehicleData)}) start`)
@@ -496,7 +511,7 @@ class OTAKeyStore {
         }
     }
 
-    async disableEngine(requestVehicleData: boolean): Promise<boolean> {
+    async disableEngine(requestVehicleData: boolean = false): Promise<boolean> {
 
         try {
             await this.trace("debug", "disableEngine", 0, `-> this.ota.disableEngine(${String(requestVehicleData)}) start`)

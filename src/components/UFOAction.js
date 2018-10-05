@@ -46,7 +46,7 @@ class UFOAction extends React.Component {
                     <UFOIcon icon={icon} size={size} />
                 </Touchable>
                 {!noText && (
-                    <UFOText h10 upper inverted={inverted}>{t(icon.i18nKey)}</UFOText>
+                    <UFOText h10 upper inverted={!inverted}>{t(icon.i18nKey)}</UFOText>
                 )}
             </View>
         )

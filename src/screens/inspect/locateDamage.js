@@ -98,7 +98,7 @@ class LocateDamageScreen extends Component {
     let carModel = driveStore.rental ? driveStore.rental.car ? driveStore.rental.car.car_model : null : null
 
     return (
-      <UFOContainer image={require('../../assets/images/background/UFOBGINSPECT001.png')}>
+      <UFOContainer image={screens.INSPECT_LOCATE.backgroundImage}>
         <UFOHeader transparent t={t} navigation={navigation} currentScreen={screens.INSPECT_LOCATE} title={t('inspect:locateDamageTitle', { rental: driveStore.rental })} />
         <KeyboardAwareScrollView>
           <View style={{ padding: 20, flexDirection: 'column', justifyContent: 'flex-start' }}>

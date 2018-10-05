@@ -7,6 +7,7 @@ import OTAKeyStore from '../stores/otaKeyStore'
 import { checkConnectivity } from '../utils/api'
 import { hydrate } from '../utils/store'
 import { confirm } from '../utils/interaction';
+import otaKeyStore from '../stores/otaKeyStore';
 
 
 class AppStore {
@@ -66,6 +67,7 @@ class AppStore {
     try {
       await hydrate('register', registerStore).then(() => console.log('registerStore hydrated'))
       await hydrate('drive', driveStore).then(() => console.log('driveStore hydrated'))
+      await hydrate('otaKey', otaKeyStore).then(() => console.log('otaKeyStore hydrated'))
       await hydrate('support', supportStore).then(() => console.log('supportStore hydrated'))
       console.log("<== LOAD LOCAL DATA DONE ")
     } catch (error) {

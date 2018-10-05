@@ -34,9 +34,11 @@ import com.otakeys.sdk.service.ble.enumerator.BleError;
 import com.otakeys.sdk.service.ble.enumerator.BluetoothState;
 import com.otakeys.sdk.service.core.callback.ServiceStateCallback;
 import com.otakeys.sdk.service.core.callback.SwitchToKeyCallback;
+import com.otakeys.sdk.service.object.DoorsState;
 import com.otakeys.sdk.service.object.request.OtaKeyRequest;
 import com.otakeys.sdk.service.object.request.OtaSessionRequest;
 import com.otakeys.sdk.service.object.response.OtaKey;
+import com.otakeys.sdk.service.object.response.OtaLastVehicleData;
 import com.otakeys.sdk.service.object.response.OtaOperation;
 import com.otakeys.sdk.service.object.response.OtaState;
 import com.otakeys.sdk.service.object.response.OtaVehicleData;
@@ -120,6 +122,25 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
         return otaKeyMap;
     }
 
+    private WritableMap convert(OtaLastVehicleData otaVehicleData) {
+
+        WritableMap otaKeyMap = Arguments.createMap();
+        otaKeyMap.putString("energyType", otaVehicleData.getEnergyType() != null ? otaVehicleData.getEnergyType().name() : null);
+        otaKeyMap.putDouble("batteryVoltage", otaVehicleData.getBatteryVoltage());
+        otaKeyMap.putBoolean("connectedToCharger", otaVehicleData.isConnectedToCharger());
+        otaKeyMap.putBoolean("engineRunning", otaVehicleData.isEngineRunning());
+        otaKeyMap.putBoolean("doorsLocked", otaVehicleData.getDoorsState() == DoorsState.LOCKED);
+        otaKeyMap.putBoolean("malfunctionIndicatorLamp", otaVehicleData.isMalfunctionIndicatorLamp());
+        otaKeyMap.putDouble("gpsLatitude", otaVehicleData.getGpsLatitude());
+        otaKeyMap.putDouble("gpsLongitude", otaVehicleData.getGpsLongitude());
+        otaKeyMap.putDouble("sdkGpsLatitude", otaVehicleData.getSdkGpsLatitude());
+        otaKeyMap.putDouble("sdkGpsLongitude", otaVehicleData.getSdkGpsLongitude());
+        otaKeyMap.putDouble("sdkGpsAccuracy", otaVehicleData.getSdkGpsAccuracy());
+        otaKeyMap.putString("fuelUnit", otaVehicleData.getFuelUnit() != null ? otaVehicleData.getFuelUnit().name() : null);
+        otaKeyMap.putString("odometerUnit", otaVehicleData.getOdometerUnit() != null ? otaVehicleData.getOdometerUnit().name() : null);
+        otaKeyMap.putString("doorsState", otaVehicleData.getDoorsState() != null ? otaVehicleData.getDoorsState().name() : null);
+        return otaKeyMap;
+    }
 
 
 
@@ -722,19 +743,17 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
         try {
             getOtaSdk().getBle().getVehicleData(new BleVehicleDataCallback() {
 
-                public void onVehicleDataUpdated(OtaVehicleData otaVehicleData) {
+                public void onVehicleDataUpdated(OtaLastVehicleData otaVehicleData) {
                     promise.resolve(true);
                     sendEvent(getReactApplicationContext(), "onOtaVehicleDataUpdated", convert(otaVehicleData));
                 }
 
                 @Override
                 public void onBleError(BleError errorCode) {
-                    Toast.makeText(getReactApplicationContext(), "OtaKeysService started!", Toast.LENGTH_LONG).show();
                     promise.reject(errorCode.name(), errorCode.toString());
                 }
             });
         }catch(java.lang.IllegalStateException exception){
-            Toast.makeText(getReactApplicationContext(), "OtaKeysService in Error!", Toast.LENGTH_LONG).show();
             silentException(exception);
         }
         return;
@@ -770,7 +789,7 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
 
         WritableMap map = Arguments.createMap();
         map.putString("newBluetoothState", newBluetoothState != null ? newBluetoothState.name() : null);
-        map.putString("previousBluetoothState1", previousBluetoothState1 != null ? previousBluetoothState1.name() : null);
+        map.putString("previousBluetoothState", previousBluetoothState1 != null ? previousBluetoothState1.name() : null);
         sendEvent(getReactApplicationContext(), "onOtaBluetoothStateChanged", map);
     }
 }

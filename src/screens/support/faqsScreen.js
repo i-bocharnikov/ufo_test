@@ -132,7 +132,7 @@ class SupportFaqsScreen extends Component {
     })
 
     return (
-      <UFOContainer image={require('../../assets/images/background/UFOBGSUPPORT001.png')}>
+      <UFOContainer image={screens.SUPPORT_FAQS.backgroundImage}>
         <NavigationEvents onWillFocus={payload => { this.onLoad(payload) }} />
         <UFOHeader t={t} navigation={navigation} title={t('support:supportTitle')} currentScreen={screens.SUPPORT_FAQS} />
         <KeyboardAwareSectionList

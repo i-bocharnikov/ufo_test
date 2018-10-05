@@ -34,17 +34,15 @@ class DriveCard extends Component {
     }
 
     return (
-      <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: 10, backgroundColor: colors.CARD_BACKGROUND.string() }}>
+      <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: 10, backgroundColor: colors.CARD_BACKGROUND.string(), borderRadius: 8 }}>
         <UFOText h3 style={{}}>{t("drive:rentalReference", { rental: rental })}</UFOText>
         <UFOImage source={{ uri: carModel.image_side_url }} style={{ width: DRIVE_CARD_WIDTH, height: DRIVE_CARD_HEIGHT }} resizeMode={'contain'} />
         <UFOText h3 bold style={{}}>{t("drive:rentalCarModel", { rental: rental })}</UFOText>
         <UFOText h3 bold style={{}}>{t("drive:rentalCar", { rental: rental })}</UFOText>
-        {driveStore.inUse && (
-          <UFOText h4>{(driveStore.rental && !driveStore.rental.key_id) || !otaKeyStore.key.isEnabled ? t("drive:noKey") : otaKeyStore.isConnecting ? t("drive:connecting") : !otaKeyStore.isConnected ? t("drive:notConnected") : otaKeyStore.vehicleData ? otaKeyStore.vehicleData.doorsLocked ? t("drive:locked") : t("drive:unlocked") : t("drive:noData")}</UFOText>
-        )}
-        <UFOText h3 bold style={{ marginTop: 10 }}>{t("drive:rentalStartAt", { start_at: driveStore.format(rental.start_at, dateFormats.DRIVE) })}</UFOText>
-        <UFOText h3 upper style={{}}>{t("drive:rentalLocation", { rental: rental })}</UFOText>
-        <UFOText h3 bold style={{}}>{t("drive:rentalEndAt", { end_at: driveStore.format(rental.end_at, dateFormats.DRIVE) })}</UFOText>
+        <UFOText h4>{!driveStore.inUse ? "" : (driveStore.rental && !driveStore.rental.key_id) || !otaKeyStore.key.isEnabled ? t("drive:noKey") : otaKeyStore.isConnecting ? t("drive:connecting") : !otaKeyStore.isConnected ? t("drive:notConnected") : otaKeyStore.doorsLocked ? t("drive:locked") : t("drive:unlocked")}</UFOText>
+        <UFOText h4 bold style={{ marginTop: 10 }}>{t("drive:rentalStartAt", { start_at: driveStore.format(rental.start_at, dateFormats.DRIVE) })}</UFOText>
+        <UFOText h4 upper style={{}}>{t("drive:rentalLocation", { rental: rental })}</UFOText>
+        <UFOText h4 bold style={{}}>{t("drive:rentalEndAt", { end_at: driveStore.format(rental.end_at, dateFormats.DRIVE) })}</UFOText>
       </View>
     );
   }

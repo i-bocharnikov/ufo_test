@@ -73,12 +73,12 @@ class ReturnScreen extends Component {
 
 
     return (
-      <UFOContainer image={require('../../assets/images/background/UFOBGRETURN001.png')}>
+      <UFOContainer image={screens.RETURN.backgroundImage}>
         <KeyboardAwareScrollView
           refreshControl={_RefreshControl}
         >
           <UFOHeader t={t} navigation={navigation} currentScreen={screens.DRIVE} title={t('guide:returnTitle', { rental: driveStore.rental })} />
-          <View style={{ paddingTop: "20%" }}>
+          <View style={{ paddingTop: 100 }}>
             <UFOSlider data={guides} renderItem={this.renderGuide} onSnapToItem={this.onSnapToItem} />
           </View>
         </KeyboardAwareScrollView >

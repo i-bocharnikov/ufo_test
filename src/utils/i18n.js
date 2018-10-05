@@ -145,10 +145,10 @@ i18n.use(LanguageDetector).init({
                 "confirmCloseRentalKeyMessageConfirmationMessage": "\nPLEASE PUT THE KEY BACK IN THE GLOVEBOX.",
                 "noKey": "No key",
                 "notConnected": "Not connected",
-                "connecting": "Connecting...",
+                "connecting": "...Connecting...",
                 "locked": "Doors locked",
                 "unlocked": "Doors unlocked",
-                "noData": "No data",
+                "noData": "...",
             },
             guide: {
                 "findTitle": "Where is the car",

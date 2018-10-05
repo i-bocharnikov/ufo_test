@@ -68,7 +68,7 @@ class InspectScreen extends Component {
     let _RefreshControl = (<RefreshControl refreshing={this.refreshing} onRefresh={this.refresh} />)
 
     return (
-      <UFOContainer image={require('../../assets/images/background/UFOBGDRIVE001.png')}>
+      <UFOContainer image={screens.RENTAL_AGREEMENT.backgroundImage}>
         <UFOHeader t={t} navigation={navigation} currentScreen={screens.DRIVE} title={t('term:rentalAgreementTitle', { rental: driveStore.rental })} />
         <WebView
           ref={(ref) => { this.webView = ref; }}

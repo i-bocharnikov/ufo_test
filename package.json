@@ -15,6 +15,7 @@
     "dev": "react-native start",
     "link": "react-native link",
     "android": "react-native run-android",
+    "build": "cd android; ./gradlew assembleRelease;cd ..",
     "ios": "react-native run-ios",
     "ios.stany": "react-native run-ios 'Stany Blanvalet''s iphone'",
     "android.logs": "react-native log-android",

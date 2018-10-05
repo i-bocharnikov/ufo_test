@@ -78,7 +78,7 @@ class EmailScreen extends Component {
     ]
 
     return (
-      <UFOContainer image={require("../../assets/images/background/UFOBGREGISTER001.png")}>
+      <UFOContainer image={screens.REGISTER_EMAIL.backgroundImage}>
         <UFOHeader t={t} navigation={navigation} title={t('register:emailTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_EMAIL} />
         <KeyboardAwareScrollView
           enableOnAndroid={true}
