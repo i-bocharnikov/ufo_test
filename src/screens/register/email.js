@@ -8,7 +8,7 @@ import _ from 'lodash'
 import UFOHeader from "../../components/header/UFOHeader";
 import UFOActionBar from "../../components/UFOActionBar";
 import { UFOContainer, UFOTextInput } from '../../components/common'
-import { screens, actionStyles, icons, colors } from '../../utils/global'
+import { screens, actionStyles, icons, colors, dims } from '../../utils/global'
 import { observable, action } from "mobx";
 import registerStore from '../../stores/registerStore';
 import UFOCard from "../../components/UFOCard";
@@ -79,11 +79,11 @@ class EmailScreen extends Component {
 
     return (
       <UFOContainer image={screens.REGISTER_EMAIL.backgroundImage}>
-        <UFOHeader t={t} navigation={navigation} title={t('register:emailTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_EMAIL} />
+        <UFOHeader transparent t={t} navigation={navigation} title={t('register:emailTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_EMAIL} />
         <KeyboardAwareScrollView
           enableOnAndroid={true}
           resetScrollToCoords={{ x: 0, y: 0 }}>
-          <View style={{ paddingTop: "20%", paddingHorizontal: 10, flex: 0.80, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
+          <View style={{ paddingTop: dims.CONTENT_PADDING_TOP, paddingHorizontal: 10, flex: 0.80, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
             <UFOCard title={t('register:emailInputLabel')}>
               <UFOTextInput autoFocus keyboardType='email-address' defaultValue={registerStore.user.email} placeholder='john.doe@gmail.com' onChangeText={(text) => this.emailValue = text} />
             </UFOCard>

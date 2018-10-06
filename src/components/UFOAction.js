@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     area: {
         flex: 1,
         flexDirection: 'column',
-        justifyContent: 'flex-start',
+        justifyContent: 'center',
         alignItems: 'center'
     },
     button: {

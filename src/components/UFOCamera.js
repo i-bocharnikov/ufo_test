@@ -1,21 +1,27 @@
 import React from "react";
-import { View, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
+import { translate } from "react-i18next";
 import { RNCamera } from 'react-native-camera';
 import ImageRotate from 'react-native-image-rotate';
 
-import { UFOText } from './common'
 
 
-export default class UFOCamera extends React.Component {
+class UFOCamera extends React.Component {
 
+    constructor(props, context) {
+        super(props, context);
+    }
 
-    capture = async (t) => {
+    try() {
+        return "work"
+    }
+
+    async capture() {
 
         if (!this.camera) {
-            showWarning(t("Registration:CameraNotAvailable"))
+            showWarning(this.props.t("Registration:CameraNotAvailable"))
             return
         }
-        this.activityPending = true
         const options = { quality: 1, base64: false, exif: true, doNotSave: false };
         //Take photo
         let fullImage = await this.camera.takePictureAsync(options)
@@ -37,6 +43,7 @@ export default class UFOCamera extends React.Component {
 
     render() {
 
+        const { t } = this.props
         return (
             <RNCamera
                 ref={ref => {
@@ -63,3 +70,6 @@ const styles = StyleSheet.create({
         right: 0,
     },
 });
+
+
+export default translate("translations")(UFOCamera);

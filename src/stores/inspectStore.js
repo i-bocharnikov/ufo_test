@@ -10,7 +10,7 @@ const DEBUG = false
 class CarDamage {
     @persist @observable reference = null
     @persist @observable status = null
-    @persist @observable comment = null
+    @persist @observable comment = ""
     @persist @observable relative_position_x = null
     @persist @observable relative_position_y = null
     @persist @observable document_reference = null

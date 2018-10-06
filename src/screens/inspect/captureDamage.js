@@ -5,22 +5,19 @@ import { observer } from "mobx-react";
 import { observable, action } from "mobx";
 import { RNCamera } from 'react-native-camera';
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-
-
+import ImageRotate from 'react-native-image-rotate';
 
 import UFOHeader from "../../components/header/UFOHeader";
 import UFOActionBar from "../../components/UFOActionBar";
 import { UFOContainer, UFOImage } from '../../components/common'
-import { screens, actionStyles, icons } from '../../utils/global'
+import { screens, actionStyles, icons, dims } from '../../utils/global'
 import { inspectStore } from "../../stores";
 import UFOCard from "../../components/UFOCard";
 import { Body } from "native-base";
 
-
 const window = Dimensions.get('window');
 const DEVICE_WIDTH = window.width
 const DEVICE_HEIGHT = window.height
-
 @observer
 class CaptureDamageScreen extends Component {
 
@@ -39,7 +36,7 @@ class CaptureDamageScreen extends Component {
       return
     }
     this.activityPending = true
-    const options = { quality: 1, base64: false, exif: true, doNotSave: false };
+    const options = { quality: 1, base64: false, exif: true, doNotSave: false, width: 2048 };
     //Take photo
     let fullImage = await this.camera.takePictureAsync(options)
     const { uri, width, height, exif } = fullImage;
@@ -99,10 +96,10 @@ class CaptureDamageScreen extends Component {
     return (
 
       <KeyboardAwareScrollView>
-        <View style={{ padding: 20, flexDirection: 'column', justifyContent: 'flex-start' }}>
+        <View style={{ paddingTop: 10 }}>
           <UFOCard title={t('inspect:captureCheckGuidance')} >
             <Body>
-              <UFOImage source={{ uri: this.documentUri }} style={{ width: DEVICE_WIDTH * 0.7, height: DEVICE_HEIGHT * 0.7, alignSelf: 'center' }} />
+              <UFOImage source={{ uri: this.documentUri }} style={{ width: dims.DEVICE_WIDTH * 0.7, height: dims.DEVICE_HEIGHT * 0.5, alignSelf: 'center' }} />
             </Body>
           </UFOCard >
         </View >

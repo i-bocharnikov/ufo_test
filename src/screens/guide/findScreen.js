@@ -8,17 +8,10 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import UFOHeader from "../../components/header/UFOHeader";
 import UFOActionBar from "../../components/UFOActionBar";
 import { UFOContainer } from '../../components/common'
-import { screens, actionStyles, icons, colors } from '../../utils/global'
+import { screens, actionStyles, icons, colors, dims } from '../../utils/global'
 import { driveStore, guideStore } from '../../stores'
 import UFOCard from "../../components/UFOCard";
 import UFOSlider from "../../components/UFOSlider";
-
-
-const DEVICE_WIDTH = Dimensions.get("window").width
-const DEVICE_HEIGHT = Dimensions.get("window").height
-const MEDIA_RATIO = 1.5
-const MEDIA_WIDTH = DEVICE_WIDTH - 60
-const MEDIA_HEIGHT = MEDIA_WIDTH / MEDIA_RATIO
 
 @observer
 class FindScreen extends Component {
@@ -85,7 +78,7 @@ class FindScreen extends Component {
           refreshControl={_RefreshControl}
         >
           <UFOHeader t={t} navigation={navigation} currentScreen={screens.DRIVE} title={t('guide:findTitle', { rental: driveStore.rental })} />
-          <View style={{ paddingTop: 100 }}>
+          <View style={{ paddingTop: dims.CONTENT_PADDING_TOP }}>
             <UFOSlider data={guides} renderItem={this.renderGuide} onSnapToItem={this.onSnapToItem} />
           </View>
         </KeyboardAwareScrollView >

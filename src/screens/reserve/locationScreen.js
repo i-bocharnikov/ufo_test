@@ -5,7 +5,7 @@ import { View, Linking, Clipboard } from 'react-native';
 import UFOHeader from "../../components/header/UFOHeader";
 import UFOActionBar from "../../components/UFOActionBar";
 import { UFOContainer, UFOText, UFOIcon, UFOImage } from '../../components/common'
-import { screens, actionStyles, icons } from '../../utils/global'
+import { screens, actionStyles, icons, dims } from '../../utils/global'
 import UFOCard from "../../components/UFOCard";
 
 const bookingUrl = "https://booking.ufodrive.com"
@@ -45,7 +45,7 @@ class ReserveLocationScreen extends Component {
       <UFOContainer image={screens.RESERVE_LOCATION.backgroundImage}>
         <UFOHeader t={t} navigation={navigation} title={t('reserve:reserveTitle')} currentScreen={screens.RESERVE_LOCATION} />
         <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
-          <View style={{ paddingTop: '20%', paddingLeft: '10%', paddingRight: '10%' }} >
+          <View style={{ paddingTop: dims.CONTENT_PADDING_TOP, paddingLeft: '10%', paddingRight: '10%' }} >
             <UFOCard title={t('reserve:bookingLink')}  >
               <UFOText link h2 center onPress={this.goToURL} style={{ paddingTop: 20 }} >{bookingUrl}</UFOText>
             </UFOCard>

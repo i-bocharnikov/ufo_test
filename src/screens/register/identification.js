@@ -5,12 +5,13 @@ import { ImageBackground, View, Dimensions, ImageEditor, StyleSheet } from 'reac
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { RNCamera } from 'react-native-camera';
 import _ from 'lodash'
+import ImageRotate from 'react-native-image-rotate';
 
 import UFOHeader from "../../components/header/UFOHeader";
 import UFOActionBar from "../../components/UFOActionBar";
 import { UFOContainer, UFOText, UFOImage } from '../../components/common'
 import registerStore from '../../stores/registerStore';
-import { screens, actionStyles, icons, colors } from '../../utils/global'
+import { screens, actionStyles, icons, colors, dims } from '../../utils/global'
 import { showWarning } from '../../utils/interaction'
 import { observable, action } from "mobx";
 import UFOCard from "../../components/UFOCard";
@@ -61,39 +62,76 @@ class IdentificationScreen extends Component {
       return
     }
     this.activityPending = true
-    const options = { quality: 1, base64: true };
+    const options = { quality: 1, base64: false, exif: true, doNotSave: false, width: 2048 };
     //Take photo
     let fullImage = await this.camera.takePictureAsync(options)
-    //Crop Image
-    const { uri, width, height } = fullImage;
-    const ratioX = width / DEVICE_WIDTH
-    const ratioy = height / DEVICE_HEIGHT
-    const cropData = {
-      offset: { x: PADDING_WIDTH * ratioX, y: PADDING_HEIGHT * ratioy },
-      size: { width: CARD_WIDTH * ratioX, height: CARD_HEIGHT * ratioy },
-    };
-    ImageEditor.cropImage(uri, cropData, url => {
-      if (this.captureState === captureStates.CAPTURE_FRONT) {
-        this.frontImageUrl = url
-        this.captureState = captureStates.CAPTURE_BACK
-        this.activityPending = false
+    const { uri, width, height, exif } = fullImage;
+    if (exif && exif.Orientation === 6) {
+      ImageRotate.rotateImage(uri, 90, (uri) => {
+        //Crop Image
+        //const { uri, width, height } = fullImage;
+        const ratioX = height / DEVICE_WIDTH
+        const ratioy = width / DEVICE_HEIGHT
+        const cropData = {
+          offset: { x: PADDING_WIDTH * ratioX, y: PADDING_HEIGHT * ratioy },
+          size: { width: CARD_WIDTH * ratioX, height: CARD_HEIGHT * ratioy },
+        };
+        ImageEditor.cropImage(uri, cropData, url => {
+          if (this.captureState === captureStates.CAPTURE_FRONT) {
+            this.frontImageUrl = url
+            this.captureState = captureStates.CAPTURE_BACK
+            this.activityPending = false
 
-        return
-      }
-      if (this.captureState === captureStates.CAPTURE_BACK) {
-        this.backImageUrl = url
-        this.captureState = captureStates.VALIDATE
-        this.activityPending = false
+            return
+          }
+          if (this.captureState === captureStates.CAPTURE_BACK) {
+            this.backImageUrl = url
+            this.captureState = captureStates.VALIDATE
+            this.activityPending = false
 
-        return
+            return
+          }
+        }, error => {
+          this.activityPending = false
+          showWarning(t("Registration:CameraProcessingError", { message: error.message }))
+        }
+        )
+      },
+        (error) => {
+          console.error(error);
+        }
+      )
+    } else {
+      //Crop Image
+      //const { uri, width, height } = fullImage;
+      const ratioX = width / DEVICE_WIDTH
+      const ratioy = height / DEVICE_HEIGHT
+      console.log("***********crop from to ", width, CARD_WIDTH * ratioX)
+      const cropData = {
+        offset: { x: PADDING_WIDTH * ratioX, y: PADDING_HEIGHT * ratioy },
+        size: { width: CARD_WIDTH * ratioX, height: CARD_HEIGHT * ratioy },
+      };
+      ImageEditor.cropImage(uri, cropData, url => {
+        if (this.captureState === captureStates.CAPTURE_FRONT) {
+          this.frontImageUrl = url
+          this.captureState = captureStates.CAPTURE_BACK
+          this.activityPending = false
+
+          return
+        }
+        if (this.captureState === captureStates.CAPTURE_BACK) {
+          this.backImageUrl = url
+          this.captureState = captureStates.VALIDATE
+          this.activityPending = false
+
+          return
+        }
+      }, error => {
+        this.activityPending = false
+        showWarning(t("Registration:CameraProcessingError", { message: error.message }))
       }
-    }, error => {
-      this.activityPending = false
-      showWarning(t("Registration:CameraProcessingError", { message: error.message }))
+      )
     }
-    )
-
-
   }
 
   @action
@@ -232,7 +270,7 @@ class IdentificationScreen extends Component {
               alignContent: 'center',
               opacity: 0.4
             }}>
-              <UFOText upper h2 inverted center>{t(inputLabel)}</UFOText>
+              <UFOText style={{ opacity: 1 }} upper h1 color={this.activityPending ? colors.DISABLE : colors.INVERTED_TEXT} center>{t(inputLabel)}</UFOText>
             </ImageBackground>
           </View>
         )}

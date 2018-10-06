@@ -268,6 +268,10 @@ class OTAKeyStore {
     @action
     async openSession(keyAccessDeviceToken: string, showError = true): Promise<boolean> {
 
+        if (!keyAccessDeviceToken || !keyAccessDeviceToken instanceof String) {
+            return false
+        }
+
         try {
             this.keyAccessDeviceToken = keyAccessDeviceToken
             await this.trace("debug", "openOTASession", 0, `-> this.ota.openSession(${this.keyAccessDeviceToken}) start`)
@@ -299,6 +303,10 @@ class OTAKeyStore {
 
 
     async getKey(keyId: string, showError = true): Promise<boolean> {
+
+        if (!keyId || !keyId instanceof String) {
+            return false
+        }
 
         try {
             await this.trace("debug", "getKey", 0, `-> this.ota.getKey(${keyId}) start`)
@@ -333,6 +341,10 @@ class OTAKeyStore {
 
     @action
     async enableKey(keyId: string, showError = true): Promise<boolean> {
+
+        if (!keyId || !keyId instanceof String) {
+            return false
+        }
 
         try {
             await this.trace("debug", "enableKey", 0, `-> this.ota.enableKey(${keyId}) start`)

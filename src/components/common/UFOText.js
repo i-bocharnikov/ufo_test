@@ -16,6 +16,9 @@ export default class UFOText extends React.Component {
         if (!style.fontSize) {
             style.fontSize = 14
         }
+        if (this.props.color) {
+            style.color = this.props.color.string()
+        }
         if (this.props.bold) {
             style.fontWeight = 'bold'
         }

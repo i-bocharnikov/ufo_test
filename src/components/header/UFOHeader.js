@@ -52,11 +52,8 @@ export default class UFOHeader extends React.Component {
                         }} size={sizes.SMALL} noText />
                     </View >
                     <View style={styles.body}>
-                        <View style={styles.bodyContainer}>
-                            {title}
-                            {subTitle}
-                            {logo}
-                        </View>
+                        {title}
+                        {logo}
                     </View>
                     <View style={styles.right}>
                         {(isSupport &&
@@ -77,19 +74,19 @@ export default class UFOHeader extends React.Component {
 const styles = StyleSheet.create({
     headerMasterContainer: {
         flexDirection: 'column',
+        justifyContent: 'flex-start',
         alignItems: 'center',
-        justifyContent: 'flex-start',
-    },
-    headerContainer: {
-        paddingVertical: 10,
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        alignContent: 'center'
     },
     activityMessages: {
         backgroundColor: colors.ERROR.string(),
         height: 15,
+        width: "100%",
+    },
+    headerContainer: {
+        paddingVertical: 10,
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignContent: 'center',
         width: "100%",
     },
     left: {
@@ -100,21 +97,14 @@ const styles = StyleSheet.create({
     },
     body: {
         flex: 0.7,
-        flexDirection: 'column',
-        alignItems: 'center',
+        flexDirection: 'row',
+        alignItems: 'flex-start',
         justifyContent: 'center',
     },
     right: {
         flex: 0.15,
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center',
-    },
-    bodyContainer: {
-        flex: 1,
-        height: 40,
-        flexDirection: 'row',
-        alignItems: 'flex-start',
         justifyContent: 'center',
     },
     logo: {

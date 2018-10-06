@@ -13,7 +13,7 @@ import _ from 'lodash'
 import UFOHeader from "../../components/header/UFOHeader";
 import UFOActionBar from "../../components/UFOActionBar";
 import { UFOContainer, UFOText, UFOIcon, UFOImage, UFOTextInput } from '../../components/common'
-import { screens, actionStyles, icons, colors } from '../../utils/global'
+import { screens, actionStyles, icons, colors, dims } from '../../utils/global'
 import appStore from '../../stores/appStore';
 import registerStore from '../../stores/registerStore';
 import UFOCard from "../../components/UFOCard";
@@ -128,11 +128,11 @@ class PhoneScreen extends Component {
 
     return (
       <UFOContainer image={screens.REGISTER_PHONE.backgroundImage}>
-        <UFOHeader t={t} navigation={navigation} title={t('register:phoneTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_PHONE} />
+        <UFOHeader transparent t={t} navigation={navigation} title={t('register:phoneTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_PHONE} />
         <KeyboardAwareScrollView
           enableOnAndroid={true}
           resetScrollToCoords={{ x: 0, y: 0 }}>
-          <View style={{ paddingTop: "20%", paddingHorizontal: 10, flex: 0.80, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
+          <View style={{ paddingTop: dims.CONTENT_PADDING_TOP, paddingHorizontal: 10, flex: 0.80, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
             {!this.activityPending && registerStore.isConnected && (
               <UFOCard title={t('register:phoneNumberInputLabel')}>
                 <UFOTextInput defaultValue={registerStore.user.phone_number} editable={false} />

@@ -9,7 +9,7 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import UFOHeader from "../../components/header/UFOHeader";
 import UFOActionBar from "../../components/UFOActionBar";
 import { UFOContainer } from '../../components/common'
-import { screens, actionStyles, icons, colors } from '../../utils/global'
+import { screens, actionStyles, icons, colors, dims } from '../../utils/global'
 import { observable, action } from "mobx";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import UFOCard from "../../components/UFOCard";
@@ -68,7 +68,7 @@ class AddressScreen extends Component {
           enableOnAndroid={true}
           resetScrollToCoords={{ x: 0, y: 0 }}
         >
-          <View style={{ paddingTop: "20%", paddingHorizontal: 10, flex: 0.80, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
+          <View style={{ paddingTop: dims.CONTENT_PADDING_TOP / 2, paddingHorizontal: 10, flex: 0.80, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
             <UFOCard title={t('register:addressInputLabel')}>
 
               <GooglePlacesAutocomplete
