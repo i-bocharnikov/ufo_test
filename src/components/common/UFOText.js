@@ -52,6 +52,18 @@ export default class UFOText extends React.Component {
         if (this.props.h10) {
             style.fontSize = 11
         }
+        if (this.props.h11) {
+            style.fontSize = 10
+        }
+        if (this.props.h12) {
+            style.fontSize = 9
+        }
+        if (this.props.h13) {
+            style.fontSize = 8
+        }
+        if (this.props.h14) {
+            style.fontSize = 7
+        }
         if (this.props.link) {
             style.textDecorationLine = 'underline'
         }

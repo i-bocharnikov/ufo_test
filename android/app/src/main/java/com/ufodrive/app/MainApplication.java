@@ -4,6 +4,7 @@ package com.ufodrive.app;
 
 
 import com.facebook.react.ReactApplication;
+import io.codebakery.imagerotate.ImageRotatePackage;
 import com.masteratul.exceptionhandler.ReactNativeExceptionHandlerPackage;
 import br.com.classapp.RNSensitiveInfo.RNSensitiveInfoPackage;
 import com.dylanvann.fastimage.FastImageViewPackage;
@@ -34,6 +35,7 @@ public class MainApplication extends OtaKeysApplication implements ReactApplicat
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new ImageRotatePackage(),
             new ReactNativeExceptionHandlerPackage(),
             new RNSensitiveInfoPackage(),
             new FastImageViewPackage(),

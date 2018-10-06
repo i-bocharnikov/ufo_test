@@ -164,7 +164,7 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
                 }
             });            
         }catch(Exception e) {
-            promise.reject(e);
+            try {promise.reject(e);}catch(Exception exception){silentException(e);}
         }
         return;
     }
@@ -185,8 +185,8 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
         try {
             String accessDeviceToken = getOtaSdk().getCore().getAccessDeviceToken(force);
             promise.resolve(accessDeviceToken);
-        }catch(Exception e) {
-            promise.reject(e);
+        }catch(Exception e) {            
+            try {promise.reject(e);}catch(Exception exception){silentException(e);}
         }
         return;
     }
@@ -204,28 +204,30 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
     @ReactMethod
     public void openSession(String otaSessionToken, final Promise promise ) {
 
-        if(otaSessionToken == null){
-            promise.reject("Input Invalid", "otaSessionToken ["+otaSessionToken+"] is required");
+        try {
+            if(otaSessionToken == null){
+                promise.reject("Input Invalid", "otaSessionToken ["+otaSessionToken+"] is required");
+                return;
+            }
+
+
+            OtaSessionRequest otaSessionRequest = new OtaSessionRequest.AccessDeviceBuilder(otaSessionToken).create();
+            getOtaSdk().getCore().openSession(
+                    otaSessionRequest,
+                    new AuthenticateCallback() {
+
+                        @Override
+                        public void onAuthenticated() {
+                            promise.resolve(true);
+                        }
+
+                        @Override
+                        public void onApiError(HttpStatus httpStatus, ApiCode errorCode) {
+                            try {promise.reject(errorCode.name(), httpStatus.name());}catch(Exception exception){silentException(exception);}
+                        }
+                    });
             return;
-        }
-
-
-        OtaSessionRequest otaSessionRequest = new OtaSessionRequest.AccessDeviceBuilder(otaSessionToken).create();
-        getOtaSdk().getCore().openSession(
-                otaSessionRequest,
-                new AuthenticateCallback() {
-
-                    @Override
-                    public void onAuthenticated() {
-                        promise.resolve(true);
-                    }
-
-                    @Override
-                    public void onApiError(HttpStatus httpStatus, ApiCode errorCode) {
-                        promise.reject(errorCode.name(), httpStatus.name());
-                    }
-                });
-        return;
+        }catch(Exception e){silentException(e);}
     }
 
     /**
@@ -241,26 +243,28 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
     @ReactMethod
     public void getKey(String otaKeyId, final Promise promise ) {
 
-        if(otaKeyId == null){
-            promise.reject("Input Invalid", "otaKeyId ["+otaKeyId+"] is required");
+        try {
+            if(otaKeyId == null){
+                promise.reject("Input Invalid", "otaKeyId ["+otaKeyId+"] is required");
+                return;
+            }
+
+
+            OtaKeyRequest otaKeyRequest = new OtaKeyRequest.EnableKeyBuilder(Long.parseLong(otaKeyId)).create();
+            getOtaSdk().getApi().getKey(otaKeyRequest, new GetKeyCallback() {
+                @Override
+                public void onGetKey(OtaKey otaKey) {
+                    promise.resolve(convert(otaKey));
+                    return;
+                }
+                @Override
+                public void onApiError(HttpStatus httpStatus, ApiCode errorCode) {
+                    try {promise.reject(errorCode.name(), httpStatus.name());}catch(Exception exception){silentException(exception);}
+                    return;
+                }
+            });
             return;
-        }
-
-
-        OtaKeyRequest otaKeyRequest = new OtaKeyRequest.EnableKeyBuilder(Long.parseLong(otaKeyId)).create();
-        getOtaSdk().getApi().getKey(otaKeyRequest, new GetKeyCallback() {
-            @Override
-            public void onGetKey(OtaKey otaKey) {
-                promise.resolve(convert(otaKey));
-                return;
-            }
-            @Override
-            public void onApiError(HttpStatus httpStatus, ApiCode errorCode) {
-                promise.reject(errorCode.name(), httpStatus.name());
-                return;
-            }
-        });
-        return;
+        }catch(Exception e){silentException(e);} 
     }
 
     /**
@@ -276,25 +280,26 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
     @ReactMethod
     public void enableKey(String otaKeyId, final Promise promise  ) {
 
+        try {
+            if(otaKeyId == null){
+                promise.reject("Input Invalid", "otaKeyId ["+otaKeyId+"] is required");
+                return;
+            }
 
-        if(otaKeyId == null){
-            promise.reject("Input Invalid", "otaKeyId ["+otaKeyId+"] is required");
+            OtaKeyRequest otaKeyRequest = new OtaKeyRequest.EnableKeyBuilder(Long.parseLong(otaKeyId)).create();
+            getOtaSdk().getApi().enableKey(otaKeyRequest, new EnableKeyCallback() {
+                @Override
+                public void onEnableKey(OtaKey otaKey) {
+                    LAST_ENABLED_KEY = otaKey;
+                    promise.resolve(convert(otaKey));
+                }
+                @Override
+                public void onApiError(HttpStatus httpStatus, ApiCode errorCode) {
+                    try {promise.reject(errorCode.name(), httpStatus.name());}catch(Exception exception){silentException(exception);}
+                }
+            });
             return;
-        }
-
-        OtaKeyRequest otaKeyRequest = new OtaKeyRequest.EnableKeyBuilder(Long.parseLong(otaKeyId)).create();
-        getOtaSdk().getApi().enableKey(otaKeyRequest, new EnableKeyCallback() {
-            @Override
-            public void onEnableKey(OtaKey otaKey) {
-                LAST_ENABLED_KEY = otaKey;
-                promise.resolve(convert(otaKey));
-            }
-            @Override
-            public void onApiError(HttpStatus httpStatus, ApiCode errorCode) {
-                promise.reject(errorCode.name(), httpStatus.name());
-            }
-        });
-        return;
+        }catch(Exception e){silentException(e);}  
     }
 
     /**
@@ -310,24 +315,26 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
     @ReactMethod
     public void endKey(String otaKeyId, final Promise promise  ) {
 
-        if(otaKeyId == null){
-            promise.reject("Input Invalid", "otaKeyId ["+otaKeyId+"] is required");
+        try {
+            if(otaKeyId == null){
+                promise.reject("Input Invalid", "otaKeyId ["+otaKeyId+"] is required");
+                return;
+            }
+
+
+            OtaKeyRequest otaKeyRequest = new OtaKeyRequest.EndKeyBuilder(Long.parseLong(otaKeyId)).create();
+            getOtaSdk().getApi().endKey(otaKeyRequest, new EndKeyCallback() {
+                @Override
+                public void onEndKey(OtaKey otaKey) {
+                    promise.resolve(convert(otaKey));
+                }
+                @Override
+                public void onApiError(HttpStatus httpStatus, ApiCode errorCode) {
+                    try {promise.reject(errorCode.name(), httpStatus.name());}catch(Exception exception){silentException(exception);}
+                }
+            });
             return;
-        }
-
-
-        OtaKeyRequest otaKeyRequest = new OtaKeyRequest.EndKeyBuilder(Long.parseLong(otaKeyId)).create();
-        getOtaSdk().getApi().endKey(otaKeyRequest, new EndKeyCallback() {
-            @Override
-            public void onEndKey(OtaKey otaKey) {
-                promise.resolve(convert(otaKey));
-            }
-            @Override
-            public void onApiError(HttpStatus httpStatus, ApiCode errorCode) {
-                promise.reject(errorCode.name(), httpStatus.name());
-            }
-        });
-        return;
+        }catch(Exception e){silentException(e);}  
     }
 
 
@@ -354,8 +361,8 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
                 }
 
             });
-        }catch(NullPointerException exception){
-            promise.reject(exception);
+        }catch(Exception e){
+            try {promise.reject(e);}catch(Exception ignore){silentException(e);}
         }
         return;
     }
@@ -373,18 +380,20 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
     @ReactMethod
     public void syncVehicleData(final Promise promise) {
 
-        getOtaSdk().getApi().syncVehicleData(new SyncVehicleDataCallback() {
-            @Override
-            public void onVehicleDataSync() {
-                promise.resolve(true);
+        try {
+            getOtaSdk().getApi().syncVehicleData(new SyncVehicleDataCallback() {
+                @Override
+                public void onVehicleDataSync() {
+                    promise.resolve(true);
 
-            }
-            @Override
-            public void onApiError(HttpStatus httpStatus, ApiCode errorCode) {
-                promise.reject(errorCode.name(), httpStatus.name());
-            }
-        });
-        return;
+                }
+                @Override
+                public void onApiError(HttpStatus httpStatus, ApiCode errorCode) {                          
+                    try {promise.reject(errorCode.name(), httpStatus.name());}catch(Exception exception){silentException(exception);}
+                }
+            });
+            return;
+        }catch(Exception e){silentException(e);}         
     }
 
     /**
@@ -405,7 +414,7 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
             boolean result = getOtaSdk().getCore().configureNetworkTimeouts(connectTimeout, readTimeout);
             promise.resolve(result);
         }catch(Exception e) {
-            promise.reject(e);
+            try {promise.reject(e);}catch(Exception ignore){silentException(e);}
         }
         return;
 
@@ -425,7 +434,7 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
             OtaKey otaKey = getOtaSdk().getCore().getUsedKey();
             promise.resolve(convert(otaKey));
         }catch(Exception e) {
-            promise.reject(e);
+            try {promise.reject(e);}catch(Exception ignore){silentException(e);}
         }
         return;
     }
@@ -446,7 +455,7 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
             boolean result = getOtaSdk().getBle().isConnectedToVehicle();
             promise.resolve(result);
         }catch(Exception e) {
-            promise.reject(e);
+            try {promise.reject(e);}catch(Exception ignore){silentException(e);}
         }
         return;
     }
@@ -467,7 +476,7 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
             String result = getOtaSdk().getBle().getBluetoothState().name();
             promise.resolve(result);
         }catch(Exception e) {
-            promise.reject(e);
+            try {promise.reject(e);}catch(Exception ignore){silentException(e);}
         }
         return;
     }
@@ -488,7 +497,7 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
             boolean result = getOtaSdk().getBle().isOperationInProgress();
             promise.resolve(result);
         }catch(Exception e) {
-            promise.reject(e);
+            try {promise.reject(e);}catch(Exception ignore){silentException(e);}
         }
         return;
     }
@@ -528,12 +537,10 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
 
                 @Override
                 public void onBleError(BleError errorCode) {
-                    try {
-                        promise.reject(errorCode.name(), errorCode.toString());
-                    }catch(Exception e){}
+                    try {promise.reject(errorCode.name(), errorCode.toString());}catch(Exception exception){silentException(exception);}
                 }
             });
-        }catch(java.lang.IllegalStateException exception){
+        }catch(Exception exception){
             silentException(exception);
         }
         return;
@@ -558,10 +565,10 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
 
                 @Override
                 public void onBleError(BleError errorCode) {
-                    promise.reject(errorCode.name(), errorCode.toString());
+                    try {promise.reject(errorCode.name(), errorCode.toString());}catch(Exception exception){silentException(exception);}
                 }
             });
-        }catch(java.lang.IllegalStateException exception){
+        }catch(Exception exception){
             silentException(exception);
         }
         return;
@@ -603,10 +610,10 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
 
                 @Override
                 public void onBleError(BleError errorCode) {
-                    promise.reject(errorCode.name(), errorCode.toString());
+                    try {promise.reject(errorCode.name(), errorCode.toString());}catch(Exception exception){silentException(exception);}
                 }
             });
-        }catch(java.lang.IllegalStateException exception){
+        }catch(Exception exception){
             silentException(exception);
         }
         return;
@@ -641,10 +648,10 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
 
                 @Override
                 public void onBleError(BleError errorCode) {
-                    promise.reject(errorCode.name(), errorCode.toString());
+                    try {promise.reject(errorCode.name(), errorCode.toString());}catch(Exception exception){silentException(exception);}
                 }
             });
-        }catch(java.lang.IllegalStateException exception){
+        }catch(Exception exception){
             silentException(exception);
         }
         return;
@@ -677,10 +684,10 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
 
                 @Override
                 public void onBleError(BleError errorCode) {
-                    promise.reject(errorCode.name(), errorCode.toString());
+                    try {promise.reject(errorCode.name(), errorCode.toString());}catch(Exception exception){silentException(exception);}
                 }
             });
-        }catch(java.lang.IllegalStateException exception){
+        }catch(Exception exception){
             silentException(exception);
         }
         return;
@@ -713,10 +720,10 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
 
                 @Override
                 public void onBleError(BleError errorCode) {
-                    promise.reject(errorCode.name(), errorCode.toString());
+                    try {promise.reject(errorCode.name(), errorCode.toString());}catch(Exception exception){silentException(exception);}
                 }
             });
-        }catch(java.lang.IllegalStateException exception){
+        }catch(Exception exception){
             silentException(exception);
         }
         return;
@@ -743,10 +750,10 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
 
                 @Override
                 public void onBleError(BleError errorCode) {
-                    promise.reject(errorCode.name(), errorCode.toString());
+                    try {promise.reject(errorCode.name(), errorCode.toString());}catch(Exception exception){silentException(exception);}
                 }
             });
-        }catch(java.lang.IllegalStateException exception){
+        }catch(Exception exception){
             silentException(exception);
         }
         return;

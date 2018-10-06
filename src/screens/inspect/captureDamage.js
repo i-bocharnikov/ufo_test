@@ -7,6 +7,7 @@ import { RNCamera } from 'react-native-camera';
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 
+
 import UFOHeader from "../../components/header/UFOHeader";
 import UFOActionBar from "../../components/UFOActionBar";
 import { UFOContainer, UFOImage } from '../../components/common'
@@ -38,12 +39,23 @@ class CaptureDamageScreen extends Component {
       return
     }
     this.activityPending = true
-    const options = { quality: 0.5, base64: true, fixOrientation: true, doNotSave: false };
+    const options = { quality: 1, base64: false, exif: true, doNotSave: false };
     //Take photo
     let fullImage = await this.camera.takePictureAsync(options)
-    const { uri, width, height } = fullImage;
-    this.documentUri = uri
-    this.activityPending = false
+    const { uri, width, height, exif } = fullImage;
+    if (exif && exif.Orientation === 6) {
+      ImageRotate.rotateImage(uri, 90, (uri) => {
+        this.documentUri = uri
+        this.activityPending = false
+      },
+        (error) => {
+          console.error(error);
+        }
+      )
+    } else {
+      this.documentUri = uri
+      this.activityPending = false
+    }
   }
 
   @action
@@ -97,7 +109,6 @@ class CaptureDamageScreen extends Component {
       </KeyboardAwareScrollView>
     )
   }
-
 
   render() {
     const { t, navigation } = this.props;

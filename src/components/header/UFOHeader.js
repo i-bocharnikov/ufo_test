@@ -1,6 +1,5 @@
 import React from "react";
 import { View, StyleSheet } from 'react-native';
-import { Header, Left, Right, Body } from 'native-base';
 import { observer } from "mobx-react";
 
 import { UFOText, UFOImage } from '../common'
@@ -20,38 +19,12 @@ export default class UFOHeader extends React.Component {
     render() {
 
         let t = this.props.t
-        let left = (
-            <View style={styles.left}>
-                <UFOAction action={{
-                    style: actionStyles.ACTIVE,
-                    icon: icons.HOME,
-                    onPress: this.goToHome
-
-                }} size={sizes.SMALL} noText />
-            </View >)
         let title = this.props.title ? (<UFOText inverted h3>{this.props.title}</UFOText>) : null
         let subTitle = this.props.subTitle ? (<UFOText inverted h4>{this.props.subTitle}</UFOText>) : null
-        let logo = this.props.logo ? (<UFOImage source={logos.horizontal} style={{ width: 200, height: 34 }} />) : null
+        let logo = this.props.logo ? (<UFOImage source={logos.horizontal} style={styles.logo} resizeMode='contain' />) : null
         let alpha = this.props.transparent ? 0 : 0.7
         let currentScreen = this.props.currentScreen ? this.props.currentScreen : screens.HOME
-
         let isSupport = currentScreen.supportFaqCategory !== null
-
-        let right = (
-            <View style={styles.right}>
-                {(isSupport &&
-                    <UFOAction action={{
-                        style: actionStyles.TODO,
-                        icon: icons.HELP,
-                        onPress: () => this.goToSupport(currentScreen)
-
-                    }} size={sizes.SMALL} noText style={{ flex: 0.1 }} />
-                )}
-                <View style={{ flex: 0.8 }} />
-            </View>
-        )
-
-
         let activities = activitiesStore.activities
         let activitiesMessage = null
         if (activities.internetAccessFailure && activities.bluetoothAccessFailure) {
@@ -63,47 +36,89 @@ export default class UFOHeader extends React.Component {
         }
 
         return (
-            <View style={styles.headerContainer}>
+            <View style={styles.headerMasterContainer}>
                 {activitiesMessage && (
                     <View style={styles.activityMessages}>
-                        <UFOText h10 inverted center>{activitiesMessage}</UFOText>
+                        <UFOText h11 inverted center>{activitiesMessage}</UFOText>
                     </View>
                 )}
-                <Header style={{ width: "100%", backgroundColor: colors.HEADER_BACKGROUND.alpha(alpha).string() }} noShadow>
-                    <Left >{left}</Left>
-                    <Body >
-                        {title}
-                        {subTitle}
-                        {logo}
-                    </Body>
-                    <Right >{right}</Right>
-                </Header>
+                <View style={[styles.headerContainer, { backgroundColor: colors.HEADER_BACKGROUND.alpha(alpha).string() }]}>
+                    <View style={styles.left}>
+                        <UFOAction action={{
+                            style: actionStyles.ACTIVE,
+                            icon: icons.HOME,
+                            onPress: this.goToHome
+
+                        }} size={sizes.SMALL} noText />
+                    </View >
+                    <View style={styles.body}>
+                        <View style={styles.bodyContainer}>
+                            {title}
+                            {subTitle}
+                            {logo}
+                        </View>
+                    </View>
+                    <View style={styles.right}>
+                        {(isSupport &&
+                            <UFOAction action={{
+                                style: actionStyles.TODO,
+                                icon: icons.HELP,
+                                onPress: () => this.goToSupport(currentScreen)
+
+                            }} size={sizes.SMALL} noText />
+                        )}
+                    </View>
+                </View>
             </View>
         );
     }
 }
 
 const styles = StyleSheet.create({
-    left: {
-        flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-    },
-    right: {
-        flex: 1,
-        flexDirection: 'row-reverse',
+    headerMasterContainer: {
+        flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'flex-start',
     },
     headerContainer: {
-        flexDirection: 'column',
-        alignItems: 'center',
+        paddingVertical: 10,
+        flex: 1,
+        flexDirection: 'row',
         justifyContent: 'flex-start',
+        alignContent: 'center'
     },
     activityMessages: {
         backgroundColor: colors.ERROR.string(),
         height: 15,
         width: "100%",
-    }
+    },
+    left: {
+        flex: 0.15,
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    body: {
+        flex: 0.7,
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    right: {
+        flex: 0.15,
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    bodyContainer: {
+        flex: 1,
+        height: 40,
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+    },
+    logo: {
+        flex: 1,
+        height: 35
+    },
 });

@@ -22,4 +22,6 @@ target 'driverApp' do
 
   pod 'ReactNativePermissions', :path => '../node_modules/react-native-permissions'
 
+  pod 'RNImageRotate', :path => '../node_modules/react-native-image-rotate'
+
 end

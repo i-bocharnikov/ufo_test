@@ -1,5 +1,6 @@
 import Color from 'color'
 import configurations from './configurations';
+import { Dimensions } from 'react-native'
 
 const THEME_UFO = 'UFO'
 const THEME_ACL = 'ACL'
@@ -87,6 +88,17 @@ class Screen {
     name = "missing"
     supportFaqCategory = "missing"
     backgroundImage = null
+}
+
+const DEVICE_WIDTH = Dimensions.get('window').width
+const DEVICE_HEIGHT = Dimensions.get('window').height
+
+export const dims = {
+    DEVICE_WIDTH: DEVICE_WIDTH,
+    DEVICE_HEIGHT: DEVICE_HEIGHT,
+    CONTENT_WIDTH: DEVICE_WIDTH * 90 / 100,
+    CONTENT_PADDING_HORIZONTAL: (DEVICE_WIDTH * 10 / 100) / 2,
+    CONTENT_PADDING_TOP: DEVICE_HEIGHT / 5
 }
 
 export const screens = {

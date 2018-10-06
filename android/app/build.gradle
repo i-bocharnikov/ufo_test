@@ -155,6 +155,7 @@ configurations.all {
 }
 
 dependencies {
+    compile project(':react-native-image-rotate')
     implementation 'com.google.firebase:firebase-core:16.0.1'
     implementation 'com.google.android.gms:play-services-location:15+'
     compile project(':react-native-exception-handler')

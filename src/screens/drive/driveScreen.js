@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { translate } from "react-i18next";
-import { Dimensions, View, RefreshControl } from 'react-native'
+import { View, RefreshControl } from 'react-native'
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { observer } from "mobx-react";
 import { observable, action } from "mobx";
@@ -10,7 +10,7 @@ import DeviceInfo from 'react-native-device-info';
 import UFOHeader from "../../components/header/UFOHeader";
 import UFOActionBar from "../../components/UFOActionBar";
 import { UFOContainer, UFOText, } from '../../components/common'
-import { screens, actionStyles, icons, colors, } from '../../utils/global'
+import { screens, actionStyles, icons, colors, dims, } from '../../utils/global'
 import { driveStore } from '../../stores'
 import otaKeyStore from '../../stores/otaKeyStore'
 import registerStore from "../../stores/registerStore"
@@ -20,13 +20,6 @@ import DriveCard from "./driveCard";
 import appStore from "../../stores/appStore";
 import { confirm } from "../../utils/interaction";
 import { checkAndRequestLocationPermission } from "../../utils/permissions";
-
-const DRIVE_DEVICE_WIDTH = Dimensions.get('window').width
-const DRIVE_DEVICE_HEIGHT = Dimensions.get('window').height
-const DRIVE_WIDTH = DRIVE_DEVICE_WIDTH * 90 / 100
-const DRIVE_PADDING_HORIZONTAL = (DRIVE_DEVICE_WIDTH - DRIVE_WIDTH) / 2
-const DRIVE_PADDING_TOP = DRIVE_DEVICE_HEIGHT / 15
-
 
 
 @observer
@@ -66,19 +59,19 @@ class DriveScreen extends Component {
 
   loadKeyForSelectedRental = async () => {
     if (driveStore.inUse) {
-      await otaKeyStore.getKey(driveStore.rental.key_id)
+      await otaKeyStore.getKey(driveStore.rental.key_id, false)
       if (!otaKeyStore.isKeyEnabled) {
-        await otaKeyStore.enableKey(driveStore.rental.key_id)
+        await otaKeyStore.enableKey(driveStore.rental.key_id, false)
       }
       await otaKeyStore.getUsedKey()
       if (otaKeyStore.key.keyId !== driveStore.rental.key_id) {
-        await otaKeyStore.switchToKey()
+        await otaKeyStore.switchToKey(false)
       }
-      await otaKeyStore.syncVehicleData()
-      await otaKeyStore.isConnectedToVehicle()
+      await otaKeyStore.syncVehicleData(false)
+      await otaKeyStore.isConnectedToVehicle(false)
       if (!DeviceInfo.isEmulator() && !otaKeyStore.isConnected) {
-        await otaKeyStore.connect()
-        await otaKeyStore.getVehicleData()
+        await otaKeyStore.connect(false, false)
+        await otaKeyStore.getVehicleData(false)
       }
     }
   }
@@ -175,7 +168,7 @@ class DriveScreen extends Component {
         <UFOHeader transparent logo t={t} navigation={navigation} currentScreen={screens.DRIVE} />
         <KeyboardAwareScrollView refreshControl={_RefreshControl}>
           {!this.driveSelected && !driveStore.hasRentals && (
-            <View style={{ paddingTop: 150, paddingLeft: 20, paddingRight: 20 }} >
+            <View style={{ paddingTop: dims.CONTENT_PADDING_TOP, paddingHorizontal: dims.CONTENT_PADDING_HORIZONTAL }} >
               <View style={{ flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center', backgroundColor: colors.CARD_BACKGROUND.string(), borderRadius: 8, padding: 20 }}>
                 <UFOText h1 bold center style={{ paddingTop: 10 }}>{t('home:reserve', { user: registerStore.user })}</UFOText>
                 <UFOText h1 bold center style={{ paddingTop: 5 }}>{t('home:register', { user: registerStore.user })}</UFOText>
@@ -185,12 +178,12 @@ class DriveScreen extends Component {
           )}
 
           {driveStore.hasRentals && driveStore.rental && (
-            <View style={{ paddingTop: DRIVE_PADDING_TOP }}>
+            <View style={{ paddingTop: dims.CONTENT_PADDING_TOP }}>
               <UFOSlider data={driveStore.rentals} renderItem={this.renderRental} onSnapToItem={this.selectRental} firstItem={driveStore.index} />
             </View>
           )}
           {this.driveSelected && !driveStore.rental && (
-            <View style={{ paddingTop: 100, paddingHorizontal: DRIVE_PADDING_HORIZONTAL, flex: 1, flexDirection: 'column', justifyContent: 'center', alignContent: 'center' }}>
+            <View style={{ paddingTop: dims.CONTENT_PADDING_TOP, paddingHorizontal: dims.CONTENT_PADDING_HORIZONTAL, flex: 1, flexDirection: 'column', justifyContent: 'center', alignContent: 'center' }}>
               <UFOCard title={t('drive:noRentalsTitle')} text={t('drive:noRentalsDescription')} />
             </View>
           )}
