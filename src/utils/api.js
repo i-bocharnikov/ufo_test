@@ -14,12 +14,12 @@ export const ufodrive_server_connectivity_test_api = axios.create({
 
 export const ufodrive_server_public_api = axios.create({
     baseURL: configurations.UFO_SERVER_PUBLIC_API_URL,
-    timeout: 10000
+    timeout: 30000
 });
 
 export const ufodrive_server_api = axios.create({
     baseURL: configurations.UFO_SERVER_PRIVATE_API_URL,
-    timeout: 10000
+    timeout: 30000
 });
 
 export async function useTokenInApi(token) {

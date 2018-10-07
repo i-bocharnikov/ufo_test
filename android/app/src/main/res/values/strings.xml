@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">UFODRIVE</string>
+    <string name="action_settings">Settings</string>
 </resources>

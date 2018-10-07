@@ -1,17 +1,15 @@
 import React, { Component } from "react";
 import { translate } from "react-i18next";
 import { observer } from "mobx-react";
-import { View, KeyboardAvoidingView, Dimensions, ScrollView } from 'react-native'
+import { View } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import UFOHeader from "../../components/header/UFOHeader";
 import UFOActionBar from "../../components/UFOActionBar";
-import { UFOContainer, UFOText, UFOIcon, UFOImage } from '../../components/common'
-import { actionStyles, icons, colors, sizes, screens, navigationParams } from '../../utils/global'
+import { UFOContainer } from '../../components/common'
+import { actionStyles, icons, screens } from '../../utils/global'
 import registerStore from "../../stores/registerStore";
 import { WebView } from 'react-native';
-import { observable } from "mobx";
 
 @observer
 class ChatScreen extends Component {
@@ -48,15 +46,15 @@ class ChatScreen extends Component {
     return (
       <UFOContainer image={screens.SUPPORT_CHAT.backgroundImage}>
         <UFOHeader transparent logo t={t} navigation={navigation} currentScreen={screens.SUPPORT_CHAT} style={{ backgroundColor: 'transparent' }} />
-        <View style={{ flex: 0.5 }}>
+        <View style={{ flex: 0.4 }}>
           <WebView
             ref={(ref) => { this.webView = ref; }}
-            source={require('./assets/index.html')}
+            source={{ uri: "file:///android_asset/chat/index.html" }}
             injectedJavaScript={this.injectjs()}
             javaScriptEnabled={true}
             domStorageEnabled={true}
             startInLoadingState={true}
-
+            style={{ zIndex: 10 }}
           />
         </View>
         <UFOActionBar actions={actions} />

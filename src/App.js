@@ -34,13 +34,14 @@ import RegisterIdentificationScreen from './screens/register/identification'
 import RegisterDriverLicenceScreen from './screens/register/driverLicence'
 
 import getTheme from '../native-base-theme/components';
-import { screens, colors } from './utils/global'
+import { screens, colors, backgrounds } from './utils/global'
 import AppStore from './stores/appStore'
 
 
 
 import { setJSExceptionHandler, setNativeExceptionHandler } from 'react-native-exception-handler';
 import registerStore from "./stores/registerStore";
+import { UFOContainer } from "./components/common";
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' +
@@ -204,17 +205,15 @@ class App extends React.Component {
     if (!appStore.isAppReady) {
       return (
         <View style={{ flex: 1, backgroundColor: colors.TRANSITION_BACKGROUND.string() }}>
-          <ActivityIndicator style={styles.centered} size="large" color={colors.ACTIVE} />
+          <UFOContainer image={backgrounds.HOME001}>
+            <ActivityIndicator style={styles.centered} size="large" color={colors.ACTIVE} />
+          </UFOContainer>
         </View>
       );
     }
 
     return (
       <Root>
-        <StatusBar
-          backgroundColor='black'
-          barStyle="light-content"
-        />
         <StyleProvider style={getTheme()}>
           <RootStack />
         </StyleProvider>
