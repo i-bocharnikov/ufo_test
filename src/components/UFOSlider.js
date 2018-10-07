@@ -6,7 +6,7 @@ import Carousel from 'react-native-snap-carousel';
 import { UFOText } from './common'
 
 const UFOSLIDER_DEVICE_WIDTH = Dimensions.get('window').width
-const UFOSLIDER_WIDTH = UFOSLIDER_DEVICE_WIDTH * 85 / 100
+const UFOSLIDER_WIDTH = UFOSLIDER_DEVICE_WIDTH * 90 / 100
 
 class UFOSlider extends React.Component {
 

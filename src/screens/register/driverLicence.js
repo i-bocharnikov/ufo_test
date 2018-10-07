@@ -16,6 +16,7 @@ import { showWarning } from '../../utils/interaction'
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import UFOCard from "../../components/UFOCard";
 import { Body } from "native-base";
+import { checkAndRequestCameraPermission } from "../../utils/permissions";
 
 const DEVICE_WIDTH = Dimensions.get("window").width
 const DEVICE_HEIGHT = Dimensions.get("window").height
@@ -35,10 +36,15 @@ const captureStates = {
 @observer
 class DriverLicenceScreen extends Component {
 
+  async componentDidMount() {
+    //onCameraReady={() => this.isCameraAllowed = true} this.isCameraAllowed = await checkAndRequestCameraPermission()
+  }
+
   @observable captureState = null // state 0 = capture front; 1 = capture back; 2 = validate front & back
   @observable frontImageUrl = null
   @observable backImageUrl = null
   @observable activityPending = false
+  @observable isCameraAllowed = false
 
   @action
   doCancel = async (isInWizzard) => {
@@ -220,7 +226,7 @@ class DriverLicenceScreen extends Component {
     if (this.captureState === captureStates.CAPTURE_FRONT || this.captureState === captureStates.CAPTURE_BACK) {
 
       actions.push({
-        style: actionStyles.TODO,
+        style: this.isCameraAllowed ? actionStyles.TODO : actionStyles.DISABLE,
         icon: icons.CAPTURE,
         onPress: async () => {
           this.doCapture(t, isInWizzard)
@@ -242,6 +248,7 @@ class DriverLicenceScreen extends Component {
         )}
         {showCamera && (
           <View style={styles.container}>
+            <UFOHeader t={t} transparent navigation={navigation} logo currentScreen={screens.REGISTER_DRIVER_LICENCE} />
             <RNCamera
               ref={ref => {
                 this.camera = ref;
@@ -249,10 +256,10 @@ class DriverLicenceScreen extends Component {
               style={styles.preview}
               type={RNCamera.Constants.Type.back}
               flashMode={RNCamera.Constants.FlashMode.on}
+              onCameraReady={() => this.isCameraAllowed = true}
               permissionDialogTitle={t('register:cameraPermissionTitle')}
               permissionDialogMessage={t('register:cameraPermissionMessage')}
             />
-            <UFOHeader t={t} transparent navigation={navigation} logo currentScreen={screens.REGISTER_DRIVER_LICENCE} />
             <ImageBackground source={sample} style={{
               position: 'absolute',
               top: PADDING_HEIGHT,
@@ -272,7 +279,7 @@ class DriverLicenceScreen extends Component {
             enableOnAndroid={true}
             resetScrollToCoords={{ x: 0, y: 0 }
             }>
-            <View style={{ paddingTop: 10, paddingHorizontal: 10, flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
+            <View style={{ paddingTop: 10, paddingHorizontal: dims.CONTENT_PADDING_HORIZONTAL, flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
               <UFOCard title={t('register:driverLicenceCheckLabel')}>
                 <Body>
                   <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-evenly', alignContent: 'center' }}>

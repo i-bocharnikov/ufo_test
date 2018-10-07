@@ -768,7 +768,7 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
     }
 
     private void silentException(Exception exception) {
-        Toast.makeText(getReactApplicationContext(), "Silent Exception:"+exception.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+        //Toast.makeText(getReactApplicationContext(), "Silent Exception:"+exception.getLocalizedMessage(), Toast.LENGTH_LONG).show();
     }
 
     private void sendEvent(ReactContext reactContext, String eventName, @Nullable WritableMap params) {

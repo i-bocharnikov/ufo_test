@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'flex-start',
         alignItems: 'center',
+        zIndex: 20
     },
     activityMessages: {
         backgroundColor: colors.ERROR.string(),

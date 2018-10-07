@@ -8,7 +8,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import UFOHeader from "../../components/header/UFOHeader";
 import UFOActionBar from "../../components/UFOActionBar";
 import { UFOContainer } from '../../components/common'
-import { screens, actionStyles, icons, colors, dims } from '../../utils/global'
+import { screens, actionStyles, icons, colors, dims, backgrounds } from '../../utils/global'
 import { driveStore, guideStore } from '../../stores'
 import UFOCard from "../../components/UFOCard";
 import UFOSlider from "../../components/UFOSlider";
@@ -73,7 +73,7 @@ class FindScreen extends Component {
 
 
     return (
-      <UFOContainer image={screens.FIND.backgroundImage}>
+      <UFOContainer image={backgrounds.DRIVE001}>
         <KeyboardAwareScrollView
           refreshControl={_RefreshControl}
         >

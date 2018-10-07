@@ -6,7 +6,7 @@ const THEME_UFO = 'UFO'
 const THEME_ACL = 'ACL'
 const THEME = configurations.theme
 
-const backgrounds = {
+export const backgrounds = {
     HOME001: THEME === THEME_UFO ? require("../assets/images/background/UFOBGHOME001.png") : require("../assets/images/background/ACLBGHOME001.png"),
     HOME002: THEME === THEME_UFO ? require("../assets/images/background/UFOBGHOME002.png") : require("../assets/images/background/ACLBGHOME002.png"),
     DRIVE001: THEME === THEME_UFO ? require("../assets/images/background/UFOBGDRIVE001.png") : require("../assets/images/background/ACLBGDRIVE001.png"),
@@ -58,7 +58,7 @@ export const colors = {
     INVERTED_TEXT: new Color.rgb(255, 255, 255),//new Color('#fff'),
     TEXT: new Color.rgb(64, 101, 125),//new Color('#fff'),
     ICON: new Color.rgb(255, 255, 255),//new Color('#fff'),
-    CARD_BACKGROUND: new Color.rgb(255, 255, 255).alpha(0.85),//new Color('#fff'),
+    CARD_BACKGROUND: new Color.rgb(255, 255, 255).alpha(0.65),//new Color('#fff'),
     TODO: new Color.rgb(234, 80, 76),//new Color('#C8102E'),
     DONE: new Color.rgb(64, 101, 125),//new Color('#03DAC6'),//new Color.rgb(64, 101, 125), //
     ACTIVE: new Color.rgb(64, 101, 125), //new Color('#0081B5'),

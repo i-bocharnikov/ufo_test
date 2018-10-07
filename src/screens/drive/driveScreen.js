@@ -10,7 +10,7 @@ import DeviceInfo from 'react-native-device-info';
 import UFOHeader from "../../components/header/UFOHeader";
 import UFOActionBar from "../../components/UFOActionBar";
 import { UFOContainer, UFOText, } from '../../components/common'
-import { screens, actionStyles, icons, colors, dims, } from '../../utils/global'
+import { screens, actionStyles, icons, colors, dims, backgrounds } from '../../utils/global'
 import { driveStore } from '../../stores'
 import otaKeyStore from '../../stores/otaKeyStore'
 import registerStore from "../../stores/registerStore"
@@ -28,10 +28,10 @@ class DriveScreen extends Component {
   async componentDidMount() {
     if (driveStore.hasRentalOngoing) {
       otaKeyStore.register()
-      await checkAndRequestLocationPermission()
     }
     if (driveStore.hasRentalOngoing && registerStore.isUserRegistered) {
       this.driveSelected = true
+      await checkAndRequestLocationPermission()
     }
     this.loadKeyForSelectedRental()
   }
@@ -162,9 +162,10 @@ class DriveScreen extends Component {
       driveStore.computeActionCloseRental(actions, () => this.confirmCloseRental(t))
     }
     let _RefreshControl = (<RefreshControl refreshing={this.refreshing} onRefresh={this.refreshRental} />)
+    let background = this.driveSelected ? this.returnSelected ? backgrounds.RETURN001 : backgrounds.DRIVE001 : backgrounds.HOME002
 
     return (
-      <UFOContainer image={screens.DRIVE.backgroundImage}>
+      <UFOContainer image={background}>
         <UFOHeader transparent logo t={t} navigation={navigation} currentScreen={screens.DRIVE} />
         <KeyboardAwareScrollView refreshControl={_RefreshControl}>
           {!this.driveSelected && !driveStore.hasRentals && (

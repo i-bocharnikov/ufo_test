@@ -33,7 +33,7 @@ class SupportFaqsScreen extends Component {
       return
     }
     await this.doRefresh()
-    this.section = this.props.navigation.getParam(navigationParams.SUPPORT_FAQ_CATEGORY, this.section);
+    //this.section = this.props.navigation.getParam(navigationParams.SUPPORT_FAQ_CATEGORY, this.section);
   }
 
   onPressSection = (reference) => {

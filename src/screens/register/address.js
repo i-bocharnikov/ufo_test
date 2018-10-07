@@ -68,7 +68,7 @@ class AddressScreen extends Component {
           enableOnAndroid={true}
           resetScrollToCoords={{ x: 0, y: 0 }}
         >
-          <View style={{ paddingTop: dims.CONTENT_PADDING_TOP / 2, paddingHorizontal: 10, flex: 0.80, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
+          <View style={{ paddingTop: dims.CONTENT_PADDING_TOP / 2, paddingHorizontal: dims.CONTENT_PADDING_HORIZONTAL, flex: 0.80, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
             <UFOCard title={t('register:addressInputLabel')}>
 
               <GooglePlacesAutocomplete

@@ -14,6 +14,7 @@ import { screens, actionStyles, icons, dims } from '../../utils/global'
 import { inspectStore } from "../../stores";
 import UFOCard from "../../components/UFOCard";
 import { Body } from "native-base";
+import { checkAndRequestCameraPermission } from "../../utils/permissions";
 
 const window = Dimensions.get('window');
 const DEVICE_WIDTH = window.width
@@ -23,9 +24,11 @@ class CaptureDamageScreen extends Component {
 
   @observable documentUri = null
   @observable activityPending = false
+  @observable isCameraAllowed = false
 
-  componentDidMount() {
+  async componentDidMount() {
     this.documentUri = null
+    //this.isCameraAllowed = await checkAndRequestCameraPermission()
   }
 
   @action
@@ -74,6 +77,7 @@ class CaptureDamageScreen extends Component {
   renderBodyCapture = (t, navigation) => {
     return (
       <View style={styles.container}>
+        <UFOHeader transparent t={t} navigation={navigation} currentScreen={screens.INSPECT_CAPTURE} logo />
         <RNCamera
           ref={ref => {
             this.camera = ref;
@@ -81,12 +85,12 @@ class CaptureDamageScreen extends Component {
           style={styles.preview}
           autoFocus={RNCamera.Constants.AutoFocus.on}
           captureAudio={false}
+          onCameraReady={() => this.isCameraAllowed = true}
           type={RNCamera.Constants.Type.back}
           flashMode={RNCamera.Constants.FlashMode.auto}
           permissionDialogTitle={t('register:cameraPermissionTitle')}
           permissionDialogMessage={t('register:cameraPermissionMessage')}
         />
-        <UFOHeader transparent t={t} navigation={navigation} currentScreen={screens.INSPECT_CAPTURE} logo />
 
       </View>
     )
@@ -96,7 +100,8 @@ class CaptureDamageScreen extends Component {
     return (
 
       <KeyboardAwareScrollView>
-        <View style={{ paddingTop: 10 }}>
+        <UFOHeader transparent t={t} navigation={navigation} currentScreen={screens.INSPECT_CAPTURE} logo />
+        <View style={{ paddingTop: 10, paddingHorizontal: dims.CONTENT_PADDING_HORIZONTAL, flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
           <UFOCard title={t('inspect:captureCheckGuidance')} >
             <Body>
               <UFOImage source={{ uri: this.documentUri }} style={{ width: dims.DEVICE_WIDTH * 0.7, height: dims.DEVICE_HEIGHT * 0.5, alignSelf: 'center' }} />
@@ -122,7 +127,7 @@ class CaptureDamageScreen extends Component {
         onPress: () => this.props.navigation.pop()
       },
       {
-        style: this.documentUri ? actionStyles.ACTIVE : actionStyles.TODO,
+        style: this.isCameraAllowed ? this.documentUri ? actionStyles.ACTIVE : actionStyles.TODO : actionStyles.DISABLE,
         icon: this.documentUri ? icons.NEW_CAPTURE : icons.CAPTURE,
         onPress: async () => {
           this.documentUri ? this.documentUri = null : this.doCapture(t)

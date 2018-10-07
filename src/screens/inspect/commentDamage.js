@@ -8,7 +8,7 @@ import { observable, action } from "mobx";
 import UFOHeader from "../../components/header/UFOHeader";
 import UFOActionBar from "../../components/UFOActionBar";
 import { UFOContainer, UFOText, UFOImage, UFOTextInput } from '../../components/common'
-import { screens, actionStyles, icons, colors } from '../../utils/global'
+import { screens, actionStyles, icons, colors, dims } from '../../utils/global'
 import { driveStore, inspectStore } from '../../stores'
 import UFOCard from "../../components/UFOCard";
 const markerImage = require('../../assets/images/marker.png')
@@ -32,27 +32,29 @@ class CommentDamageScreen extends Component {
 
     let carModel = driveStore.rental ? driveStore.rental.car ? driveStore.rental.car.car_model : null : null
     return (
-      <UFOCard title={t('inspect:commentGuidance')}>
-        <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignContent: 'center' }}>
-            <UFOImage source={{ reference: inspectStore.documentReference }} style={{
-              width: DEVICE_WIDTH / 3, height: DEVICE_HEIGHT / 3
-            }} />
-            <UFOImage style={{ width: DEVICE_WIDTH / 3, height: DEVICE_HEIGHT / 3 }} source={{ uri: carModel.image_top_h_url }} >
-              <UFOImage style={{
-                position: 'relative',
-                left: inspectStore.relativePositionX * 100 - 3 + "%",
-                top: inspectStore.relativePositionY * 100 - 3 + "%",
-                width: 10,
-                height: 10
-              }} source={markerImage} />
-            </UFOImage>
+      <View style={{ paddingTop: 10, paddingHorizontal: dims.CONTENT_PADDING_HORIZONTAL, flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
+        <UFOCard title={t('inspect:commentGuidance')}>
+          <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignContent: 'center' }}>
+              <UFOImage source={{ reference: inspectStore.documentReference }} style={{
+                width: DEVICE_WIDTH / 3, height: DEVICE_HEIGHT / 3
+              }} />
+              <UFOImage style={{ width: DEVICE_WIDTH / 3, height: DEVICE_HEIGHT / 3 }} source={{ uri: carModel.image_top_h_url }} >
+                <UFOImage style={{
+                  position: 'relative',
+                  left: inspectStore.relativePositionX * 100 - 3 + "%",
+                  top: inspectStore.relativePositionY * 100 - 3 + "%",
+                  width: 10,
+                  height: 10
+                }} source={markerImage} />
+              </UFOImage>
+            </View>
+            <View style={{ paddingTop: 10 }} >
+              <UFOTextInput autofocus value={this.comment} autoCorrect={true} placeholder={t('inspect:commentPlaceholder')} multiline={true} numberOfLines={4} onChangeText={(text) => this.comment = text} />
+            </View>
           </View>
-          <View style={{ paddingTop: 10 }} >
-            <UFOTextInput autofocus value={this.comment} autoCorrect={true} placeholder={t('inspect:commentPlaceholder')} multiline={true} numberOfLines={4} onChangeText={(text) => this.comment = text} />
-          </View>
-        </View>
-      </UFOCard>
+        </UFOCard>
+      </View>
     )
   }
 

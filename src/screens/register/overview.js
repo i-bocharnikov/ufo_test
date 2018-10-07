@@ -11,7 +11,7 @@ import { UFOContainer, UFOText, UFOIcon, UFOImage } from '../../components/commo
 
 import registerStore from '../../stores/registerStore';
 import appStore from '../../stores/appStore';
-import { screens, actionStyles, icons, colors, sizes } from '../../utils/global'
+import { screens, actionStyles, icons, colors, sizes, dims } from '../../utils/global'
 import UFOCard from "../../components/UFOCard";
 
 
@@ -125,8 +125,8 @@ class RegisterScreen extends Component {
       <UFOContainer image={screens.REGISTER_OVERVIEW.backgroundImage}>
         <NavigationEvents onWillFocus={payload => { this.onLoad(payload) }} />
         <UFOHeader t={t} navigation={navigation} title={t('register:overviewTitle', { user: registerStore.user })} currentScreen={screens.REGISTER_OVERVIEW} />
-        <Content padder>
-          <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-evenly', alignContent: 'center', paddingTop: 100 }} >
+        <Content>
+          <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-evenly', alignContent: 'center', paddingTop: 100, paddingHorizontal: dims.CONTENT_PADDING_HORIZONTAL }} >
             <Card >
               <List>
                 <ListItem icon onPress={() => { this.props.navigation.navigate(screens.REGISTER_PHONE.name) }} >

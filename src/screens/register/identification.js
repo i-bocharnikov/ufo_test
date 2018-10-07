@@ -16,6 +16,7 @@ import { showWarning } from '../../utils/interaction'
 import { observable, action } from "mobx";
 import UFOCard from "../../components/UFOCard";
 import { Body } from "native-base";
+import { checkAndRequestCameraPermission } from "../../utils/permissions";
 
 
 const DEVICE_WIDTH = Dimensions.get("window").width
@@ -36,10 +37,15 @@ const captureStates = {
 @observer
 class IdentificationScreen extends Component {
 
+  async componentDidMount() {
+    //this.isCameraAllowed = await checkAndRequestCameraPermission()
+  }
+
   @observable captureState = null // state 0 = capture front; 1 = capture back; 2 = validate front & back
   @observable frontImageUrl = null
   @observable backImageUrl = null
   @observable activityPending = false
+  @observable isCameraAllowed = false
 
 
   @action
@@ -216,7 +222,7 @@ class IdentificationScreen extends Component {
     }
 
     /*  if (this.captureState === captureStates.CAPTURE_BACK) {
- 
+   
        actions.push({
          style: actionStyles.ACTIVE,
          icon: icons.SKIP,
@@ -227,7 +233,7 @@ class IdentificationScreen extends Component {
     if (this.captureState === captureStates.CAPTURE_FRONT || this.captureState === captureStates.CAPTURE_BACK) {
 
       actions.push({
-        style: actionStyles.TODO,
+        style: this.isCameraAllowed ? actionStyles.TODO : actionStyles.DISABLE,
         icon: icons.CAPTURE,
         onPress: async () => {
           this.doCapture(t, isInWizzard)
@@ -249,6 +255,7 @@ class IdentificationScreen extends Component {
         )}
         {showCamera && (
           <View style={styles.container}>
+            <UFOHeader t={t} transparent navigation={navigation} logo currentScreen={screens.REGISTER_IDENTIFICATION} />
             <RNCamera
               ref={ref => {
                 this.camera = ref;
@@ -256,10 +263,10 @@ class IdentificationScreen extends Component {
               style={styles.preview}
               type={RNCamera.Constants.Type.back}
               flashMode={RNCamera.Constants.FlashMode.on}
+              onCameraReady={() => this.isCameraAllowed = true}
               permissionDialogTitle={t('register:cameraPermissionTitle')}
               permissionDialogMessage={t('register:cameraPermissionMessage')}
             />
-            <UFOHeader t={t} transparent navigation={navigation} logo currentScreen={screens.REGISTER_IDENTIFICATION} />
             <ImageBackground source={sample} style={{
               position: 'absolute',
               top: PADDING_HEIGHT,
@@ -270,7 +277,7 @@ class IdentificationScreen extends Component {
               alignContent: 'center',
               opacity: 0.4
             }}>
-              <UFOText style={{ opacity: 1 }} upper h1 color={this.activityPending ? colors.DISABLE : colors.INVERTED_TEXT} center>{t(inputLabel)}</UFOText>
+              <UFOText style={{ opacity: 1, zIndex: 20 }} upper h1 bold color={this.activityPending ? colors.DISABLE : colors.INVERTED_TEXT} center>{t(inputLabel)}</UFOText>
             </ImageBackground>
           </View>
         )}
@@ -279,7 +286,7 @@ class IdentificationScreen extends Component {
             enableOnAndroid={true}
             resetScrollToCoords={{ x: 0, y: 0 }
             }>
-            <View style={{ paddingTop: 10, paddingHorizontal: 10, flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
+            <View style={{ paddingTop: 10, paddingHorizontal: dims.CONTENT_PADDING_HORIZONTAL, flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
               <UFOCard title={t('register:identificationCheckLabel')}>
                 <Body>
                   <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-evenly', alignContent: 'center' }}>

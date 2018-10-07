@@ -77,7 +77,7 @@ i18n.use(LanguageDetector).init({
                 "emergencyCall": "Emergency call",
             },
             register: {
-                "overviewTitle": "Registration {{user.reference}} {{user.status}}",
+                "overviewTitle": "Registration",
                 "phoneTitle": "Register - Phone",
                 "phoneNumberLabel": "Phone",
                 "phoneNumberInputLabel": "Your mobile phone number",

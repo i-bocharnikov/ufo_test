@@ -132,7 +132,7 @@ class PhoneScreen extends Component {
         <KeyboardAwareScrollView
           enableOnAndroid={true}
           resetScrollToCoords={{ x: 0, y: 0 }}>
-          <View style={{ paddingTop: dims.CONTENT_PADDING_TOP, paddingHorizontal: 10, flex: 0.80, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
+          <View style={{ paddingTop: dims.CONTENT_PADDING_TOP, paddingHorizontal: dims.CONTENT_PADDING_HORIZONTAL, flex: 0.80, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
             {!this.activityPending && registerStore.isConnected && (
               <UFOCard title={t('register:phoneNumberInputLabel')}>
                 <UFOTextInput defaultValue={registerStore.user.phone_number} editable={false} />
