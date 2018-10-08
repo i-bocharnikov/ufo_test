@@ -214,6 +214,7 @@ class App extends React.Component {
 
     return (
       <Root>
+        <StatusBar backgroundColor={colors.TRANSITION_BACKGROUND.string()} barStyle="light-content" />
         <StyleProvider style={getTheme()}>
           <RootStack />
         </StyleProvider>

@@ -50,7 +50,7 @@ const production = {
 
 //const configurations = { ...production, theme: 'UFO' };;
 //const configurations = { ...uat, theme: 'UFO' };;
-const configurations = { ...development, theme: 'UFO' };
+//const configurations = { ...development, theme: 'UFO' };
 configurations.UFO_SERVER_PRIVATE_API_URL = configurations.UFO_SERVER_API_URL + "api/" + configurations.UFO_SERVER_API_VERSION + "/"
 configurations.UFO_SERVER_PUBLIC_API_URL = configurations.UFO_SERVER_API_URL + "public/api/" + configurations.UFO_SERVER_API_VERSION + "/"
 
