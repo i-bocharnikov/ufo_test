@@ -302,6 +302,7 @@ class OTAKeyStore {
     }
 
 
+    @action
     async getKey(keyId: string, showError = true): Promise<boolean> {
 
         if (!keyId || !keyId instanceof String || keyId === "") {
@@ -421,6 +422,7 @@ class OTAKeyStore {
         }
     }
 
+    @action
     async isConnectedToVehicle(showError = true): Promise<boolean> {
 
         try {
@@ -435,6 +437,7 @@ class OTAKeyStore {
         }
     }
 
+    @action
     async isOperationInProgress(showError = true): Promise<boolean> {
 
         try {
@@ -450,6 +453,7 @@ class OTAKeyStore {
     }
 
 
+    @action
     async getBluetoothState(showError = true): Promise<string> {
 
         try {
@@ -464,6 +468,8 @@ class OTAKeyStore {
         }
     }
 
+
+    @action
     async connect(showNotification = false, showError = true): Promise<boolean> {
 
         try {
@@ -481,6 +487,7 @@ class OTAKeyStore {
     }
 
 
+    @action
     async disconnect(showError = true): Promise<boolean> {
 
         try {
@@ -495,6 +502,7 @@ class OTAKeyStore {
         }
     }
 
+    @action
     async unlockDoors(requestVehicleData: boolean = false, showError = true): Promise<boolean> {
 
         try {
@@ -509,6 +517,7 @@ class OTAKeyStore {
         }
     }
 
+    @action
     async lockDoors(requestVehicleData: boolean = false, showError = true): Promise<boolean> {
 
         try {
@@ -524,6 +533,7 @@ class OTAKeyStore {
     }
 
 
+    @action
     async enableEngine(requestVehicleData: boolean = false, showError = true): Promise<boolean> {
 
         try {
@@ -538,6 +548,7 @@ class OTAKeyStore {
         }
     }
 
+    @action
     async disableEngine(requestVehicleData: boolean = false, showError = true): Promise<boolean> {
 
         try {

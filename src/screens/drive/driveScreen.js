@@ -81,7 +81,6 @@ class DriveScreen extends Component {
     await driveStore.reset()
   }
 
-  @action
   doCloseRental = async () => {
     this.activityPending = true
     await otaKeyStore.lockDoors(false)
@@ -90,7 +89,6 @@ class DriveScreen extends Component {
     this.activityPending = false
   }
 
-  @action
   doEnableKey = async () => {
     this.activityPending = true
     driveStore.refreshRental();
@@ -112,7 +110,6 @@ class DriveScreen extends Component {
     this.activityPending = false
   }
 
-  @action
   doUnlockCar = async () => {
     this.activityPending = true
     if (!DeviceInfo.isEmulator() && !otaKeyStore.isConnected) {
@@ -123,7 +120,6 @@ class DriveScreen extends Component {
     this.activityPending = false
   }
 
-  @action
   doLockCar = async () => {
     this.activityPending = true
     if (!DeviceInfo.isEmulator() && !otaKeyStore.isConnected) {
@@ -134,7 +130,6 @@ class DriveScreen extends Component {
     this.activityPending = false
   }
 
-  @action
   doConnectCar = async () => {
     this.activityPending = true
     await otaKeyStore.connect()
