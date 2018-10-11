@@ -45,7 +45,6 @@ export async function getFromApi(path, suppressToastBox = false, usePublicApi = 
         activitiesStore.activities.registerInternetStopSuccess()
         return response.data
     } catch (error) {
-        activitiesStore.activities.registerInternetStopFailure()
         handleError(error, suppressToastBox)
     }
 }
@@ -67,7 +66,6 @@ export async function postToApi(path, body, suppressToastBox = false, usePublicA
         activitiesStore.activities.registerInternetStopSuccess()
         return response.data
     } catch (error) {
-        activitiesStore.activities.registerInternetStopFailure()
         handleError(error, suppressToastBox)
     }
 }
@@ -89,7 +87,6 @@ export async function putToApi(path, body, suppressToastBox = false, usePublicAp
         activitiesStore.activities.registerInternetStopSuccess()
         return response.data
     } catch (error) {
-        activitiesStore.activities.registerInternetStopFailure()
         handleError(error, suppressToastBox)
     }
 }
@@ -129,7 +126,6 @@ export async function uploadToApi(domain, format, type, sub_type, uri, suppressT
         activitiesStore.activities.registerInternetStopSuccess()
         return response.data
     } catch (error) {
-        activitiesStore.activities.registerInternetStopFailure()
         handleError(error, suppressToastBox)
     }
 }
@@ -155,7 +151,6 @@ export async function downloadFromApi(reference, thumbnail = true, suppressToast
         activitiesStore.activities.registerInternetStopSuccess()
         return base64Str
     } catch (error) {
-        activitiesStore.activities.registerInternetStopFailure()
         handleError(error, suppressToastBox)
     }
 }
@@ -175,9 +170,14 @@ export async function checkConnectivity() {
 
 async function handleError(error, suppressToastBox) {
     let ufoError = formatApiError(error);
-    console.debug("api.get error.stack: ", error);
+    console.debug("api.get error.stack: ", ufoError);
     if (!suppressToastBox) {
         await showToastError(ufoError.key, ufoError.message)
+    }
+    if (ufoError.key !== 400 && ufoError.key !== 500) {
+        activitiesStore.activities.registerInternetStopFailure()
+    } else {
+        activitiesStore.activities.registerInternetStopSuccess()
     }
 }
 
@@ -189,6 +189,7 @@ function formatApiError(error) {
     }
     let key = "error:api";
     let message = error.message;
+    console.debug("format error: ", error.response);
 
     if (
         error.response &&
@@ -196,8 +197,10 @@ function formatApiError(error) {
         error.response.data.data &&
         error.response.data.data.message
     ) {
+        console.debug("format error: ", error.response);
+
         message = error.response.data.data.message;
-        key = error.response.data.status ? error.response.data.status : "api";
+        key = error.response.status ? error.response.status : error.response.data.status ? error.response.data.status : "api";
 
     }
 
