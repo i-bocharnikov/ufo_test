@@ -79,6 +79,7 @@ class PhoneScreen extends Component {
         return
       }
     }
+    this.activityPending = false
   }
 
   @action
@@ -103,7 +104,7 @@ class PhoneScreen extends Component {
 
     if (!registerStore.isConnected) {
       actions.push({
-        style: !registerStore.isConnected && this.phoneInput && this.phoneInput.isValidNumber() ? actionStyles.TODO : actionStyles.DISABLE,
+        style: !registerStore.isConnected ? this.isCodeRequested ? actionStyles.ACTIVE : this.phoneInput && this.phoneInput.isValidNumber() ? actionStyles.TODO : actionStyles.ACTIVE : actionStyles.DISABLE,
         icon: this.isCodeRequested ? icons.RESEND_CODE : icons.VALIDATE,
         onPress: async () => await this.doRequestCode(isInWizzard)
       })
