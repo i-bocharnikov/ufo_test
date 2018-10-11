@@ -1,8 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ufodrive.app"
     xmlns:tools="http://schemas.android.com/tools">
-    <uses-permission tools:node="remove" android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission tools:node="remove" android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -11,27 +9,16 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission tools:node="remove" android:name="android.permission.READ_OWNER_DATA" />
-    <uses-permission tools:node="remove" android:name="android.permission.WRITE_OWNER_DATA" />
     <application
       android:name=".MainApplication"
       android:label="@string/app_name"
       android:icon="@mipmap/ic_launcher"
       android:allowBackup="false"
-      android:theme="@style/AppTheme">
-      <service android:name=".ExportUserExperienceService" />
-        <receiver
-        android:name=".NetworkChangeReceiver"
-        android:label="NetworkChangeReceiver" >
-        <intent-filter>
-        <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-        <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
-        </intent-filter>
-        </receiver>
+      android:theme="@style/AppTheme">     
         <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
         android:screenOrientation="portrait"
         android:configChanges="keyboard|keyboardHidden|screenSize"
         android:windowSoftInputMode="adjustPan">

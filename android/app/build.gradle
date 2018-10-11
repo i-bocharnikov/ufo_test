@@ -161,7 +161,7 @@ dependencies {
     implementation project(':react-native-exception-handler')
     implementation project(':react-native-sensitive-info')
 
-    implementation(group: 'com.otakeys.sdk', name: 'otakeys-sdk', version: '3.9.0-wl', ext: 'aar') {
+    implementation(group: 'com.otakeys.sdk', name: 'otakeys-sdk', version: '3.9.+', ext: 'aar') {
         transitive = true
     }
     implementation project(':react-native-fast-image')

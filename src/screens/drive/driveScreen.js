@@ -58,7 +58,7 @@ class DriveScreen extends Component {
   }
 
   loadKeyForSelectedRental = async () => {
-    if (driveStore.inUse) {
+    if (driveStore.inUse && driveStore.rental.key_id) {
       await otaKeyStore.getKey(driveStore.rental.key_id, false)
       if (!otaKeyStore.isKeyEnabled) {
         await otaKeyStore.enableKey(driveStore.rental.key_id, false)
@@ -87,6 +87,28 @@ class DriveScreen extends Component {
     await otaKeyStore.lockDoors(false)
     await otaKeyStore.endKey()
     await driveStore.closeRental()
+    this.activityPending = false
+  }
+
+  @action
+  doEnableKey = async () => {
+    this.activityPending = true
+    driveStore.refreshRental();
+    if (driveStore.inUse && driveStore.rental.key_id) {
+      if (!otaKeyStore.isKeyEnabled) {
+        await otaKeyStore.enableKey(driveStore.rental.key_id, true)
+      }
+      await otaKeyStore.getUsedKey()
+      if (otaKeyStore.key.keyId !== driveStore.rental.key_id) {
+        await otaKeyStore.switchToKey(true)
+      }
+      await otaKeyStore.syncVehicleData(true)
+      await otaKeyStore.isConnectedToVehicle(true)
+      if (!DeviceInfo.isEmulator() && !otaKeyStore.isConnected) {
+        await otaKeyStore.connect(false, true)
+        await otaKeyStore.getVehicleData(true)
+      }
+    }
     this.activityPending = false
   }
 
@@ -147,7 +169,7 @@ class DriveScreen extends Component {
         driveStore.computeActionInitialInspect(actions, () => this.props.navigation.navigate(screens.INSPECT.name))
         driveStore.computeActionStartContract(actions, () => this.props.navigation.navigate(screens.RENTAL_AGREEMENT.name))
 
-        otaKeyStore.computeActionEnableKey(actions, () => otaKeyStore.enableKey(driveStore.rental.key_id))
+        otaKeyStore.computeActionEnableKey(actions, this.doEnableKey)
         //otaKeyStore.computeActionConnect(actions, this.doConnectCar)
         otaKeyStore.computeActionUnlock(actions, this.doUnlockCar)
         otaKeyStore.computeActionLock(actions, this.doLockCar)

@@ -76,7 +76,7 @@ class OTAKeyStore {
 
 
     constructor() {
-        AppRegistry.registerHeadlessTask('ExportUserExperienceTask', this.exportPendingUserExperiences);
+        //AppRegistry.registerHeadlessTask('ExportUserExperienceTask', this.exportPendingUserExperiences);
     }
 
 
