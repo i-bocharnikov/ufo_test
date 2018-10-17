@@ -1,12 +1,11 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { translate } from "react-i18next";
+import { translate } from 'react-i18next';
 import { Image, StyleSheet, View, Dimensions, ImageEditor, ImageBackground } from 'react-native';
-import { RNCamera } from 'react-native-camera';
-import _ from 'lodash'
-import { observable, action } from "mobx";
-import ImageRotate from 'react-native-image-rotate';
+import _ from 'lodash';
+import { observable, action } from 'mobx';
 
+import UFOCamera, { RNCAMERA_CONSTANTS } from './../../components/UFOCamera';
 import UFOHeader from "../../components/header/UFOHeader";
 import UFOActionBar from "../../components/UFOActionBar";
 import { UFOContainer, UFOText, UFOIcon, UFOImage } from '../../components/common'
@@ -31,11 +30,10 @@ const captureStates = {
   CAPTURE_FRONT: 'CAPTURE_FRONT',
   CAPTURE_BACK: 'CAPTURE_BACK',
   VALIDATE: 'VALIDATE',
-}
+};
 
 @observer
 class DriverLicenceScreen extends Component {
-
   async componentDidMount() {
     //onCameraReady={() => this.isCameraAllowed = true} this.isCameraAllowed = await checkAndRequestCameraPermission()
   }
@@ -47,101 +45,64 @@ class DriverLicenceScreen extends Component {
   @observable isCameraAllowed = false
 
   @action
-  doCancel = async (isInWizzard) => {
-    isInWizzard ? this.props.navigation.navigate(screens.HOME.name) : this.props.navigation.popToTop()
+  doCancel = async isInWizzard => {
+    isInWizzard
+      ? this.props.navigation.navigate(screens.HOME.name)
+      : this.props.navigation.popToTop();
   }
 
   @action
-  doReset = async (isInWizzard) => {
-    this.frontImageUrl = null
-    this.backImageUrl = null
-    this.captureState = captureStates.CAPTURE_FRONT
+  doReset = async isInWizzard => {
+    this.frontImageUrl = null;
+    this.backImageUrl = null;
+    this.captureState = captureStates.CAPTURE_FRONT;
   }
 
   @action
   doCapture = async (t, isInWizzard) => {
-
-    if (!this.camera) {
-      showWarning(t("Registration:CameraNotAvailable"))
-      return
+    this.activityPending = true;
+    const imageData = await this.takePicture();
+    if (!imageData) {
+      this.activityPending = false;
+      return;
     }
-    this.activityPending = true
-    const options = { quality: 1, base64: false, exif: true, doNotSave: false, width: 2048 };
-    //Take photo
-    let fullImage = await this.camera.takePictureAsync(options)
-    const { uri, width, height, exif } = fullImage;
-    if (exif && exif.Orientation === 6) {
-      ImageRotate.rotateImage(uri, 90, (uri) => {
-        //Crop Image
-        //const { uri, width, height } = fullImage;
-        const ratioX = height / DEVICE_WIDTH
-        const ratioy = width / DEVICE_HEIGHT
-        const cropData = {
-          offset: { x: PADDING_WIDTH * ratioX, y: PADDING_HEIGHT * ratioy },
-          size: { width: CARD_WIDTH * ratioX, height: CARD_HEIGHT * ratioy },
-        };
-        ImageEditor.cropImage(uri, cropData, url => {
-          if (this.captureState === captureStates.CAPTURE_FRONT) {
-            this.frontImageUrl = url
-            this.captureState = captureStates.CAPTURE_BACK
-            this.activityPending = false
-
-            return
-          }
-          if (this.captureState === captureStates.CAPTURE_BACK) {
-            this.backImageUrl = url
-            this.captureState = captureStates.VALIDATE
-            this.activityPending = false
-
-            return
-          }
-        }, error => {
-          this.activityPending = false
-          showWarning(t("Registration:CameraProcessingError", { message: error.message }))
-        }
-        )
+    const { uri, width, height } = imageData;
+    // Crop Image
+    const ratioX = width / DEVICE_WIDTH;
+    const ratioy = height / DEVICE_HEIGHT;
+    const cropData = {
+      offset: {
+        x: PADDING_WIDTH * ratioX,
+        y: PADDING_HEIGHT * ratioy,
       },
-        (error) => {
-          console.error(error);
-        }
-      )
-    } else {
-      //Crop Image
-      //const { uri, width, height } = fullImage;
-      const ratioX = width / DEVICE_WIDTH
-      const ratioy = height / DEVICE_HEIGHT
-      console.log("***********crop from to ", width, CARD_WIDTH * ratioX)
-      const cropData = {
-        offset: { x: PADDING_WIDTH * ratioX, y: PADDING_HEIGHT * ratioy },
-        size: { width: CARD_WIDTH * ratioX, height: CARD_HEIGHT * ratioy },
-      };
-      ImageEditor.cropImage(uri, cropData, url => {
-        if (this.captureState === captureStates.CAPTURE_FRONT) {
-          this.frontImageUrl = url
-          this.captureState = captureStates.CAPTURE_BACK
-          this.activityPending = false
-
-          return
-        }
-        if (this.captureState === captureStates.CAPTURE_BACK) {
-          this.backImageUrl = url
-          this.captureState = captureStates.VALIDATE
-          this.activityPending = false
-
-          return
-        }
-      }, error => {
-        this.activityPending = false
-        showWarning(t("Registration:CameraProcessingError", { message: error.message }))
+      size: {
+        width: CARD_WIDTH * ratioX,
+        height: CARD_HEIGHT * ratioy,
+      },
+    };
+    ImageEditor.cropImage(uri, cropData, url => {
+      if (this.captureState === captureStates.CAPTURE_FRONT) {
+        this.frontImageUrl = url;
+        this.captureState = captureStates.CAPTURE_BACK;
+        this.activityPending = false;
+        return;
       }
-      )
-    }
+      if (this.captureState === captureStates.CAPTURE_BACK) {
+        this.backImageUrl = url;
+        this.captureState = captureStates.VALIDATE;
+        this.activityPending = false;
+        return;
+      }
+    }, error => {
+      this.activityPending = false;
+      showWarning(t("Registration:CameraProcessingError", {message: error.message}));
+    });
   }
 
   @action
-  doskip = async (isInWizzard) => {
-    this.backImageUrl = null
-    this.captureState = captureStates.VALIDATE
+  doskip = async isInWizzard => {
+    this.backImageUrl = null;
+    this.captureState = captureStates.VALIDATE;
   }
 
   @action
@@ -223,16 +184,14 @@ class DriverLicenceScreen extends Component {
           })
         } */
 
-    if (this.captureState === captureStates.CAPTURE_FRONT || this.captureState === captureStates.CAPTURE_BACK) {
-
+    if (this.captureState === captureStates.CAPTURE_FRONT
+      || this.captureState === captureStates.CAPTURE_BACK) {
+      
       actions.push({
         style: this.isCameraAllowed ? actionStyles.TODO : actionStyles.DISABLE,
         icon: icons.CAPTURE,
-        onPress: async () => {
-          this.doCapture(t, isInWizzard)
-        }
-      },
-      )
+        onPress: () => this.doCapture(t, isInWizzard),
+      });
     }
 
     let inputLabel = this.captureState === captureStates.CAPTURE_FRONT ? 'register:driverLicenceFrontInputLabel' : 'register:driverLicenceBackInputLabel'
@@ -248,17 +207,17 @@ class DriverLicenceScreen extends Component {
         )}
         {showCamera && (
           <View style={styles.container}>
-            <UFOHeader t={t} transparent navigation={navigation} logo currentScreen={screens.REGISTER_DRIVER_LICENCE} />
-            <RNCamera
-              ref={ref => {
-                this.camera = ref;
-              }}
-              style={styles.preview}
-              type={RNCamera.Constants.Type.back}
-              flashMode={RNCamera.Constants.FlashMode.on}
-              onCameraReady={() => this.isCameraAllowed = true}
-              permissionDialogTitle={t('register:cameraPermissionTitle')}
-              permissionDialogMessage={t('register:cameraPermissionMessage')}
+            <UFOHeader
+              t={t}
+              transparent
+              navigation={navigation}
+              logo
+              currentScreen={screens.REGISTER_DRIVER_LICENCE}
+            />
+            <UFOCamera
+              getCaptureFunc={func => (this.takePicture = func)}
+              onCameraReady={() => (this.isCameraAllowed = true)}
+              flashMode={RNCAMERA_CONSTANTS.FlashMode.on}
             />
             <ImageBackground source={sample} style={{
               position: 'absolute',

@@ -1,14 +1,10 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-
-
 buildscript {
     repositories {
         jcenter()
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.4'
-
+        classpath "com.android.tools.build:gradle:3.1.4"
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -23,9 +19,14 @@ allprojects {
                 username "ufodrive"
                 password "wnyT3jPN"
             }
-            url "https://otakeys.jfrog.io/otakeys/android-keycore" }
-        maven { url "https://jitpack.io" }
-        maven { url 'https://maven.google.com' }
+            url "https://otakeys.jfrog.io/otakeys/android-keycore"
+        }
+        maven {
+            url "https://jitpack.io"
+        }
+        maven {
+            url "https://maven.google.com"
+        }
         maven {
             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
             url "$rootDir/../node_modules/react-native/android"
@@ -37,4 +38,15 @@ allprojects {
     }
 }
 
-
+subprojects {
+    project.configurations.all {
+        afterEvaluate {project ->
+            if (project.hasProperty("android")) {
+                android {
+                    compileSdkVersion 26
+                    buildToolsVersion "26.0.2"
+                }
+            }
+        }
+    }
+}

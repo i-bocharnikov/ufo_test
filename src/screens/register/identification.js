@@ -1,13 +1,11 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { translate } from "react-i18next";
+import { translate } from 'react-i18next';
 import { ImageBackground, View, Dimensions, ImageEditor, StyleSheet } from 'react-native';
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { RNCamera } from 'react-native-camera';
-import _ from 'lodash'
-import ImageRotate from 'react-native-image-rotate';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import _ from 'lodash';
 
-import UFOCamera from './../../components/UFOCamera';
+import UFOCamera, { RNCAMERA_CONSTANTS } from './../../components/UFOCamera';
 import UFOHeader from "../../components/header/UFOHeader";
 import UFOActionBar from "../../components/UFOActionBar";
 import { UFOContainer, UFOText, UFOImage } from '../../components/common'
@@ -18,7 +16,6 @@ import { observable, action } from "mobx";
 import UFOCard from "../../components/UFOCard";
 import { Body } from "native-base";
 import { checkAndRequestCameraPermission } from "../../utils/permissions";
-
 
 const DEVICE_WIDTH = Dimensions.get("window").width
 const DEVICE_HEIGHT = Dimensions.get("window").height
@@ -33,11 +30,10 @@ const captureStates = {
   CAPTURE_FRONT: 'CAPTURE_FRONT',
   CAPTURE_BACK: 'CAPTURE_BACK',
   VALIDATE: 'VALIDATE',
-}
+};
 
 @observer
 class IdentificationScreen extends Component {
-
   async componentDidMount() {
     //this.isCameraAllowed = await checkAndRequestCameraPermission()
   }
@@ -50,102 +46,64 @@ class IdentificationScreen extends Component {
 
 
   @action
-  doCancel = async (isInWizzard) => {
-    isInWizzard ? this.props.navigation.navigate(screens.HOME.name) : this.props.navigation.popToTop()
+  doCancel = async isInWizzard => {
+    isInWizzard
+      ? this.props.navigation.navigate(screens.HOME.name)
+      : this.props.navigation.popToTop();
   }
 
   @action
-  doReset = async (isInWizzard) => {
-    this.frontImageUrl = null
-    this.backImageUrl = null
-    this.captureState = captureStates.CAPTURE_FRONT
+  doReset = async isInWizzard => {
+    this.frontImageUrl = null;
+    this.backImageUrl = null;
+    this.captureState = captureStates.CAPTURE_FRONT;
   }
 
-  @action.bound
+  @action
   doCapture = async (t, isInWizzard) => {
-    console.log('CAMERA---Action',this.camera);
-    if (!this.camera) {
-      showWarning(t("Registration:CameraNotAvailable"))
-      return
+    this.activityPending = true;
+    const imageData = await this.takePicture();
+    if (!imageData) {
+      this.activityPending = false;
+      return;
     }
-    
-    this.activityPending = true
-    //const options = { quality: 1, base64: false, exif: true, doNotSave: false, width: 2048 };
-    //Take photo
-    let fullImage = await this.camera.takePictureAsync()
-    const { uri, width, height, exif } = fullImage;
-    if (exif && exif.Orientation === 6) {
-      ImageRotate.rotateImage(uri, 90, (uri) => {
-        //Crop Image
-        //const { uri, width, height } = fullImage;
-        const ratioX = height / DEVICE_WIDTH
-        const ratioy = width / DEVICE_HEIGHT
-        const cropData = {
-          offset: { x: PADDING_WIDTH * ratioX, y: PADDING_HEIGHT * ratioy },
-          size: { width: CARD_WIDTH * ratioX, height: CARD_HEIGHT * ratioy },
-        };
-        ImageEditor.cropImage(uri, cropData, url => {
-          if (this.captureState === captureStates.CAPTURE_FRONT) {
-            this.frontImageUrl = url
-            this.captureState = captureStates.CAPTURE_BACK
-            this.activityPending = false
-
-            return
-          }
-          if (this.captureState === captureStates.CAPTURE_BACK) {
-            this.backImageUrl = url
-            this.captureState = captureStates.VALIDATE
-            this.activityPending = false
-
-            return
-          }
-        }, error => {
-          this.activityPending = false
-          showWarning(t("Registration:CameraProcessingError", { message: error.message }))
-        }
-        )
+    const { uri, width, height } = imageData;
+    // Crop Image
+    const ratioX = width / DEVICE_WIDTH;
+    const ratioy = height / DEVICE_HEIGHT;
+    const cropData = {
+      offset: {
+        x: PADDING_WIDTH * ratioX,
+        y: PADDING_HEIGHT * ratioy,
       },
-        (error) => {
-          console.error(error);
-        }
-      )
-    } else {
-      //Crop Image
-      //const { uri, width, height } = fullImage;
-      const ratioX = width / DEVICE_WIDTH
-      const ratioy = height / DEVICE_HEIGHT
-      console.log("***********crop from to ", width, CARD_WIDTH * ratioX)
-      const cropData = {
-        offset: { x: PADDING_WIDTH * ratioX, y: PADDING_HEIGHT * ratioy },
-        size: { width: CARD_WIDTH * ratioX, height: CARD_HEIGHT * ratioy },
-      };
-      ImageEditor.cropImage(uri, cropData, url => {
-        if (this.captureState === captureStates.CAPTURE_FRONT) {
-          this.frontImageUrl = url
-          this.captureState = captureStates.CAPTURE_BACK
-          this.activityPending = false
-
-          return
-        }
-        if (this.captureState === captureStates.CAPTURE_BACK) {
-          this.backImageUrl = url
-          this.captureState = captureStates.VALIDATE
-          this.activityPending = false
-
-          return
-        }
-      }, error => {
-        this.activityPending = false
-        showWarning(t("Registration:CameraProcessingError", { message: error.message }))
+      size: {
+        width: CARD_WIDTH * ratioX,
+        height: CARD_HEIGHT * ratioy,
+      },
+    };
+    ImageEditor.cropImage(uri, cropData, url => {
+      if (this.captureState === captureStates.CAPTURE_FRONT) {
+        this.frontImageUrl = url;
+        this.captureState = captureStates.CAPTURE_BACK;
+        this.activityPending = false;
+        return;
       }
-      )
-    }
+      if (this.captureState === captureStates.CAPTURE_BACK) {
+        this.backImageUrl = url;
+        this.captureState = captureStates.VALIDATE;
+        this.activityPending = false;
+        return;
+      }
+    }, error => {
+      this.activityPending = false;
+      showWarning(t("Registration:CameraProcessingError", {message: error.message}));
+    });
   }
 
   @action
   doskip = async (isInWizzard) => {
-    this.backImageUrl = null
-    this.captureState = captureStates.VALIDATE
+    this.backImageUrl = null;
+    this.captureState = captureStates.VALIDATE;
   }
 
   @action
@@ -179,10 +137,8 @@ class IdentificationScreen extends Component {
   }
 
   render() {
-    console.log('CAMERA---',this.camera);
     const { t, navigation } = this.props;
-
-    let isInWizzard = this.props.navigation.getParam('isInWizzard', false)
+    let isInWizzard = this.props.navigation.getParam('isInWizzard', false);
 
     //Check if we have to retrieve imageUrl from overview screen
     if (this.captureState === null) {
@@ -232,16 +188,14 @@ class IdentificationScreen extends Component {
        })
      }
   */
-    if (this.captureState === captureStates.CAPTURE_FRONT || this.captureState === captureStates.CAPTURE_BACK) {
+    if (this.captureState === captureStates.CAPTURE_FRONT
+      || this.captureState === captureStates.CAPTURE_BACK) {
 
       actions.push({
         style: this.isCameraAllowed ? actionStyles.TODO : actionStyles.DISABLE,
         icon: icons.CAPTURE,
-        onPress: async () => {
-          this.doCapture(t, isInWizzard)
-        }
-      },
-      )
+        onPress: () => this.doCapture(t, isInWizzard),
+      });
     }
 
     let inputLabel = this.captureState === captureStates.CAPTURE_FRONT ? 'register:identificationFrontInputLabel' : 'register:identificationBackInputLabel'
@@ -257,23 +211,17 @@ class IdentificationScreen extends Component {
         )}
         {showCamera && (
           <View style={styles.container}>
-            <UFOHeader t={t} transparent navigation={navigation} logo currentScreen={screens.REGISTER_IDENTIFICATION} />
-            {/*
-            <RNCamera
-              ref={ref => {
-                this.camera = ref;
-              }}
-              style={styles.preview}
-              type={RNCamera.Constants.Type.back}
-              flashMode={RNCamera.Constants.FlashMode.on}
-              onCameraReady={() => this.isCameraAllowed = true}
-              permissionDialogTitle={t('register:cameraPermissionTitle')}
-              permissionDialogMessage={t('register:cameraPermissionMessage')}
+            <UFOHeader
+              t={t}
+              transparent
+              navigation={navigation}
+              logo
+              currentScreen={screens.REGISTER_IDENTIFICATION}
             />
-            */}
             <UFOCamera
-              ref={ref => (this.camera = ref)}
+              getCaptureFunc={func => (this.takePicture = func)}
               onCameraReady={() => (this.isCameraAllowed = true)}
+              flashMode={RNCAMERA_CONSTANTS.FlashMode.on}
             />
             <ImageBackground source={sample} style={{
               position: 'absolute',
