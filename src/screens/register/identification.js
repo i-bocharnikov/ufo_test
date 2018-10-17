@@ -7,6 +7,7 @@ import { RNCamera } from 'react-native-camera';
 import _ from 'lodash'
 import ImageRotate from 'react-native-image-rotate';
 
+import UFOCamera from './../../components/UFOCamera';
 import UFOHeader from "../../components/header/UFOHeader";
 import UFOActionBar from "../../components/UFOActionBar";
 import { UFOContainer, UFOText, UFOImage } from '../../components/common'
@@ -60,17 +61,18 @@ class IdentificationScreen extends Component {
     this.captureState = captureStates.CAPTURE_FRONT
   }
 
-  @action
+  @action.bound
   doCapture = async (t, isInWizzard) => {
-
+    console.log('CAMERA---Action',this.camera);
     if (!this.camera) {
       showWarning(t("Registration:CameraNotAvailable"))
       return
     }
+    
     this.activityPending = true
-    const options = { quality: 1, base64: false, exif: true, doNotSave: false, width: 2048 };
+    //const options = { quality: 1, base64: false, exif: true, doNotSave: false, width: 2048 };
     //Take photo
-    let fullImage = await this.camera.takePictureAsync(options)
+    let fullImage = await this.camera.takePictureAsync()
     const { uri, width, height, exif } = fullImage;
     if (exif && exif.Orientation === 6) {
       ImageRotate.rotateImage(uri, 90, (uri) => {
@@ -177,7 +179,7 @@ class IdentificationScreen extends Component {
   }
 
   render() {
-
+    console.log('CAMERA---',this.camera);
     const { t, navigation } = this.props;
 
     let isInWizzard = this.props.navigation.getParam('isInWizzard', false)
@@ -256,6 +258,7 @@ class IdentificationScreen extends Component {
         {showCamera && (
           <View style={styles.container}>
             <UFOHeader t={t} transparent navigation={navigation} logo currentScreen={screens.REGISTER_IDENTIFICATION} />
+            {/*
             <RNCamera
               ref={ref => {
                 this.camera = ref;
@@ -266,6 +269,11 @@ class IdentificationScreen extends Component {
               onCameraReady={() => this.isCameraAllowed = true}
               permissionDialogTitle={t('register:cameraPermissionTitle')}
               permissionDialogMessage={t('register:cameraPermissionMessage')}
+            />
+            */}
+            <UFOCamera
+              ref={ref => (this.camera = ref)}
+              onCameraReady={() => (this.isCameraAllowed = true)}
             />
             <ImageBackground source={sample} style={{
               position: 'absolute',
