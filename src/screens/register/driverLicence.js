@@ -64,6 +64,7 @@ class DriverLicenceScreen extends Component {
     const imageData = await this.takePicture();
     if (!imageData) {
       this.activityPending = false;
+
       return;
     }
     const { uri, width, height } = imageData;
@@ -85,12 +86,14 @@ class DriverLicenceScreen extends Component {
         this.frontImageUrl = url;
         this.captureState = captureStates.CAPTURE_BACK;
         this.activityPending = false;
+
         return;
       }
       if (this.captureState === captureStates.CAPTURE_BACK) {
         this.backImageUrl = url;
         this.captureState = captureStates.VALIDATE;
         this.activityPending = false;
+
         return;
       }
     }, error => {
