@@ -219,7 +219,7 @@ class DriverLicenceScreen extends Component {
               t={t}
               onCameraReady={() => (this.isCameraAllowed = true)}
               flashMode={RNCAMERA_CONSTANTS.FlashMode.on}
-              ref={ref => this.cameraRef = ref}
+              ref={ref => (this.cameraRef = ref)}
             />
             <ImageBackground source={sample} style={{
               position: 'absolute',

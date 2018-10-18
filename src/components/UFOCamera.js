@@ -1,6 +1,5 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { translate } from 'react-i18next';
 import { RNCamera } from 'react-native-camera';
 import ImageRotate from 'react-native-image-rotate';
 import PropTypes from 'prop-types';
@@ -19,9 +18,31 @@ const styles = StyleSheet.create({
   },
 });
 
-class UFOCamera extends React.Component {
+export default class UFOCamera extends React.Component {
+  constructor() {
+    super();
+    this.camera = null;
+  }
+
+  render() {
+    const { t, ...restCameraProps } = this.props;
+
+    return (
+      <RNCamera
+        style={styles.preview}
+        type={RNCamera.Constants.Type.back}
+        flashMode={RNCamera.Constants.FlashMode.auto}
+        permissionDialogTitle={t('register:cameraPermissionTitle')}
+        permissionDialogMessage={t('register:cameraPermissionMessage')}
+        {...restCameraProps}
+        ref={ref => (this.camera = ref)}
+      />
+    );
+  }
+
   rotateImage = imageData => new Promise((resolve, reject) => {
     const { uri, width, height } = imageData;
+
     ImageRotate.rotateImage(uri, 90, res => {
       imageData.uri = res;
       imageData.width = height;
@@ -29,7 +50,7 @@ class UFOCamera extends React.Component {
 
       return resolve(imageData);
     }, err => reject(err));
-  })
+  });
 
   takePicture = async (customOptions = {}) => {
     try {
@@ -38,18 +59,20 @@ class UFOCamera extends React.Component {
 
         return null;
       }
+
       const options = {
         width: 2048,
         quality: 0.8,
         base64: false,
         exif: true,
         doNotSave: false,
-        ...customOptions,
+        ...customOptions
       };
       const imageData = await this.camera.takePictureAsync(options);
+
       // For all samsung device the picture is rotated so this code fix this issues
       if (imageData.exif.Orientation === 6) {
-        await this.rotateImage(imageData);
+        return await this.rotateImage(imageData);
       }
 
       return imageData;
@@ -58,28 +81,10 @@ class UFOCamera extends React.Component {
 
       return null;
     }
-  }
-
-  render() {
-    const { t, ...restCameraProps } = this.props;
-  
-    return (
-      <RNCamera
-        style={styles.preview}
-        type={RNCamera.Constants.Type.back}
-        flashMode={RNCamera.Constants.FlashMode.auto}
-        permissionDialogTitle={t('register:cameraPermissionTitle')}
-        permissionDialogMessage={t('register:cameraPermissionMessage')}
-        { ...restCameraProps }
-        ref={ref => (this.camera = ref)}
-      />
-    );
-  }
+  };
 }
 
 UFOCamera.propTypes = {
-  t : PropTypes.func.isRequired,
-  // also you can pass on original RNCamera props
+  t: PropTypes.func.isRequired,
+  ...RNCamera.propTypes
 };
-
-export default UFOCamera;

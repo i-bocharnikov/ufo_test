@@ -5,7 +5,7 @@ import { observer } from 'mobx-react';
 import { observable, action } from 'mobx';
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
-import UFOCamera, { RNCAMERA_CONSTANTS } from './../../components/UFOCamera';
+import UFOCamera from './../../components/UFOCamera';
 import UFOHeader from "../../components/header/UFOHeader";
 import UFOActionBar from "../../components/UFOActionBar";
 import { UFOContainer, UFOImage } from '../../components/common'
@@ -67,8 +67,7 @@ class CaptureDamageScreen extends Component {
         <UFOCamera
           t={t}
           onCameraReady={() => (this.isCameraAllowed = true)}
-          flashMode={RNCAMERA_CONSTANTS.FlashMode.on}
-          ref={ref => this.cameraRef = ref}
+          ref={ref => (this.cameraRef = ref)}
         />
       </View>
     );
