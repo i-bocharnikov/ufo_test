@@ -156,16 +156,23 @@ i18n.use(LanguageDetector).init({
             },
             term: {
                 "rentalAgreementTitle": "Sign the agreement",
-                "confirmContractSignatureConfirmationMessage": "By signing, I certify that I have read and fully accepted the terms and conditions."
+                "confirmContractDescription": "By signing, I certify that I have read and fully accepted the terms and conditions.",
+                "confirmContractTitle": "Enter \"{{strKey}}\" to confirm",
+                "confirmContractKeyString": "I agree",
             },
             error: {
                 "noKey": "You currently have no key. Please ask support team to have one",
+                "stringNotMatch": "Entered string are not fit"
             },
         },
         fr: {
             home: {
                 "welcome": "Bonjour {{user.reference}}, voici les prochaine actions?",
-            }
+            },
+            term: {
+                "confirmContractTitle": "Enter \"{{strKey}}\" to confirm",
+                "confirmContractKeyString": "Je suis d'accord",
+            },
         }
     },
     fallbackLng: "en",
