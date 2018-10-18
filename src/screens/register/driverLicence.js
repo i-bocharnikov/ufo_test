@@ -61,7 +61,7 @@ class DriverLicenceScreen extends Component {
   @action
   doCapture = async (t, isInWizzard) => {
     this.activityPending = true;
-    const imageData = await this.takePicture();
+    const imageData = await this.cameraRef.takePicture();
     if (!imageData) {
       this.activityPending = false;
 
@@ -134,10 +134,8 @@ class DriverLicenceScreen extends Component {
   }
 
   render() {
-
     const { t, navigation } = this.props;
-
-    let isInWizzard = this.props.navigation.getParam('isInWizzard', false)
+    let isInWizzard = this.props.navigation.getParam('isInWizzard', false);
 
     //Check if we have to retrieve imageUrl from overview screen
     if (this.captureState === null) {
@@ -218,9 +216,10 @@ class DriverLicenceScreen extends Component {
               currentScreen={screens.REGISTER_DRIVER_LICENCE}
             />
             <UFOCamera
-              getCaptureFunc={func => (this.takePicture = func)}
+              t={t}
               onCameraReady={() => (this.isCameraAllowed = true)}
               flashMode={RNCAMERA_CONSTANTS.FlashMode.on}
+              ref={ref => this.cameraRef = ref}
             />
             <ImageBackground source={sample} style={{
               position: 'absolute',

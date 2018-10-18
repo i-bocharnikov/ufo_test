@@ -20,11 +20,6 @@ const styles = StyleSheet.create({
 });
 
 class UFOCamera extends React.Component {
-  constructor(props) {
-    super(props);
-    props.getCaptureFunc(this.takePicture);
-  }
-
   rotateImage = imageData => new Promise((resolve, reject) => {
     const { uri, width, height } = imageData;
     ImageRotate.rotateImage(uri, 90, res => {
@@ -83,7 +78,8 @@ class UFOCamera extends React.Component {
 }
 
 UFOCamera.propTypes = {
-  getCaptureFunc : PropTypes.func.isRequired,
+  t : PropTypes.func.isRequired,
+  // also you can pass on original RNCamera props
 };
 
-export default translate('translations')(UFOCamera);
+export default UFOCamera;

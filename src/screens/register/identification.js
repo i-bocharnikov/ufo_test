@@ -62,9 +62,10 @@ class IdentificationScreen extends Component {
   @action
   doCapture = async (t, isInWizzard) => {
     this.activityPending = true;
-    const imageData = await this.takePicture();
+    const imageData = await this.cameraRef.takePicture();
     if (!imageData) {
       this.activityPending = false;
+
       return;
     }
     const { uri, width, height } = imageData;
@@ -86,12 +87,14 @@ class IdentificationScreen extends Component {
         this.frontImageUrl = url;
         this.captureState = captureStates.CAPTURE_BACK;
         this.activityPending = false;
+
         return;
       }
       if (this.captureState === captureStates.CAPTURE_BACK) {
         this.backImageUrl = url;
         this.captureState = captureStates.VALIDATE;
         this.activityPending = false;
+
         return;
       }
     }, error => {
@@ -219,9 +222,10 @@ class IdentificationScreen extends Component {
               currentScreen={screens.REGISTER_IDENTIFICATION}
             />
             <UFOCamera
-              getCaptureFunc={func => (this.takePicture = func)}
+              t={t}
               onCameraReady={() => (this.isCameraAllowed = true)}
               flashMode={RNCAMERA_CONSTANTS.FlashMode.on}
+              ref={ref => this.cameraRef = ref}
             />
             <ImageBackground source={sample} style={{
               position: 'absolute',

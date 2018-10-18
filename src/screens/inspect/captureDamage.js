@@ -33,7 +33,7 @@ class CaptureDamageScreen extends Component {
   @action
   doCapture = async () => {
     this.activityPending = true
-    const imageData = await this.takePicture();
+    const imageData = await this.cameraRef.takePicture();
     this.documentUri = imageData.uri;
     this.activityPending = false;
   }
@@ -65,8 +65,10 @@ class CaptureDamageScreen extends Component {
           logo
         />
         <UFOCamera
-          getCaptureFunc={func => (this.takePicture = func)}
+          t={t}
           onCameraReady={() => (this.isCameraAllowed = true)}
+          flashMode={RNCAMERA_CONSTANTS.FlashMode.on}
+          ref={ref => this.cameraRef = ref}
         />
       </View>
     );
