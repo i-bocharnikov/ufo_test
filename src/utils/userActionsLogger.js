@@ -1,5 +1,4 @@
 import moment from 'moment';
-
 import { checkConnectivity, postToApi } from './api';
 
 export default async function userActionsLogger(options) {
@@ -11,7 +10,7 @@ export default async function userActionsLogger(options) {
             message = '',
             description = '',
             context = null,
-            momentDate = null,
+            momentDate = null
         } = options;
         const date = momentDate || moment();
         const isConnectionActive = await checkConnectivity();
@@ -69,4 +68,13 @@ async exportPendingUserExperiences(taskData) {
     }
     console.log("exportPendingUserExperiences stopped with ", taskData)
 }
+*/
+/*
+await this.otaKeyLogger({
+                severity: '',
+                action: '',
+                code: null,
+                message: '',
+                description: ''
+            });
 */

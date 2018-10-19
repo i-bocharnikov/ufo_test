@@ -129,33 +129,69 @@ class OTAKeyStore {
         this.otaLog = `${date.format('HH:mm:ss')} ${severity} ${message}\n${this.otaLog}`;
     }
 
-
-
     computeActionEnableKey(actions, onPress) {
-        if (!driveStore.inUse || this.isKeyEnabled) { return }
-        actions.push({ style: this.key && this.key.isEnabled ? actionStyles.DONE : actionStyles.TODO, icon: icons.KEY, onPress: onPress })
+        if (!driveStore.inUse || this.isKeyEnabled) {
+            return;
+        }
+        actions.push({
+            style: this.key && this.key.isEnabled ? actionStyles.DONE : actionStyles.TODO,
+            icon: icons.KEY,
+            onPress
+        });
     }
 
     computeActionConnect(actions, onPress) {
-        if (!driveStore.inUse) { return }
-        actions.push({ style: this.isConnecting || this.isConnected ? actionStyles.DISABLE : actionStyles.TODO, icon: icons.CONNECT, onPress: onPress })
+        if (!driveStore.inUse) {
+            return;
+        }
+        actions.push({
+            style: this.isConnecting || this.isConnected ? actionStyles.DISABLE : actionStyles.TODO,
+            icon: icons.CONNECT,
+            onPress
+        });
     }
 
     computeActionUnlock(actions, onPress) {
-        if (!driveStore.inUse) { return }
-        actions.push({ style: this.isKeyEnabled ? actionStyles.ACTIVE : actionStyles.DISABLE, icon: icons.UNLOCK, onPress: onPress })
+        if (!driveStore.inUse) {
+            return;
+        }
+        actions.push({
+            style: this.isKeyEnabled ? actionStyles.ACTIVE : actionStyles.DISABLE,
+            icon: icons.UNLOCK,
+            onPress
+        });
     }
     computeActionLock(actions, onPress) {
-        if (!driveStore.inUse) { return }
-        actions.push({ style: this.isKeyEnabled ? actionStyles.ACTIVE : actionStyles.DISABLE, icon: icons.LOCK, onPress: onPress })
+        if (!driveStore.inUse) {
+            return;
+        }
+        actions.push({
+            style: this.isKeyEnabled ? actionStyles.ACTIVE : actionStyles.DISABLE,
+            icon: icons.LOCK,
+            onPress
+        });
     }
+
     computeActionStart(actions, onPress) {
-        if (!driveStore.inUse) { return }
-        actions.push({ style: this.key ? actionStyles.ACTIVE : actionStyles.DISABLE, icon: icons.START, onPress: onPress })
+        if (!driveStore.inUse) {
+            return;
+        }
+        actions.push({
+            style: this.key ? actionStyles.ACTIVE : actionStyles.DISABLE,
+            icon: icons.START,
+            onPress
+        });
     }
+
     computeActionStop(actions, onPress) {
-        if (!driveStore.inUse) { return }
-        actions.push({ style: this.key ? actionStyles.ACTIVE : actionStyles.DISABLE, icon: icons.STOP, onPress: onPress })
+        if (!driveStore.inUse) {
+            return;
+        }
+        actions.push({
+            style: this.key ? actionStyles.ACTIVE : actionStyles.DISABLE,
+            icon: icons.STOP,
+            onPress
+        });
     }
 
 
@@ -189,80 +225,163 @@ class OTAKeyStore {
     }
 
     @action
-    onOtaActionPerformed = async (otaAction) => {
+    onOtaActionPerformed = async otaAction => {
         try {
-            await this.trace("info", "onOtaActionPerformed", 0, `>> ${otaAction.otaOperation} / ${otaAction.otaState}`)
+            await this.otaKeyLogger({
+                severity: 'info',
+                action: 'onOtaActionPerformed',
+                code: 0,
+                message: `>> ${otaAction.otaOperation} / ${otaAction.otaState}`
+            });
         } catch (error) {
-            await this.trace("error", "onOtaActionPerformed", 1, `>> exception`, error)
+            await this.otaKeyLogger({
+                severity: 'error',
+                action: 'onOtaActionPerformed',
+                code: 1,
+                message: '>> exception',
+                description: error
+            });
         }
     }
 
     @action
-    onOtaBluetoothStateChanged = async (otaBluetoothState) => {
+    onOtaBluetoothStateChanged = async otaBluetoothState => {
         try {
-            await this.trace("info", "onOtaBluetoothStateChanged", 0, `>> ${otaBluetoothState.newBluetoothState}`)
+            await this.otaKeyLogger({
+                severity: 'info',
+                action: 'onOtaBluetoothStateChanged',
+                code: 0,
+                message: `>> ${otaBluetoothState.newBluetoothState}`
+            });
             if (otaBluetoothState.newBluetoothState === 'CONNECTED') {
-                this.isConnected = true
-                this.isConnecting = false
+                this.isConnected = true;
+                this.isConnecting = false;
             } else if (otaBluetoothState.newBluetoothState === 'DISCONNECTED') {
-                this.isConnected = false
-                this.isConnecting = false
+                this.isConnected = false;
+                this.isConnecting = false;
             } else {
-                this.isConnected = false
-                this.isConnecting = true
+                this.isConnected = false;
+                this.isConnecting = true;
             }
-
         } catch (error) {
-            await this.trace("error", "onOtaBluetoothStateChanged", 1, `>> exception`, error)
+            await this.otaKeyLogger({
+                severity: 'error',
+                action: 'onOtaBluetoothStateChanged',
+                code: 1,
+                message: '>> exception',
+                description: error
+            });
         }
     }
 
     @action
     async register(showError = true): Promise<boolean> {
-
         if (this.isRegistered) {
-            return false
+            return false;
         }
 
-
         try {
-            await this.trace("debug", "register", 0, `-> this.ota.register(${String(this.keyAccessDeviceRegistrationNumber)}, ${String(showError)}) start`)
-            let result = await this.ota.register(this.keyAccessDeviceRegistrationNumber)
+            await this.otaKeyLogger({
+                severity: 'debug',
+                action: 'register',
+                code: 0,
+                message: `-> this.ota.register(${
+                    String(this.keyAccessDeviceRegistrationNumber)
+                }, ${
+                    String(showError)
+                }) start`
+            });
+            const result = await this.ota.register(this.keyAccessDeviceRegistrationNumber);
 
             DeviceEventEmitter.addListener('onOtaVehicleDataUpdated', this.onOtaVehicleDataUpdated);
             DeviceEventEmitter.addListener('onOtaActionPerformed', this.onOtaActionPerformed);
             DeviceEventEmitter.addListener('onOtaBluetoothStateChanged', this.onOtaBluetoothStateChanged);
 
-            await this.trace("debug", "registerToOTA", 0, `<- this.ota.register(${String(this.keyAccessDeviceRegistrationNumber)}, ${String(showError)}) return ${result}`, result)
+            await this.otaKeyLogger({
+                severity: 'debug',
+                action: 'registerToOTA',
+                code: 0,
+                message: `<- this.ota.register(${
+                    String(this.keyAccessDeviceRegistrationNumber)
+                }, ${
+                    String(showError)
+                }) return ${
+                    result
+                }`,
+                description: result
+            });
+            this.isRegistered = true;
 
-            this.isRegistered = true
-
-            return result
+            return result;
         } catch (error) {
-            await this.trace("debug", "registerToOTA", 1, `<- this.ota.register(${String(this.keyAccessDeviceRegistrationNumber)}, ${String(showError)}) failed ${error}`, error)
-            this.handleOTAAPIError(error, showError)
-            return false
+            await this.otaKeyLogger({
+                severity: 'debug',
+                action: 'registerToOTA',
+                code: 1,
+                message: `<- this.ota.register(${
+                    String(this.keyAccessDeviceRegistrationNumber)
+                }, ${
+                    String(showError)
+                }) failed ${
+                    error
+                }`,
+                description: error
+            });
+            this.handleOTAAPIError(error, showError);
+            return false;
         }
     }
 
     @action
     async getKeyAccessDeviceIdentifier(force: boolean = false, showError = true): Promise<string> {
         try {
-            await this.trace("debug", "getOTAKeyAccessDeviceIdentifier", 0, `-> this.ota.getAccessDeviceToken(${String(force)}, ${String(showError)}) start`)
-            this.keyAccessDeviceIdentifier = await this.ota.getAccessDeviceToken(force)
-            await this.trace("debug", "getOTAKeyAccessDeviceIdentifier", 0, `<- this.ota.getAccessDeviceToken(${String(force)}, ${String(showError)}) return ${this.keyAccessDeviceIdentifier}`)
+            await this.otaKeyLogger({
+                severity: 'debug',
+                action: 'getOTAKeyAccessDeviceIdentifier',
+                code: 0,
+                message: `-> this.ota.getAccessDeviceToken(${
+                    String(force)
+                }, ${
+                    String(showError)
+                }) start`
+            });
+            this.keyAccessDeviceIdentifier = await this.ota.getAccessDeviceToken(force);
+            await this.otaKeyLogger({
+                severity: 'debug',
+                action: 'getOTAKeyAccessDeviceIdentifier',
+                code: 0,
+                message: `<- this.ota.getAccessDeviceToken(${
+                    String(force)
+                }, ${
+                    String(showError)
+                }) return ${
+                    this.keyAccessDeviceIdentifier
+                }`
+            });
         } catch (error) {
             await this.trace("debug", "getOTAKeyAccessDeviceIdentifier", 1, `<- this.ota.getAccessDeviceToken(${String(force)}, ${String(showError)}) failed ${error}`, error)
-            this.handleOTAAPIError(error, showError)
+            await this.otaKeyLogger({
+                severity: 'debug',
+                action: 'getOTAKeyAccessDeviceIdentifier',
+                code: 1,
+                message: `<- this.ota.getAccessDeviceToken(${
+                    String(force)
+                }, ${
+                    String(showError)
+                }) failed ${
+                    error
+                }`,
+                description: error
+            });
+            this.handleOTAAPIError(error, showError);
         }
-        return this.keyAccessDeviceIdentifier
+        return this.keyAccessDeviceIdentifier;
     }
 
     @action
     async openSession(keyAccessDeviceToken: string, showError = true): Promise<boolean> {
-
         if (!keyAccessDeviceToken || !keyAccessDeviceToken instanceof String || keyAccessDeviceToken === "") {
-            return false
+            return false;
         }
 
         try {
@@ -292,11 +411,24 @@ class OTAKeyStore {
                 }`,
                 description: result
             });
-            return result
+
+            return result;
         } catch (error) {
-            await this.trace("error", "openOTASession", 1, `<- this.ota.openSession(${this.keyAccessDeviceToken}, ${String(showError)}) failed ${error}`, error)
-            this.handleOTAAPIError(error, showError)
-            return false
+            await this.otaKeyLogger({
+                severity: 'error',
+                action: 'openOTASession',
+                code: 1,
+                message: `<- this.ota.openSession(${
+                    this.keyAccessDeviceToken
+                }, ${
+                    String(showError)
+                }) failed ${
+                    error
+                }`,
+                description: error
+            });
+            this.handleOTAAPIError(error, showError);
+            return false;
         }
     }
 
