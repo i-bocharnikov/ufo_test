@@ -7,7 +7,7 @@ import { driveStore } from '.';
 import { actionStyles, icons } from './../utils/global';
 import { postToApi, checkConnectivity } from './../utils/api';
 import { showToastError } from './../utils/interaction';
-import logger from './../utils/userActionsLogger';
+import logger, { codeTypes, severityTypes } from './../utils/userActionsLogger';
 
 class Vehicle {
     @persist @observable vin: String;
@@ -88,44 +88,15 @@ class OTAKeyStore {
 
     @persist isRegistered = false;
 
-    async trace(severity, action, code, message, description = "") {
-
-        let date = moment()
-        if (severity !== "debug") {
-
-            let ue = {
-                severity: severity,
-                action: action,
-                code: code,
-                message: message,
-                description: code === 0 ? { result: description } : { error: description },
-                context: { key: this.key, doorsLocked: this.doorsLocked },
-                performed_at: date.toDate()
-            }
-
-            if (await checkConnectivity()) {
-                try {
-                    await postToApi("/user_experiences", ue)
-                } catch (error) {
-                    console.log("exportPendingUserExperiences failed", error)
-                }
-            } else {
-                // this.userExperiences.push(ue);
-            }
-            this.otaLog = date.format("HH:mm:ss") + " " + severity + " " + message + '\n' + this.otaLog
-        }
-
-        console.log(date.format("HH:mm:ss") + " " + severity + " " + action + " " + message)
-    }
-
     otaKeyLogger = async options => {
         const date = moment();
-        await logger({
+        const { severity, code, action, message, description } = options;
+        const logExtraData = {
             context: {key: this.key, doorsLocked: this.doorsLocked},
-            momentDate: date,
-            ...options
-        });
-        const { severity, message } = options;
+            momentDate: date
+        };
+
+        await logger(severity, code, action, message, description, logExtraData);
         this.otaLog = `${date.format('HH:mm:ss')} ${severity} ${message}\n${this.otaLog}`;
     }
 
@@ -199,9 +170,9 @@ class OTAKeyStore {
     onOtaVehicleDataUpdated = async otaVehicleData => {
         try {
             await this.otaKeyLogger({
-                severity: 'info',
+                severity: severityTypes.INFO,
                 action: 'onOtaVehicleDataUpdated',
-                code: 0,
+                code: codeTypes.SUCCESS,
                 message: `>> ${
                     otaVehicleData.doorsLocked ? "LOCKED" : "UNLOCKED"
                 } / ${
@@ -215,9 +186,9 @@ class OTAKeyStore {
             this.energyCurrent = otaVehicleData.energyCurrent;
         } catch (error) {
             await this.otaKeyLogger({
-                severity: 'error',
+                severity: severityTypes.ERROR,
                 action: 'onOtaVehicleDataUpdated',
-                code: 1,
+                code: codeTypes.ERROR,
                 message: '>> exception',
                 description: error
             });
@@ -228,16 +199,16 @@ class OTAKeyStore {
     onOtaActionPerformed = async otaAction => {
         try {
             await this.otaKeyLogger({
-                severity: 'info',
+                severity: severityTypes.INFO,
                 action: 'onOtaActionPerformed',
-                code: 0,
+                code: codeTypes.SUCCESS,
                 message: `>> ${otaAction.otaOperation} / ${otaAction.otaState}`
             });
         } catch (error) {
             await this.otaKeyLogger({
-                severity: 'error',
+                severity: severityTypes.ERROR,
                 action: 'onOtaActionPerformed',
-                code: 1,
+                code: codeTypes.ERROR,
                 message: '>> exception',
                 description: error
             });
@@ -248,9 +219,9 @@ class OTAKeyStore {
     onOtaBluetoothStateChanged = async otaBluetoothState => {
         try {
             await this.otaKeyLogger({
-                severity: 'info',
+                severity: severityTypes.INFO,
                 action: 'onOtaBluetoothStateChanged',
-                code: 0,
+                code: codeTypes.SUCCESS,
                 message: `>> ${otaBluetoothState.newBluetoothState}`
             });
             if (otaBluetoothState.newBluetoothState === 'CONNECTED') {
@@ -265,9 +236,9 @@ class OTAKeyStore {
             }
         } catch (error) {
             await this.otaKeyLogger({
-                severity: 'error',
+                severity: severityTypes.ERROR,
                 action: 'onOtaBluetoothStateChanged',
-                code: 1,
+                code: codeTypes.ERROR,
                 message: '>> exception',
                 description: error
             });
@@ -282,9 +253,9 @@ class OTAKeyStore {
 
         try {
             await this.otaKeyLogger({
-                severity: 'debug',
+                severity: severityTypes.DEBUG,
                 action: 'register',
-                code: 0,
+                code: codeTypes.SUCCESS,
                 message: `-> this.ota.register(${
                     String(this.keyAccessDeviceRegistrationNumber)
                 }, ${
@@ -298,9 +269,9 @@ class OTAKeyStore {
             DeviceEventEmitter.addListener('onOtaBluetoothStateChanged', this.onOtaBluetoothStateChanged);
 
             await this.otaKeyLogger({
-                severity: 'debug',
+                severity: severityTypes.DEBUG,
                 action: 'registerToOTA',
-                code: 0,
+                code: codeTypes.SUCCESS,
                 message: `<- this.ota.register(${
                     String(this.keyAccessDeviceRegistrationNumber)
                 }, ${
@@ -315,9 +286,9 @@ class OTAKeyStore {
             return result;
         } catch (error) {
             await this.otaKeyLogger({
-                severity: 'debug',
+                severity: severityTypes.DEBUG,
                 action: 'registerToOTA',
-                code: 1,
+                code: codeTypes.ERROR,
                 message: `<- this.ota.register(${
                     String(this.keyAccessDeviceRegistrationNumber)
                 }, ${
@@ -336,9 +307,9 @@ class OTAKeyStore {
     async getKeyAccessDeviceIdentifier(force: boolean = false, showError = true): Promise<string> {
         try {
             await this.otaKeyLogger({
-                severity: 'debug',
+                severity: severityTypes.DEBUG,
                 action: 'getOTAKeyAccessDeviceIdentifier',
-                code: 0,
+                code: codeTypes.SUCCESS,
                 message: `-> this.ota.getAccessDeviceToken(${
                     String(force)
                 }, ${
@@ -347,9 +318,9 @@ class OTAKeyStore {
             });
             this.keyAccessDeviceIdentifier = await this.ota.getAccessDeviceToken(force);
             await this.otaKeyLogger({
-                severity: 'debug',
+                severity: severityTypes.DEBUG,
                 action: 'getOTAKeyAccessDeviceIdentifier',
-                code: 0,
+                code: codeTypes.SUCCESS,
                 message: `<- this.ota.getAccessDeviceToken(${
                     String(force)
                 }, ${
@@ -359,11 +330,10 @@ class OTAKeyStore {
                 }`
             });
         } catch (error) {
-            await this.trace("debug", "getOTAKeyAccessDeviceIdentifier", 1, `<- this.ota.getAccessDeviceToken(${String(force)}, ${String(showError)}) failed ${error}`, error)
             await this.otaKeyLogger({
-                severity: 'debug',
+                severity: severityTypes.DEBUG,
                 action: 'getOTAKeyAccessDeviceIdentifier',
-                code: 1,
+                code: codeTypes.ERROR,
                 message: `<- this.ota.getAccessDeviceToken(${
                     String(force)
                 }, ${
@@ -387,9 +357,9 @@ class OTAKeyStore {
         try {
             this.keyAccessDeviceToken = keyAccessDeviceToken;
             await this.otaKeyLogger({
-                severity: 'debug',
+                severity: severityTypes.DEBUG,
                 action: 'openOTASession',
-                code: 0,
+                code: codeTypes.SUCCESS,
                 message : `-> this.ota.openSession(${
                     this.keyAccessDeviceToken
                 }, ${
@@ -397,11 +367,11 @@ class OTAKeyStore {
                 }) start`
             });
 
-            let result = await this.ota.openSession(keyAccessDeviceToken)
+            const result = await this.ota.openSession(keyAccessDeviceToken);
             await this.otaKeyLogger({
-                severity: 'info',
+                severity: severityTypes.INFO,
                 action: 'openOTASession',
-                code: 0,
+                code: codeTypes.SUCCESS,
                 message : `<- this.ota.openSession(${
                     this.keyAccessDeviceToken
                 }, ${
@@ -415,9 +385,9 @@ class OTAKeyStore {
             return result;
         } catch (error) {
             await this.otaKeyLogger({
-                severity: 'error',
+                severity: severityTypes.ERROR,
                 action: 'openOTASession',
-                code: 1,
+                code: codeTypes.ERROR,
                 message: `<- this.ota.openSession(${
                     this.keyAccessDeviceToken
                 }, ${
@@ -432,308 +402,730 @@ class OTAKeyStore {
         }
     }
 
-
     @action
     async getVehicleData(showError = true): Promise<boolean> {
-
         try {
-            await this.trace("debug", "getVehicleData", 0, `-> this.ota.getVehicleData( ${String(showError)}) start`)
-            let result = await this.ota.getVehicleData()
-            await this.trace("info", "getVehicleData", 0, `<- this.ota.getVehicleData( ${String(showError)}) return ${JSON.stringify(result)}`, result)
-            return result
+            await this.otaKeyLogger({
+                severity: severityTypes.DEBUG,
+                action: 'getVehicleData',
+                code: codeTypes.SUCCESS,
+                message: `-> this.ota.getVehicleData(${String(showError)}) start`
+            });
+            const result = await this.ota.getVehicleData();
+            await this.otaKeyLogger({
+                severity: severityTypes.INFO,
+                action: 'getVehicleData',
+                code: codeTypes.SUCCESS,
+                message: `<- this.ota.getVehicleData(${
+                    String(showError)
+                }) return ${
+                    JSON.stringify(result)
+                }`,
+                description: result
+            });
+            return result;
         } catch (error) {
-            await this.trace("error", "getVehicleData", 1, `<- this.ota.getVehicleData( ${String(showError)}) failed ${error}`, error)
-            this.handleOTAAPIError(error, showError)
-            return false
+            await this.otaKeyLogger({
+                severity: severityTypes.ERROR,
+                action: 'getVehicleData',
+                code: codeTypes.ERROR,
+                message: `<- this.ota.getVehicleData(${String(showError)}) failed ${error}`,
+                description: error
+            });
+            this.handleOTAAPIError(error, showError);
+            return false;
         }
     }
 
-
     @action
     async getKey(keyId: string, showError = true): Promise<boolean> {
-
         if (!keyId || !keyId instanceof String || keyId === "") {
-            return false
+            return false;
         }
 
         try {
-            await this.trace("debug", "getKey", 0, `-> this.ota.getKey(${keyId}, ${String(showError)}) start`)
-            this.key = await this.ota.getKey(keyId)
-            await this.trace("info", "getKey", 0, `<- this.ota.getKey(${keyId}, ${String(showError)}) return ${JSON.stringify(this.key)}`, this.key)
-            return true
+            await this.otaKeyLogger({
+                severity: severityTypes.DEBUG,
+                action: 'getKey',
+                code: codeTypes.SUCCESS,
+                message: `-> this.ota.getKey(${keyId}, ${String(showError)}) start`
+            });
+            this.key = await this.ota.getKey(keyId);
+            await this.otaKeyLogger({
+                severity: severityTypes.INFO,
+                action: 'getKey',
+                code: codeTypes.SUCCESS,
+                message: `<- this.ota.getKey(${
+                    keyId
+                }, ${
+                    String(showError)
+                }) return ${
+                    JSON.stringify(this.key)
+                }`,
+                description: this.key
+            });
+            return true;
         } catch (error) {
-            await this.trace("error", "getKey", 1, `<- this.ota.getKey(${keyId}, ${String(showError)}) failed ${error}`, error)
-            this.handleOTAAPIError(error, showError)
-            return false
+            await this.otaKeyLogger({
+                severity: severityTypes.ERROR,
+                action: 'getKey',
+                code: codeTypes.ERROR,
+                message: `<- this.ota.getKey(${
+                    keyId
+                }, ${
+                    String(showError)
+                }) failed ${
+                    error
+                }`,
+                description: error
+            });
+            this.handleOTAAPIError(error, showError);
+            return false;
         }
     }
 
     @action
     async getUsedKey(showError = true): Promise<boolean> {
-
         try {
-            await this.trace("debug", "getUsedKey", 0, `-> this.ota.getUsedKey( ${String(showError)}) start`)
-            this.key = await this.ota.getUsedKey()
-            await this.trace("info", "getUsedKey", 0, `<- this.ota.getUsedKey( ${String(showError)}) return ${JSON.stringify(this.key)}`, this.key)
-            return true
+            await this.otaKeyLogger({
+                severity: severityTypes.DEBUG,
+                action: 'getUsedKey',
+                code: codeTypes.SUCCESS,
+                message: `-> this.ota.getUsedKey(${String(showError)}) start`
+            });
+            this.key = await this.ota.getUsedKey();
+            await this.otaKeyLogger({
+                severity: severityTypes.INFO,
+                action: 'getUsedKey',
+                code: codeTypes.SUCCESS,
+                message: `<- this.ota.getUsedKey(${
+                    String(showError)
+                }) return ${
+                    JSON.stringify(this.key)
+                }`,
+                description: this.key
+            });
+            return true;
         } catch (error) {
-            await this.trace("error", "getUsedKey", 1, `<- this.ota.getUsedKey( ${String(showError)}) failed ${error}`, error)
-            this.handleOTAAPIError(error, showError)
-            return false
+            await this.otaKeyLogger({
+                severity: severityTypes.ERROR,
+                action: 'getUsedKey',
+                code: codeTypes.ERROR,
+                message: `<- this.ota.getUsedKey(${String(showError)}) failed ${error}`,
+                description: error
+            });
+            this.handleOTAAPIError(error, showError);
+            return false;
         }
     }
 
     @computed get isKeyEnabled() {
-        return this.key && driveStore.rental && this.key.keyId === driveStore.rental.key_id && this.key.isEnabled
+        return this.key && driveStore.rental && this.key.keyId === driveStore.rental.key_id && this.key.isEnabled;
     }
 
     @action
     async enableKey(keyId: string, showError = true): Promise<boolean> {
-
         if (!keyId || !keyId instanceof String || keyId === "") {
-            return false
+            return false;
         }
 
         try {
-            await this.trace("debug", "enableKey", 0, `-> this.ota.enableKey(${keyId}, ${String(showError)}) start`)
-            this.key = await this.ota.enableKey(keyId)
-            await this.trace("info", "enableKey", 0, `<- this.ota.enableKey(${keyId}, ${String(showError)}) return ${JSON.stringify(this.key)}`, this.key)
+            await this.otaKeyLogger({
+                severity: severityTypes.DEBUG,
+                action: 'enableKey',
+                code: codeTypes.SUCCESS,
+                message: `-> this.ota.enableKey(${keyId}, ${String(showError)}) start`
+            });
+            this.key = await this.ota.enableKey(keyId);
+            await this.otaKeyLogger({
+                severity: severityTypes.INFO,
+                action: 'enableKey',
+                code: codeTypes.SUCCESS,
+                message: `<- this.ota.enableKey(${
+                    keyId
+                }, ${
+                    String(showError)
+                }) return ${
+                    JSON.stringify(this.key)
+                }`,
+                description: this.key
+            });
             return true
         } catch (error) {
-            await this.trace("error", "enableKey", 1, `<- this.ota.enableKey(${keyId}, ${String(showError)}) failed ${error}`, error)
-            this.handleOTAAPIError(error, showError)
-            return false
+            await this.otaKeyLogger({
+                severity: severityTypes.ERROR,
+                action: 'enableKey',
+                code: codeTypes.ERROR,
+                message: `<- this.ota.enableKey(${keyId}, ${String(showError)}) failed ${error}`,
+                description: error
+            });
+            this.handleOTAAPIError(error, showError);
+            return false;
         }
     }
 
     @action
     async endKey(showError = true): Promise<boolean> {
-
         try {
-            await this.trace("debug", "endKey", 0, `-> this.ota.endKey(${this.key.keyId}, ${String(showError)}) start`)
-            this.key = await this.ota.endKey(this.key.keyId)
-            await this.trace("info", "endKey", 0, `<- this.ota.endKey(${this.key.keyId}, ${String(showError)}) return ${JSON.stringify(this.key)}`, this.key)
-            return true
+            await this.otaKeyLogger({
+                severity: severityTypes.DEBUG,
+                action: 'endKey',
+                code: codeTypes.SUCCESS,
+                message: `-> this.ota.endKey(${this.key.keyId}, ${String(showError)}) start`
+            });
+            this.key = await this.ota.endKey(this.key.keyId);
+            await this.otaKeyLogger({
+                severity: severityTypes.INFO,
+                action: 'endKey',
+                code: codeTypes.SUCCESS,
+                message: `<- this.ota.endKey(${
+                    this.key.keyId
+                }, ${
+                    String(showError)
+                }) return ${
+                    JSON.stringify(this.key)
+                }`,
+                description: this.key
+            });
+            return true;
         } catch (error) {
-            await this.trace("error", "endKey", 1, `<- this.ota.endKey(${this.key.keyId}, ${String(showError)}) failed ${error}`, error)
-            this.handleOTAAPIError(error, showError)
-            return false
+            await this.otaKeyLogger({
+                severity: severityTypes.ERROR,
+                action: 'endKey',
+                code: codeTypes.ERROR,
+                message: `<- this.ota.endKey(${
+                    this.key.keyId
+                }, ${
+                    String(showError)
+                }) failed ${
+                    error
+                }`,
+                description: error
+            });
+            this.handleOTAAPIError(error, showError);
+            return false;
         }
     }
 
     @action
     async switchToKey(showError = true): Promise<boolean> {
-
         try {
-            await this.trace("debug", "switchToKey", 0, `-> this.ota.switchToKey(${JSON.stringify(this.key)}, ${String(showError)}) start`)
-            this.key = await this.ota.switchToKey()
-            await this.trace("info", "switchToKey", 0, `<- this.ota.switchToKey(${JSON.stringify(this.key)}, ${String(showError)}) return ${JSON.stringify(this.key)}`, this.key)
-            return true
+            await this.otaKeyLogger({
+                severity: severityTypes.DEBUG,
+                action: 'switchToKey',
+                code: codeTypes.SUCCESS,
+                message: `-> this.ota.switchToKey(${
+                    JSON.stringify(this.key)
+                }, ${
+                    String(showError)
+                }) start`
+            });
+            this.key = await this.ota.switchToKey();
+            await this.otaKeyLogger({
+                severity: severityTypes.INFO,
+                action: 'switchToKey',
+                code: codeTypes.SUCCESS,
+                message: `<- this.ota.switchToKey(${
+                    JSON.stringify(this.key)
+                }, ${
+                    String(showError)
+                }) return ${
+                    JSON.stringify(this.key)
+                }`,
+                description: this.key
+            });
+            return true;
         } catch (error) {
-            await this.trace("error", "switchToKey", 1, `<- this.ota.switchToKey(${JSON.stringify(this.key)}, ${String(showError)}) failed ${error}`, error)
-            this.handleOTAAPIError(error, showError)
-            return false
+            await this.otaKeyLogger({
+                severity: severityTypes.ERROR,
+                action: 'switchToKey',
+                code: codeTypes.ERROR,
+                message: `<- this.ota.switchToKey(${
+                    JSON.stringify(this.key)
+                }, ${
+                    String(showError)
+                }) failed ${
+                    error
+                }`,
+                description: error
+            });
+            this.handleOTAAPIError(error, showError);
+            return false;
         }
     }
 
     @action
     async syncVehicleData(showError = true): Promise<boolean> {
-
         try {
-            await this.trace("debug", "syncVehicleData", 0, `-> this.ota.syncVehicleData( ${String(showError)}) start`)
-            let result = await this.ota.syncVehicleData()
-            await this.trace("info", "syncVehicleData", 0, `<- this.ota.syncVehicleData( ${String(showError)}) return ${result}`, result)
-            return result
+            await this.otaKeyLogger({
+                severity: severityTypes.DEBUG,
+                action: 'syncVehicleData',
+                code: codeTypes.SUCCESS,
+                message: `-> this.ota.syncVehicleData(${String(showError)}) start`
+            });
+            const result = await this.ota.syncVehicleData();
+            await this.otaKeyLogger({
+                severity: severityTypes.INFO,
+                action: 'syncVehicleData',
+                code: codeTypes.SUCCESS,
+                message: `<- this.ota.syncVehicleData(${String(showError)}) return ${result}`,
+                description: result
+            });
+            return result;
         } catch (error) {
-            await this.trace("error", "syncVehicleData", 1, `<- this.ota.syncVehicleData( ${String(showError)}) failed ${error}`, error)
-            this.handleOTAAPIError(error, showError)
-            return false
+            await this.otaKeyLogger({
+                severity: severityTypes.ERROR,
+                action: 'syncVehicleData',
+                code: codeTypes.ERROR,
+                message: `<- this.ota.syncVehicleData(${String(showError)}) failed ${error}`,
+                description: error
+            });
+            this.handleOTAAPIError(error, showError);
+            return false;
         }
     }
 
-
-    //BLE actions
-
     @action
     async configureNetworkTimeouts(connectTimeout: Number, readTimeout: Number, showError = true): Promise<boolean> {
-
         try {
-            await this.trace("debug", "configureOTANetworkTimeouts", 0, `-> this.ota.configureNetworkTimeouts(${String(connectTimeout)}, ${String(readTimeout)}, ${String(showError)}) start`)
-            let result = await this.ota.configureNetworkTimeouts(connectTimeout, readTimeout)
-            await this.trace("info", "configureOTANetworkTimeouts", 0, `<- this.ota.configureNetworkTimeouts(${String(connectTimeout)}, ${String(readTimeout)}, ${String(showError)}) return ${result}`, result)
-            return result
+            await this.otaKeyLogger({
+                severity: severityTypes.DEBUG,
+                action: 'configureOTANetworkTimeouts',
+                code: codeTypes.SUCCESS,
+                message: `-> this.ota.configureNetworkTimeouts(${
+                    String(connectTimeout)
+                }, ${
+                    String(readTimeout)
+                }, ${
+                    String(showError)
+                }) start`
+            });
+            const result = await this.ota.configureNetworkTimeouts(connectTimeout, readTimeout);
+            await this.otaKeyLogger({
+                severity: severityTypes.INFO,
+                action: 'configureOTANetworkTimeouts',
+                code: codeTypes.SUCCESS,
+                message: `<- this.ota.configureNetworkTimeouts(${
+                    String(connectTimeout)
+                }, ${
+                    String(readTimeout)
+                }, ${
+                    String(showError)
+                }) return ${
+                    result
+                }`,
+                description: result
+            });
+            return result;
         } catch (error) {
-            await this.trace("error", "configureOTANetworkTimeouts", 1, `<- this.ota.configureNetworkTimeouts(${String(connectTimeout)}, ${String(readTimeout)}, ${String(showError)}) failed ${error}`, error)
-            this.handleOTABLEError(error, showError)
-            return false
+            await this.otaKeyLogger({
+                severity: severityTypes.ERROR,
+                action: 'configureOTANetworkTimeouts',
+                code: codeTypes.ERROR,
+                message: `<- this.ota.configureNetworkTimeouts(${
+                    String(connectTimeout)
+                }, ${
+                    String(readTimeout)
+                }, ${
+                    String(showError)
+                }) failed ${
+                    error
+                }`,
+                description: error
+            });
+            this.handleOTABLEError(error, showError);
+            return false;
         }
     }
 
     @action
     async isConnectedToVehicle(showError = true): Promise<boolean> {
-
         try {
-            await this.trace("debug", "isConnectedToVehicle", 0, `-> this.ota.isConnectedToVehicle( ${String(showError)}) start`)
-            let result = await this.ota.isConnectedToVehicle()
-            await this.trace("info", "isConnectedToVehicle", 0, `<- this.ota.isConnectedToVehicle( ${String(showError)}) return ${result}`, result)
-            return result
+            await this.otaKeyLogger({
+                severity: severityTypes.DEBUG,
+                action: 'isConnectedToVehicle',
+                code: codeTypes.SUCCESS,
+                message: `-> this.ota.isConnectedToVehicle(${String(showError)}) start`
+            });
+            const result = await this.ota.isConnectedToVehicle();
+            await this.otaKeyLogger({
+                severity: severityTypes.INFO,
+                action: 'isConnectedToVehicle',
+                code: codeTypes.SUCCESS,
+                message: `<- this.ota.isConnectedToVehicle(${String(showError)}) return ${result}`,
+                description: result
+            });
+            return result;
         } catch (error) {
-            await this.trace("error", "isConnectedToVehicle", 1, `<- this.ota.isConnectedToVehicle( ${String(showError)}) failed ${error}`, error)
-            this.handleOTABLEError(error, showError)
-            return false
+            await this.otaKeyLogger({
+                severity: severityTypes.ERROR,
+                action: 'isConnectedToVehicle',
+                code: codeTypes.ERROR,
+                message: `<- this.ota.isConnectedToVehicle(${String(showError)}) failed ${error}`,
+                description: error
+            });
+            this.handleOTABLEError(error, showError);
+            return false;
         }
     }
 
     @action
     async isOperationInProgress(showError = true): Promise<boolean> {
-
         try {
-            await this.trace("debug", "isOTAOperationInProgress", 0, `-> this.ota.isOperationInProgress( ${String(showError)}) start`)
-            let result = await this.ota.isOperationInProgress()
-            await this.trace("info", "isOTAOperationInProgress", 0, `<- this.ota.isOperationInProgress( ${String(showError)}) return ${result}`, result)
-            return result
+            await this.otaKeyLogger({
+                severity: severityTypes.DEBUG,
+                action: 'isOTAOperationInProgress',
+                code: codeTypes.SUCCESS,
+                message: `-> this.ota.isOperationInProgress(${String(showError)}) start`
+            });
+            const result = await this.ota.isOperationInProgress();
+            await this.otaKeyLogger({
+                severity: severityTypes.INFO,
+                action: 'isOTAOperationInProgress',
+                code: codeTypes.SUCCESS,
+                message: `<- this.ota.isOperationInProgress(${String(showError)}) return ${result}`,
+                description: result
+            });
+            return result;
         } catch (error) {
-            await this.trace("error", "isOTAOperationInProgress", 1, `<- this.ota.isOperationInProgress( ${String(showError)}) failed ${error}`, error)
-            this.handleOTABLEError(error, showError)
-            return false
+            await this.otaKeyLogger({
+                severity: severityTypes.ERROR,
+                action: 'isOTAOperationInProgress',
+                code: codeTypes.ERROR,
+                message: `<- this.ota.isOperationInProgress(${String(showError)}) failed ${error}`,
+                description: error
+            });
+            this.handleOTABLEError(error, showError);
+            return false;
         }
     }
-
 
     @action
     async getBluetoothState(showError = true): Promise<string> {
 
         try {
-            await this.trace("debug", "getBluetoothState", 0, `-> this.ota.getBluetoothState( ${String(showError)}) start`)
-            let result = await this.ota.getBluetoothState()
-            await this.trace("info", "getBluetoothState", 0, `<- this.ota.getBluetoothState( ${String(showError)}) return ${result}`, result)
-            return result
+            await this.otaKeyLogger({
+                severity: severityTypes.DEBUG,
+                action: 'getBluetoothState',
+                code: codeTypes.SUCCESS,
+                message: `-> this.ota.getBluetoothState(${String(showError)}) start`
+            });
+            const result = await this.ota.getBluetoothState();
+            await this.otaKeyLogger({
+                severity: severityTypes.INFO,
+                action: 'getBluetoothState',
+                code: codeTypes.SUCCESS,
+                message: `<- this.ota.getBluetoothState(${String(showError)}) return ${result}`,
+                description: result
+            });
+            return result;
         } catch (error) {
-            await this.trace("error", "getBluetoothState", 1, `<- this.ota.getBluetoothState( ${String(showError)}) failed ${error}`, error)
-            this.handleOTABLEError(error, showError)
-            return "UNKNOWN"
+            await this.otaKeyLogger({
+                severity: severityTypes.ERROR,
+                action: 'getBluetoothState',
+                code: codeTypes.ERROR,
+                message: `<- this.ota.getBluetoothState(${String(showError)}) failed ${error}`,
+                description: error
+            });
+            this.handleOTABLEError(error, showError);
+            return "UNKNOWN";
         }
     }
-
 
     @action
     async connect(showNotification = false, showError = true): Promise<boolean> {
-
         try {
-            await this.trace("debug", "connectToVehicle", 0, `-> this.ota.connect(${String(showNotification)}, ${String(showError)}) start`)
-            let result = await this.ota.connect(showNotification)
-            await this.trace("info", "connectToVehicle", 0, `<- this.ota.connect(${String(showNotification)}, ${String(showError)}) return ${result}`, result)
-            return result
+            await this.otaKeyLogger({
+                severity: severityTypes.DEBUG,
+                action: 'connectToVehicle',
+                code: codeTypes.SUCCESS,
+                message: `-> this.ota.connect(${String(showNotification)}, ${String(showError)}) start`
+            });
+            const result = await this.ota.connect(showNotification);
+            await this.otaKeyLogger({
+                severity: severityTypes.INFO,
+                action: 'connectToVehicle',
+                code: codeTypes.SUCCESS,
+                message: `<- this.ota.connect(${
+                    String(showNotification)
+                }, ${
+                    String(showError)
+                }) return ${
+                    result
+                }`,
+                description: result
+            });
+            return result;
         } catch (error) {
-            if (error.code = 'ALREADY_CONNECTED') return true
+            if (error.code = 'ALREADY_CONNECTED') {
+                return true;
+            }
 
-            await this.trace("error", "connectToVehicle", 1, `<- this.ota.connect(${String(showNotification)}, ${String(showError)}) failed ${error}`, error)
-            this.handleOTABLEError(error, showError)
-            return false
+            await this.otaKeyLogger({
+                severity: severityTypes.ERROR,
+                action: 'connectToVehicle',
+                code: codeTypes.ERROR,
+                message: `<- this.ota.connect(${
+                    String(showNotification)
+                }, ${
+                    String(showError)
+                }) failed ${
+                    error
+                }`,
+                description: error
+            });
+            this.handleOTABLEError(error, showError);
+            return false;
         }
     }
 
-
     @action
     async disconnect(showError = true): Promise<boolean> {
-
         try {
-            await this.trace("debug", "disconnectFromVehicle", 0, `-> this.ota.disconnect( ${String(showError)}) start`)
-            let result = await this.ota.disconnect()
-            await this.trace("info", "disconnectFromVehicle", 0, `<- this.ota.disconnect( ${String(showError)}) return ${result}`, result)
-            return result
+            await this.otaKeyLogger({
+                severity: severityTypes.DEBUG,
+                action: 'disconnectFromVehicle',
+                code: codeTypes.SUCCESS,
+                message: `-> this.ota.disconnect(${String(showError)}) start`
+            });
+            const result = await this.ota.disconnect();
+            await this.otaKeyLogger({
+                severity: severityTypes.INFO,
+                action: 'disconnectFromVehicle',
+                code: codeTypes.SUCCESS,
+                message: `<- this.ota.disconnect(${String(showError)}) return ${result}`,
+                description: result
+            });
+            return result;
         } catch (error) {
-            await this.trace("error", "disconnectFromVehicle", 1, `<- this.ota.disconnect( ${String(showError)}) failed ${error}`, error)
-            this.handleOTABLEError(error, showError)
-            return false
+            await this.otaKeyLogger({
+                severity: severityTypes.ERROR,
+                action: 'disconnectFromVehicle',
+                code: codeTypes.ERROR,
+                message: `<- this.ota.disconnect(${String(showError)}) failed ${error}`,
+                description: error
+            });
+            this.handleOTABLEError(error, showError);
+            return false;
         }
     }
 
     @action
     async unlockDoors(requestVehicleData: boolean = false, showError = true): Promise<boolean> {
-
         try {
-            await this.trace("debug", "unlockDoors", 0, `-> this.ota.unlockDoors(${String(requestVehicleData)}, ${String(showError)}) start`)
-            let result = await this.ota.unlockDoors(requestVehicleData, true)
-            await this.trace("info", "unlockDoors", 0, `<- this.ota.unlockDoors(${String(requestVehicleData)},  ${String(showError)}) return ${result}`, result)
-            return result
+            await this.otaKeyLogger({
+                severity: severityTypes.DEBUG,
+                action: 'unlockDoors',
+                code: codeTypes.SUCCESS,
+                message: `-> this.ota.unlockDoors(${
+                    String(requestVehicleData)
+                }, ${
+                    String(showError)
+                }) start`
+            });
+            const result = await this.ota.unlockDoors(requestVehicleData, true);
+            await this.otaKeyLogger({
+                severity: severityTypes.INFO,
+                action: 'unlockDoors',
+                code: codeTypes.SUCCESS,
+                message: `<- this.ota.unlockDoors(${
+                    String(requestVehicleData)
+                },  ${
+                    String(showError)
+                }) return ${
+                    result
+                }`,
+                description: result
+            });
+            return result;
         } catch (error) {
-            await this.trace("error", "unlockDoors", 1, `<- this.ota.unlockDoors(${String(requestVehicleData)}, ${String(showError)}) failed ${error}`, error)
-            this.handleOTABLEError(error, showError)
-            return false
+            await this.otaKeyLogger({
+                severity: severityTypes.ERROR,
+                action: 'unlockDoors',
+                code: codeTypes.ERROR,
+                message: `<- this.ota.unlockDoors(${
+                    String(requestVehicleData)
+                }, ${
+                    String(showError)
+                }) failed ${
+                    error
+                }`,
+                description: error
+            });
+            this.handleOTABLEError(error, showError);
+            return false;
         }
     }
 
     @action
     async lockDoors(requestVehicleData: boolean = false, showError = true): Promise<boolean> {
-
         try {
-            await this.trace("debug", "lockDoors", 0, `-> this.ota.lockDoors(${String(requestVehicleData)}, ${String(showError)},) start`)
-            let result = await this.ota.lockDoors(requestVehicleData)
-            await this.trace("info", "lockDoors", 0, `<- this.ota.lockDoors(${String(requestVehicleData)}, ${String(showError)}) return ${result}`, result)
-            return result
+            await this.otaKeyLogger({
+                severity: severityTypes.DEBUG,
+                action: 'lockDoors',
+                code: codeTypes.SUCCESS,
+                message: `-> this.ota.lockDoors(${
+                    String(requestVehicleData)
+                }, ${
+                    String(showError)
+                },) start`
+            });
+            const result = await this.ota.lockDoors(requestVehicleData);
+            await this.otaKeyLogger({
+                severity: severityTypes.INFO,
+                action: 'lockDoors',
+                code: codeTypes.SUCCESS,
+                message: `<- this.ota.lockDoors(${
+                    String(requestVehicleData)
+                }, ${
+                    String(showError)
+                }) return ${
+                    result
+                }`,
+                description: result
+            });
+            return result;
         } catch (error) {
-            await this.trace("error", "lockDoors", 1, `<- this.ota.lockDoors(${String(requestVehicleData)}, ${String(showError)}) failed ${error}`, error)
-            this.handleOTABLEError(error, showError)
-            return false
+            await this.otaKeyLogger({
+                severity: severityTypes.ERROR,
+                action: 'lockDoors',
+                code: codeTypes.ERROR,
+                message: `<- this.ota.lockDoors(${
+                    String(requestVehicleData)
+                }, ${
+                    String(showError)
+                }) failed ${
+                    error
+                }`,
+                description: error
+            });
+            this.handleOTABLEError(error, showError);
+            return false;
         }
     }
 
 
     @action
     async enableEngine(requestVehicleData: boolean = false, showError = true): Promise<boolean> {
-
         try {
-            await this.trace("debug", "enableEngine", 0, `-> this.ota.enableEngine(${String(requestVehicleData)}, ${String(showError)}) start`)
-            let result = await this.ota.enableEngine(requestVehicleData)
-            await this.trace("info", "enableEngine", 0, `<- this.ota.enableEngine(${String(requestVehicleData)}, ${String(showError)}) return ${result}`, result)
-            return result
+            await this.otaKeyLogger({
+                severity: severityTypes.DEBUG,
+                action: 'enableEngine',
+                code: codeTypes.SUCCESS,
+                message: `-> this.ota.enableEngine(${
+                    String(requestVehicleData)
+                }, ${
+                    String(showError)
+                }) start`
+            });
+            const result = await this.ota.enableEngine(requestVehicleData);
+            await this.otaKeyLogger({
+                severity: severityTypes.INFO,
+                action: 'enableEngine',
+                code: codeTypes.SUCCESS,
+                message: `<- this.ota.enableEngine(${
+                    String(requestVehicleData)
+                }, ${
+                    String(showError)
+                }) return ${
+                    result
+                }`,
+                description: result
+            });
+            return result;
         } catch (error) {
-            await this.trace("error", "enableEngine", 1, `<- this.ota.enableEngine(${String(requestVehicleData)}, ${String(showError)}) failed ${error}`, error)
-            this.handleOTABLEError(error, showError)
-            return false
+            await this.otaKeyLogger({
+                severity: severityTypes.ERROR,
+                action: 'enableEngine',
+                code: codeTypes.ERROR,
+                message: `<- this.ota.enableEngine(${
+                    String(requestVehicleData)
+                }, ${
+                    String(showError)
+                }) failed ${
+                    error
+                }`,
+                description: error
+            });
+            this.handleOTABLEError(error, showError);
+            return false;
         }
     }
 
     @action
     async disableEngine(requestVehicleData: boolean = false, showError = true): Promise<boolean> {
-
         try {
-            await this.trace("debug", "disableEngine", 0, `-> this.ota.disableEngine(${String(requestVehicleData)}, ${String(showError)}) start`)
-            let result = await this.ota.disableEngine(requestVehicleData)
-            await this.trace("info", "disableEngine", 0, `<- this.ota.disableEngine(${String(requestVehicleData)}, ${String(showError)}) return ${result}`, result)
-            return result
+            await this.otaKeyLogger({
+                severity: severityTypes.DEBUG,
+                action: 'disableEngine',
+                code: codeTypes.SUCCESS,
+                message: `-> this.ota.disableEngine(${
+                    String(requestVehicleData)
+                }, ${
+                    String(showError)
+                }) start`
+            });
+            const result = await this.ota.disableEngine(requestVehicleData);
+            await this.otaKeyLogger({
+                severity: severityTypes.INFO,
+                action: 'disableEngine',
+                code: codeTypes.SUCCESS,
+                message: `<- this.ota.disableEngine(${
+                    String(requestVehicleData)
+                }, ${
+                    String(showError)
+                }) return ${
+                    result
+                }`,
+                description: result
+            });
+            return result;
         } catch (error) {
-            await this.trace("error", "disableEngine", 1, `<- this.ota.disableEngine(${String(requestVehicleData)}, ${String(showError)}) failed ${error}`, error)
-            this.handleOTABLEError(error, showError)
-            return false
+            await this.otaKeyLogger({
+                severity: severityTypes.ERROR,
+                action: 'disableEngine',
+                code: codeTypes.ERROR,
+                message: `<- this.ota.disableEngine(${
+                    String(requestVehicleData)
+                }, ${
+                    String(showError)
+                }) failed ${
+                    error
+                }`,
+                description: error
+            });
+            this.handleOTABLEError(error, showError);
+            return false;
         }
     }
 
     handleOTAAPIError(error, showError) {
+        if (!showError) {
+            return;
+        }
 
-        if (!showError) return
-
-        let code = error.code
-        let message = error.message
+        const code = error.code;
+        const message = error.message;
 
         //Show error to user
-        showToastError(code, message)
+        showToastError(code, message);
     }
 
     handleOTABLEError(error, showError) {
+        if (!showError) {
+            return;
+        }
 
-        if (!showError) return
+        const code = error.code;
+        const message = error.message;
 
-        let code = error.code
-        let message = error.message
-
-        if (code === 'ALREADY_CONNECTED') return
+        if (code === 'ALREADY_CONNECTED') {
+            return;
+        }
 
         //Show error to user
-        showToastError(code, message)
+        showToastError(code, message);
     }
-
 }
 
 export default new OTAKeyStore();

@@ -1,80 +1,50 @@
 import moment from 'moment';
 import { checkConnectivity, postToApi } from './api';
 
-export default async function userActionsLogger(options) {
+export const codeTypes = {
+    SUCCESS: 0,
+    ERROR: 1
+};
+
+export const severityTypes = {
+    DEBUG: 'debug',
+    INFO: 'info',
+    WARN: 'warn',
+    ERROR: 'error',
+};
+
+export default async function userActionsLogger(
+    severity,
+    code,
+    action = '',
+    message = '',
+    description = '',
+    extraData = {}
+) {
     try {
-        const {
-            severity = '',
-            action = '',
-            code = null,
-            message = '',
-            description = '',
-            context = null,
-            momentDate = null
-        } = options;
+        const { momentDate, ...restLogData } = extraData;
         const date = momentDate || moment();
         const isConnectionActive = await checkConnectivity();
 
-        if (severity === 'debug') {
+        if (severity === severityTypes.DEBUG) {
             console.log(`${date.format('HH:mm:ss')} ${severity} ${action} ${message}`);
             return;
         }
 
         const payload = {
             severity,
-            action,
             code,
+            action,
             message,
-            context,
+            description: code === 0 ? {result: description} : {error: description},
             performed_at: date.toDate(),
-            description: code === 0 ? {result: description} : {error: description}
+            ...restLogData
         };
 
         if (isConnectionActive) {
             await postToApi('/user_experiences', payload);
-        } else {
-            // this.userExperiences.push(payload);
-            // look function below for pending log, I leave it as it was
         }
     } catch (error) {
         console.error('export of UserExperiences failed', error);
     }
 }
-
-
-/*
-strange functions, it was hide in comments, not sure that it work
-
-constructor() {
-    //AppRegistry.registerHeadlessTask('ExportUserExperienceTask', this.exportPendingUserExperiences);
-}
-
-async exportPendingUserExperiences(taskData) {
-    try {
-        console.log("exportPendingUserExperiences started with ", taskData)
-        if (await checkConnectivity()) {
-            let isConnected = true
-            while (this.userExperiences && this.userExperiences.length > 0 && isConnected) {
-                try {
-                    await postToApi("/user_experiences", this.userExperiences.shift())
-                } catch (error) {
-                    isConnected = await checkConnectivity()
-                    console.log("exportPendingUserExperiences failed", error)
-                }
-            }
-        }
-    } catch (error) {
-        console.log("exportPendingUserExperiences failed with ", error)
-    }
-    console.log("exportPendingUserExperiences stopped with ", taskData)
-}
-*/
-/*
-await this.otaKeyLogger({
-                severity: '',
-                action: '',
-                code: null,
-                message: '',
-                description: ''
-            });
-*/
