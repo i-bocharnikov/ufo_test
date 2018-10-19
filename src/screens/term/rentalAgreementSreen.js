@@ -81,13 +81,12 @@ class InspectScreen extends Component {
     const t = this.props.t;
     const confirmKey = t('term:confirmContractKeyString');
 
-    const promptStr = showPrompt(
+    showPrompt(
       t('term:confirmContractTitle', {strKey: confirmKey}),
       t('term:confirmContractDescription'),
-      str => {(str === confirmKey)
+      str => str === confirmKey
         ? this.doSign()
-        : toastError(t('error:stringNotMatch'), 160);
-      }
+        : toastError(t('error:stringNotMatch'), 160)
     );
   };
 }

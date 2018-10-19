@@ -1,13 +1,14 @@
 import { Alert, Vibration, ToastAndroid } from 'react-native';
 import prompt from 'react-native-prompt-android';
+import i18n from 'i18next';
 
 export async function confirm(title = '', message='', action) {
   await Alert.alert(
     title,
     message,
     [
-      {text: 'Cancel', onPress: () => null, style: 'cancel'},
-      {text: 'OK', onPress: () => action()},
+      {text: i18n.t('common:cancelBtn'), onPress: () => null, style: 'cancel'},
+      {text: i18n.t('common:okBtn'), onPress: () => action()},
     ],
     {cancelable: true}
   );
@@ -32,11 +33,11 @@ export function toastError(message = '', yOffset = 0, xOffset = 0) {
 
 export function showPrompt(title = '', descr = '', action, options = {}) {
   const actions = [
-    {text: 'Cancel', onPress: () => null, style: 'cancel'}
+    {text: i18n.t('common:cancelBtn'), onPress: () => null, style: 'cancel'}
   ];
 
   if (typeof action === 'function') {
-    const agreeAction = {text: 'OK', onPress: action};
+    const agreeAction = {text: i18n.t('common:okBtn'), onPress: action};
     actions.push(agreeAction);
   }
 
