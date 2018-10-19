@@ -1,18 +1,13 @@
-// @flow  
 import { NativeModules, DeviceEventEmitter, AppRegistry } from 'react-native';
 import { observable, action, computed } from 'mobx';
-import moment from 'moment';
-import { driveStore } from '.';
-import { actionStyles, icons } from '../utils/global';
-import { postToApi, checkConnectivity } from '../utils/api';
-import { showToastError } from '../utils/interaction';
 import { persist } from 'mobx-persist';
+import moment from 'moment';
 
-const RENTAL_STATUS = {
-    CONFIRMED: 'confirmed',
-    ONGOING: 'ongoing',
-    CLOSED: 'closed',
-}
+import { driveStore } from '.';
+import { actionStyles, icons } from './../utils/global';
+import { postToApi, checkConnectivity } from './../utils/api';
+import { showToastError } from './../utils/interaction';
+import logger from './../utils/userActionsLogger';
 
 class Vehicle {
     @persist @observable vin: String;
@@ -23,7 +18,6 @@ class Vehicle {
     @persist @observable plate: String;
     @persist @observable isEnabled: boolean;
 }
-
 
 class Key {
     @persist @observable beginDate: Moment;
@@ -42,8 +36,8 @@ class VehicleData {
     @persist @observable engineRunning: boolean;
     @persist @observable doorsLocked: boolean;
     @persist @observable energyCurrent: Number;
-
-/*     @observable id: Number;
+/*  
+    @observable id: Number;
     @observable date: Moment;
     @observable mileageStart: Number;
     @observable mileageCurrent: Number;
@@ -69,58 +63,30 @@ class VehicleData {
     @observable operationCode: String;
     @observable doorsState: String;
     @observable operationState: String;
- */}
-
+*/
+}
 
 class OTAKeyStore {
 
+    keyAccessDeviceRegistrationNumber = 9706753;
+    ota = NativeModules.OTAKeyModule;
 
-    constructor() {
-        //AppRegistry.registerHeadlessTask('ExportUserExperienceTask', this.exportPendingUserExperiences);
-    }
+    @persist keyAccessDeviceRegistrationNumber: Number;
+    @persist keyAccessDeviceIdentifier: string;
+    @persist keyAccessDeviceToken: string;
 
+    @observable otaLog: string = "";
 
-    userExperiences = []
+    @persist('object', Key) @observable key: Key = new Key;
 
-    async exportPendingUserExperiences(taskData) {
-        try {
-            console.log("exportPendingUserExperiences started with ", taskData)
-            if (await checkConnectivity()) {
-                let isConnected = true
-                while (this.userExperiences && this.userExperiences.length > 0 && isConnected) {
-                    try {
-                        await postToApi("/user_experiences", this.userExperiences.shift())
-                    } catch (error) {
-                        isConnected = await checkConnectivity()
-                        console.log("exportPendingUserExperiences failed", error)
-                    }
-                }
-            }
-        } catch (error) {
-            console.log("exportPendingUserExperiences failed with ", error)
-        }
-        console.log("exportPendingUserExperiences stopped with ", taskData)
-    }
+    @persist @observable isConnecting = false;
+    @persist @observable isConnected = false;
 
-    keyAccessDeviceRegistrationNumber = 9706753
+    @persist @observable engineRunning = false;
+    @persist @observable doorsLocked = true;
+    @persist @observable energyCurrent = 0;
 
-    ota = NativeModules.OTAKeyModule
-    @persist keyAccessDeviceRegistrationNumber: Number
-    @persist keyAccessDeviceIdentifier: string
-    @persist keyAccessDeviceToken: string
-
-    @observable otaLog: string = ""
-
-    @persist('object', Key) @observable key: Key = new Key
-
-    @persist @observable isConnecting = false
-    @persist @observable isConnected = false
-
-    @persist @observable engineRunning = false
-    @persist @observable doorsLocked = true
-    @persist @observable energyCurrent = 0
-
-    @persist isRegistered = false
+    @persist isRegistered = false;
 
     async trace(severity, action, code, message, description = "") {
 
@@ -144,12 +110,23 @@ class OTAKeyStore {
                     console.log("exportPendingUserExperiences failed", error)
                 }
             } else {
-                this.userExperiences.push(ue);
+                // this.userExperiences.push(ue);
             }
             this.otaLog = date.format("HH:mm:ss") + " " + severity + " " + message + '\n' + this.otaLog
         }
 
         console.log(date.format("HH:mm:ss") + " " + severity + " " + action + " " + message)
+    }
+
+    otaKeyLogger = async options => {
+        const date = moment();
+        await logger({
+            context: {key: this.key, doorsLocked: this.doorsLocked},
+            momentDate: date,
+            ...options
+        });
+        const { severity, message } = options;
+        this.otaLog = `${date.format('HH:mm:ss')} ${severity} ${message}\n${this.otaLog}`;
     }
 
 
@@ -183,15 +160,31 @@ class OTAKeyStore {
 
 
     @action
-    onOtaVehicleDataUpdated = async (otaVehicleData) => {
+    onOtaVehicleDataUpdated = async otaVehicleData => {
         try {
-            await this.trace("info", "onOtaVehicleDataUpdated", 0, `>> ${otaVehicleData.doorsLocked ? "LOCKED" : "UNLOCKED"} / ${otaVehicleData.engineRunning ? "STARTED" : "STOPPED"} / ${otaVehicleData.energyCurrent + "%"}`)
-
-            this.doorsLocked = otaVehicleData.doorsLocked === true ? true : false
-            this.engineRunning = otaVehicleData.engineRunning === true ? true : false
-            this.energyCurrent = otaVehicleData.energyCurrent
+            await this.otaKeyLogger({
+                severity: 'info',
+                action: 'onOtaVehicleDataUpdated',
+                code: 0,
+                message: `>> ${
+                    otaVehicleData.doorsLocked ? "LOCKED" : "UNLOCKED"
+                } / ${
+                    otaVehicleData.engineRunning ? "STARTED" : "STOPPED"
+                } / ${
+                    otaVehicleData.energyCurrent + "%"
+                }`
+            });
+            this.doorsLocked = otaVehicleData.doorsLocked === true ? true : false;
+            this.engineRunning = otaVehicleData.engineRunning === true ? true : false;
+            this.energyCurrent = otaVehicleData.energyCurrent;
         } catch (error) {
-            await this.trace("error", "onOtaVehicleDataUpdated", 1, `>> exception`, error)
+            await this.otaKeyLogger({
+                severity: 'error',
+                action: 'onOtaVehicleDataUpdated',
+                code: 1,
+                message: '>> exception',
+                description: error
+            });
         }
     }
 
@@ -273,10 +266,32 @@ class OTAKeyStore {
         }
 
         try {
-            this.keyAccessDeviceToken = keyAccessDeviceToken
-            await this.trace("debug", "openOTASession", 0, `-> this.ota.openSession(${this.keyAccessDeviceToken}, ${String(showError)}) start`)
+            this.keyAccessDeviceToken = keyAccessDeviceToken;
+            await this.otaKeyLogger({
+                severity: 'debug',
+                action: 'openOTASession',
+                code: 0,
+                message : `-> this.ota.openSession(${
+                    this.keyAccessDeviceToken
+                }, ${
+                    String(showError)
+                }) start`
+            });
+
             let result = await this.ota.openSession(keyAccessDeviceToken)
-            await this.trace("info", "openOTASession", 0, `<- this.ota.openSession(${this.keyAccessDeviceToken}, ${String(showError)}) return ${result}`, result)
+            await this.otaKeyLogger({
+                severity: 'info',
+                action: 'openOTASession',
+                code: 0,
+                message : `<- this.ota.openSession(${
+                    this.keyAccessDeviceToken
+                }, ${
+                    String(showError)
+                }) return ${
+                    result
+                }`,
+                description: result
+            });
             return result
         } catch (error) {
             await this.trace("error", "openOTASession", 1, `<- this.ota.openSession(${this.keyAccessDeviceToken}, ${String(showError)}) failed ${error}`, error)
