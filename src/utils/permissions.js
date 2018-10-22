@@ -1,5 +1,7 @@
 import Permissions from 'react-native-permissions';
 
+import logger, { codeTypes, severityTypes } from './userActionsLogger';
+
 export async function checkAndRequestLocationPermission() {
   return await checkAndRequestPermission('location');
 }
@@ -21,11 +23,23 @@ async function checkAndRequestPermission(type) {
     }
 
     const permRequest = await Permissions.request(type);
+    await logger(
+        severityTypes.INFO,
+        codeTypes.SUCCESS,
+        'requestPermission',
+        `Permission for "${type}" was asked.\n Result: "${permRequest}".`
+    );
 
     return permRequest === 'authorized';
   } catch (error) {
-    console.log('Permission manager error', error);
-    
+    await logger(
+        severityTypes.ERROR,
+        codeTypes.ERROR,
+        'requestPermission',
+        'Permission exception',
+        error
+    );
+
     return false;
   }
 }

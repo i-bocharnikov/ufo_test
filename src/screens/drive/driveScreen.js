@@ -34,19 +34,11 @@ class DriveScreen extends Component {
     }
 
     if (driveStore.hasRentalOngoing && registerStore.isUserRegistered) {
+      await checkAndRequestLocationPermission();
       this.driveSelected = true;
-      this.checkLocationPermission();
     }
 
     this.loadKeyForSelectedRental();
-  }
-
-  checkLocationPermission = async () => {
-    const status = await checkAndRequestLocationPermission();
-
-    if (status !== otaKeyStore.hasPermitToLocation) {
-      otaKeyStore.checkPermitToLocation(status);
-    }
   }
 
   renderRental({ item, index }) {
@@ -118,23 +110,35 @@ class DriveScreen extends Component {
   }
 
   doUnlockCar = async () => {
-    this.activityPending = true
-    if (!DeviceInfo.isEmulator() && !otaKeyStore.isConnected) {
-      await otaKeyStore.connect()
+    const permission = await checkAndRequestLocationPermission();
+    if (!permission) {
+      return;
     }
-    await otaKeyStore.unlockDoors(false)
-    await otaKeyStore.getVehicleData()
-    this.activityPending = false
+
+    this.activityPending = true;
+    if (!DeviceInfo.isEmulator() && !otaKeyStore.isConnected) {
+      await otaKeyStore.connect();
+    }
+
+    await otaKeyStore.unlockDoors(false);
+    await otaKeyStore.getVehicleData();
+    this.activityPending = false;
   }
 
   doLockCar = async () => {
-    this.activityPending = true
-    if (!DeviceInfo.isEmulator() && !otaKeyStore.isConnected) {
-      await otaKeyStore.connect()
+    const permission = await checkAndRequestLocationPermission();
+    if (!permission) {
+      return;
     }
-    await otaKeyStore.lockDoors(false)
-    await otaKeyStore.getVehicleData()
-    this.activityPending = false
+
+    this.activityPending = true;
+    if (!DeviceInfo.isEmulator() && !otaKeyStore.isConnected) {
+      await otaKeyStore.connect();
+    }
+
+    await otaKeyStore.lockDoors(false);
+    await otaKeyStore.getVehicleData();
+    this.activityPending = false;
   }
 
   doConnectCar = async () => {
@@ -217,15 +221,8 @@ class DriveScreen extends Component {
         );
 
         otaKeyStore.computeActionEnableKey(actions, this.doEnableKey);
-        /* if user didn't allow access to location set checkPermission fn */
-        otaKeyStore.computeActionUnlock(
-          actions,
-          otaKeyStore.hasPermitToLocation ? this.doUnlockCar : this.checkLocationPermission
-        );
-        otaKeyStore.computeActionLock(
-          actions,
-          otaKeyStore.hasPermitToLocation ? this.doLockCar : this.checkLocationPermission
-        );
+        otaKeyStore.computeActionUnlock(actions, this.doUnlockCar);
+        otaKeyStore.computeActionLock(actions, this.doLockCar);
 
         if (driveStore.rental
           && driveStore.rental.contract_signed

@@ -88,8 +88,6 @@ class OTAKeyStore {
 
     @persist isRegistered = false;
 
-    @persist @observable hasPermitToLocation = false;
-
     otaKeyLogger = async options => {
         const date = moment();
         const { severity, code, action, message, description } = options;
@@ -165,28 +163,6 @@ class OTAKeyStore {
             icon: icons.STOP,
             onPress
         });
-    }
-
-    @action
-    checkPermitToLocation = async status => {
-        try {
-            await this.otaKeyLogger({
-                severity: severityTypes.INFO,
-                action: 'checkPermitToLocation',
-                code: codeTypes.SUCCESS,
-                message: `permission for user location state was allowed`
-            });
-
-            this.hasPermitToLocation = status;
-        } catch (error) {
-            await this.otaKeyLogger({
-                severity: severityTypes.ERROR,
-                action: 'checkPermitToLocation',
-                code: codeTypes.ERROR,
-                message: '>> exception',
-                description: error
-            });
-        }
     }
 
     @action
