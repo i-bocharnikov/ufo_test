@@ -110,34 +110,34 @@ class DriveScreen extends Component {
   }
 
   doUnlockCar = async () => {
-    const permission = await checkAndRequestLocationPermission();
-    if (!permission) {
-      return;
-    }
-
     this.activityPending = true;
-    if (!DeviceInfo.isEmulator() && !otaKeyStore.isConnected) {
-      await otaKeyStore.connect();
+    const permission = await checkAndRequestLocationPermission();
+
+    if (permission) {
+      if (!DeviceInfo.isEmulator() && !otaKeyStore.isConnected) {
+        await otaKeyStore.connect();
+      }
+
+      await otaKeyStore.unlockDoors(false);
+      await otaKeyStore.getVehicleData();
     }
 
-    await otaKeyStore.unlockDoors(false);
-    await otaKeyStore.getVehicleData();
     this.activityPending = false;
   }
 
   doLockCar = async () => {
-    const permission = await checkAndRequestLocationPermission();
-    if (!permission) {
-      return;
-    }
-
     this.activityPending = true;
-    if (!DeviceInfo.isEmulator() && !otaKeyStore.isConnected) {
-      await otaKeyStore.connect();
+    const permission = await checkAndRequestLocationPermission();
+
+    if (permission) {
+      if (!DeviceInfo.isEmulator() && !otaKeyStore.isConnected) {
+        await otaKeyStore.connect();
+      }
+
+      await otaKeyStore.lockDoors(false);
+      await otaKeyStore.getVehicleData();
     }
 
-    await otaKeyStore.lockDoors(false);
-    await otaKeyStore.getVehicleData();
     this.activityPending = false;
   }
 
