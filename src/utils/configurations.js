@@ -48,8 +48,8 @@ const production = {
     UFO_PAYMENT_API_KEY: "pk_live_oi9sZTmKXYxcHmWzV7UMLboa"
 };
 
-const configurations = { ...production, theme: 'UFO' };;
-//const configurations = { ...uat, theme: 'UFO' };;
+//const configurations = { ...production, theme: 'UFO' };;
+const configurations = { ...uat, theme: 'UFO' };;
 //const configurations = { ...development, theme: 'UFO' };
 configurations.UFO_SERVER_PRIVATE_API_URL = configurations.UFO_SERVER_API_URL + "api/" + configurations.UFO_SERVER_API_VERSION + "/"
 configurations.UFO_SERVER_PUBLIC_API_URL = configurations.UFO_SERVER_API_URL + "public/api/" + configurations.UFO_SERVER_API_VERSION + "/"

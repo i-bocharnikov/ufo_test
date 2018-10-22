@@ -1,10 +1,14 @@
-import i18n from "i18next";
+import i18n from 'i18next';
 import LanguageDetector from 'i18next-react-native-language-detector'
 
 i18n.use(LanguageDetector).init({
     // we init with resources
     resources: {
         en: {
+            common: {
+                "okBtn": "OK",
+                "cancelBtn": "Cancel"
+            },
             activities: {
                 "internetAccessFailure": "Unexpected internet connectivity issues. Operating in offline/degraded mode",
                 "bluetoothAccessFailure": "Unexpected bluetooth connectivity issues. Operating in offline/degraded mode",
@@ -24,6 +28,8 @@ i18n.use(LanguageDetector).init({
                 "internetConnectionRequired": "This operation requires an internet connection",
                 "bluetoothConnectionRequired": "This operation requires a blootooth connection",
                 "unexpectedServerResponse": "Oops, this was not supposed to happen. Apologises for the inconvenience",
+                "noKey": "You currently have no key. Please ask support team to have one",
+                "stringNotMatch": "Wrong confirmation string. Try again"
             },
             icon: {
                 "reserve": "Reserve",
@@ -156,16 +162,19 @@ i18n.use(LanguageDetector).init({
             },
             term: {
                 "rentalAgreementTitle": "Sign the agreement",
-                "confirmContractSignatureConfirmationMessage": "By signing, I certify that I have read and fully accepted the terms and conditions."
-            },
-            error: {
-                "noKey": "You currently have no key. Please ask support team to have one",
+                "confirmContractDescription": "By signing, I certify that I have read and fully accepted the terms and conditions.",
+                "confirmContractTitle": "Enter \"{{strKey}}\" to confirm",
+                "confirmContractKeyString": "I agree",
             },
         },
         fr: {
             home: {
                 "welcome": "Bonjour {{user.reference}}, voici les prochaine actions?",
-            }
+            },
+            term: {
+                "confirmContractTitle": "Enter \"{{strKey}}\" to confirm",
+                "confirmContractKeyString": "Je suis d'accord",
+            },
         }
     },
     fallbackLng: "en",
