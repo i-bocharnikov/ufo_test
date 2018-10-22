@@ -33,8 +33,7 @@ class DriveScreen extends Component {
       otaKeyStore.register();
     }
 
-    //if (driveStore.hasRentalOngoing && registerStore.isUserRegistered) {
-    if (driveStore.hasRentalOngoing) {
+    if (driveStore.hasRentalOngoing && registerStore.isUserRegistered) {
       this.driveSelected = true;
       this.checkLocationPermission();
     }
@@ -44,7 +43,7 @@ class DriveScreen extends Component {
 
   checkLocationPermission = async () => {
     const status = await checkAndRequestLocationPermission();
-    
+
     if (status !== otaKeyStore.hasPermitToLocation) {
       otaKeyStore.checkPermitToLocation(status);
     }

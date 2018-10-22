@@ -43,7 +43,6 @@ export default async function userActionsLogger(
 
         if (isConnectionActive) {
             await postToApi('/user_experiences', payload);
-            console.log(payload);
         }
     } catch (error) {
         console.error('export of UserExperiences failed', error);
