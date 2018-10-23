@@ -86,9 +86,9 @@ i18n.use(LanguageDetector).init({
                 "overviewTitle": "Registration",
                 "phoneTitle": "Register - Phone",
                 "phoneNumberLabel": "Phone",
-                "phoneNumberInputLabel": "Your mobile phone number",
+                "phoneNumberInputLabel": "Phone number",
                 "emailTitle": "Register Email",
-                "emailInputLabel": "Your email address",
+                "emailInputLabel": "Email",
                 "emailLabel": "Email",
                 "addressTitle": "Register Address",
                 "addressInputLabel": "Your billing address",
@@ -111,7 +111,8 @@ i18n.use(LanguageDetector).init({
                 "cameraPermissionTitle": 'Permission to use camera',
                 "cameraPermissionMessage": 'We need your permission to use your phone\'s camera',
                 "disconnectConfirmationMessage": "Are you sure you want to disconnect?",
-
+                "idCardPickerLabel": "Passport\nor ID card",
+                "driveCardPickerLabel": "Driving\nLicense",
             },
             inspect: {
                 "initialInspectionTitle": "Initial inspection",

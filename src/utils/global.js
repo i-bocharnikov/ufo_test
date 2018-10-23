@@ -23,6 +23,11 @@ export const logos = {
     horizontal: THEME === THEME_UFO ? require("../assets/images/logos/UFOLOGO_H.png") : require("../assets/images/logos/ACLLOGO_H.png"),
 }
 
+export const images = {
+    photoPicker: require('./../assets/images/photo_picker.png'),
+    shareRef: require('./../assets/images/share_ref.png')
+};
+
 //TOCHECK
 
 //https://github.com/jondot/awesome-react-native#geolocation
@@ -69,6 +74,9 @@ export const colors = {
     ERROR: new Color.rgb(234, 80, 76), //new Color('#C8102E'),
     WARNING: new Color.rgb(255, 87, 34),
     WRONG: new Color('yellow'),
+
+    INPUT_BG: new Color.rgb(255, 255, 255),     // #FFF
+    TEXT_DARK: new Color.rgb(47, 47, 47),       // #2F2F2F
 }
 
 
@@ -108,7 +116,7 @@ export const screens = {
     RESERVE_DATE_AND_CAR: new Screen('DateAndCar', 'RESERVE', backgrounds.RESERVE001),
     RESERVE_PAYMENT: new Screen('Payment', 'RESERVE', backgrounds.RESERVE001),
     REGISTER: new Screen('Register', 'REGISTER', backgrounds.REGISTER001),
-    REGISTER_OVERVIEW: new Screen('Overview', 'REGISTER', backgrounds.REGISTER001),
+    REGISTER_OVERVIEW: new Screen('SignUp', 'REGISTER', backgrounds.DRIVE001),
     REGISTER_PHONE: new Screen('Phone', 'REGISTER', backgrounds.REGISTER001),
     REGISTER_EMAIL: new Screen('Email', 'REGISTER', backgrounds.REGISTER001),
     REGISTER_ADDRESS: new Screen('Address', 'REGISTER', backgrounds.REGISTER001),
@@ -258,3 +266,8 @@ export const errors = {
     BLUETOOTH_CONNECTION_REQUIRED: new UFOError('error:bluetoothConnectionRequired'),
     UNEXPECTED_SERVER_REPONSE: new UFOError('error:unexpectedServerResponse')
 }
+
+export const fonts = {
+    REGULAR: 'Sofia Pro',
+    LIGHT: 'SofiaProLight'
+};

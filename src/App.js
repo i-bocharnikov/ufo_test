@@ -26,7 +26,8 @@ import RentalAgreementScreen from './screens/term/rentalAgreementSreen'
 import ReserveLocationScreen from './screens/reserve/locationScreen'
 import ReserveDateAndCarScreen from './screens/reserve/dateAndCarScreen'
 import ReservePaymentScreen from './screens/reserve/paymentScreen'
-import RegisterOverviewScreen from './screens/register/overview'
+//import SignUpScreen from './screens/register/overview';
+import SignUpScreen from './screens/SignUp';
 import RegisterEmailScreen from './screens/register/email'
 import RegisterAddressScreen from './screens/register/address'
 import RegisterPhoneScreen from './screens/register/phone'
@@ -144,7 +145,7 @@ const SupportStack = createStackNavigator(
 
 const RegisterStack = createStackNavigator(
   {
-    Overview: { screen: RegisterOverviewScreen },
+    SignUp: { screen: SignUpScreen },
     Phone: { screen: RegisterPhoneScreen },
     Email: { screen: RegisterEmailScreen },
     Address: { screen: RegisterAddressScreen },
