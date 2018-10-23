@@ -1,54 +1,53 @@
-import React, { Component } from "react";
-import { translate } from "react-i18next";
+import React, { Component } from 'react';
+import { translate } from 'react-i18next';
 import { View, RefreshControl } from 'react-native'
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { observer } from "mobx-react";
-import { observable, action } from "mobx";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { observer } from 'mobx-react';
+import { observable, action, when } from 'mobx';
 import DeviceInfo from 'react-native-device-info';
 
-
-import UFOHeader from "../../components/header/UFOHeader";
-import UFOActionBar from "../../components/UFOActionBar";
+import UFOHeader from '../../components/header/UFOHeader';
+import UFOActionBar from '../../components/UFOActionBar';
 import { UFOContainer, UFOText, } from '../../components/common'
 import { screens, actionStyles, icons, colors, dims, backgrounds } from '../../utils/global'
 import { driveStore } from '../../stores'
 import otaKeyStore from '../../stores/otaKeyStore'
-import registerStore from "../../stores/registerStore"
-import UFOCard from "../../components/UFOCard";
-import UFOSlider from "../../components/UFOSlider";
-import DriveCard from "./driveCard";
-import appStore from "../../stores/appStore";
-import { confirm } from "../../utils/interaction";
-import { checkAndRequestLocationPermission } from "../../utils/permissions";
-
+import registerStore from '../../stores/registerStore'
+import UFOCard from '../../components/UFOCard';
+import UFOSlider from '../../components/UFOSlider';
+import DriveCard from './driveCard';
+import appStore from '../../stores/appStore';
+import { confirm } from '../../utils/interaction';
+import { checkAndRequestLocationPermission } from '../../utils/permissions';
 
 @observer
 class DriveScreen extends Component {
 
+  @observable driveSelected = false;
+  @observable returnSelected = false;
+  @observable refreshing = false;
+  @observable activityPending = false;
+
   async componentDidMount() {
     if (driveStore.hasRentalOngoing) {
-      otaKeyStore.register()
+      otaKeyStore.register();
     }
+
     if (driveStore.hasRentalOngoing && registerStore.isUserRegistered) {
-      this.driveSelected = true
-      await checkAndRequestLocationPermission()
+      await checkAndRequestLocationPermission();
+      this.driveSelected = true;
     }
-    this.loadKeyForSelectedRental()
+
+    this.loadKeyForSelectedRental();
   }
 
-  @observable driveSelected = false
-  @observable returnSelected = false
-  @observable refreshing = false
-  @observable activityPending = false
-
   renderRental({ item, index }) {
-
-    let rental = item
+    const rental = item;
 
     if (rental) {
       return <DriveCard rental={rental} />
     } else {
-      return (null)
+      return null;
     }
   }
 
@@ -111,23 +110,35 @@ class DriveScreen extends Component {
   }
 
   doUnlockCar = async () => {
-    this.activityPending = true
-    if (!DeviceInfo.isEmulator() && !otaKeyStore.isConnected) {
-      await otaKeyStore.connect()
+    this.activityPending = true;
+    const permission = await checkAndRequestLocationPermission();
+
+    if (permission) {
+      if (!DeviceInfo.isEmulator() && !otaKeyStore.isConnected) {
+        await otaKeyStore.connect();
+      }
+
+      await otaKeyStore.unlockDoors(false);
+      await otaKeyStore.getVehicleData();
     }
-    await otaKeyStore.unlockDoors(false)
-    await otaKeyStore.getVehicleData()
-    this.activityPending = false
+
+    this.activityPending = false;
   }
 
   doLockCar = async () => {
-    this.activityPending = true
-    if (!DeviceInfo.isEmulator() && !otaKeyStore.isConnected) {
-      await otaKeyStore.connect()
+    this.activityPending = true;
+    const permission = await checkAndRequestLocationPermission();
+
+    if (permission) {
+      if (!DeviceInfo.isEmulator() && !otaKeyStore.isConnected) {
+        await otaKeyStore.connect();
+      }
+
+      await otaKeyStore.lockDoors(false);
+      await otaKeyStore.getVehicleData();
     }
-    await otaKeyStore.lockDoors(false)
-    await otaKeyStore.getVehicleData()
-    this.activityPending = false
+
+    this.activityPending = false;
   }
 
   doConnectCar = async () => {
@@ -139,7 +150,7 @@ class DriveScreen extends Component {
 
 
   confirmCloseRental = async (t) => {
-    let keyMessage = driveStore.rental && driveStore.rental.car && driveStore.rental.car.has_key === true ? t('drive:confirmCloseRentalKeyMessageConfirmationMessage') : ""
+    let keyMessage = driveStore.rental && driveStore.rental.car && driveStore.rental.car.has_key === true? t('drive:confirmCloseRentalKeyMessageConfirmationMessage') : ''
     await confirm(t('global:confirmationTitle'), t('drive:confirmCloseRentalConfirmationMessage', { keyMessage: keyMessage }), async () => {
       this.doCloseRental()
     })
@@ -147,39 +158,117 @@ class DriveScreen extends Component {
 
   render() {
     const { t, navigation } = this.props;
-    let actions = []
+    let actions = [];
 
     if (!this.driveSelected) {
-      actions.push({ style: driveStore.hasRentalConfirmedOrOngoing ? actionStyles.DONE : actionStyles.TODO, icon: icons.RESERVE, onPress: () => navigation.navigate(screens.RESERVE.name) })
-      actions.push({ style: registerStore.isUserRegistered ? actionStyles.DONE : actionStyles.TODO, icon: registerStore.isUserRegistered ? icons.MY_DETAILS : icons.REGISTER, onPress: () => navigation.navigate(screens.REGISTER.name) })
-      actions.push({ style: driveStore.hasRentalOngoing ? actionStyles.TODO : actionStyles.ACTIVE, icon: icons.DRIVE, onPress: () => this.driveSelected = true })
-    } else if (this.driveSelected && !this.returnSelected) {
-      actions.push({ style: actionStyles.ACTIVE, icon: icons.BACK, onPress: () => this.driveSelected = false })
-      if (!driveStore.hasRentals) {
-        actions.push({ style: actionStyles.DISABLE, icon: icons.FIND, onPress: () => { } })
-        actions.push({ style: actionStyles.DISABLE, icon: icons.INSPECT, onPress: () => { } })
-        actions.push({ style: actionStyles.DISABLE, icon: icons.RENTAL_AGREEMENT, onPress: () => { } })
-      } else {
-        driveStore.computeActionFind(actions, () => this.props.navigation.navigate(screens.FIND.name))
-        driveStore.computeActionInitialInspect(actions, () => this.props.navigation.navigate(screens.INSPECT.name))
-        driveStore.computeActionStartContract(actions, () => this.props.navigation.navigate(screens.RENTAL_AGREEMENT.name))
+      /* initial home screen */
+      actions.push({
+        style: driveStore.hasRentalConfirmedOrOngoing ? actionStyles.DONE : actionStyles.TODO,
+        icon: icons.RESERVE,
+        onPress: () => navigation.navigate(screens.RESERVE.name)
+      });
+      actions.push({
+        style: registerStore.isUserRegistered ? actionStyles.DONE : actionStyles.TODO,
+        icon: registerStore.isUserRegistered ? icons.MY_DETAILS : icons.REGISTER,
+        onPress: () => navigation.navigate(screens.REGISTER.name)
+      });
+      actions.push({
+        style: driveStore.hasRentalOngoing ? actionStyles.TODO : actionStyles.ACTIVE,
+        icon: icons.DRIVE,
+        onPress: () => this.driveSelected = true
+      });
 
-        otaKeyStore.computeActionEnableKey(actions, this.doEnableKey)
-        //otaKeyStore.computeActionConnect(actions, this.doConnectCar)
-        otaKeyStore.computeActionUnlock(actions, this.doUnlockCar)
-        otaKeyStore.computeActionLock(actions, this.doLockCar)
-        if (driveStore.rental && driveStore.rental.contract_signed && !driveStore.rental.contract_ended) {
-          actions.push({ style: actionStyles.ACTIVE, icon: icons.RETURN, onPress: () => this.returnSelected = true })
+    } else if (this.driveSelected && !this.returnSelected) {
+      /* back btn on drive screen */
+      actions.push({
+        style: actionStyles.ACTIVE,
+        icon: icons.BACK,
+        onPress: () => this.driveSelected = false
+      });
+
+      if (!driveStore.hasRentals) {
+        /* we see this when rentals list is empty */
+        actions.push({
+          style: actionStyles.DISABLE,
+          icon: icons.FIND,
+          onPress: () => null
+        });
+        actions.push({
+          style: actionStyles.DISABLE,
+          icon: icons.INSPECT,
+          onPress: () => null
+        });
+        actions.push({
+          style: actionStyles.DISABLE,
+          icon: icons.RENTAL_AGREEMENT,
+          onPress: () => null
+        });
+
+      } else {
+        /* we add mixins to actions into stores */
+        /* it's really a bad approach and it block should be rewritten */
+        driveStore.computeActionFind(
+          actions,
+          () => this.props.navigation.navigate(screens.FIND.name)
+        );
+        driveStore.computeActionInitialInspect(
+          actions,
+          () => this.props.navigation.navigate(screens.INSPECT.name)
+        );
+        driveStore.computeActionStartContract(
+          actions,
+          () => this.props.navigation.navigate(screens.RENTAL_AGREEMENT.name)
+        );
+
+        otaKeyStore.computeActionEnableKey(actions, this.doEnableKey);
+        otaKeyStore.computeActionUnlock(actions, this.doUnlockCar);
+        otaKeyStore.computeActionLock(actions, this.doLockCar);
+
+        if (driveStore.rental
+          && driveStore.rental.contract_signed
+          && !driveStore.rental.contract_ended) {
+
+          /* return btn */
+          actions.push({
+            style: actionStyles.ACTIVE,
+            icon: icons.RETURN,
+            onPress: () => this.returnSelected = true
+          });
         }
       }
     } else {
-      actions.push({ style: actionStyles.ACTIVE, icon: icons.BACK, onPress: () => this.returnSelected = false })
-      driveStore.computeActionReturn(actions, () => this.props.navigation.navigate(screens.RETURN.name))
-      driveStore.computeActionFinalInspect(actions, () => this.props.navigation.navigate(screens.INSPECT.name))
-      driveStore.computeActionCloseRental(actions, () => this.confirmCloseRental(t))
+      /* we see this after press "return" btn */
+      actions.push({
+        style: actionStyles.ACTIVE,
+        icon: icons.BACK,
+        onPress: () => this.returnSelected = false
+      });
+      driveStore.computeActionReturn(
+        actions,
+        () => this.props.navigation.navigate(screens.RETURN.name)
+      );
+      driveStore.computeActionFinalInspect(
+        actions,
+        () => this.props.navigation.navigate(screens.INSPECT.name)
+      );
+      driveStore.computeActionCloseRental(
+        actions,
+        () => this.confirmCloseRental(t)
+      );
     }
-    let _RefreshControl = (<RefreshControl refreshing={this.refreshing} onRefresh={this.refreshRental} />)
-    let background = this.driveSelected ? this.returnSelected ? backgrounds.RETURN001 : backgrounds.DRIVE001 : backgrounds.HOME002
+
+    const _RefreshControl = (
+      <RefreshControl
+        refreshing={this.refreshing}
+        onRefresh={this.refreshRental}
+      />
+    );
+
+    const background = this.driveSelected
+      ? this.returnSelected
+        ? backgrounds.RETURN001
+        : backgrounds.DRIVE001
+      : backgrounds.HOME002;
 
     return (
       <UFOContainer image={background}>
@@ -206,12 +295,11 @@ class DriveScreen extends Component {
             </View>
           )}
 
-        </KeyboardAwareScrollView >
+        </KeyboardAwareScrollView>
         <UFOActionBar actions={actions} activityPending={this.activityPending} />
-      </UFOContainer >
+      </UFOContainer>
     );
   }
 }
 
-export default translate("translations")(DriveScreen);
-
+export default translate('translations')(DriveScreen);

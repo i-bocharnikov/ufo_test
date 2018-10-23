@@ -165,7 +165,6 @@ class OTAKeyStore {
         });
     }
 
-
     @action
     onOtaVehicleDataUpdated = async otaVehicleData => {
         try {
