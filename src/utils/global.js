@@ -77,6 +77,7 @@ export const colors = {
 
     INPUT_BG: new Color.rgb(255, 255, 255),     // #FFF
     TEXT_DARK: new Color.rgb(47, 47, 47),       // #2F2F2F
+    SUCCESS: new Color.rgb(64, 184, 68),        // #40B844
 }
 
 

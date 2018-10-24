@@ -8,7 +8,7 @@ export default StyleSheet.create({
   bodyWrapper: {
     flex: 1,
     paddingHorizontal: 24,
-    marginTop: 36,
+    marginTop: 32,
   },
 
   inputBlock: {
@@ -24,7 +24,7 @@ export default StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     backgroundColor: colors.INPUT_BG,
-    paddingVertical: 24
+    paddingVertical: 20
   },
 
   leftGap: {
@@ -59,8 +59,43 @@ export default StyleSheet.create({
   registrationStatus: {
     fontFamily: fonts.REGULAR,
     fontSize: 14,
-    lineHeight: 36,
+    lineHeight: 18,
+    paddingVertical: 10,
     textAlign: 'center',
     backgroundColor: colors.INPUT_BG
+  },
+
+  referalBlock: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: 58,
+    paddingHorizontal: 24,
+    backgroundColor: colors.INPUT_BG,
+  },
+
+  referalLabel: {
+    fontSize: 17,
+    fontFamily: fonts.LIGHT,
+    flex: 1,
+  },
+
+  referalImg: {
+    height: 35,
+    width: 28,
+    resizeMode: 'contain',
+    marginLeft: 8,
+  },
+
+  inputIcon: {
+    fontSize: 24,
+    marginLeft: 8,
+    color: colors.SUCCESS
+  },
+
+  cardIcon: {
+    position: 'absolute',
+    marginLeft: 0,
+    top: 8,
+    right: 12,
   }
 });

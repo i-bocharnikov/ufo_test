@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
-import { observable } from 'mobx';
+import { View, Text, Image, TouchableOpacity, Share, Platform } from 'react-native';
 import { observer } from 'mobx-react';
 import { translate } from 'react-i18next';
 import _ from 'lodash';
@@ -13,6 +12,7 @@ import {
   UFOContainer_re,
   UFOTextInput_re,
   UFOImage,
+  UFOIcon
 } from './../../components/common';
 import {
   screens,
@@ -24,11 +24,17 @@ import styles from './styles';
 
 @observer
 class SignUpScreen extends Component {
-
-  @observable email = registerStore.user.email;
-
   componentDidMount() {
-    this.onLoad();
+    this.initLoad();
+  }
+
+  renderIcon(extraStyles) {
+    return (
+      <UFOIcon
+        icon={icons.VALIDATE}
+        style={[styles.inputIcon, extraStyles]}
+      />
+    );
   }
 
   renderIdCardBlock() {
@@ -45,6 +51,7 @@ class SignUpScreen extends Component {
           source={{uri: registerStore.identificationBackDocument}}
           style={styles.cardThumb}
         />
+        {this.renderIcon(styles.cardIcon)}
       </Fragment>
     ) : (
       <Image
@@ -68,6 +75,7 @@ class SignUpScreen extends Component {
           source={{uri: registerStore.driverLicenceBackDocument}}
           style={styles.cardThumb}
         />
+        {this.renderIcon(styles.cardIcon)}
       </Fragment>
     ) : (
       <Image
@@ -79,6 +87,11 @@ class SignUpScreen extends Component {
 
   render() {
     const { t, navigation } = this.props;
+    const refCode = registerStore.user.referral_code;
+    const hasReferalCode = registerStore.isUserRegistered && Boolean(refCode);
+    const hasPhone = Boolean(registerStore.user.phone_number);
+    const hasEmail = Boolean(registerStore.user.email);
+    const hasAddress = Boolean(registerStore.user.address);
 
     return (
       <UFOContainer_re image={screens.REGISTER_OVERVIEW.backgroundImage}>
@@ -92,20 +105,26 @@ class SignUpScreen extends Component {
           <UFOTextInput_re
             placeholder={t('register:phoneNumberInputLabel')}
             defaultValue={registerStore.user.phone_number}
-            style={styles.inputBlock}
+            wrapperStyle={styles.inputBlock}
+            onPress={this.navToPhoneScreen}
+            isCompleted={hasPhone}
+            IconComponent={hasPhone ? this.renderIcon() : null}
           />
           <UFOTextInput_re
             placeholder={t('register:emailInputLabel')}
-            keyboardType="email-address"
-            defaultValue={this.email}
-            onChangeText={value => (this.email = value)}
-            autoCorrect={false}
-            autoCapitalize="none"
-            style={styles.inputBlock}
+            defaultValue={registerStore.user.email}
+            wrapperStyle={styles.inputBlock}
+            onPress={this.navToEmailScreen}
+            isCompleted={hasEmail}
+            IconComponent={hasEmail ? this.renderIcon() : null}
           />
           <UFOTextInput_re
-            placeholder="Billing address"
-            style={styles.inputBlock}
+            placeholder={t('register:addressLabel')}
+            defaultValue={registerStore.user.address}
+            wrapperStyle={styles.inputBlock}
+            onPress={this.navToAddressScreen}
+            isCompleted={hasAddress}
+            IconComponent={hasAddress ? this.renderIcon() : null}
           />
           <View style={styles.cardsBlock}>
             <TouchableOpacity
@@ -117,6 +136,7 @@ class SignUpScreen extends Component {
               <Text style={styles.cardPickerLabel}>
                 {t('register:idCardPickerLabel')}
               </Text>
+              
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.cardWrapper, styles.leftGap]}
@@ -129,9 +149,25 @@ class SignUpScreen extends Component {
               </Text>
             </TouchableOpacity>
           </View>
-          <Text style={[styles.registrationStatus, styles.topGap]}>
-            {registerStore.user.registration_message}
-          </Text>
+          {hasReferalCode ? (
+            <TouchableOpacity
+              style={[styles.referalBlock, styles.topGap]}
+              onPress={this.shareRefCode}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.referalLabel}>
+                {t('register:referalBlock', {code: refCode})}
+              </Text>
+              <Image
+                source={images.shareRef}
+                style={styles.referalImg}
+              />
+            </TouchableOpacity>
+          ) : (
+            <Text style={[styles.registrationStatus, styles.topGap]}>
+              {registerStore.user.registration_message}
+            </Text>
+          )}
         </View>
         <UFOActionBar actions={this.compileActions()} />
       </UFOContainer_re>
@@ -170,7 +206,19 @@ class SignUpScreen extends Component {
     }
 
     return actions;
-  }
+  };
+
+  navToPhoneScreen = () => {
+    this.props.navigation.navigate(screens.REGISTER_PHONE.name);
+  };
+
+  navToEmailScreen = () => {
+    this.props.navigation.navigate(screens.REGISTER_EMAIL.name);
+  };
+
+  navToAddressScreen = () => {
+    this.props.navigation.navigate(screens.REGISTER_ADDRESS.name);
+  };
 
   navToIdCardScreen = () => {
     this.props.navigation.navigate(
@@ -180,7 +228,7 @@ class SignUpScreen extends Component {
         backImageUrl: registerStore.identificationBackDocument
       }
     );
-  }
+  };
 
   navToDriverCardScreen = () => {
     this.props.navigation.navigate(
@@ -190,15 +238,27 @@ class SignUpScreen extends Component {
         backImageUrl: registerStore.driverLicenceBackDocument
       }
     );
-  }
+  };
 
-  onLoad = async () => {
-    /* previous functionality */
+  shareRefCode = () => {
+    const content = {message: registerStore.user.referral_code || ''};
+    const options = {};
+
+    if (Platform.OS === 'android') {
+      options.dialogTitle = this.props.t('register:shareDialogTitle');
+    }
+
+    Share.share(content, options);
+  };
+
+  initLoad = async () => {
     /* handle id card front */
     registerStore.user.identificationFrontDocument = 'loading';
-
     if (registerStore.user.identification_scan_front_side) {
-      registerStore.identificationFrontDocument = 'data:image/png;base64,' + (await registerStore.downloadDocument(registerStore.user.identification_scan_front_side.reference));
+
+      const imgRef = registerStore.user.identification_scan_front_side.reference;
+      const imgData = await registerStore.downloadDocument(imgRef);
+      registerStore.identificationFrontDocument = 'data:image/png;base64,' + imgData;
 
     } else {
       registerStore.identificationFrontDocument = null;
@@ -206,9 +266,11 @@ class SignUpScreen extends Component {
 
     /* handle id card back */
     registerStore.user.identificationBackDocument = 'loading';
-
     if (registerStore.user.identification_scan_back_side) {
-      registerStore.identificationBackDocument = 'data:image/png;base64,' + (await registerStore.downloadDocument(registerStore.user.identification_scan_back_side.reference));
+
+      const imgRef = registerStore.user.identification_scan_back_side.reference;
+      const imgData = await registerStore.downloadDocument(imgRef);
+      registerStore.identificationBackDocument = 'data:image/png;base64,' + imgData;
 
     } else {
       registerStore.identificationBackDocument = null;
@@ -216,9 +278,10 @@ class SignUpScreen extends Component {
 
     /* handle drive card front */
     registerStore.user.driverLicenceFrontDocument = 'loading';
-
     if (registerStore.user.driver_licence_scan_front_side) {
-      registerStore.driverLicenceFrontDocument = 'data:image/png;base64,' + (await registerStore.downloadDocument(registerStore.user.driver_licence_scan_front_side.reference));
+      const imgRef = registerStore.user.driver_licence_scan_front_side.reference;
+      const imgData = await registerStore.downloadDocument(imgRef);
+      registerStore.driverLicenceFrontDocument = 'data:image/png;base64,' + imgData;
 
     } else {
       registerStore.driverLicenceFrontDocument = null;
@@ -226,14 +289,15 @@ class SignUpScreen extends Component {
 
     /* handle drive card back */
     registerStore.user.driverLicenceBackDocument = 'loading';
-
     if (registerStore.user.driver_licence_scan_back_side) {
-      registerStore.driverLicenceBackDocument = 'data:image/png;base64,' + (await registerStore.downloadDocument(registerStore.user.driver_licence_scan_back_side.reference));
+      const imgRef = registerStore.user.driver_licence_scan_back_side.reference;
+      const imgData = await registerStore.downloadDocument(imgRef);
+      registerStore.driverLicenceBackDocument = 'data:image/png;base64,' + imgData;
 
     } else {
       registerStore.driverLicenceBackDocument = null;
     }
-  }
+  };
 }
 
 export default translate('translations')(SignUpScreen);

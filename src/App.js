@@ -28,11 +28,11 @@ import ReserveDateAndCarScreen from './screens/reserve/dateAndCarScreen'
 import ReservePaymentScreen from './screens/reserve/paymentScreen'
 //import SignUpScreen from './screens/register/overview';
 import SignUpScreen from './screens/SignUp';
-import RegisterEmailScreen from './screens/register/email'
-import RegisterAddressScreen from './screens/register/address'
-import RegisterPhoneScreen from './screens/register/phone'
-import RegisterIdentificationScreen from './screens/register/identification'
-import RegisterDriverLicenceScreen from './screens/register/driverLicence'
+import RegisterPhoneScreen from './screens/SignUp/PhoneEditor';
+import RegisterEmailScreen from './screens/SignUp/EmailEditor';
+import RegisterAddressScreen from './screens/SignUp/AddressEditor';
+import RegisterIdentificationScreen from './screens/SignUp/CardIdEditor';
+import RegisterDriverLicenceScreen from './screens/SignUp/DriverCardEditor';
 
 import getTheme from '../native-base-theme/components';
 import { screens, colors, backgrounds } from './utils/global'

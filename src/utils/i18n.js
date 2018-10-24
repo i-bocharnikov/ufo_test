@@ -113,6 +113,8 @@ i18n.use(LanguageDetector).init({
                 "disconnectConfirmationMessage": "Are you sure you want to disconnect?",
                 "idCardPickerLabel": "Passport\nor ID card",
                 "driveCardPickerLabel": "Driving\nLicense",
+                "shareDialogTitle": "Share referal code",
+                "referalBlock": "Referal Code {{code}}"
             },
             inspect: {
                 "initialInspectionTitle": "Initial inspection",

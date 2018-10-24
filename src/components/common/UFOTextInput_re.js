@@ -1,38 +1,69 @@
 import React, { Component } from 'react';
-import { StyleSheet, TextInput, View } from 'react-native';
+import { StyleSheet, TextInput, View, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 
-import { colors, fonts } from './../../utils/global';
+import { UFOIcon } from './index.js';
+import { colors, fonts, icons } from './../../utils/global';
+
+export const ufoInputStyles = {
+  height: 50,
+  fontSize: 17,
+  fontFamily: fonts.LIGHT,
+  color: colors.TEXT_DARK,
+  backgroundColor: colors.INPUT_BG
+};
 
 const ownStyles = StyleSheet.create({
   input: {
-    width: '100%',
-    height: 55,
-    backgroundColor: colors.INPUT_BG,
-    paddingHorizontal: 24,
-    fontSize: 17,
-    fontFamily: fonts.LIGHT,
-    color: colors.TEXT_DARK,
+    flex: 1,
+    ...ufoInputStyles,
+    backgroundColor: 'transparent'
   },
+
+  wrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingLeft: 20,
+    paddingRight: 12,
+    backgroundColor: colors.INPUT_BG
+  }
 });
 
 export default class UFOTextInput extends Component {
   render() {
-    const { style, ...restInputProps } = this.props;
+    const {
+      onPress,
+      isCompleted,
+      IconComponent,
+      style,
+      wrapperStyle,
+      ...restInputProps
+    } = this.props;
+    const isClickable = typeof onPress === 'function';
 
     return (
-      <View>
+      <TouchableOpacity
+        onPress={isClickable ? onPress : null}
+        style={[ownStyles.wrapper, wrapperStyle]}
+        activeOpacity={isClickable ? 0.8 : 1}
+      >
         <TextInput
           style={[ownStyles.input, style]}
           placeholderColor={colors.DISABLE}
           underlineColorAndroid="transparent"
+          editable={!isClickable}
           { ...restInputProps }
         />
-      </View>
+        {IconComponent}
+      </TouchableOpacity>
     )
   }
 }
 
 UFOTextInput.propTypes = {
+  wrapperStyle: PropTypes.any,
   style: PropTypes.any,
+  onPress: PropTypes.func,
+  isCompleted: PropTypes.bool,
+  IconComponent: PropTypes.object,
 };
