@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { observer } from 'mobx-react';
 import { observable, action } from 'mobx';
 import { translate } from 'react-i18next';
@@ -23,6 +23,31 @@ import registerStore from './../../stores/registerStore';
 import styles from './styles';
 
 const GOOGLE_API = 'AIzaSyBZ11c3GCMMBlSpF3H-4DK6PioxJjaFPe0';
+const googleInputStyles = StyleSheet.create({
+  container: {
+    flex: 0
+  },
+  textInputContainer: {
+    height: 'auto',
+    backgroundColor: 'transparent',
+    marginLeft: 24,
+    marginRight: 24,
+    marginTop: 32,
+    borderTopWidth: 0,
+  },
+  textInput: {
+    ...ufoInputStyles,
+    marginLeft: 0,
+    marginRight: 0,
+    borderRadius: 0,
+  },
+  separator: {
+    backgroundColor: 'transparent'
+  },
+  row: {
+    backgroundColor: colors.INPUT_BG
+  }
+});
 
 @observer
 class AddressScreen extends Component {
@@ -60,22 +85,11 @@ class AddressScreen extends Component {
             returnKeyType="default"
             fetchDetails={true}
             query={{
-              key: GOOGLE_API,
+              key: GOOGLE_API
             }}
             currentLocation={false}
             debounce={200}
-            styles={{
-              container: {
-                
-              },
-              textInputContainer: {
-
-              },
-              textInput: {
-                ...ufoInputStyles,
-                borderRadius: 0
-              },
-            }}
+            styles={googleInputStyles}
           />
         <UFOActionBar actions={this.compileActions()} />
       </UFOContainer_re>

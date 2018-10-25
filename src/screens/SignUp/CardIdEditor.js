@@ -116,16 +116,28 @@ class IdentificationScreen extends Component {
     let type = this.frontImageUrl && this.backImageUrl ? "two_side" : "one_side"
     if (this.frontImageUrl) {
       let document = await registerStore.uploadDocument("identification", type, "id", "front_side", this.frontImageUrl)
+
       if (document && document.reference) {
-        registerStore.user.identification_front_side_reference = document.reference
-        registerStore.identificationFrontDocument = 'data:image/png;base64,' + (await registerStore.downloadDocument(document.reference));
+
+        registerStore.user.identification_front_side_reference = document.reference;
+
+        const imgData = await registerStore.downloadDocument(document.reference);
+
+        registerStore.identificationFrontDocument = 'data:image/png;base64,' + imgData;
+
       }
     }
     if (this.backImageUrl) {
       let document = await registerStore.uploadDocument("identification", type, "id", "back_side", this.backImageUrl)
+
       if (document && document.reference) {
+
         registerStore.user.identification_back_side_reference = document.reference
-        registerStore.identificationBackDocument = 'data:image/png;base64,' + (await registerStore.downloadDocument(document.reference));
+
+        const imgData = await registerStore.downloadDocument(document.reference);
+
+        registerStore.identificationBackDocument = 'data:image/png;base64,' + imgData;
+
       }
     }
     if (await registerStore.save()) {

@@ -116,14 +116,16 @@ class DriverLicenceScreen extends Component {
       let document = await registerStore.uploadDocument("driver_licence", type, "driver_licence", "front_side", this.frontImageUrl)
       if (document && document.reference) {
         registerStore.user.driver_licence_front_side_reference = document.reference
-        registerStore.driverLicenceFrontDocument = 'data:image/png;base64,' + (await registerStore.downloadDocument(document.reference));
+        const imgData = await registerStore.downloadDocument(document.reference);
+        registerStore.driverLicenceFrontDocument = 'data:image/png;base64,' + imgData;
       }
     }
     if (this.backImageUrl) {
       let document = await registerStore.uploadDocument("driver_licence", type, "driver_licence", "back_side", this.backImageUrl)
       if (document && document.reference) {
         registerStore.user.driver_licence_back_side_reference = document.reference
-        registerStore.driverLicenceBackDocument = 'data:image/png;base64,' + (await registerStore.downloadDocument(document.reference));
+        const imgData = await registerStore.downloadDocument(document.reference);
+        registerStore.driverLicenceBackDocument = 'data:image/png;base64,' + imgData;
       }
     }
     if (await registerStore.save()) {
