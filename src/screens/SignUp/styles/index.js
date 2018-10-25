@@ -97,5 +97,25 @@ export default StyleSheet.create({
     marginLeft: 0,
     top: 8,
     right: 12,
+  },
+
+  cardsWrapper: {
+    flex: 1,
+    paddingHorizontal: 12,
+    marginTop: 24,
+    marginBottom: 100
+  },
+
+  cardsContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+
+  cardCameraLabel: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontFamily: fonts.LIGHT,
   }
 });

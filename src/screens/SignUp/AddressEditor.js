@@ -45,7 +45,9 @@ const googleInputStyles = StyleSheet.create({
     backgroundColor: 'transparent'
   },
   row: {
-    backgroundColor: colors.INPUT_BG
+    backgroundColor: colors.INPUT_BG,
+    marginLeft: 24,
+    marginRight: 24
   }
 });
 
@@ -62,8 +64,8 @@ class AddressScreen extends Component {
         <UFOHeader
           t={t}
           navigation={navigation}
-          title={t('register:overviewTitle', {user: registerStore.user})}
-          currentScreen={screens.REGISTER_OVERVIEW}
+          title={t('register:addressTitle', {user: registerStore.user})}
+          currentScreen={screens.REGISTER_ADDRESS}
         />
           <GooglePlacesAutocomplete
             getDefaultValue={() => registerStore.user.address || ''}

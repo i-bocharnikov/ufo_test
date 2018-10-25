@@ -27,8 +27,8 @@ class EmailScreen extends Component {
         <UFOHeader
           t={t}
           navigation={navigation}
-          title={t('register:overviewTitle', {user: registerStore.user})}
-          currentScreen={screens.REGISTER_OVERVIEW}
+          title={t('register:emailTitle', {user: registerStore.user})}
+          currentScreen={screens.REGISTER_EMAIL}
         />
         <View style={styles.bodyWrapper}>
           <UFOTextInput_re

@@ -38,8 +38,8 @@ class PhoneScreen extends Component {
         <UFOHeader
           t={t}
           navigation={navigation}
-          title={t('register:overviewTitle', {user: registerStore.user})}
-          currentScreen={screens.REGISTER_OVERVIEW}
+          title={t('register:phoneTitle', {user: registerStore.user})}
+          currentScreen={screens.REGISTER_PHONE}
         />
         <View style={styles.bodyWrapper}>
         {!this.activityPending && registerStore.isConnected && (
@@ -48,7 +48,6 @@ class PhoneScreen extends Component {
             editable={false}
           />
         )}
-
         {!this.activityPending && !registerStore.isConnected && this.isCodeRequested && (
           <UFOTextInput_re
             autoFocus={true}

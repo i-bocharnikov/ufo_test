@@ -38,8 +38,7 @@ class SignUpScreen extends Component {
   }
 
   renderIdCardBlock() {
-    const isFilled = Boolean(registerStore.identificationFrontDocument)
-      && Boolean(registerStore.identificationBackDocument);
+    const isFilled = registerStore.identificationFrontDocument && registerStore.identificationBackDocument;
 
     return isFilled ? (
       <Fragment>
@@ -62,8 +61,8 @@ class SignUpScreen extends Component {
   }
 
   renderDriverCardBlock() {
-    const isFilled = Boolean(registerStore.driverLicenceFrontDocument)
-      && Boolean(registerStore.driverLicenceBackDocument);
+    const isFilled = registerStore.driverLicenceFrontDocument
+      && registerStore.driverLicenceBackDocument;
 
     return isFilled ? (
       <Fragment>
@@ -258,7 +257,9 @@ class SignUpScreen extends Component {
 
       const imgRef = registerStore.user.identification_scan_front_side.reference;
       const imgData = await registerStore.downloadDocument(imgRef);
-      registerStore.identificationFrontDocument = 'data:image/png;base64,' + imgData;
+      registerStore.identificationFrontDocument = imgData
+        ? `data:image/png;base64,${imgData}`
+        : null;
 
     } else {
       registerStore.identificationFrontDocument = null;
@@ -270,7 +271,9 @@ class SignUpScreen extends Component {
 
       const imgRef = registerStore.user.identification_scan_back_side.reference;
       const imgData = await registerStore.downloadDocument(imgRef);
-      registerStore.identificationBackDocument = 'data:image/png;base64,' + imgData;
+      registerStore.identificationBackDocument = imgData
+        ? `data:image/png;base64,${imgData}`
+        : null;
 
     } else {
       registerStore.identificationBackDocument = null;
@@ -281,7 +284,9 @@ class SignUpScreen extends Component {
     if (registerStore.user.driver_licence_scan_front_side) {
       const imgRef = registerStore.user.driver_licence_scan_front_side.reference;
       const imgData = await registerStore.downloadDocument(imgRef);
-      registerStore.driverLicenceFrontDocument = 'data:image/png;base64,' + imgData;
+      registerStore.driverLicenceFrontDocument = imgData
+        ? `data:image/png;base64,${imgData}`
+        : null;
 
     } else {
       registerStore.driverLicenceFrontDocument = null;
@@ -292,7 +297,9 @@ class SignUpScreen extends Component {
     if (registerStore.user.driver_licence_scan_back_side) {
       const imgRef = registerStore.user.driver_licence_scan_back_side.reference;
       const imgData = await registerStore.downloadDocument(imgRef);
-      registerStore.driverLicenceBackDocument = 'data:image/png;base64,' + imgData;
+      registerStore.driverLicenceBackDocument = imgData
+        ? `data:image/png;base64,${imgData}`
+        : null;
 
     } else {
       registerStore.driverLicenceBackDocument = null;
