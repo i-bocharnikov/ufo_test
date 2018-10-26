@@ -29,7 +29,8 @@ i18n.use(LanguageDetector).init({
                 "bluetoothConnectionRequired": "This operation requires a blootooth connection",
                 "unexpectedServerResponse": "Oops, this was not supposed to happen. Apologises for the inconvenience",
                 "noKey": "You currently have no key. Please ask support team to have one",
-                "stringNotMatch": "Wrong confirmation string. Try again"
+                "stringNotMatch": "Wrong confirmation string. Try again",
+                "unknown": "Unknown Error",
             },
             icon: {
                 "reserve": "Reserve",
@@ -86,9 +87,9 @@ i18n.use(LanguageDetector).init({
                 "overviewTitle": "Registration",
                 "phoneTitle": "Register - Phone",
                 "phoneNumberLabel": "Phone",
-                "phoneNumberInputLabel": "Your mobile phone number",
+                "phoneNumberInputLabel": "Phone number",
                 "emailTitle": "Register Email",
-                "emailInputLabel": "Your email address",
+                "emailInputLabel": "Email",
                 "emailLabel": "Email",
                 "addressTitle": "Register Address",
                 "addressInputLabel": "Your billing address",
@@ -111,7 +112,10 @@ i18n.use(LanguageDetector).init({
                 "cameraPermissionTitle": 'Permission to use camera',
                 "cameraPermissionMessage": 'We need your permission to use your phone\'s camera',
                 "disconnectConfirmationMessage": "Are you sure you want to disconnect?",
-
+                "idCardPickerLabel": "Passport\nor ID card",
+                "driveCardPickerLabel": "Driving\nLicense",
+                "shareDialogTitle": "Share referal code",
+                "referalBlock": "Referal Code {{code}}"
             },
             inspect: {
                 "initialInspectionTitle": "Initial inspection",

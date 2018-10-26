@@ -26,12 +26,13 @@ import RentalAgreementScreen from './screens/term/rentalAgreementSreen'
 import ReserveLocationScreen from './screens/reserve/locationScreen'
 import ReserveDateAndCarScreen from './screens/reserve/dateAndCarScreen'
 import ReservePaymentScreen from './screens/reserve/paymentScreen'
-import RegisterOverviewScreen from './screens/register/overview'
-import RegisterEmailScreen from './screens/register/email'
-import RegisterAddressScreen from './screens/register/address'
-import RegisterPhoneScreen from './screens/register/phone'
-import RegisterIdentificationScreen from './screens/register/identification'
-import RegisterDriverLicenceScreen from './screens/register/driverLicence'
+//import SignUpScreen from './screens/register/overview';
+import SignUpScreen from './screens/SignUp';
+import RegisterPhoneScreen from './screens/SignUp/PhoneEditor';
+import RegisterEmailScreen from './screens/SignUp/EmailEditor';
+import RegisterAddressScreen from './screens/SignUp/AddressEditor';
+import RegisterIdentificationScreen from './screens/SignUp/CardIdEditor';
+import RegisterDriverLicenceScreen from './screens/SignUp/DriverCardEditor';
 
 import getTheme from '../native-base-theme/components';
 import { screens, colors, backgrounds } from './utils/global'
@@ -144,7 +145,7 @@ const SupportStack = createStackNavigator(
 
 const RegisterStack = createStackNavigator(
   {
-    Overview: { screen: RegisterOverviewScreen },
+    SignUp: { screen: SignUpScreen },
     Phone: { screen: RegisterPhoneScreen },
     Email: { screen: RegisterEmailScreen },
     Address: { screen: RegisterAddressScreen },

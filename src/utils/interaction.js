@@ -14,9 +14,9 @@ export async function confirm(title = '', message='', action) {
   );
 }
 
-export async function showToastError(key, message = '') {
+export async function showToastError(key, error = '') {
+  const message = typeof error === 'string' ? error : i18n.t('error:unknown');
   await Vibration.vibrate();
-  // TODO TRANSLATION with key
   await ToastAndroid.showWithGravity(message, ToastAndroid.LONG, ToastAndroid.TOP);
 }
 
