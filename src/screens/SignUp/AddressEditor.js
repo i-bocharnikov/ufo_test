@@ -25,15 +25,17 @@ import styles from './styles';
 const GOOGLE_API = 'AIzaSyBZ11c3GCMMBlSpF3H-4DK6PioxJjaFPe0';
 const googleInputStyles = StyleSheet.create({
   container: {
-    flex: 0
+    flex: 0,
+    marginLeft: 24,
+    marginRight: 24
   },
   textInputContainer: {
     height: 'auto',
     backgroundColor: 'transparent',
-    marginLeft: 24,
-    marginRight: 24,
+    marginLeft: 0,
+    marginRight: 0,
     marginTop: 32,
-    borderTopWidth: 0,
+    borderTopWidth: 0
   },
   textInput: {
     ...ufoInputStyles,
@@ -46,8 +48,8 @@ const googleInputStyles = StyleSheet.create({
   },
   row: {
     backgroundColor: colors.INPUT_BG,
-    marginLeft: 24,
-    marginRight: 24
+    marginLeft: 0,
+    marginRight: 0
   }
 });
 
@@ -57,7 +59,7 @@ class AddressScreen extends Component {
   @observable addressValue = registerStore.user.address;
 
   render() {
-    const { t, navigation } = this.props;
+    const { t, i18n, navigation } = this.props;
 
     return (
       <UFOContainer_re image={screens.REGISTER_OVERVIEW.backgroundImage}>
@@ -87,7 +89,8 @@ class AddressScreen extends Component {
             returnKeyType="default"
             fetchDetails={true}
             query={{
-              key: GOOGLE_API
+              key: GOOGLE_API,
+              language: i18n.language
             }}
             currentLocation={false}
             debounce={200}

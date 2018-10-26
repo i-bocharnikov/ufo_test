@@ -15,7 +15,7 @@ export async function confirm(title = '', message='', action) {
 }
 
 export async function showToastError(key, error = '') {
-  const message = typeof error === 'string' ? error : 'Unknown Error';
+  const message = typeof error === 'string' ? error : i18n.t('error:unknown');
   await Vibration.vibrate();
   await ToastAndroid.showWithGravity(message, ToastAndroid.LONG, ToastAndroid.TOP);
 }

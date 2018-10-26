@@ -29,7 +29,8 @@ i18n.use(LanguageDetector).init({
                 "bluetoothConnectionRequired": "This operation requires a blootooth connection",
                 "unexpectedServerResponse": "Oops, this was not supposed to happen. Apologises for the inconvenience",
                 "noKey": "You currently have no key. Please ask support team to have one",
-                "stringNotMatch": "Wrong confirmation string. Try again"
+                "stringNotMatch": "Wrong confirmation string. Try again",
+                "unknown": "Unknown Error",
             },
             icon: {
                 "reserve": "Reserve",
