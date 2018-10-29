@@ -14,6 +14,7 @@ import {
   setJSExceptionHandler,
   setNativeExceptionHandler
 } from 'react-native-exception-handler';
+import i18n from 'i18next';
 import { Root, StyleProvider } from 'native-base';
 
 import UFOAdminMenu from './components/UFOAdminMenu';
@@ -41,33 +42,47 @@ import RegisterDriverLicenceScreen from './screens/SignUp/DriverCardEditor';
 import AppStore from './stores/appStore';
 import registerStore from './stores/registerStore';
 import { screens, colors, backgrounds } from './utils/global';
+import logger, { codeTypes, severityTypes } from './utils/userActionsLogger';
 import getTheme from './../native-base-theme/components';
 
 /* Handling some errors */
 YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
 YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
 
-const errorHandler = (e, isFatal) => {
+const errorHandler = (error, isFatal) => {
   if (isFatal) {
+
+    const message = i18n.t('error:jsExceptionFatal');
+    logger(severityTypes.ERROR, codeTypes.ERROR, '', message, error);
+
     Alert.alert(
-      'Unexpected error occurred',
-      `
-        Error: ${(isFatal) ? 'Fatal:' : ''} ${e.name} ${e.message}
-        We have reported this to our team! Please close the app and start again!
-      `,
+      message,
+      `${
+        i18n.t('error:jsExceptionFatalReport')
+      }\n\n${
+        i18n.t('error:error')
+      }: ${
+        error.name
+      }\n${
+        error.message
+      }`,
       [{
-        text: 'Close'
+        text: i18n.t('common:closeBtn')
       }]
     );
   } else {
-    console.warn(e);
+
+    const message = i18n.t('error:jsException');
+    logger(severityTypes.WARN, codeTypes.ERROR, '', message, error);
   }
 };
 
-setJSExceptionHandler(errorHandler, true);
+// set true to second arg to use errorHandler in dev mode
+setJSExceptionHandler(errorHandler);
 
-setNativeExceptionHandler((errorString) => {
-  console.log('setNativeExceptionHandler');
+setNativeExceptionHandler(exceptionStr => {
+  const message = i18n.t('error:nativeException');
+  logger(severityTypes.ERROR, codeTypes.ERROR, '', message, exceptionStr);
 });
 
 /* Describing navigators */
@@ -201,7 +216,7 @@ const RootStack = createBottomTabNavigator(
   },
   {
     initialRouteName: screens.DRIVE.name,
-    navigationOptions: ({ navigation }) => ({ tabBarVisible: false })
+    navigationOptions: ({ navigation }) => ({tabBarVisible: false})
   });
 
 /* Root App component */

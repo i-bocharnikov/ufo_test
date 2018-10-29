@@ -7,7 +7,8 @@ i18n.use(LanguageDetector).init({
         en: {
             common: {
                 "okBtn": "OK",
-                "cancelBtn": "Cancel"
+                "cancelBtn": "Cancel",
+                "closeBtn": "Close",
             },
             activities: {
                 "internetAccessFailure": "Unexpected internet connectivity issues. Operating in offline/degraded mode",
@@ -25,12 +26,17 @@ i18n.use(LanguageDetector).init({
                 "confirmationCancel": "Cancel",
             },
             error: {
+                "error": "Error",
                 "internetConnectionRequired": "This operation requires an internet connection",
                 "bluetoothConnectionRequired": "This operation requires a blootooth connection",
                 "unexpectedServerResponse": "Oops, this was not supposed to happen. Apologises for the inconvenience",
                 "noKey": "You currently have no key. Please ask support team to have one",
                 "stringNotMatch": "Wrong confirmation string. Try again",
                 "unknown": "Unknown Error",
+                "nativeException": "Native Exception",
+                "jsException": "Warning from JS exception handler",
+                "jsExceptionFatal": "Fatal JS exception",
+                "jsExceptionFatalReport": "We have reported this to our team. Please close the app and start again.",
             },
             icon: {
                 "reserve": "Reserve",
