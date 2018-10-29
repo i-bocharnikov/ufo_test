@@ -37,6 +37,7 @@ i18n.use(LanguageDetector).init({
                 "jsException": "Warning from JS exception handler",
                 "jsExceptionFatal": "Fatal JS exception",
                 "jsExceptionFatalReport": "We have reported this to our team. Please close the app and start again.",
+                "localPermissionNeeded": "Location permission is required to access the car",
             },
             icon: {
                 "reserve": "Reserve",
