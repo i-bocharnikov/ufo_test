@@ -8,7 +8,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 import UFOHeader from './../../components/header/UFOHeader';
 import UFOActionBar from './../../components/UFOActionBar';
-import { UFOContainer_re, UFOText } from './../../components/common';
+import { UFOContainer, UFOText } from './../../components/common';
 import {
   screens,
   actionStyles,
@@ -73,7 +73,7 @@ class DriveScreen extends Component {
       : backgrounds.HOME002;
 
     return (
-      <UFOContainer_re image={background}>
+      <UFOContainer image={background}>
         <UFOHeader
           transparent={true}
           logo={true}
@@ -137,7 +137,7 @@ class DriveScreen extends Component {
           actions={this.compileActions()}
           activityPending={this.activityPending}
         />
-      </UFOContainer_re>
+      </UFOContainer>
     );
   }
 

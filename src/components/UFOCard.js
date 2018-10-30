@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
 import { Card, CardItem, Body, Left } from 'native-base';
-import { UFOImage, UFOText } from './common';
-import UFOVideo from './common/UFOVideo';
+import { UFOImage, UFOText, UFOVideo } from './common';
 import _ from 'lodash'
 export default class UFOCard extends Component {
 

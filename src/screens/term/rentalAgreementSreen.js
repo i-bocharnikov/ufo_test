@@ -6,7 +6,7 @@ import { observable, action } from 'mobx';
 
 import UFOHeader from './../../components/header/UFOHeader';
 import UFOActionBar from './../../components/UFOActionBar';
-import { UFOContainer_re } from './../../components/common';
+import { UFOContainer } from './../../components/common';
 import { screens, actionStyles, icons } from './../../utils/global'
 import { driveStore, termStore } from './../../stores'
 import { showPrompt, toastError } from './../../utils/interaction';
@@ -39,7 +39,7 @@ class InspectScreen extends Component {
     ];
 
     return (
-      <UFOContainer_re image={screens.RENTAL_AGREEMENT.backgroundImage}>
+      <UFOContainer image={screens.RENTAL_AGREEMENT.backgroundImage}>
         <UFOHeader
           t={t}
           navigation={navigation}
@@ -55,7 +55,7 @@ class InspectScreen extends Component {
           activityPending={this.activityPending}
           inverted={true}
         />
-      </UFOContainer_re>
+      </UFOContainer>
     );
   }
 
@@ -96,7 +96,8 @@ class InspectScreen extends Component {
     showPrompt(
       t('term:confirmContractTitle', {strKey: confirmKey}),
       t('term:confirmContractDescription'),
-      promptHandler
+      promptHandler,
+      () => (this.activityPending = false)
     );
   };
 }

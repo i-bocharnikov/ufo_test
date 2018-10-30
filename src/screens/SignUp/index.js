@@ -9,8 +9,8 @@ import appStore from './../../stores/appStore';
 import UFOHeader from './../../components/header/UFOHeader';
 import UFOActionBar from './../../components/UFOActionBar';
 import {
-  UFOContainer_re,
-  UFOTextInput_re,
+  UFOContainer,
+  UFOTextInput,
   UFOImage,
   UFOIcon
 } from './../../components/common';
@@ -93,7 +93,7 @@ class SignUpScreen extends Component {
     const hasAddress = Boolean(registerStore.user.address);
 
     return (
-      <UFOContainer_re image={screens.REGISTER_OVERVIEW.backgroundImage}>
+      <UFOContainer image={screens.REGISTER_OVERVIEW.backgroundImage}>
         <UFOHeader
           t={t}
           navigation={navigation}
@@ -101,7 +101,7 @@ class SignUpScreen extends Component {
           currentScreen={screens.REGISTER_OVERVIEW}
         />
         <View style={styles.bodyWrapper}>
-          <UFOTextInput_re
+          <UFOTextInput
             placeholder={t('register:phoneNumberInputLabel')}
             defaultValue={registerStore.user.phone_number}
             wrapperStyle={styles.inputBlock}
@@ -109,7 +109,7 @@ class SignUpScreen extends Component {
             isCompleted={hasPhone}
             IconComponent={hasPhone ? this.renderIcon() : null}
           />
-          <UFOTextInput_re
+          <UFOTextInput
             placeholder={t('register:emailInputLabel')}
             defaultValue={registerStore.user.email}
             wrapperStyle={styles.inputBlock}
@@ -117,7 +117,7 @@ class SignUpScreen extends Component {
             isCompleted={hasEmail}
             IconComponent={hasEmail ? this.renderIcon() : null}
           />
-          <UFOTextInput_re
+          <UFOTextInput
             placeholder={t('register:addressLabel')}
             defaultValue={registerStore.user.address}
             wrapperStyle={styles.inputBlock}
@@ -169,7 +169,7 @@ class SignUpScreen extends Component {
           )}
         </View>
         <UFOActionBar actions={this.compileActions()} />
-      </UFOContainer_re>
+      </UFOContainer>
     );
   }
 

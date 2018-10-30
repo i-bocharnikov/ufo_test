@@ -8,11 +8,7 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 
 import UFOHeader from './../../components/header/UFOHeader';
 import UFOActionBar from './../../components/UFOActionBar';
-import {
-  UFOContainer_re,
-  UFOTextInput_re,
-  ufoInputStyles
-} from './../../components/common';
+import { UFOContainer, ufoInputStyles } from './../../components/common';
 import {
   screens,
   actionStyles,
@@ -62,7 +58,7 @@ class AddressScreen extends Component {
     const { t, i18n, navigation } = this.props;
 
     return (
-      <UFOContainer_re image={screens.REGISTER_OVERVIEW.backgroundImage}>
+      <UFOContainer image={screens.REGISTER_OVERVIEW.backgroundImage}>
         <UFOHeader
           t={t}
           navigation={navigation}
@@ -97,7 +93,7 @@ class AddressScreen extends Component {
             styles={googleInputStyles}
           />
         <UFOActionBar actions={this.compileActions()} />
-      </UFOContainer_re>
+      </UFOContainer>
     );
   }
 

@@ -67,7 +67,7 @@ class AppStore {
     try {
       await hydrate('register', registerStore).then(() => console.log('registerStore hydrated'))
       await hydrate('drive', driveStore).then(() => console.log('driveStore hydrated'))
-      await hydrate('otaKey', otaKeyStore).then(() => console.log('otaKeyStore hydrated'))
+      //await hydrate('otaKey', otaKeyStore).then(() => console.log('otaKeyStore hydrated'))
       await hydrate('support', supportStore).then(() => console.log('supportStore hydrated'))
       console.log("<== LOAD LOCAL DATA DONE ")
     } catch (error) {
