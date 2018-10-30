@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { UFOText } from './common';
 
 const SLIDER_DEVICE_WIDTH = Dimensions.get('window').width;
-const SLIDE_WIDTH = UFOSLIDER_DEVICE_WIDTH * 90 / 100;
+const SLIDE_WIDTH = SLIDER_DEVICE_WIDTH * 90 / 100;
 
 export default class UFOSlider extends React.Component {
   onSnapDefault = slideIndex => {
@@ -39,7 +39,7 @@ export default class UFOSlider extends React.Component {
 }
 
 UFOSlider.propTypes = {
-  renderItem: PropTypes.func.isRequired
+  renderItem: PropTypes.func.isRequired,
   data: PropTypes.array,
   firstItem: PropTypes.number,
   onSnapToItem: PropTypes.func

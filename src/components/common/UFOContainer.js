@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, ImageBackground, StyleSheet, Image, ViewPropTypes } from 'react-native';
 import PropTypes from 'prop-types';
 
-const ownStyles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'black'
@@ -15,14 +15,14 @@ export default class UFOContainer extends Component {
 
     return image ? (
       <ImageBackground
-        style={[ownStyles.container, style]}
+        style={[styles.container, style]}
         source={image}
         resizeMode="cover"
       >
         {children}
       </ImageBackground>
     ) : (
-      <View style={[ownStyles.container, style]}>
+      <View style={[styles.container, style]}>
         {children}
       </View>
     );

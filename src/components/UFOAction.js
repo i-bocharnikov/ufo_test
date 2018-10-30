@@ -32,29 +32,9 @@ class UFOAction extends Component {
       size = sizes.LARGE,
     } = this.props;
 
-    const style = activityPending
-      ? actionStyles.DISABLE
-        : action.style
-        ? action.style
-      : actionStyles.WRONG;
-
-    const color = activityPending
-      ? colors.DISABLE
-        : style.color
-        ? style.color
-      : colors.WRONG;
-
-    const elevation = style.elevation ||
-      style === actionStyles.TODO
-        ? 4
-        : style === actionStyles.ACTIVE
-          ? 3
-          : style === actionStyles.DONE
-            ? 2
-            : style === actionStyles.DISABLE
-              ? 0
-              : 0;
-
+    const style = activityPending ? actionStyles.DISABLE : (action.style || actionStyles.WRONG);
+    const color = activityPending ? colors.DISABLE : (style.color || colors.WRONG);
+    const elevation = this.getElevation(style);
     const icon = action.icon ? action.icon : icons.WRONG;
     const actionSize = size === sizes.SMALL ? 30 : 45;
 
@@ -82,6 +62,25 @@ class UFOAction extends Component {
       </View>
     );
   }
+
+  getElevation = style => {
+    if (style.elevation) {
+      return style.elevation;
+    }
+
+    switch(style) {
+      case actionStyles.TODO:
+        return 4;
+      case actionStyles.ACTIVE:
+        return 3;
+      case actionStyles.DONE:
+        return 2;
+      case actionStyles.DISABLE:
+        return 0;
+      default:
+        return 0;
+    }
+  };
 }
 
 UFOAction.propTypes = {

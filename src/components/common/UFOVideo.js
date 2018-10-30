@@ -3,18 +3,21 @@ import Video from 'react-native-video';
 
 export default class UFOVideo extends Component {
   render() {
-    const { resizeMode, ...restProps } = this.props;
+    const props = this.props;
 
     return (
       <Video
         ref={ref => (this.player = ref)}
-        resizeMode={resizeMode || 'cover'}
-        repeat={true}
-        { ...restProps }
+        { ...props }
       />
     );
   }
 }
+
+UFOVideo.defaultProps = {
+  repeat: true,
+  resizeMode: 'cover'
+};
 
 UFOVideo.propTypes = {
   ...Video.propTypes
