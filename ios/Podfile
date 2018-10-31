@@ -3,9 +3,10 @@ platform :ios, '11.0'
 
 target 'driverApp' do
 
-  # next 2 lines were commented, because I don't have such sources yet
-  # plugin 'cocoapods-art', :sources => [ 'ios-keycore']
-  # source 'https://github.com/CocoaPods/Specs.git'
+  plugin 'cocoapods-art', :sources => [
+    'ios-keycore'
+  ]
+  source 'https://github.com/CocoaPods/Specs.git'
 
   # ignore all warnings from all pods
   inhibit_all_warnings!
@@ -34,9 +35,7 @@ target 'driverApp' do
   # my custom pods
   pod 'react-native-sensitive-info', :path => '../node_modules/react-native-sensitive-info'
   pod 'ReactNativePermissions', :path => '../node_modules/react-native-permissions'
-
-  # don't have such SDK yet
-  # pod 'OTASDK'
+  pod 'OTASDK', '~> 3.11.2'
 
 end
 
