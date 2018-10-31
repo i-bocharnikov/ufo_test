@@ -31,9 +31,10 @@ export function toastError(message = '', yOffset = 0, xOffset = 0) {
   );
 }
 
-export function showPrompt(title = '', descr = '', action, options = {}) {
+export function showPrompt(title = '', descr = '', action, cancelAction, options = {}) {
+  const cancelFn = typeof cancelAction === 'function' ? cancelAction : () => null;
   const actions = [
-    {text: i18n.t('common:cancelBtn'), onPress: () => null, style: 'cancel'}
+    {text: i18n.t('common:cancelBtn'), onPress: cancelFn, style: 'cancel'}
   ];
 
   if (typeof action === 'function') {

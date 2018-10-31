@@ -91,3 +91,8 @@ export default class UFOText extends React.Component {
         return <Text style={style} onPress={this.props.onPress} >{text}</Text>
     }
 }
+
+/*
+ * use instead it default Text or create new UFOText component
+ * because it will not work when 'style' passed as StyleSheet.create object
+*/

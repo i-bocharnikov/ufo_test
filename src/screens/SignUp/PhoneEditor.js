@@ -11,8 +11,8 @@ import _ from 'lodash';
 import UFOHeader from './../../components/header/UFOHeader';
 import UFOActionBar from './../../components/UFOActionBar';
 import {
-  UFOContainer_re,
-  UFOTextInput_re,
+  UFOContainer,
+  UFOTextInput,
   ufoInputStyles
 } from '../../components/common';
 import { screens, actionStyles, icons } from './../../utils/global';
@@ -34,7 +34,7 @@ class PhoneScreen extends Component {
     const { t, i18n, navigation } = this.props;
 
     return (
-      <UFOContainer_re image={screens.REGISTER_OVERVIEW.backgroundImage}>
+      <UFOContainer image={screens.REGISTER_OVERVIEW.backgroundImage}>
         <UFOHeader
           t={t}
           navigation={navigation}
@@ -43,13 +43,13 @@ class PhoneScreen extends Component {
         />
         <View style={styles.bodyWrapper}>
         {!this.activityPending && registerStore.isConnected && (
-          <UFOTextInput_re
+          <UFOTextInput
             defaultValue={registerStore.user.phone_number}
             editable={false}
           />
         )}
         {!this.activityPending && !registerStore.isConnected && this.isCodeRequested && (
-          <UFOTextInput_re
+          <UFOTextInput
             autoFocus={true}
             maxLength={10}
             keyboardType="number-pad"
@@ -83,7 +83,7 @@ class PhoneScreen extends Component {
         )}
         </View>
         <UFOActionBar actions={this.compileActions()} />
-      </UFOContainer_re>
+      </UFOContainer>
     );
   }
 

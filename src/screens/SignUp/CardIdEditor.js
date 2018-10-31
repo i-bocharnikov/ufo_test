@@ -17,7 +17,7 @@ import UFOCamera, { RNCAMERA_CONSTANTS } from './../../components/UFOCamera';
 import UFOHeader from './../../components/header/UFOHeader';
 import UFOActionBar from './../../components/UFOActionBar';
 import UFOCard from './../../components/UFOCard';
-import { UFOImage, UFOContainer_re } from './../../components/common'
+import { UFOImage, UFOContainer } from './../../components/common'
 import registerStore from './../../stores/registerStore';
 import {
   screens,
@@ -99,7 +99,7 @@ class IdentificationScreen extends Component {
       : images.captureCardIdBack;
 
     return (
-      <UFOContainer_re image={screens.REGISTER_OVERVIEW.backgroundImage}>
+      <UFOContainer image={screens.REGISTER_OVERVIEW.backgroundImage}>
         <UFOHeader
           t={t}
           navigation={navigation}
@@ -154,7 +154,7 @@ class IdentificationScreen extends Component {
           actions={this.compileActions()}
           activityPending={this.activityPending}
         />
-      </UFOContainer_re>
+      </UFOContainer>
     );
   }
 

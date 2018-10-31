@@ -6,7 +6,7 @@ import { translate } from 'react-i18next';
 
 import UFOHeader from './../../components/header/UFOHeader';
 import UFOActionBar from './../../components/UFOActionBar';
-import { UFOContainer_re, UFOTextInput_re } from './../../components/common';
+import { UFOContainer, UFOTextInput } from './../../components/common';
 import { screens, actionStyles, icons } from '../../utils/global'
 import registerStore from './../../stores/registerStore';
 import UFOCard from './../../components/UFOCard';
@@ -23,7 +23,7 @@ class EmailScreen extends Component {
     const { t, navigation } = this.props;
 
     return (
-      <UFOContainer_re image={screens.REGISTER_OVERVIEW.backgroundImage}>
+      <UFOContainer image={screens.REGISTER_OVERVIEW.backgroundImage}>
         <UFOHeader
           t={t}
           navigation={navigation}
@@ -31,7 +31,7 @@ class EmailScreen extends Component {
           currentScreen={screens.REGISTER_EMAIL}
         />
         <View style={styles.bodyWrapper}>
-          <UFOTextInput_re
+          <UFOTextInput
             autoFocus={true}
             keyboardType="email-address"
             defaultValue={registerStore.user.email}
@@ -40,7 +40,7 @@ class EmailScreen extends Component {
           />
         </View>
         <UFOActionBar actions={this.compileActions()} />
-      </UFOContainer_re>
+      </UFOContainer>
     );
   }
 
