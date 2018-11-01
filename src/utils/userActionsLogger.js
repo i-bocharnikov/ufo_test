@@ -26,6 +26,8 @@ export default async function userActionsLogger(
         const date = momentDate || moment();
         const isConnectionActive = await checkConnectivity();
 
+        console.log('---LOGGERR---', { action, message, description, severity, extraData });
+
         if (severity === severityTypes.DEBUG) {
             console.log(`${date.format('HH:mm:ss')} ${severity} ${action} ${message}`);
             return;
@@ -42,7 +44,7 @@ export default async function userActionsLogger(
         };
 
         if (isConnectionActive) {
-            await postToApi('/user_experiences', payload);
+            //await postToApi('/user_experiences', payload);
         }
     } catch (error) {
         console.error('export of UserExperiences failed', error);
