@@ -26,7 +26,7 @@ export default async function userActionsLogger(
         const date = momentDate || moment();
         const isConnectionActive = await checkConnectivity();
 
-        console.log('---LOGGERR---', { action, message, description, severity, extraData });
+        console.log('--LOGGER--', { code, action, message, description, extraData });
 
         if (severity === severityTypes.DEBUG) {
             console.log(`${date.format('HH:mm:ss')} ${severity} ${action} ${message}`);

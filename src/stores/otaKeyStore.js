@@ -1,4 +1,4 @@
-import { NativeModules, DeviceEventEmitter, AppRegistry } from 'react-native';
+import { NativeModules, DeviceEventEmitter, Platform } from 'react-native';
 import { observable, action, computed } from 'mobx';
 import { persist } from 'mobx-persist';
 import moment from 'moment';
@@ -261,7 +261,9 @@ class OTAKeyStore {
                     String(showError)
                 }) start`
             });
-            const result = await this.ota.register(this.keyAccessDeviceRegistrationNumber);
+            const result = Platform.OS === 'ios'
+                ? await this.ota.register()
+                : await this.ota.register(this.keyAccessDeviceRegistrationNumber);
 
             DeviceEventEmitter.addListener('onOtaVehicleDataUpdated', this.onOtaVehicleDataUpdated);
             DeviceEventEmitter.addListener('onOtaActionPerformed', this.onOtaActionPerformed);
