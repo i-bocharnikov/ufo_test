@@ -521,7 +521,7 @@ class OTAKeyStore {
     }
 
     @computed get isKeyEnabled() {
-        return this.key && driveStore.rental && this.key.keyId === driveStore.rental.key_id && this.key.isEnabled;
+        return this.key && driveStore.rental && this.key.keyId === driveStore.rental.key_id && this.key && this.key.isEnabled;
     }
 
     @action
@@ -688,6 +688,7 @@ class OTAKeyStore {
 
     @action
     async configureNetworkTimeouts(connectTimeout: Number, readTimeout: Number, showError = true): Promise<boolean> {
+        // unused method
         try {
             await this.otaKeyLogger({
                 severity: severityTypes.DEBUG,
@@ -772,6 +773,7 @@ class OTAKeyStore {
 
     @action
     async isOperationInProgress(showError = true): Promise<boolean> {
+        // unused method
         try {
             await this.otaKeyLogger({
                 severity: severityTypes.DEBUG,
@@ -803,7 +805,7 @@ class OTAKeyStore {
 
     @action
     async getBluetoothState(showError = true): Promise<string> {
-
+        // unused method
         try {
             await this.otaKeyLogger({
                 severity: severityTypes.DEBUG,

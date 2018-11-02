@@ -5,6 +5,9 @@
 @end
 
 @implementation OTAKeyModule
+
+NSString *LAST_ENABLED_KEYID = nil;
+
 // conforming to OTABLEEventsDelegate protocol
 - (void) bluetoothStateChanged:(OTABLEConnectionStatus) status withError:(OTABLEErrorCode) error {
   // connecting, connected, disconnected, etc. see OTAEnums
@@ -15,6 +18,7 @@
 
 RCT_EXPORT_MODULE();
 
+// Initialize operations
 // getAccessDeviceToken
 RCT_REMAP_METHOD(getAccessDeviceToken,
                  forceRefresh:(BOOL) forceRefresh
@@ -76,6 +80,7 @@ RCT_REMAP_METHOD(register,
   }
 }
 
+// OTAKEY operations
 // getKey
 RCT_REMAP_METHOD(getKey,
                  keyId:(NSString *) keyId
@@ -86,6 +91,7 @@ RCT_REMAP_METHOD(getKey,
   {
     [[OTAManager instance] keyWithID:keyId
                              success:^(OTAKeyPublic *key) {
+                               LAST_ENABLED_KEYID = keyId;
                                resolve(key);
                              }
                              failure:^(OTAErrorCode errorCode, NSError *error) {
@@ -109,6 +115,7 @@ RCT_REMAP_METHOD(enableKey,
   {
     [[OTAManager instance] enableKeyWithID:keyId
                              success:^(OTAKeyPublic *key) {
+                               LAST_ENABLED_KEYID = keyId;
                                resolve(key);
                              }
                              failure:^(OTAErrorCode errorCode, NSError *error) {
@@ -130,8 +137,11 @@ RCT_REMAP_METHOD(getUsedKey,
   @try
   {
     OTAKeyPublic *currentKey = [[OTAManager instance] localKey];
-    // probably should to add if-else block for empty "currentKey" occasion
-    resolve(currentKey);
+    if (currentKey) {
+      resolve(currentKey);
+    } else {
+      resolve(nil);
+    }
   }
   @catch (NSError *error)
   {
@@ -167,8 +177,85 @@ RCT_REMAP_METHOD(switchToKey,
                  switchToKeyResolver:(RCTPromiseResolveBlock)resolve
                  switchToKeyRejecter:(RCTPromiseRejectBlock)reject)
 {
-  // added switch to latest key as in android
-  resolve(@YES);
+  NSError *error = [NSError errorWithDomain:@"" code:404 userInfo:nil];
+  if (!LAST_ENABLED_KEYID) {
+    reject(@"error", @"enableKey", error);
+    return;
+  }
+  OTAKeyPublic *currentKey = [[OTAManager instance] localKey];
+  [[OTAManager instance] switchToKeyWithID:LAST_ENABLED_KEYID
+                           completionBlock:^(bool success) {
+                             if (success) {
+                               resolve(currentKey);
+                             } else {
+                               // add some message to error
+                               NSError *error = [NSError errorWithDomain:@"" code:404 userInfo:nil];
+                               reject(@"error", @"enableKey", error);
+                             }
+                           }
+   ];
 }
+
+// Operations with connecting, and checking statuses
+// syncVehicleData
+RCT_REMAP_METHOD(syncVehicleData,
+                 syncVehicleDataResolver:(RCTPromiseResolveBlock)resolve
+                 syncVehicleDataRejecter:(RCTPromiseRejectBlock)reject)
+{
+  @try
+  {
+    [[OTAManager instance] syncVehicleDataWithSuccess:^(bool success) {
+      if (success) {
+        resolve(@YES);
+      } else {
+        resolve(@NO);
+      }
+    }
+    failure:^(OTAErrorCode errorCode, NSError *error) {
+      reject(@"error", @"syncVehicleData", error);
+    }];
+  }
+  @catch (NSError *error)
+  {
+    reject(@"error", @"syncVehicleData", error);
+  }
+}
+
+// isConnectedToVehicle
+RCT_REMAP_METHOD(isConnectedToVehicle,
+                 isConnectedToVehicleResolver:(RCTPromiseResolveBlock)resolve
+                 isConnectedToVehicleRejecter:(RCTPromiseRejectBlock)reject)
+{
+  @try
+  {
+    bool isConnected = [[OTAManager instance] connectedToVehicle];
+    if (isConnected) {
+      resolve(@YES);
+    } else {
+      resolve(@NO);
+    }
+  }
+  @catch (NSError *error)
+  {
+    reject(@"error", @"isConnectedToVehicle", error);
+  }
+}
+
+// getVehicleData
+RCT_REMAP_METHOD(getVehicleData,
+                 getVehicleDataResolver:(RCTPromiseResolveBlock)resolve
+                 getVehicleDataRejecter:(RCTPromiseRejectBlock)reject)
+{
+  @try
+  {
+    // put code (vehicleDataWithSuccess)
+  }
+  @catch (NSError *error)
+  {
+    reject(@"error", @"getVehicleData", error);
+  }
+}
+
+// 
 
 @end
