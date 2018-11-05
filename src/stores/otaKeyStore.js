@@ -844,7 +844,9 @@ class OTAKeyStore {
                 code: codeTypes.SUCCESS,
                 message: `-> this.ota.connect(${String(showNotification)}, ${String(showError)}) start`
             });
-            const result = await this.ota.connect(showNotification);
+            const result = Platform.OS === 'ios'
+                ? await this.ota.connect()
+                : await this.ota.connect(showNotification);
             await this.otaKeyLogger({
                 severity: severityTypes.INFO,
                 action: 'connectToVehicle',

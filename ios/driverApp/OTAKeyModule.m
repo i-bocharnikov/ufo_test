@@ -248,7 +248,12 @@ RCT_REMAP_METHOD(getVehicleData,
 {
   @try
   {
-    // put code (vehicleDataWithSuccess)
+    [[OTAManager instance] vehicleDataWithSuccess:^(OTAVehicleData *vehicleData) {
+      resolve(@YES);
+    }
+    failure:^(OTABLEErrorCode errorCode, NSError *error) {
+      reject(@"error", @"getVehicleData", error);
+    }];
   }
   @catch (NSError *error)
   {
@@ -256,6 +261,130 @@ RCT_REMAP_METHOD(getVehicleData,
   }
 }
 
-// 
+// connect
+RCT_REMAP_METHOD(connect,
+                 connectResolver:(RCTPromiseResolveBlock)resolve
+                 connectRejecter:(RCTPromiseRejectBlock)reject)
+{
+  @try
+  {
+    [[OTAManager instance] connectToVehicle];
+    resolve(@YES);
+  }
+  @catch (NSError *error)
+  {
+    reject(@"error", @"connect", error);
+  }
+}
+
+// disconnect
+RCT_REMAP_METHOD(disconnect,
+                 disconnectResolver:(RCTPromiseResolveBlock)resolve
+                 disconnectRejecter:(RCTPromiseRejectBlock)reject)
+{
+  @try
+  {
+    [[OTAManager instance] disconnectFromVehicle];
+    resolve(@YES);
+  }
+  @catch (NSError *error)
+  {
+    reject(@"error", @"disconnect", error);
+  }
+}
+
+// unlockDoors
+RCT_REMAP_METHOD(unlockDoors,
+                 requestVehicleData:(BOOL) requestVehicleData
+                 enableEngine:(BOOL) enableEngine
+                 unlockDoorsResolver:(RCTPromiseResolveBlock)resolve
+                 unlockDoorsRejecter:(RCTPromiseRejectBlock)reject)
+{
+  @try
+  {
+    [[OTAManager instance] unlockDoorsWithRequestVehicleData:requestVehicleData
+                                                enableEngine:enableEngine
+                                                     success:^(OTAVehicleData *vehicleData) {
+                                                       resolve(@YES);
+                                                     }
+                                                     failure:^(OTAVehicleData *vehicleData, OTABLEErrorCode errorCode, NSError *error) {
+                                                       reject(@"error", @"unlockDoors", error);
+                                                     }
+     ];
+  }
+  @catch (NSError *error)
+  {
+    reject(@"error", @"unlockDoors", error);
+  }
+}
+
+// lockDoors
+RCT_REMAP_METHOD(lockDoors,
+                 requestVehicleData:(BOOL) requestVehicleData
+                 lockDoorsResolver:(RCTPromiseResolveBlock)resolve
+                 lockDoorsRejecter:(RCTPromiseRejectBlock)reject)
+{
+  @try
+  {
+    [[OTAManager instance] lockDoorsWithRequestVehicleData:requestVehicleData
+                                                   success:^(OTAVehicleData *vehicleData) {
+                                                     resolve(@YES);
+                                                   }
+                                                   failure:^(OTAVehicleData *vehicleData, OTABLEErrorCode errorCode, NSError *error) {
+                                                     reject(@"error", @"lockDoors", error);
+                                                   }
+     ];
+  }
+  @catch (NSError *error)
+  {
+    reject(@"error", @"lockDoors", error);
+  }
+}
+
+// enableEngine
+RCT_REMAP_METHOD(enableEngine,
+                 requestVehicleData:(BOOL) requestVehicleData
+                 enableEngineResolver:(RCTPromiseResolveBlock)resolve
+                 enableEngineRejecter:(RCTPromiseRejectBlock)reject)
+{
+  @try
+  {
+    [[OTAManager instance] enableEngineWithRequestVehicleData:requestVehicleData
+                                                   success:^(OTAVehicleData *vehicleData) {
+                                                     resolve(@YES);
+                                                   }
+                                                   failure:^(OTAVehicleData *vehicleData, OTABLEErrorCode errorCode, NSError *error) {
+                                                     reject(@"error", @"enableEngine", error);
+                                                   }
+     ];
+  }
+  @catch (NSError *error)
+  {
+    reject(@"error", @"enableEngine", error);
+  }
+}
+
+// disableEngine
+RCT_REMAP_METHOD(disableEngine,
+                 requestVehicleData:(BOOL) requestVehicleData
+                 disableEngineResolver:(RCTPromiseResolveBlock)resolve
+                 disableEngineRejecter:(RCTPromiseRejectBlock)reject)
+{
+  @try
+  {
+    [[OTAManager instance] disableEngineWithRequestVehicleData:requestVehicleData
+                                                      success:^(OTAVehicleData *vehicleData) {
+                                                        resolve(@YES);
+                                                      }
+                                                      failure:^(OTAVehicleData *vehicleData, OTABLEErrorCode errorCode, NSError *error) {
+                                                        reject(@"error", @"disableEngine", error);
+                                                      }
+     ];
+  }
+  @catch (NSError *error)
+  {
+    reject(@"error", @"disableEngine", error);
+  }
+}
 
 @end
