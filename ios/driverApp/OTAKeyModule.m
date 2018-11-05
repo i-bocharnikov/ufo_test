@@ -6,17 +6,89 @@
 
 @implementation OTAKeyModule
 
+// helpers
+static id ObjectOrNull(id object)
+{
+  return object ?: [NSNull null];
+}
+
++ (NSString *)convertDateToString: (NSDate *)date {
+  NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+  [dateFormatter setDateFormat:@"YYYY-MM-dd'T'HH:mm:ss.sssZ"];
+  return date ? [dateFormatter stringFromDate:date] : @"";
+}
+
+// utils and global overriding
++ (NSDictionary *) OTABLEConnectionStatusDictionary
+{
+  return @{
+           @(OTABLEConnected): @"CONNECTED",
+           @(OTABLEDiscoveryInProgress): @"IN_PROGRESS",
+           @(OTABLEConnectionInProgress): @"IN_PROGRESS",
+           @(OTABLENotAvailable): @"DISCONNECTED",
+           @(OTABLENotConnected): @"DISCONNECTED",
+           };
+}
+
++ (NSDictionary *) OTABLEDoorStateDictionary
+{
+  return @{
+           @(OTADoorsStateLocked): @YES,
+           @(OTADoorsStateUnlocked): @NO,
+           };
+}
+
++ (NSDictionary*) convertOTAKeyPublic: (OTAKeyPublic *)key {
+  return @{
+           @"beginDate": [OTAKeyModule convertDateToString:[key beginDate]],
+           @"endDate": [OTAKeyModule convertDateToString:[key endDate]],
+           @"mileageLimit": [key mileageLimit],
+           @"keyId" : [key otaId],
+           @"extId" : ObjectOrNull([key extId]),
+           @"enabled": [NSNumber numberWithBool:[key enabled]],
+           @"keyArgs": ObjectOrNull([key keyArgs]),
+           @"keySensitiveArgs": ObjectOrNull([key keySensitiveArgs]),
+           @"vehicle": [OTAKeyModule convertOTAVehiclePublic:[key vehicle]],
+           };
+}
+
++ (NSDictionary*) convertOTAVehiclePublic: (OTAVehiclePublic *)vehicle {
+  return @{
+           @"otaId" : [vehicle otaId],
+           @"otaExtId" : [vehicle extId],
+           @"vin" : [vehicle vin],
+           @"brand" : [vehicle brand],
+           @"model" : [vehicle model],
+           @"plate" : [vehicle plate],
+           @"isEnabled": [NSNumber numberWithBool:[vehicle enabled]],
+           };
+}
+
++ (NSDictionary*) convertOTAVehicleData: (OTAVehicleData *)vehicleData {
+  return @{
+           @"doorsState" : [[OTAKeyModule OTABLEDoorStateDictionary] objectForKey:@([vehicleData doorsState])],
+           @"engineRunning" : [NSNumber numberWithBool:[vehicleData engineRunning]],
+           @"energyCurrent" : ObjectOrNull([vehicleData energyCurrent]),
+           };
+}
+
 NSString *LAST_ENABLED_KEYID = nil;
-
-// conforming to OTABLEEventsDelegate protocol
-- (void) bluetoothStateChanged:(OTABLEConnectionStatus) status withError:(OTABLEErrorCode) error {
-  // connecting, connected, disconnected, etc. see OTAEnums
-}
-- (void) operationPerformedWithCode:(OTAOperationCode)operationCode andState:(OTAOperationState)operationState {
-  // lock, unlock, engine started, etc. see OTAEnums
-}
-
 RCT_EXPORT_MODULE();
+
+// custom events and listeners
+- (NSArray<NSString *> *)supportedEvents
+{
+  return @[@"onOtaVehicleDataUpdated", @"onOtaActionPerformed", @"onOtaBluetoothStateChanged"];
+}
+
+- (void) bluetoothStateChanged:(OTABLEConnectionStatus)status withError:(OTABLEErrorCode)error {
+  NSString *customStatus = [[OTAKeyModule OTABLEConnectionStatusDictionary] objectForKey:@(status)];
+  [self sendEventWithName:@"onOtaBluetoothStateChanged" body:@{@"newBluetoothState": customStatus}];
+}
+
+- (void) operationPerformedWithCode:(OTAOperationCode)operationCode andState:(OTAOperationState)operationState {
+  [self sendEventWithName:@"onOtaActionPerformed" body:@{@"otaOperation": @(operationCode), @"otaState": @(operationState)}];
+}
 
 // Initialize operations
 // getAccessDeviceToken
@@ -92,7 +164,7 @@ RCT_REMAP_METHOD(getKey,
     [[OTAManager instance] keyWithID:keyId
                              success:^(OTAKeyPublic *key) {
                                LAST_ENABLED_KEYID = keyId;
-                               resolve(key);
+                               resolve([OTAKeyModule convertOTAKeyPublic:key]);
                              }
                              failure:^(OTAErrorCode errorCode, NSError *error) {
                                reject(@"error", @"getKey", error);
@@ -116,7 +188,7 @@ RCT_REMAP_METHOD(enableKey,
     [[OTAManager instance] enableKeyWithID:keyId
                              success:^(OTAKeyPublic *key) {
                                LAST_ENABLED_KEYID = keyId;
-                               resolve(key);
+                               resolve([OTAKeyModule convertOTAKeyPublic:key]);
                              }
                              failure:^(OTAErrorCode errorCode, NSError *error) {
                                reject(@"error", @"enableKey", error);
@@ -138,7 +210,7 @@ RCT_REMAP_METHOD(getUsedKey,
   {
     OTAKeyPublic *currentKey = [[OTAManager instance] localKey];
     if (currentKey) {
-      resolve(currentKey);
+      resolve([OTAKeyModule convertOTAKeyPublic:currentKey]);
     } else {
       resolve(nil);
     }
@@ -159,7 +231,7 @@ RCT_REMAP_METHOD(endKey,
   {
     [[OTAManager instance] endKeyWithID:keyId
                                 success:^(OTAKeyPublic *key) {
-                                  resolve(key);
+                                  resolve([OTAKeyModule convertOTAKeyPublic:key]);
                                 }
                                 failure:^(OTAErrorCode errorCode, NSError *error) {
                                   reject(@"error", @"enableKey", error);
@@ -186,7 +258,7 @@ RCT_REMAP_METHOD(switchToKey,
   [[OTAManager instance] switchToKeyWithID:LAST_ENABLED_KEYID
                            completionBlock:^(bool success) {
                              if (success) {
-                               resolve(currentKey);
+                               resolve([OTAKeyModule convertOTAKeyPublic:currentKey]);
                              } else {
                                // add some message to error
                                NSError *error = [NSError errorWithDomain:@"" code:404 userInfo:nil];
@@ -249,6 +321,7 @@ RCT_REMAP_METHOD(getVehicleData,
   @try
   {
     [[OTAManager instance] vehicleDataWithSuccess:^(OTAVehicleData *vehicleData) {
+      [self sendEventWithName:@"onOtaVehicleDataUpdated" body:[OTAKeyModule convertOTAVehicleData:vehicleData]];
       resolve(@YES);
     }
     failure:^(OTABLEErrorCode errorCode, NSError *error) {
@@ -305,6 +378,7 @@ RCT_REMAP_METHOD(unlockDoors,
     [[OTAManager instance] unlockDoorsWithRequestVehicleData:requestVehicleData
                                                 enableEngine:enableEngine
                                                      success:^(OTAVehicleData *vehicleData) {
+                                                       [self sendEventWithName:@"onOtaVehicleDataUpdated" body:[OTAKeyModule convertOTAVehicleData:vehicleData]];
                                                        resolve(@YES);
                                                      }
                                                      failure:^(OTAVehicleData *vehicleData, OTABLEErrorCode errorCode, NSError *error) {
@@ -328,6 +402,7 @@ RCT_REMAP_METHOD(lockDoors,
   {
     [[OTAManager instance] lockDoorsWithRequestVehicleData:requestVehicleData
                                                    success:^(OTAVehicleData *vehicleData) {
+                                                     [self sendEventWithName:@"onOtaVehicleDataUpdated" body:[OTAKeyModule convertOTAVehicleData:vehicleData]];
                                                      resolve(@YES);
                                                    }
                                                    failure:^(OTAVehicleData *vehicleData, OTABLEErrorCode errorCode, NSError *error) {
@@ -351,6 +426,7 @@ RCT_REMAP_METHOD(enableEngine,
   {
     [[OTAManager instance] enableEngineWithRequestVehicleData:requestVehicleData
                                                    success:^(OTAVehicleData *vehicleData) {
+                                                     [self sendEventWithName:@"onOtaVehicleDataUpdated" body:[OTAKeyModule convertOTAVehicleData:vehicleData]];
                                                      resolve(@YES);
                                                    }
                                                    failure:^(OTAVehicleData *vehicleData, OTABLEErrorCode errorCode, NSError *error) {
@@ -374,6 +450,7 @@ RCT_REMAP_METHOD(disableEngine,
   {
     [[OTAManager instance] disableEngineWithRequestVehicleData:requestVehicleData
                                                       success:^(OTAVehicleData *vehicleData) {
+                                                        [self sendEventWithName:@"onOtaVehicleDataUpdated" body:[OTAKeyModule convertOTAVehicleData:vehicleData]];
                                                         resolve(@YES);
                                                       }
                                                       failure:^(OTAVehicleData *vehicleData, OTABLEErrorCode errorCode, NSError *error) {
