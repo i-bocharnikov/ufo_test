@@ -3,25 +3,46 @@ platform :ios, '11.0'
 
 target 'driverApp' do
 
-  # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
-  use_frameworks!
-
-	plugin 'cocoapods-art', :sources => [ 'ios-keycore'
-	]
-	source 'https://github.com/CocoaPods/Specs.git'
+  plugin 'cocoapods-art', :sources => [
+    'ios-keycore'
+  ]
+  source 'https://github.com/CocoaPods/Specs.git'
 
   # ignore all warnings from all pods
   inhibit_all_warnings!
 
-  # Pods for driverApp
-	pod 'OTASDK'
+  # RN pods
+  # http://facebook.github.io/react-native/docs/integration-with-existing-apps.htm
+  pod 'React', :path => '../node_modules/react-native', :subspecs => [
+    'Core',
+    'CxxBridge',
+    'DevSupport',
+    'RCTText',
+    'RCTNetwork',
+    'RCTWebSocket',
+    'RCTAnimation',
+  ]
 
-  pod 'react-native-fast-image', :path => '../node_modules/react-native-fast-image'
+  pod 'yoga', :path => '../node_modules/react-native/ReactCommon/yoga'
 
+  # Third party deps podspec link
+
+  pod 'DoubleConversion', :podspec => '../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec'
+  pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
+  pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
+  pod 'react-native-camera', path: '../node_modules/react-native-camera'
+
+  # my custom pods
   pod 'react-native-sensitive-info', :path => '../node_modules/react-native-sensitive-info'
-
   pod 'ReactNativePermissions', :path => '../node_modules/react-native-permissions'
+  pod 'OTASDK', '~> 3.11.2'
 
-  pod 'RNImageRotate', :path => '../node_modules/react-native-image-rotate'
+end
 
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    if target.name == "React"
+      target.remove_from_project
+    end
+  end
 end

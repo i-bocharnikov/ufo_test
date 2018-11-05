@@ -14,9 +14,9 @@ export async function confirm(title = '', message='', action) {
   );
 }
 
-export async function showToastError(key, message = '') {
+export async function showToastError(key, error = '') {
+  const message = typeof error === 'string' ? error : i18n.t('error:unknown');
   await Vibration.vibrate();
-  // TODO TRANSLATION with key
   await ToastAndroid.showWithGravity(message, ToastAndroid.LONG, ToastAndroid.TOP);
 }
 
@@ -31,9 +31,10 @@ export function toastError(message = '', yOffset = 0, xOffset = 0) {
   );
 }
 
-export function showPrompt(title = '', descr = '', action, options = {}) {
+export function showPrompt(title = '', descr = '', action, cancelAction, options = {}) {
+  const cancelFn = typeof cancelAction === 'function' ? cancelAction : () => null;
   const actions = [
-    {text: i18n.t('common:cancelBtn'), onPress: () => null, style: 'cancel'}
+    {text: i18n.t('common:cancelBtn'), onPress: cancelFn, style: 'cancel'}
   ];
 
   if (typeof action === 'function') {

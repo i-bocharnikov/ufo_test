@@ -1,25 +1,24 @@
-import React from "react";
-import Video from 'react-native-video'
+import React, { Component } from 'react';
+import Video from 'react-native-video';
 
-export default class UFOVideo extends React.Component {
+export default class UFOVideo extends Component {
+  render() {
+    const props = this.props;
 
-    render() {
-
-        let style = this.props.style
-        let resizeMode = this.props.resizeMode ? this.props.resizeMode : 'cover'
-        let source = this.props.source
-
-
-
-        return <Video source={source}
-            ref={(ref) => {
-                this.player = ref
-            }}
-            style={style}
-            resizeMode={resizeMode}
-            repeat={true}
-            paused={false}
-            muted={false}
-        />
-    }
+    return (
+      <Video
+        ref={ref => (this.player = ref)}
+        { ...props }
+      />
+    );
+  }
 }
+
+UFOVideo.defaultProps = {
+  repeat: true,
+  resizeMode: 'cover'
+};
+
+UFOVideo.propTypes = {
+  ...Video.propTypes
+};

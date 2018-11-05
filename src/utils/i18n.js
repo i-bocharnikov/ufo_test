@@ -7,7 +7,8 @@ i18n.use(LanguageDetector).init({
         en: {
             common: {
                 "okBtn": "OK",
-                "cancelBtn": "Cancel"
+                "cancelBtn": "Cancel",
+                "closeBtn": "Close",
             },
             activities: {
                 "internetAccessFailure": "Unexpected internet connectivity issues. Operating in offline/degraded mode",
@@ -25,11 +26,18 @@ i18n.use(LanguageDetector).init({
                 "confirmationCancel": "Cancel",
             },
             error: {
+                "error": "Error",
                 "internetConnectionRequired": "This operation requires an internet connection",
                 "bluetoothConnectionRequired": "This operation requires a blootooth connection",
                 "unexpectedServerResponse": "Oops, this was not supposed to happen. Apologises for the inconvenience",
                 "noKey": "You currently have no key. Please ask support team to have one",
-                "stringNotMatch": "Wrong confirmation string. Try again"
+                "stringNotMatch": "Wrong confirmation string. Try again",
+                "unknown": "Unknown Error",
+                "nativeException": "Native Exception",
+                "jsException": "Warning from JS exception handler",
+                "jsExceptionFatal": "Fatal JS exception",
+                "jsExceptionFatalReport": "We have reported this to our team. Please close the app and start again.",
+                "localPermissionNeeded": "Location permission is required to access the car",
             },
             icon: {
                 "reserve": "Reserve",
@@ -86,9 +94,9 @@ i18n.use(LanguageDetector).init({
                 "overviewTitle": "Registration",
                 "phoneTitle": "Register - Phone",
                 "phoneNumberLabel": "Phone",
-                "phoneNumberInputLabel": "Your mobile phone number",
+                "phoneNumberInputLabel": "Phone number",
                 "emailTitle": "Register Email",
-                "emailInputLabel": "Your email address",
+                "emailInputLabel": "Email",
                 "emailLabel": "Email",
                 "addressTitle": "Register Address",
                 "addressInputLabel": "Your billing address",
@@ -111,7 +119,10 @@ i18n.use(LanguageDetector).init({
                 "cameraPermissionTitle": 'Permission to use camera',
                 "cameraPermissionMessage": 'We need your permission to use your phone\'s camera',
                 "disconnectConfirmationMessage": "Are you sure you want to disconnect?",
-
+                "idCardPickerLabel": "Passport\nor ID card",
+                "driveCardPickerLabel": "Driving\nLicense",
+                "shareDialogTitle": "Share referal code",
+                "referalBlock": "Referal Code {{code}}"
             },
             inspect: {
                 "initialInspectionTitle": "Initial inspection",

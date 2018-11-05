@@ -1,88 +1,102 @@
-import React from "react";
+import React from 'react';
+import {
+  StyleSheet,
+  View,
+  ActivityIndicator,
+  StatusBar,
+  Alert,
+  YellowBox
+} from 'react-native';
 import { createBottomTabNavigator, createStackNavigator } from 'react-navigation';
-import { Root, StyleProvider } from "native-base";
-import { translate } from "react-i18next";
-import { observer } from "mobx-react";
-import { StyleSheet, View, ActivityIndicator, Platform, StatusBar, Alert } from 'react-native';
+import { translate } from 'react-i18next';
+import { observer } from 'mobx-react';
+import {
+  setJSExceptionHandler,
+  setNativeExceptionHandler
+} from 'react-native-exception-handler';
+import i18n from 'i18next';
+import { Root, StyleProvider } from 'native-base';
 
-//Temporary ignore warning comming from react-native
-import { YellowBox } from 'react-native';
+import UFOAdminMenu from './components/UFOAdminMenu';
+import { UFOContainer } from './components/common';
+import SupportFaqsScreen from './screens/support/faqsScreen';
+import SupportFaqScreen from './screens/support/faqScreen';
+import SupportChatScreen from './screens/support/chatScreen';
+import DriveScreen from './screens/drive/driveScreen';
+import FindScreen from './screens/guide/findScreen';
+import ReturnScreen from './screens/guide/returnScreen';
+import InspectScreen from './screens/inspect/inspectScreen';
+import LocateDamage from './screens/inspect/locateDamage';
+import CaptureDamage from './screens/inspect/captureDamage';
+import CommentDamage from './screens/inspect/commentDamage';
+import RentalAgreementScreen from './screens/term/rentalAgreementSreen';
+import ReserveLocationScreen from './screens/reserve/locationScreen';
+import ReserveDateAndCarScreen from './screens/reserve/dateAndCarScreen';
+import ReservePaymentScreen from './screens/reserve/paymentScreen';
+import SignUpScreen from './screens/SignUp';
+import RegisterPhoneScreen from './screens/SignUp/PhoneEditor';
+import RegisterEmailScreen from './screens/SignUp/EmailEditor';
+import RegisterAddressScreen from './screens/SignUp/AddressEditor';
+import RegisterIdentificationScreen from './screens/SignUp/CardIdEditor';
+import RegisterDriverLicenceScreen from './screens/SignUp/DriverCardEditor';
+import AppStore from './stores/appStore';
+import registerStore from './stores/registerStore';
+import { screens, colors, backgrounds } from './utils/global';
+import logger, { codeTypes, severityTypes } from './utils/userActionsLogger';
+import getTheme from './../native-base-theme/components';
+
+/* Handling some errors */
 YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
 YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
 
-
-import UFOAdminMenu from './components/UFOAdminMenu'
-import SupportFaqsScreen from './screens/support/faqsScreen'
-import SupportFaqScreen from './screens/support/faqScreen'
-import SupportChatScreen from './screens/support/chatScreen'
-import DriveScreen from './screens/drive/driveScreen'
-import FindScreen from './screens/guide/findScreen'
-import ReturnScreen from './screens/guide/returnScreen'
-import InspectScreen from './screens/inspect/inspectScreen'
-import LocateDamage from './screens/inspect/locateDamage'
-import CaptureDamage from './screens/inspect/captureDamage'
-import CommentDamage from './screens/inspect/commentDamage'
-import RentalAgreementScreen from './screens/term/rentalAgreementSreen'
-import ReserveLocationScreen from './screens/reserve/locationScreen'
-import ReserveDateAndCarScreen from './screens/reserve/dateAndCarScreen'
-import ReservePaymentScreen from './screens/reserve/paymentScreen'
-import RegisterOverviewScreen from './screens/register/overview'
-import RegisterEmailScreen from './screens/register/email'
-import RegisterAddressScreen from './screens/register/address'
-import RegisterPhoneScreen from './screens/register/phone'
-import RegisterIdentificationScreen from './screens/register/identification'
-import RegisterDriverLicenceScreen from './screens/register/driverLicence'
-
-import getTheme from '../native-base-theme/components';
-import { screens, colors, backgrounds } from './utils/global'
-import AppStore from './stores/appStore'
-
-
-
-import { setJSExceptionHandler, setNativeExceptionHandler } from 'react-native-exception-handler';
-import registerStore from "./stores/registerStore";
-import { UFOContainer } from "./components/common";
-
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' +
-    'Cmd+D or shake for dev menu',
-  android: 'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
-
-
-const errorHandler = (e, isFatal) => {
+const errorHandler = (error, isFatal) => {
   if (isFatal) {
+
+    const message = i18n.t('error:jsExceptionFatal');
+    logger(severityTypes.ERROR, codeTypes.ERROR, '', message, error);
+
     Alert.alert(
-      'Unexpected error occurred',
-      `
-        Error: ${(isFatal) ? 'Fatal:' : ''} ${e.name} ${e.message}
-        We have reported this to our team ! Please close the app and start again!
-        `,
+      message,
+      `${
+        i18n.t('error:jsExceptionFatalReport')
+      }\n\n${
+        i18n.t('error:error')
+      }: ${
+        error.name
+      }\n${
+        error.message
+      }`,
       [{
-        text: 'Close'
+        text: i18n.t('common:closeBtn')
       }]
     );
   } else {
-    console.log(e); // So that we can see it in the ADB logs in case of Android if needed
+
+    const message = i18n.t('error:jsException');
+    logger(severityTypes.WARN, codeTypes.ERROR, '', message, error);
   }
 };
 
-setJSExceptionHandler(errorHandler, true);
+// set true to second arg to use errorHandler in dev mode
+setJSExceptionHandler(errorHandler);
 
-setNativeExceptionHandler((errorString) => {
-  console.log('setNativeExceptionHandler');
+setNativeExceptionHandler(exceptionStr => {
+  const message = i18n.t('error:nativeException');
+  logger(severityTypes.ERROR, codeTypes.ERROR, '', message, exceptionStr);
 });
 
+/* Describing navigators */
 const commonStackNavigationOptions = {};
-
 const DriveStack = createStackNavigator(
   {
     Drive: {
       screen: DriveScreen
     },
-
-  }, { headerMode: 'none', navigationOptions: commonStackNavigationOptions }
+  },
+  {
+    headerMode: 'none',
+    navigationOptions: commonStackNavigationOptions
+  }
 );
 
 const ReserveStack = createStackNavigator(
@@ -96,7 +110,8 @@ const ReserveStack = createStackNavigator(
     Payment: {
       screen: ReservePaymentScreen
     },
-  }, {
+  },
+  {
     initialRouteName: screens.RESERVE_LOCATION.name,
     headerMode: 'none',
     navigationOptions: commonStackNavigationOptions
@@ -117,7 +132,8 @@ const InspectStack = createStackNavigator(
     InspectCommentDamage: {
       screen: CommentDamage
     },
-  }, {
+  },
+  {
     initialRouteName: screens.INSPECT.name,
     headerMode: 'none',
     navigationOptions: commonStackNavigationOptions
@@ -135,7 +151,8 @@ const SupportStack = createStackNavigator(
     SupportChat: {
       screen: SupportChatScreen
     }
-  }, {
+  },
+  {
     initialRouteName: screens.SUPPORT_FAQS.name,
     headerMode: 'none',
     navigationOptions: commonStackNavigationOptions
@@ -144,17 +161,31 @@ const SupportStack = createStackNavigator(
 
 const RegisterStack = createStackNavigator(
   {
-    Overview: { screen: RegisterOverviewScreen },
-    Phone: { screen: RegisterPhoneScreen },
-    Email: { screen: RegisterEmailScreen },
-    Address: { screen: RegisterAddressScreen },
-    Identification: { screen: RegisterIdentificationScreen },
-    DriverLicence: { screen: RegisterDriverLicenceScreen },
-
-
-  }, { initialRouteName: screens.REGISTER_OVERVIEW.name, headerMode: 'none', navigationOptions: commonStackNavigationOptions }
+    SignUp: {
+      screen: SignUpScreen
+    },
+    Phone: {
+      screen: RegisterPhoneScreen
+    },
+    Email: {
+      screen: RegisterEmailScreen
+    },
+    Address: {
+      screen: RegisterAddressScreen
+    },
+    Identification: {
+      screen: RegisterIdentificationScreen
+    },
+    DriverLicence: {
+      screen: RegisterDriverLicenceScreen
+    },
+  },
+  {
+    initialRouteName: screens.REGISTER_OVERVIEW.name,
+    headerMode: 'none',
+    navigationOptions: commonStackNavigationOptions
+  }
 );
-
 
 const RootStack = createBottomTabNavigator(
   {
@@ -185,55 +216,51 @@ const RootStack = createBottomTabNavigator(
   },
   {
     initialRouteName: screens.DRIVE.name,
-    navigationOptions: ({ navigation }) => ({ tabBarVisible: false }
-    )
-  })
+    navigationOptions: ({ navigation }) => ({tabBarVisible: false})
+  });
 
-
-@observer
-class App extends React.Component {
-
-  async componentDidMount() {
-
-    await AppStore.initialise(this.props.t)
-
-  }
-
-  render() {
-    const { t } = this.props;
-
-    if (!appStore.isAppReady) {
-      return (
-        <View style={{ flex: 1, backgroundColor: colors.TRANSITION_BACKGROUND.string() }}>
-          <UFOContainer image={backgrounds.HOME001}>
-            <ActivityIndicator style={styles.centered} size="large" color={colors.ACTIVE} />
-          </UFOContainer>
-        </View>
-      );
-    }
-
-    return (
-      <Root>
-        <StatusBar backgroundColor={colors.TRANSITION_BACKGROUND.string()} barStyle="light-content" />
-        <StyleProvider style={getTheme()}>
-          <RootStack />
-        </StyleProvider>
-        {registerStore.isAdmin && (
-          <UFOAdminMenu />
-        )}
-      </Root >
-    );
-  }
-}
-
+/* Root App component */
 const styles = StyleSheet.create({
   centered: {
     flex: 1,
     alignSelf: 'center'
+  },
+  preloadWrapper: {
+    flex: 1,
+    backgroundColor: colors.TRANSITION_BACKGROUND.string()
   }
 });
 
-export default translate("translations")(App);
+@observer
+class App extends React.Component {
+  async componentDidMount() {
+    await AppStore.initialise(this.props.t);
+  }
 
+  render() {
+    return !appStore.isAppReady ? (
+      <View style={styles.preloadWrapper}>
+          <UFOContainer image={backgrounds.HOME001}>
+            <ActivityIndicator
+              style={styles.centered}
+              size='large'
+              color={colors.ACTIVE}
+            />
+          </UFOContainer>
+        </View>
+    ) : (
+      <Root>
+        <StatusBar
+          backgroundColor={colors.TRANSITION_BACKGROUND.string()}
+          barStyle="light-content"
+        />
+        <StyleProvider style={getTheme()}>
+          <RootStack />
+        </StyleProvider>
+        {registerStore.isAdmin && <UFOAdminMenu />}
+      </Root>
+    );
+  }
+}
 
-
+export default translate('translations')(App);

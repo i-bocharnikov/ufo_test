@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
 import { Card, CardItem, Body, Left } from 'native-base';
-import { UFOImage, UFOText } from './common';
-import UFOVideo from './common/UFOVideo';
+import { UFOImage, UFOText, UFOVideo } from './common';
 import _ from 'lodash'
+import PropTypes from 'prop-types';
+
 export default class UFOCard extends Component {
 
 
@@ -100,3 +101,14 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 8
     }
 })
+
+UFOCard.propTypes = {
+    inverted: PropTypes.bool,
+    title: PropTypes.string,
+    text: PropTypes.array,
+    imageSource: PropTypes.any,
+    imageResizeMode: PropTypes.string,
+    videoSource: PropTypes.any,
+    children: PropTypes.node,
+    message: PropTypes.string
+};

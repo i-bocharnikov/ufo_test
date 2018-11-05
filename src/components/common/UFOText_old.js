@@ -1,6 +1,6 @@
 import React from "react";
 import { Text } from 'react-native'
-import { colors } from "../../utils/global";
+import { colors, fonts } from "../../utils/global";
 
 export default class UFOText extends React.Component {
 
@@ -11,7 +11,7 @@ export default class UFOText extends React.Component {
             style.color = this.props.inverted ? colors.INVERTED_TEXT.string() : colors.TEXT.string()
         }
         if (!style.fontFamily) {
-            style.fontFamily = "Sofia Pro Light"
+            style.fontFamily = fonts.LIGHT;
         }
         if (!style.fontSize) {
             style.fontSize = 14
@@ -91,3 +91,8 @@ export default class UFOText extends React.Component {
         return <Text style={style} onPress={this.props.onPress} >{text}</Text>
     }
 }
+
+/*
+ * use instead it default Text or create new UFOText component
+ * because it will not work when 'style' passed as StyleSheet.create object
+*/

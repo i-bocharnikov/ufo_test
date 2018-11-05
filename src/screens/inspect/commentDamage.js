@@ -7,7 +7,7 @@ import { observable, action } from "mobx";
 
 import UFOHeader from "../../components/header/UFOHeader";
 import UFOActionBar from "../../components/UFOActionBar";
-import { UFOContainer, UFOText, UFOImage, UFOTextInput } from '../../components/common'
+import { UFOContainer, UFOText, UFOImage, UFOTextInput_old } from '../../components/common'
 import { screens, actionStyles, icons, colors, dims } from '../../utils/global'
 import { driveStore, inspectStore } from '../../stores'
 import UFOCard from "../../components/UFOCard";
@@ -50,7 +50,7 @@ class CommentDamageScreen extends Component {
               </UFOImage>
             </View>
             <View style={{ paddingTop: 10 }} >
-              <UFOTextInput autofocus value={this.comment} autoCorrect={true} placeholder={t('inspect:commentPlaceholder')} multiline={true} numberOfLines={4} onChangeText={(text) => this.comment = text} />
+              <UFOTextInput_old autofocus value={this.comment} autoCorrect={true} placeholder={t('inspect:commentPlaceholder')} multiline={true} numberOfLines={4} onChangeText={(text) => this.comment = text} />
             </View>
           </View>
         </UFOCard>
