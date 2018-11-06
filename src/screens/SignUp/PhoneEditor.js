@@ -67,9 +67,10 @@ class PhoneScreen extends Component {
                 ...ufoInputStyles,
                 paddingHorizontal: 20
               }}
-              defaultValue={registerStore.user.phone_number}
               onChangePhoneNumber={this.onChangePhoneNumber}
-              autoFocus={true}
+              textProps={{
+                autoFocus: true
+              }}
             />
             <CountryPicker
               ref={ref => (this.countryPicker = ref)}
