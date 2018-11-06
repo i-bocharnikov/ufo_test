@@ -1,4 +1,4 @@
-import { NativeModules, DeviceEventEmitter, AppRegistry } from 'react-native';
+import { NativeModules, DeviceEventEmitter, NativeEventEmitter, Platform } from 'react-native';
 import { observable, action, computed } from 'mobx';
 import { persist } from 'mobx-persist';
 import moment from 'moment';
@@ -8,6 +8,11 @@ import { actionStyles, icons } from './../utils/global';
 import { postToApi, checkConnectivity } from './../utils/api';
 import { showToastError } from './../utils/interaction';
 import logger, { codeTypes, severityTypes } from './../utils/userActionsLogger';
+
+const { OTAKeyModule } = NativeModules;
+const PlatformEventEmitter = Platform === 'ios'
+    ? new NativeEventEmitter(OTAKeyModule)
+    : DeviceEventEmitter;
 
 class Vehicle {
     @persist @observable vin: String;
@@ -69,7 +74,7 @@ class VehicleData {
 class OTAKeyStore {
 
     keyAccessDeviceRegistrationNumber = 9706753;
-    ota = NativeModules.OTAKeyModule;
+    ota = OTAKeyModule;
 
     @persist keyAccessDeviceRegistrationNumber: Number;
     @persist keyAccessDeviceIdentifier: string;
@@ -261,11 +266,22 @@ class OTAKeyStore {
                     String(showError)
                 }) start`
             });
-            const result = await this.ota.register(this.keyAccessDeviceRegistrationNumber);
+            const result = Platform.OS === 'ios'
+                ? await this.ota.register()
+                : await this.ota.register(this.keyAccessDeviceRegistrationNumber);
 
-            DeviceEventEmitter.addListener('onOtaVehicleDataUpdated', this.onOtaVehicleDataUpdated);
-            DeviceEventEmitter.addListener('onOtaActionPerformed', this.onOtaActionPerformed);
-            DeviceEventEmitter.addListener('onOtaBluetoothStateChanged', this.onOtaBluetoothStateChanged);
+            PlatformEventEmitter.addListener(
+                'onOtaVehicleDataUpdated',
+                this.onOtaVehicleDataUpdated
+            );
+            PlatformEventEmitter.addListener(
+                'onOtaActionPerformed',
+                this.onOtaActionPerformed
+            );
+            PlatformEventEmitter.addListener(
+                'onOtaBluetoothStateChanged',
+                this.onOtaBluetoothStateChanged
+            );
 
             await this.otaKeyLogger({
                 severity: severityTypes.DEBUG,
@@ -686,6 +702,7 @@ class OTAKeyStore {
 
     @action
     async configureNetworkTimeouts(connectTimeout: Number, readTimeout: Number, showError = true): Promise<boolean> {
+        // unused method
         try {
             await this.otaKeyLogger({
                 severity: severityTypes.DEBUG,
@@ -770,6 +787,7 @@ class OTAKeyStore {
 
     @action
     async isOperationInProgress(showError = true): Promise<boolean> {
+        // unused method
         try {
             await this.otaKeyLogger({
                 severity: severityTypes.DEBUG,
@@ -801,7 +819,7 @@ class OTAKeyStore {
 
     @action
     async getBluetoothState(showError = true): Promise<string> {
-
+        // unused method
         try {
             await this.otaKeyLogger({
                 severity: severityTypes.DEBUG,
@@ -840,7 +858,9 @@ class OTAKeyStore {
                 code: codeTypes.SUCCESS,
                 message: `-> this.ota.connect(${String(showNotification)}, ${String(showError)}) start`
             });
-            const result = await this.ota.connect(showNotification);
+            const result = Platform.OS === 'ios'
+                ? await this.ota.connect()
+                : await this.ota.connect(showNotification);
             await this.otaKeyLogger({
                 severity: severityTypes.INFO,
                 action: 'connectToVehicle',

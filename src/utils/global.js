@@ -1,6 +1,6 @@
 import Color from 'color'
 import configurations from './configurations';
-import { Dimensions } from 'react-native'
+import { Dimensions, Platform } from 'react-native'
 
 const THEME_UFO = 'UFO'
 const THEME_ACL = 'ACL'
@@ -273,6 +273,7 @@ export const errors = {
 }
 
 export const fonts = {
-    REGULAR: 'Sofia Pro',
-    LIGHT: 'SofiaProLight'
+    // add fontWeight for ios
+    REGULAR: Platform.OS === 'android' ? 'Sofia Pro' : 'Sofia Pro',
+    LIGHT: Platform.OS === 'android' ? 'SofiaProLight' : 'Sofia Pro',
 };
