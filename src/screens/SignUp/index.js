@@ -240,7 +240,10 @@ class SignUpScreen extends Component {
   };
 
   shareRefCode = () => {
-    const content = {message: registerStore.user.referral_code || ''};
+    const code = registerStore.user.referral_code;
+    const message = this.props.t('register:referalCodeMessage', { code });
+
+    const content = { message };
     const options = {};
 
     if (Platform.OS === 'android') {
