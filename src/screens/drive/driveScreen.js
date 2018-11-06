@@ -261,7 +261,7 @@ class DriveScreen extends Component {
 
       await otaKeyStore.getUsedKey();
 
-      if (otaKeyStore.key.keyId !== driveStore.rental.key_id) {
+      if (otaKeyStore.key && otaKeyStore.key.keyId !== driveStore.rental.key_id) {
         await otaKeyStore.switchToKey(false);
       }
 
@@ -301,7 +301,7 @@ class DriveScreen extends Component {
 
       await otaKeyStore.getUsedKey();
 
-      if (otaKeyStore.key.keyId !== driveStore.rental.key_id) {
+      if (otaKeyStore.key && otaKeyStore.key.keyId !== driveStore.rental.key_id) {
         await otaKeyStore.switchToKey(true);
       }
 

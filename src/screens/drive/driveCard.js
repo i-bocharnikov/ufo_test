@@ -39,7 +39,7 @@ class DriveCard extends Component {
         <UFOImage source={{ uri: carModel.image_side_url }} style={{ width: DRIVE_CARD_WIDTH, height: DRIVE_CARD_HEIGHT }} resizeMode={'contain'} />
         <UFOText h3 bold style={{}}>{t("drive:rentalCarModel", { rental: rental })}</UFOText>
         <UFOText h3 bold style={{}}>{t("drive:rentalCar", { rental: rental })}</UFOText>
-        <UFOText h4>{!driveStore.inUse ? "" : (driveStore.rental && !driveStore.rental.key_id) || !otaKeyStore.key.isEnabled ? t("drive:noKey") : otaKeyStore.isConnecting ? t("drive:connecting") : !otaKeyStore.isConnected ? t("drive:notConnected") : otaKeyStore.doorsLocked ? t("drive:locked") : t("drive:unlocked")}</UFOText>
+        <UFOText h4>{!driveStore.inUse ? "" : (driveStore.rental && !driveStore.rental.key_id) || !(otaKeyStore.key && otaKeyStore.key.isEnabled) ? t("drive:noKey") : otaKeyStore.isConnecting ? t("drive:connecting") : !otaKeyStore.isConnected ? t("drive:notConnected") : otaKeyStore.doorsLocked ? t("drive:locked") : t("drive:unlocked")}</UFOText>
         <UFOText h4 bold style={{ marginTop: 10 }}>{t("drive:rentalStartAt", { start_at: driveStore.format(rental.start_at, dateFormats.DRIVE) })}</UFOText>
         <UFOText h4 upper style={{}}>{t("drive:rentalLocation", { rental: rental })}</UFOText>
         <UFOText h4 bold style={{}}>{t("drive:rentalEndAt", { end_at: driveStore.format(rental.end_at, dateFormats.DRIVE) })}</UFOText>
