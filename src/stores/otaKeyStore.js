@@ -535,7 +535,7 @@ class OTAKeyStore {
     }
 
     @computed get isKeyEnabled() {
-        return this.key && driveStore.rental && this.key.keyId === driveStore.rental.key_id && this.key && this.key.isEnabled;
+        return this.key && driveStore.rental && this.key.keyId === driveStore.rental.key_id && this.key.isEnabled;
     }
 
     @action
