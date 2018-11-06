@@ -105,7 +105,8 @@ const styles = StyleSheet.create({
 UFOCard.propTypes = {
     inverted: PropTypes.bool,
     title: PropTypes.string,
-    text: PropTypes.array,
+    texts: PropTypes.array,
+    text: PropTypes.string,
     imageSource: PropTypes.any,
     imageResizeMode: PropTypes.string,
     videoSource: PropTypes.any,
