@@ -42,9 +42,13 @@ class InspectScreen extends Component {
   }
 
   renderDamage({ item, index }) {
-    let damage = item
     return (
-      <UFOCard title={'Damage ' + (index + 1) + '/' + inspectStore.carDamages.length} text={damage.comment} imageSource={{ reference: damage.document.reference }} />
+      <UFOCard
+        title={`Damage ${index + 1}/${inspectStore.carDamages.length}`}
+        text={item.comment}
+        imageSource={{reference: item.document.reference}}
+        imageResizeMode="contain"
+      />
     );
   }
 

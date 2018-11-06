@@ -13,11 +13,10 @@ import { driveStore, inspectStore } from '../../stores'
 import UFOCard from "../../components/UFOCard";
 const markerImage = require('../../assets/images/marker.png')
 
-const window = Dimensions.get('window');
-const DEVICE_WIDTH = Dimensions.get('window').width
-const DEVICE_HEIGHT = DEVICE_WIDTH / 2
-const CAR_WIDTH = Dimensions.get('window').width - 40
-const CAR_HEIGHT = CAR_WIDTH / 2
+const { width: DEVICE_WIDTH, height: DEVICE_HEIGHT } = Dimensions.get('window');
+const CAMERA_RATIO = 4 / 3;
+const THUMB_WIDTH = DEVICE_WIDTH / 3;
+const THUMB_HEIGHT = THUMB_WIDTH * CAMERA_RATIO;
 
 @observer
 class CommentDamageScreen extends Component {
@@ -36,10 +35,14 @@ class CommentDamageScreen extends Component {
         <UFOCard title={t('inspect:commentGuidance')}>
           <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignContent: 'center' }}>
-              <UFOImage source={{ reference: inspectStore.documentReference }} style={{
-                width: DEVICE_WIDTH / 3, height: DEVICE_HEIGHT / 3
-              }} />
-              <UFOImage style={{ width: DEVICE_WIDTH / 3, height: DEVICE_HEIGHT / 3 }} source={{ uri: carModel.image_top_h_url }} >
+              <UFOImage
+                source={{reference: inspectStore.documentReference}}
+                style={{ width: THUMB_WIDTH, height: THUMB_HEIGHT}}
+              />
+              <UFOImage
+                style={{width: DEVICE_WIDTH / 3, height: DEVICE_HEIGHT / 6}}
+                source={{uri: carModel.image_top_h_url}}
+              >
                 <UFOImage style={{
                   position: 'relative',
                   left: inspectStore.relativePositionX * 100 - 3 + "%",
