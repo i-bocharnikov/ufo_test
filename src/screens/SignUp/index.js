@@ -1,5 +1,15 @@
 import React, { Component, Fragment } from 'react';
-import { View, Text, Image, TouchableOpacity, Share, Platform } from 'react-native';
+import {
+  View,
+  ScrollView,
+  RefreshControl,
+  Text,
+  Image,
+  TouchableOpacity,
+  Share,
+  Platform
+} from 'react-native';
+import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { translate } from 'react-i18next';
 import _ from 'lodash';
@@ -24,6 +34,9 @@ import styles from './styles';
 
 @observer
 class SignUpScreen extends Component {
+
+  @observable refreshing = false;
+
   componentDidMount() {
     this.initLoad();
   }
@@ -100,7 +113,15 @@ class SignUpScreen extends Component {
           title={t('register:overviewTitle', {user: registerStore.user})}
           currentScreen={screens.REGISTER_OVERVIEW}
         />
-        <View style={styles.bodyWrapper}>
+        <ScrollView
+          contentContainerStyle={styles.bodyWrapper}
+          refreshControl={
+            <RefreshControl
+              onRefresh={this.refreshSignUpData}
+              refreshing={this.refreshing}
+            />
+          }
+        >
           <UFOTextInput
             placeholder={t('register:phoneNumberInputLabel')}
             defaultValue={registerStore.user.phone_number}
@@ -167,7 +188,7 @@ class SignUpScreen extends Component {
               {registerStore.user.registration_message}
             </Text>
           )}
-        </View>
+        </ScrollView>
         <UFOActionBar actions={this.compileActions()} />
       </UFOContainer>
     );
@@ -307,6 +328,13 @@ class SignUpScreen extends Component {
     } else {
       registerStore.driverLicenceBackDocument = null;
     }
+  };
+
+  refreshSignUpData = async () => {
+    this.refreshing = true;
+    await registerStore.getUserData();
+    await this.initLoad();
+    this.refreshing = false;
   };
 }
 
