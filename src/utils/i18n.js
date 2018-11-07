@@ -190,7 +190,7 @@ i18n.use(LanguageDetector).init({
       term: {
         "confirmContractTitle": "Enter \"{{strKey}}\" to confirm",
         "confirmContractKeyString": "Je suis d'accord"
-      },
+      }
     }
   },
   fallbackLng: "en",

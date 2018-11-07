@@ -90,7 +90,7 @@ export default class UFOTextInput extends React.Component {
         let keyboardType = this.props.keyboardType ? this.props.keyboardType : 'default'
         let placeholder = this.props.placeholder ? this.props.placeholder : "..."
         let value = this.props.value ? this.props.value : null
-        let onChangeText = this.props.onChangeText && editable ? this.props.onChangeText : (text) => console.log("UFOTextInput.onChangeText not implemented or text readonly. text " + text + " ignored")
+        let onChangeText = this.props.onChangeText && editable ? this.props.onChangeText : () => null;
         return (
             <View style={{ paddingHorizontal: 20, width: "100%" }}>
                 <TextInput
