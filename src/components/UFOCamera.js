@@ -5,6 +5,7 @@ import ImageRotate from 'react-native-image-rotate';
 import PropTypes from 'prop-types';
 
 import { showWarning } from './../utils/interaction';
+import { checkAndRequestCameraPermission } from './../utils/permissions';
 
 export const RNCAMERA_CONSTANTS = RNCamera.Constants;
 
@@ -22,22 +23,34 @@ export default class UFOCamera extends React.Component {
   constructor() {
     super();
     this.camera = null;
+    this.state = {
+      hasPermit: false
+    };
+  }
+
+  async componentDidMount() {
+    const { forbiddenCallback } = this.props;
+    const hasPermit = await checkAndRequestCameraPermission();
+
+    if (typeof forbiddenCallback === 'function' && !hasPermit) {
+      forbiddenCallback();
+    }
+    
+    this.setState({ hasPermit });
   }
 
   render() {
     const { t, ...restCameraProps } = this.props;
 
-    return (
+    return this.state.hasPermit ? (
       <RNCamera
         style={styles.preview}
         type={RNCamera.Constants.Type.back}
         flashMode={RNCamera.Constants.FlashMode.auto}
-        permissionDialogTitle={t('register:cameraPermissionTitle')}
-        permissionDialogMessage={t('register:cameraPermissionMessage')}
         {...restCameraProps}
         ref={ref => (this.camera = ref)}
       />
-    );
+    ) : null;
   }
 
   rotateImage = imageData => new Promise((resolve, reject) => {
@@ -86,5 +99,6 @@ export default class UFOCamera extends React.Component {
 
 UFOCamera.propTypes = {
   t: PropTypes.func.isRequired,
+  forbiddenCallback: PropTypes.func,
   ...RNCamera.propTypes
 };

@@ -68,6 +68,7 @@ class CaptureDamageScreen extends Component {
           t={t}
           onCameraReady={() => (this.isCameraAllowed = true)}
           ref={ref => (this.cameraRef = ref)}
+          forbiddenCallback={navigation.goBack}
         />
       </View>
     );

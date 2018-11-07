@@ -1,6 +1,8 @@
 import Permissions from 'react-native-permissions';
+import i18n from 'i18next';
 
 import logger, { codeTypes, severityTypes } from './userActionsLogger';
+import { showAlertInfo } from './interaction';
 
 export async function checkAndRequestLocationPermission() {
   return await checkAndRequestPermission('location');
@@ -20,6 +22,13 @@ async function checkAndRequestPermission(type) {
 
     if (status === 'authorized') {
       return true;
+
+    } else if (status === 'restricted') {
+      const title = i18n.t('register:cameraPermissionTitle');
+      const message = i18n.t('register:restrictedCamera');
+      await showAlertInfo(title, message);
+
+      return false;
     }
 
     const permRequest = await Permissions.request(type);

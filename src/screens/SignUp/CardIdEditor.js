@@ -97,7 +97,6 @@ class IdentificationScreen extends Component {
     const sample = this.captureState === captureStates.CAPTURE_FRONT
       ? images.captureCardIdFront
       : images.captureCardIdBack;
-
     return (
       <UFOContainer image={screens.REGISTER_OVERVIEW.backgroundImage}>
         <UFOHeader
@@ -136,6 +135,7 @@ class IdentificationScreen extends Component {
               onCameraReady={() => (this.isCameraAllowed = true)}
               flashMode={RNCAMERA_CONSTANTS.FlashMode.on}
               ref={ref => (this.cameraRef = ref)}
+              forbiddenCallback={navigation.goBack}
             />
             <ImageBackground
               source={sample}

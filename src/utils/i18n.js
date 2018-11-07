@@ -122,7 +122,8 @@ i18n.use(LanguageDetector).init({
         "driveCardPickerLabel": "Driving\nLicense",
         "shareDialogTitle": "Share referal code",
         "referalBlock": "Referal Code {{code}}",
-        "referalCodeMessage": "You can use my UFODRIVE referral code {{code}} to get €30 off of your first ride, and drive to space!"
+        "referalCodeMessage": "You can use my UFODRIVE referral code {{code}} to get €30 off of your first ride, and drive to space!",
+        "restrictedCamera": "To use camera activate it in the phone settings",
       },
       inspect: {
         "initialInspectionTitle": "Initial inspection",

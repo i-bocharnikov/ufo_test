@@ -2,7 +2,7 @@ import { Alert, Vibration, ToastAndroid } from 'react-native';
 import prompt from 'react-native-prompt-android';
 import i18n from 'i18next';
 
-export async function confirm(title = '', message='', action) {
+export async function confirm(title = '', message = '', action) {
   await Alert.alert(
     title,
     message,
@@ -12,6 +12,18 @@ export async function confirm(title = '', message='', action) {
     ],
     {cancelable: true}
   );
+}
+
+export async function showAlertInfo(title = '', message = '') {
+  return new Promise(resolve => {
+    Alert.alert(
+      title,
+      message,
+      [
+        {text: i18n.t('common:okBtn'), onPress: resolve}
+      ],
+    );
+  });
 }
 
 export async function showToastError(key, error = '') {
