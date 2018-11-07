@@ -40,7 +40,7 @@ class CommentDamageScreen extends Component {
                 style={{ width: THUMB_WIDTH, height: THUMB_HEIGHT}}
               />
               <UFOImage
-                style={{width: DEVICE_WIDTH / 3, height: DEVICE_HEIGHT / 6}}
+                style={{width: DEVICE_WIDTH / 3, height: DEVICE_WIDTH / 6}}
                 source={{uri: carModel.image_top_h_url}}
               >
                 <UFOImage style={{
