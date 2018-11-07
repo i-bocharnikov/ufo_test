@@ -8,7 +8,7 @@ export default StyleSheet.create({
   bodyWrapper: {
     flex: 1,
     paddingHorizontal: 24,
-    marginTop: 32,
+    marginTop: 32
   },
 
   inputBlock: {
@@ -53,7 +53,7 @@ export default StyleSheet.create({
   cardThumb: {
     width: 82,
     height: 46,
-    marginBottom: 1,
+    marginBottom: 1
   },
 
   registrationStatus: {
@@ -70,20 +70,20 @@ export default StyleSheet.create({
     alignItems: 'center',
     height: 58,
     paddingHorizontal: 24,
-    backgroundColor: colors.INPUT_BG,
+    backgroundColor: colors.INPUT_BG
   },
 
   referalLabel: {
     fontSize: 17,
     fontFamily: fonts.LIGHT,
-    flex: 1,
+    flex: 1
   },
 
   referalImg: {
     height: 35,
     width: 28,
     resizeMode: 'contain',
-    marginLeft: 8,
+    marginLeft: 8
   },
 
   inputIcon: {
@@ -96,7 +96,7 @@ export default StyleSheet.create({
     position: 'absolute',
     marginLeft: 0,
     top: 8,
-    right: 12,
+    right: 12
   },
 
   cardsWrapper: {
@@ -116,6 +116,6 @@ export default StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',
-    fontFamily: fonts.LIGHT,
+    fontFamily: fonts.LIGHT
   }
 });

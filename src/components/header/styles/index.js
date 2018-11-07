@@ -12,7 +12,7 @@ export default StyleSheet.create({
   activityMessages: {
     backgroundColor: colors.ERROR.string(),
     height: 15,
-    width: '100%',
+    width: '100%'
   },
 
   headerContainer: {
@@ -20,28 +20,28 @@ export default StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignContent: 'center',
-    width: '100%',
+    width: '100%'
   },
 
   left: {
     flex: 0.15,
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
 
   body: {
     flex: 0.7,
     flexDirection: 'row',
     alignItems: 'flex-start',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
 
   right: {
     flex: 0.15,
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
 
   logo: {

@@ -19,13 +19,13 @@ const styles = StyleSheet.create({
     height: 80,
     backgroundColor: 'transparent',
     flexDirection: 'column-reverse',
-    justifyContent: 'flex-start',
+    justifyContent: 'flex-start'
   },
   actionBar: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'flex-start',
-    flex: 1,
+    flex: 1
   },
   progressBar: {
     height: 14
@@ -40,7 +40,7 @@ export default class UFOActionBar extends Component {
     super();
     this.state = {
       fadeAnim: new Animated.Value(0),
-      bottomAnimatedPosition: new Animated.Value(0),
+      bottomAnimatedPosition: new Animated.Value(0)
     };
   }
 
@@ -52,7 +52,7 @@ export default class UFOActionBar extends Component {
       this.state.fadeAnim,
       {
         toValue: 1,
-        duration: 500,
+        duration: 500
       }
     ).start();
   }
@@ -65,7 +65,7 @@ export default class UFOActionBar extends Component {
       this.state.fadeAnim,
       {
         toValue: 0,
-        duration: 500,
+        duration: 500
       }
     ).start();
   }

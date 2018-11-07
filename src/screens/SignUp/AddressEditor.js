@@ -37,7 +37,7 @@ const googleInputStyles = StyleSheet.create({
     ...ufoInputStyles,
     marginLeft: 0,
     marginRight: 0,
-    borderRadius: 0,
+    borderRadius: 0
   },
   separator: {
     backgroundColor: 'transparent'
@@ -134,7 +134,7 @@ class AddressScreen extends Component {
           : actionStyles.DISABLE,
         icon: isInWizzard ? icons.NEXT : icons.SAVE,
         onPress: async () => await this.doSave(isInWizzard)
-      },
+      }
     ];
 
     return actions;

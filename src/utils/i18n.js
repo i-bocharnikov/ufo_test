@@ -10,22 +10,22 @@ i18n.use(LanguageDetector).init({
         "closeBtn": "Close",
         "modeAuto": "auto",
         "modeOn": "on",
-        "modeOff": "off",
+        "modeOff": "off"
       },
       activities: {
         "internetAccessFailure": "Unexpected internet connectivity issues. Operating in offline/degraded mode",
         "bluetoothAccessFailure": "Unexpected bluetooth connectivity issues. Operating in offline/degraded mode",
-        "internetbluetoothAccessFailure": "Unexpected internet and bluetooth connectivity issues. Operating in offline/degraded mode",
+        "internetbluetoothAccessFailure": "Unexpected internet and bluetooth connectivity issues. Operating in offline/degraded mode"
       },
       home: {
         "reserve": "1. Reserve a car",
         "register": "2. Register your profile",
-        "drive": "3. Drive your rented car",
+        "drive": "3. Drive your rented car"
       },
       global: {
         "confirmationTitle": "Confirmation needed",
         "confirmationOk": "OK",
-        "confirmationCancel": "Cancel",
+        "confirmationCancel": "Cancel"
       },
       error: {
         "error": "Error",
@@ -39,7 +39,7 @@ i18n.use(LanguageDetector).init({
         "jsException": "Warning from JS exception handler",
         "jsExceptionFatal": "Fatal JS exception",
         "jsExceptionFatalReport": "We have reported this to our team. Please close the app and start again.",
-        "localPermissionNeeded": "Location permission is required to access the car",
+        "localPermissionNeeded": "Location permission is required to access the car"
       },
       icon: {
         "reserve": "Reserve",
@@ -90,7 +90,7 @@ i18n.use(LanguageDetector).init({
         "clipboard": "clipboard",
         "browse": "Open browser",
         "closeRental": "Close rental",
-        "emergencyCall": "Emergency call",
+        "emergencyCall": "Emergency call"
       },
       register: {
         "overviewTitle": "Registration",
@@ -126,7 +126,7 @@ i18n.use(LanguageDetector).init({
         "shareDialogTitle": "Share referal code",
         "referalBlock": "Referal Code {{code}}",
         "referalCodeMessage": "You can use my UFODRIVE referral code {{code}} to get €30 off of your first ride, and drive to space!",
-        "restrictedCamera": "To use camera activate it in the phone settings",
+        "restrictedCamera": "To use camera activate it in the phone settings"
       },
       inspect: {
         "initialInspectionTitle": "Initial inspection",
@@ -151,7 +151,7 @@ i18n.use(LanguageDetector).init({
         "bookingLink": "Coming soon, please follow this link to book a car"
       },
       support: {
-        "supportTitle": "How can we help you?",
+        "supportTitle": "How can we help you?"
       },
       drive: {
         "driveTitle": "Rental",
@@ -170,7 +170,7 @@ i18n.use(LanguageDetector).init({
         "connecting": "...Connecting...",
         "locked": "Doors locked",
         "unlocked": "Doors unlocked",
-        "noData": "...",
+        "noData": "..."
       },
       guide: {
         "findTitle": "Where is the car",
@@ -180,16 +180,16 @@ i18n.use(LanguageDetector).init({
         "rentalAgreementTitle": "Sign the agreement",
         "confirmContractDescription": "By signing, I certify that I have read and fully accepted the terms and conditions.",
         "confirmContractTitle": "Enter \"{{strKey}}\" to confirm",
-        "confirmContractKeyString": "I agree",
-      },
+        "confirmContractKeyString": "I agree"
+      }
     },
     fr: {
       home: {
-        "welcome": "Bonjour {{user.reference}}, voici les prochaine actions?",
+        "welcome": "Bonjour {{user.reference}}, voici les prochaine actions?"
       },
       term: {
         "confirmContractTitle": "Enter \"{{strKey}}\" to confirm",
-        "confirmContractKeyString": "Je suis d'accord",
+        "confirmContractKeyString": "Je suis d'accord"
       },
     }
   },
@@ -203,7 +203,7 @@ i18n.use(LanguageDetector).init({
   keySeparator: false, // we use content as keys
 
   interpolation: {
-    escapeValue: false, // not needed for react!!
+    escapeValue: false // not needed for react!!
   },
 
   react: {

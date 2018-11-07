@@ -8,7 +8,7 @@ export async function confirm(title = '', message = '', action) {
     message,
     [
       {text: i18n.t('common:cancelBtn'), onPress: () => null, style: 'cancel'},
-      {text: i18n.t('common:okBtn'), onPress: () => action()},
+      {text: i18n.t('common:okBtn'), onPress: () => action()}
     ],
     {cancelable: true}
   );

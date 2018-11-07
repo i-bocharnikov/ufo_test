@@ -83,7 +83,7 @@ class EmailScreen extends Component {
             : actionStyles.DISABLE,
         icon: isInWizzard ? icons.NEXT : icons.SAVE,
         onPress: async () => await this.doSave(isInWizzard)
-      },
+      }
     ];
 
     return actions;

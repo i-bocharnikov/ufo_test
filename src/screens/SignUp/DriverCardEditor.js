@@ -41,7 +41,7 @@ const captureStates = {
   PREVIEW: 'PREVIEW',
   CAPTURE_FRONT: 'CAPTURE_FRONT',
   CAPTURE_BACK: 'CAPTURE_BACK',
-  VALIDATE: 'VALIDATE',
+  VALIDATE: 'VALIDATE'
 };
 
 const bgImageStyles = StyleSheet.create({
@@ -187,12 +187,12 @@ class DriverLicenceScreen extends Component {
     const cropData = {
       offset: {
         x: PADDING_WIDTH * ratioX,
-        y: PADDING_HEIGHT * ratioy,
+        y: PADDING_HEIGHT * ratioy
       },
       size: {
         width: CARD_WIDTH * ratioX,
-        height: CARD_HEIGHT * ratioy,
-      },
+        height: CARD_HEIGHT * ratioy
+      }
     };
     ImageEditor.cropImage(uri, cropData, url => {
       if (this.captureState === captureStates.CAPTURE_FRONT) {

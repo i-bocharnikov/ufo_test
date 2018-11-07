@@ -10,7 +10,7 @@ export const severityTypes = {
     DEBUG: 'debug',
     INFO: 'info',
     WARN: 'warn',
-    ERROR: 'error',
+    ERROR: 'error'
 };
 
 export default async function userActionsLogger(

@@ -74,14 +74,13 @@ export const colors = {
     PRIMARY: new Color.rgb(64, 101, 125),
     DISABLE: new Color.rgb(151, 151, 151),
     PENDING: new Color.rgb(151, 151, 151),
-    SUCCESS: new Color('#03DAC6'),
     ERROR: new Color.rgb(234, 80, 76), //new Color('#C8102E'),
     WARNING: new Color.rgb(255, 87, 34),
     WRONG: new Color('yellow'),
 
     INPUT_BG: new Color.rgb(255, 255, 255),     // #FFF
     TEXT_DARK: new Color.rgb(47, 47, 47),       // #2F2F2F
-    SUCCESS: new Color.rgb(64, 184, 68),        // #40B844
+    SUCCESS: new Color.rgb(64, 184, 68)         // #40B844
 }
 
 
@@ -275,5 +274,5 @@ export const errors = {
 export const fonts = {
     // add fontWeight for ios
     REGULAR: Platform.OS === 'android' ? 'Sofia Pro' : 'Sofia Pro',
-    LIGHT: Platform.OS === 'android' ? 'SofiaProLight' : 'Sofia Pro',
+    LIGHT: Platform.OS === 'android' ? 'SofiaProLight' : 'Sofia Pro'
 };

@@ -76,7 +76,6 @@ class OTAKeyStore {
     keyAccessDeviceRegistrationNumber = 9706753;
     ota = OTAKeyModule;
 
-    @persist keyAccessDeviceRegistrationNumber: Number;
     @persist keyAccessDeviceIdentifier: string;
     @persist keyAccessDeviceToken: string;
 

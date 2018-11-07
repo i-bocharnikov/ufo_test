@@ -178,7 +178,7 @@ const RegisterStack = createStackNavigator(
     },
     DriverLicence: {
       screen: RegisterDriverLicenceScreen
-    },
+    }
   },
   {
     initialRouteName: screens.REGISTER_OVERVIEW.name,

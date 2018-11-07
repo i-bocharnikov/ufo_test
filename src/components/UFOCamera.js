@@ -35,13 +35,13 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     bottom: 0,
-    right: 0,
+    right: 0
   },
   torchBtn: {
     flexDirection: 'row',
     alignSelf: 'center',
     alignItems: 'center',
-    opacity: 0.4,
+    opacity: 0.6,
     paddingHorizontal: 24,
     paddingVertical: 4,
     marginTop: 60
@@ -71,7 +71,6 @@ export default class UFOCamera extends React.Component {
     if (typeof forbiddenCallback === 'function' && !hasPermit) {
       forbiddenCallback();
     }
-    
     this.setState({ hasPermit });
   }
 

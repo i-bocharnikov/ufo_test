@@ -27,7 +27,7 @@ export default class UFOImage extends React.Component {
         style={[style, isLoading && ownStyles.preloader]}
         source={{
           uri,
-          headers: isRefImage ? {Authorization: `Bearer ${SAVE_TOKEN}`} : {},
+          headers: isRefImage ? {Authorization: `Bearer ${SAVE_TOKEN}`} : {}
         }}
         {...restProps}
       >
