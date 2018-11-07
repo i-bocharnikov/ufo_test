@@ -8,6 +8,9 @@ i18n.use(LanguageDetector).init({
         "okBtn": "OK",
         "cancelBtn": "Cancel",
         "closeBtn": "Close",
+        "modeAuto": "auto",
+        "modeOn": "on",
+        "modeOff": "off",
       },
       activities: {
         "internetAccessFailure": "Unexpected internet connectivity issues. Operating in offline/degraded mode",

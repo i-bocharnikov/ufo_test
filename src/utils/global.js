@@ -226,7 +226,7 @@ export const icons = {
     SELECT: new Icon('play', 'icon:select'),
     CAPTURE: new Icon('camera', 'icon:capture'),
     NEW_CAPTURE: new Icon('camera', 'icon:newCapture'),
-    TORCH: new Icon('flashlight', 'icon:torch'),
+    TORCH: new Icon('flash', 'icon:torch'),
     VALIDATE: new Icon('checkmark', 'icon:validate'),
     DONE: new Icon('checkmark', 'icon:done'),
     CANCEL: new Icon('close', 'icon:cancel'),

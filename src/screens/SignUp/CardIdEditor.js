@@ -131,9 +131,7 @@ class IdentificationScreen extends Component {
         {showCamera && (
           <Fragment>
             <UFOCamera
-              t={t}
               onCameraReady={() => (this.isCameraAllowed = true)}
-              flashMode={RNCAMERA_CONSTANTS.FlashMode.on}
               ref={ref => (this.cameraRef = ref)}
               forbiddenCallback={navigation.goBack}
             />

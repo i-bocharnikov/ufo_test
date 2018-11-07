@@ -65,7 +65,6 @@ class CaptureDamageScreen extends Component {
           logo
         />
         <UFOCamera
-          t={t}
           onCameraReady={() => (this.isCameraAllowed = true)}
           ref={ref => (this.cameraRef = ref)}
           forbiddenCallback={navigation.goBack}
