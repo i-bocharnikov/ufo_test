@@ -37,7 +37,7 @@ class CommentDamageScreen extends Component {
             <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignContent: 'center' }}>
               <UFOImage
                 source={{reference: inspectStore.documentReference}}
-                style={{ width: THUMB_WIDTH, height: THUMB_HEIGHT}}
+                style={{width: THUMB_WIDTH, height: THUMB_HEIGHT}}
               />
               <UFOImage
                 style={{width: DEVICE_WIDTH / 3, height: DEVICE_WIDTH / 6}}

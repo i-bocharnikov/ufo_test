@@ -136,7 +136,8 @@ i18n.use(LanguageDetector).init({
         "commentDamageTitle": "Describe damage 3/3",
         "commentGuidance": "Add a comment",
         "commentPlaceholder": "your comment",
-        "confirmInspectionConfirmationMessage": "You are about to confirm the car condition conforms to the description on the screen.\nThank you."
+        "confirmInspectionConfirmationMessage": "You are about to confirm the car condition conforms to the description on the screen.\nThank you.",
+        "damageCardTitle": "Damage {{index}}/{{amount}}"
       },
       reserve: {
         "reserveTitle": "Reserve",
