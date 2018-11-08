@@ -169,7 +169,7 @@ class PhoneScreen extends Component {
       actions.push({
         style: registerStore.isConnected ? actionStyles.ACTIVE : actionStyles.DISABLE,
         icon: icons.LOGOUT,
-        onPress: async () => await this.doDisconnect(t, isInWizzard)
+        onPress: async () => await this.doDisconnect(this.props.t, isInWizzard)
       });
     }
 

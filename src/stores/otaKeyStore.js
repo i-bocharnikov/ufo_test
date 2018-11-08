@@ -1,6 +1,5 @@
 import { NativeModules, DeviceEventEmitter, NativeEventEmitter, Platform } from 'react-native';
 import { observable, action, computed } from 'mobx';
-import { persist } from 'mobx-persist';
 import moment from 'moment';
 
 import { driveStore } from '.';
@@ -15,32 +14,32 @@ const PlatformEventEmitter = Platform === 'ios'
     : DeviceEventEmitter;
 
 class Vehicle {
-    @persist @observable vin: String;
-    @persist @observable otaExtId: String;
-    @persist @observable otaId: Number;
-    @persist @observable model: String;
-    @persist @observable brand: String;
-    @persist @observable plate: String;
-    @persist @observable isEnabled: boolean;
+    @observable vin;
+    @observable otaExtId;
+    @observable otaId;
+    @observable model;
+    @observable brand;
+    @observable plate;
+    @observable isEnabled;
 }
 
 class Key {
-    @persist @observable beginDate: Moment;
-    @persist @observable endDate: Moment;
-    @persist @observable mileageLimit: Number;
-    @persist @observable vehicle: Vehicle = new Vehicle;
-    @persist @observable keyId: Number;
-    @persist @observable extId: String;
-    @persist @observable isEnabled: boolean;
-    @persist @observable isUsed: boolean;
-    @persist @observable keyArgs: String;
-    @persist @observable keySensitiveArgs: String;
+    @observable beginDate;
+    @observable endDate;
+    @observable mileageLimit;
+    @observable vehicle = new Vehicle;
+    @observable keyId;
+    @observable extId;
+    @observable isEnabled;
+    @observable isUsed;
+    @observable keyArgs;
+    @observable keySensitiveArgs;
 }
 
 class VehicleData {
-    @persist @observable engineRunning: boolean;
-    @persist @observable doorsLocked: boolean;
-    @persist @observable energyCurrent: Number;
+    @observable engineRunning;
+    @observable doorsLocked;
+    @observable energyCurrent;
 /*  
     @observable id: Number;
     @observable date: Moment;
@@ -73,24 +72,23 @@ class VehicleData {
 
 class OTAKeyStore {
 
-    keyAccessDeviceRegistrationNumber = 9706753;
     ota = OTAKeyModule;
+    keyAccessDeviceRegistrationNumber = 9706753;
 
-    @persist keyAccessDeviceIdentifier: string;
-    @persist keyAccessDeviceToken: string;
+    keyAccessDeviceIdentifier;
+    keyAccessDeviceToken;
+    isRegistered = false;
 
-    @observable otaLog: string = "";
+    @observable otaLog = '';
 
-    @persist('object', Key) @observable key: Key = new Key;
+    @observable key = new Key;
 
-    @persist @observable isConnecting = false;
-    @persist @observable isConnected = false;
+    @observable isConnecting = false;
+    @observable isConnected = false;
 
-    @persist @observable engineRunning = false;
-    @persist @observable doorsLocked = true;
-    @persist @observable energyCurrent = 0;
-
-    @persist isRegistered = false;
+    @observable engineRunning = false;
+    @observable doorsLocked = true;
+    @observable energyCurrent = 0;
 
     otaKeyLogger = async options => {
         const date = moment();
@@ -102,7 +100,7 @@ class OTAKeyStore {
 
         await logger(severity, code, action, message, description, logExtraData);
         this.otaLog = `${date.format('HH:mm:ss')} ${severity} ${message}\n${this.otaLog}`;
-    }
+    };
 
     computeActionEnableKey(actions, onPress) {
         if (!driveStore.inUse || this.isKeyEnabled) {
