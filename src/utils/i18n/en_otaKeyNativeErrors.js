@@ -70,7 +70,7 @@ export default Platform.select({
     'notFound': 'Unknown error occurred. Description not found.'
   },
   android: {
-    // Error Api code 
+    // Error Api code
     '113': 'The signature verification of the message failed',
     '114': 'The SDK and server time difference is above 1 minute, request is refused',
     '120': 'The SDK could not be authenticated with the credentials provided',

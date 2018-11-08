@@ -49,7 +49,6 @@ export default {
     'return': 'Return',
     'where': 'Where',
     'rentalAgreement': 'Start rental',
-    'drive': 'Drive',
     'back': 'Back',
     'next': 'Next',
     'slidePrevious': 'Slide previous',
@@ -100,7 +99,6 @@ export default {
     'addressTitle': 'Register Address',
     'addressInputLabel': 'Your billing address',
     'addressInputPlaceholder': 'Street, number, post code, city and country',
-    'addressLabel': 'Billing address',
     'smsCodeInputLabel': 'The code received by SMS',
     'addressLabel': 'Address',
     'identificationTitle': 'Register ID',
@@ -171,7 +169,7 @@ export default {
   },
   guide: {
     'findTitle': 'Where is the car',
-    'returnTitle': 'How to return',
+    'returnTitle': 'How to return'
   },
   term: {
     'rentalAgreementTitle': 'Sign the agreement',
@@ -180,4 +178,4 @@ export default {
     'confirmContractKeyString': 'I agree'
   },
   otaKeyNativeErrors
-}
+};
