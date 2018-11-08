@@ -175,11 +175,11 @@ class OTAKeyStore {
                 action: 'onOtaVehicleDataUpdated',
                 code: codeTypes.SUCCESS,
                 message: `>> ${
-                    otaVehicleData.doorsLocked ? "LOCKED" : "UNLOCKED"
+                    otaVehicleData.doorsLocked ? 'LOCKED' : 'UNLOCKED'
                 } / ${
-                    otaVehicleData.engineRunning ? "STARTED" : "STOPPED"
+                    otaVehicleData.engineRunning ? 'STARTED' : 'STOPPED'
                 } / ${
-                    otaVehicleData.energyCurrent + "%"
+                    otaVehicleData.energyCurrent + '%'
                 }`
             });
             this.doorsLocked = otaVehicleData.doorsLocked === true ? true : false;
@@ -362,7 +362,7 @@ class OTAKeyStore {
 
     @action
     async openSession(keyAccessDeviceToken: string, showError = true): Promise<boolean> {
-        if (!keyAccessDeviceToken || !keyAccessDeviceToken instanceof String || keyAccessDeviceToken === "") {
+        if (!keyAccessDeviceToken || !keyAccessDeviceToken instanceof String || keyAccessDeviceToken === '') {
             return false;
         }
 
@@ -451,7 +451,7 @@ class OTAKeyStore {
 
     @action
     async getKey(keyId: string, showError = true): Promise<boolean> {
-        if (!keyId || !keyId instanceof String || keyId === "") {
+        if (!keyId || !keyId instanceof String || keyId === '') {
             return false;
         }
 
@@ -537,7 +537,7 @@ class OTAKeyStore {
 
     @action
     async enableKey(keyId: string, showError = true): Promise<boolean> {
-        if (!keyId || !keyId instanceof String || keyId === "") {
+        if (!keyId || !keyId instanceof String || keyId === '') {
             return false;
         }
 
@@ -842,7 +842,7 @@ class OTAKeyStore {
                 description: error
             });
             this.handleOTABLEError(error, showError);
-            return "UNKNOWN";
+            return 'UNKNOWN';
         }
     }
 

@@ -4,7 +4,7 @@ import { observer } from "mobx-react";
 import { View, StyleSheet, ScrollView } from 'react-native'
 import Touchable from 'react-native-platform-touchable';
 import otaKeyStore from '../stores/otaKeyStore'
-import { UFOText } from './common'
+import { UFOText } from './common';
 
 @observer
 class UFOAdminMenu extends Component {

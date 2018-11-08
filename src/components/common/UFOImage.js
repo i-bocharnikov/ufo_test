@@ -51,7 +51,7 @@ export default class UFOImage extends React.Component {
       }/documents/${
         source.reference
       }`;
-      
+
       return uri;
     } else if (source.uri) {
       return source.uri;

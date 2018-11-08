@@ -216,7 +216,7 @@ const RootStack = createBottomTabNavigator(
   },
   {
     initialRouteName: screens.DRIVE.name,
-    navigationOptions: ({ navigation }) => ({tabBarVisible: false})
+    navigationOptions: () => ({tabBarVisible: false})
   });
 
 /* Root App component */

@@ -156,7 +156,6 @@ class SignUpScreen extends Component {
               <Text style={styles.cardPickerLabel}>
                 {t('register:idCardPickerLabel')}
               </Text>
-              
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.cardWrapper, styles.leftGap]}

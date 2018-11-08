@@ -211,7 +211,7 @@ class registerStore {
     getUserData = async () => {
         const response = await getFromApi('/users/' + this.user.reference);
 
-        if (response && response.status === "success") {
+        if (response && response.status === 'success') {
             this.user = response.data.user;
 
             return true;

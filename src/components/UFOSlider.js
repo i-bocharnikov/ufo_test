@@ -9,10 +9,6 @@ const SLIDER_DEVICE_WIDTH = Dimensions.get('window').width;
 const SLIDE_WIDTH = SLIDER_DEVICE_WIDTH * 90 / 100;
 
 export default class UFOSlider extends React.Component {
-  onSnapDefault = slideIndex => {
-    return null;
-  }
-
   render() {
     const {
       data = [],
@@ -36,6 +32,10 @@ export default class UFOSlider extends React.Component {
       />
     );
   }
+
+  onSnapDefault = slideIndex => {
+    return slideIndex;
+  };
 }
 
 UFOSlider.propTypes = {

@@ -17,7 +17,7 @@ import UFOCamera, { RNCAMERA_CONSTANTS } from './../../components/UFOCamera';
 import UFOHeader from './../../components/header/UFOHeader';
 import UFOActionBar from './../../components/UFOActionBar';
 import UFOCard from './../../components/UFOCard';
-import { UFOImage, UFOContainer } from './../../components/common'
+import { UFOImage, UFOContainer } from './../../components/common';
 import registerStore from './../../stores/registerStore';
 import {
   screens,
@@ -25,7 +25,7 @@ import {
   icons,
   colors,
   images
-} from './../../utils/global'
+} from './../../utils/global';
 import { showWarning } from './../../utils/interaction';
 import styles from './styles';
 
@@ -251,7 +251,7 @@ class IdentificationScreen extends Component {
       );
 
       if (document && document.reference) {
-        registerStore.user.identification_back_side_reference = document.reference
+        registerStore.user.identification_back_side_reference = document.reference;
         const imgData = await registerStore.downloadDocument(document.reference);
         registerStore.identificationBackDocument = imgData ? `data:image/png;base64,${imgData}` : null;
       }
@@ -267,7 +267,7 @@ class IdentificationScreen extends Component {
       } else {
         this.props.navigation.popToTop();
         this.activityPending = false;
-        
+
         return;
       }
     }
