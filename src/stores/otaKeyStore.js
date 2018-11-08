@@ -1118,7 +1118,7 @@ class OTAKeyStore {
             || errorMessage
             || i18n.t(`otaKeyNativeErrors:${defaultCode}`);
             
-        showToastError(message)
+        showToastError(message);
     };
 }
 

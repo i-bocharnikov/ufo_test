@@ -8,12 +8,12 @@ export function showToastError(errorMessage, yOffset = 0, xOffset = 0) {
   Vibration.vibrate();
   Platform.OS === 'ios'
     ? Toast.showWithGravity(
-        errorMessage,
+        message,
         Toast.LONG,
         Toast.TOP
       )
     : ToastAndroid.showWithGravityAndOffset(
-        errorMessage,
+        message,
         ToastAndroid.LONG,
         ToastAndroid.TOP,
         xOffset,
