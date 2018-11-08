@@ -1,6 +1,13 @@
-import { NativeModules, DeviceEventEmitter, NativeEventEmitter, Platform } from 'react-native';
+import {
+    NativeModules,
+    DeviceEventEmitter,
+    NativeEventEmitter,
+    Platform,
+    Alert
+} from 'react-native';
 import { observable, action, computed } from 'mobx';
 import moment from 'moment';
+import i18n from 'i18next';
 
 import { driveStore } from '.';
 import { actionStyles, icons } from './../utils/global';
@@ -34,40 +41,6 @@ class Key {
     @observable isUsed;
     @observable keyArgs;
     @observable keySensitiveArgs;
-}
-
-class VehicleData {
-    @observable engineRunning;
-    @observable doorsLocked;
-    @observable energyCurrent;
-/*  
-    @observable id: Number;
-    @observable date: Moment;
-    @observable mileageStart: Number;
-    @observable mileageCurrent: Number;
-    @observable distanceType: String;
-    @observable energyType: String;
-    @observable batteryVoltage: Number;
-    @observable activeDtcErrorCode: Number;
-    @observable connectedToCharger: boolean;
-    @observable energyStart: Number;
-    @observable energyCurrent: Number;
-    @observable malfunctionIndicatorLamp: boolean;
-    @observable gpsLatitude: Number;
-    @observable gpsLongitude: Number;
-    @observable gpsAccuracy: Number;
-    @observable gpsCaptureDate: Moment;
-    @observable sdkGpsLatitude: Number;
-    @observable sdkGpsLongitude: Number;
-    @observable sdkGpsAccuracy: Number;
-    @observable sdkGpsCaptureDate: Moment;
-    @observable fuelUnit: String;
-    @observable odometerUnit: String;
-    @observable isBleCaptured: boolean;
-    @observable operationCode: String;
-    @observable doorsState: String;
-    @observable operationState: String;
-*/
 }
 
 class OTAKeyStore {
@@ -134,6 +107,7 @@ class OTAKeyStore {
             onPress
         });
     }
+
     computeActionLock(actions, onPress) {
         if (!driveStore.inUse) {
             return;
@@ -1115,33 +1089,37 @@ class OTAKeyStore {
         }
     }
 
-    handleOTAAPIError(error, showError) {
+    handleOTAAPIError = (error, showError) => {
+        const { code, message } = error;
         if (!showError) {
             return;
         }
 
-        const code = error.code;
-        const message = error.message;
-
-        //Show error to user
-        showToastError(code, message);
-    }
+        this.showNativeOTAError(code, message);
+    };
 
     handleOTABLEError(error, showError) {
-        if (!showError) {
+        const { code, message } = error;
+        if (!showError || code === 'ALREADY_CONNECTED') {
             return;
         }
 
-        const code = error.code;
-        const message = error.message;
-
-        if (code === 'ALREADY_CONNECTED') {
-            return;
-        }
-
-        //Show error to user
-        showToastError(code, message);
+        this.showNativeOTAError(code, message);
     }
+
+    showNativeOTAError = (errorCode, errorMessage) => {
+        const defaultCode = 'notFound';
+        /*
+         * use error code
+         * if matching not found in our i18n - use errorMessage
+         * if errorMessage empty - use default message
+         */
+        const message = i18n.t(`otaKeyNativeErrors:${errorCode}`)
+            || errorMessage
+            || i18n.t(`otaKeyNativeErrors:${defaultCode}`);
+            
+        showToastError(message)
+    };
 }
 
 export default new OTAKeyStore();

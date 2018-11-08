@@ -172,7 +172,7 @@ async function handleError(error, suppressToastBox) {
     let ufoError = formatApiError(error);
     console.debug("api.get error.stack: ", ufoError);
     if (!suppressToastBox) {
-        await showToastError(ufoError.key, ufoError.message)
+        showToastError(ufoError.message);
     }
     if (ufoError.key !== 400 && ufoError.key !== 500) {
         activitiesStore.activities.registerInternetStopFailure()

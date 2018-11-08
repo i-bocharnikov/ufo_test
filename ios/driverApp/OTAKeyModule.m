@@ -73,6 +73,7 @@ static id ObjectOrNull(id object)
 }
 
 NSString *LAST_ENABLED_KEYID = nil;
+NSString *UNEXPECTED_ERROR_CODE = @"999";
 RCT_EXPORT_MODULE();
 
 // custom events and listeners
@@ -104,7 +105,7 @@ RCT_REMAP_METHOD(getAccessDeviceToken,
   }
   @catch (NSError *error)
   {
-    reject(@"error", @"getAccessDeviceToken", error);
+    reject(UNEXPECTED_ERROR_CODE, @"getAccessDeviceToken", error);
   }
 }
 
@@ -125,13 +126,13 @@ RCT_REMAP_METHOD(openSession,
                                           }
                                         }
                                         failure:^(OTAErrorCode errorCode, NSError *error) {
-                                          reject(@"error", @"openSession", error);
+                                          reject(@(errorCode).stringValue, @"openSession", error);
                                         }
      ];
   }
   @catch (NSError *error)
   {
-    reject(@"error", @"openSession", error);
+    reject(UNEXPECTED_ERROR_CODE, @"openSession", error);
   }
 }
 
@@ -148,7 +149,7 @@ RCT_REMAP_METHOD(register,
   }
   @catch (NSError *error)
   {
-    reject(@"error", @"register", error);
+    reject(UNEXPECTED_ERROR_CODE, @"register", error);
   }
 }
 
@@ -167,13 +168,13 @@ RCT_REMAP_METHOD(getKey,
                                resolve([OTAKeyModule convertOTAKeyPublic:key]);
                              }
                              failure:^(OTAErrorCode errorCode, NSError *error) {
-                               reject(@"error", @"getKey", error);
+                               reject(@(errorCode).stringValue, @"getKey", error);
                              }
      ];
   }
   @catch (NSError *error)
   {
-    reject(@"error", @"getKey", error);
+    reject(UNEXPECTED_ERROR_CODE, @"getKey", error);
   }
 }
 
@@ -191,13 +192,13 @@ RCT_REMAP_METHOD(enableKey,
                                resolve([OTAKeyModule convertOTAKeyPublic:key]);
                              }
                              failure:^(OTAErrorCode errorCode, NSError *error) {
-                               reject(@"error", @"enableKey", error);
+                               reject(@(errorCode).stringValue, @"enableKey", error);
                              }
      ];
   }
   @catch (NSError *error)
   {
-    reject(@"error", @"enableKey", error);
+    reject(UNEXPECTED_ERROR_CODE, @"enableKey", error);
   }
 }
 
@@ -217,7 +218,7 @@ RCT_REMAP_METHOD(getUsedKey,
   }
   @catch (NSError *error)
   {
-    reject(@"error", @"getUsedKey", error);
+    reject(UNEXPECTED_ERROR_CODE, @"getUsedKey", error);
   }
 }
 
@@ -234,13 +235,13 @@ RCT_REMAP_METHOD(endKey,
                                   resolve([OTAKeyModule convertOTAKeyPublic:key]);
                                 }
                                 failure:^(OTAErrorCode errorCode, NSError *error) {
-                                  reject(@"error", @"enableKey", error);
+                                  reject(@(errorCode).stringValue, @"enableKey", error);
                                 }
      ];
   }
   @catch (NSError *error)
   {
-    reject(@"error", @"enableKey", error);
+    reject(UNEXPECTED_ERROR_CODE, @"enableKey", error);
   }
 }
 
@@ -249,9 +250,10 @@ RCT_REMAP_METHOD(switchToKey,
                  switchToKeyResolver:(RCTPromiseResolveBlock)resolve
                  switchToKeyRejecter:(RCTPromiseRejectBlock)reject)
 {
+  // maybe should put some specific error code from documentation
   NSError *error = [NSError errorWithDomain:@"" code:404 userInfo:nil];
   if (!LAST_ENABLED_KEYID) {
-    reject(@"error", @"enableKey", error);
+    reject(UNEXPECTED_ERROR_CODE, @"enableKey", error);
     return;
   }
   OTAKeyPublic *currentKey = [[OTAManager instance] localKey];
@@ -260,9 +262,8 @@ RCT_REMAP_METHOD(switchToKey,
                              if (success) {
                                resolve([OTAKeyModule convertOTAKeyPublic:currentKey]);
                              } else {
-                               // add some message to error
                                NSError *error = [NSError errorWithDomain:@"" code:404 userInfo:nil];
-                               reject(@"error", @"enableKey", error);
+                               reject(UNEXPECTED_ERROR_CODE, @"enableKey", error);
                              }
                            }
    ];
@@ -284,12 +285,12 @@ RCT_REMAP_METHOD(syncVehicleData,
       }
     }
     failure:^(OTAErrorCode errorCode, NSError *error) {
-      reject(@"error", @"syncVehicleData", error);
+      reject(@(errorCode).stringValue, @"syncVehicleData", error);
     }];
   }
   @catch (NSError *error)
   {
-    reject(@"error", @"syncVehicleData", error);
+    reject(UNEXPECTED_ERROR_CODE, @"syncVehicleData", error);
   }
 }
 
@@ -309,7 +310,7 @@ RCT_REMAP_METHOD(isConnectedToVehicle,
   }
   @catch (NSError *error)
   {
-    reject(@"error", @"isConnectedToVehicle", error);
+    reject(UNEXPECTED_ERROR_CODE, @"isConnectedToVehicle", error);
   }
 }
 
@@ -325,12 +326,12 @@ RCT_REMAP_METHOD(getVehicleData,
       resolve(@YES);
     }
     failure:^(OTABLEErrorCode errorCode, NSError *error) {
-      reject(@"error", @"getVehicleData", error);
+      reject(@(errorCode).stringValue, @"getVehicleData", error);
     }];
   }
   @catch (NSError *error)
   {
-    reject(@"error", @"getVehicleData", error);
+    reject(UNEXPECTED_ERROR_CODE, @"getVehicleData", error);
   }
 }
 
@@ -346,7 +347,7 @@ RCT_REMAP_METHOD(connect,
   }
   @catch (NSError *error)
   {
-    reject(@"error", @"connect", error);
+    reject(UNEXPECTED_ERROR_CODE, @"connect", error);
   }
 }
 
@@ -362,7 +363,7 @@ RCT_REMAP_METHOD(disconnect,
   }
   @catch (NSError *error)
   {
-    reject(@"error", @"disconnect", error);
+    reject(UNEXPECTED_ERROR_CODE, @"disconnect", error);
   }
 }
 
@@ -382,13 +383,13 @@ RCT_REMAP_METHOD(unlockDoors,
                                                        resolve(@YES);
                                                      }
                                                      failure:^(OTAVehicleData *vehicleData, OTABLEErrorCode errorCode, NSError *error) {
-                                                       reject(@"error", @"unlockDoors", error);
+                                                       reject(@(errorCode).stringValue, @"unlockDoors", error);
                                                      }
      ];
   }
   @catch (NSError *error)
   {
-    reject(@"error", @"unlockDoors", error);
+    reject(UNEXPECTED_ERROR_CODE, @"unlockDoors", error);
   }
 }
 
@@ -406,13 +407,13 @@ RCT_REMAP_METHOD(lockDoors,
                                                      resolve(@YES);
                                                    }
                                                    failure:^(OTAVehicleData *vehicleData, OTABLEErrorCode errorCode, NSError *error) {
-                                                     reject(@"error", @"lockDoors", error);
+                                                     reject(@(errorCode).stringValue, @"lockDoors", error);
                                                    }
      ];
   }
   @catch (NSError *error)
   {
-    reject(@"error", @"lockDoors", error);
+    reject(UNEXPECTED_ERROR_CODE, @"lockDoors", error);
   }
 }
 
@@ -430,13 +431,13 @@ RCT_REMAP_METHOD(enableEngine,
                                                      resolve(@YES);
                                                    }
                                                    failure:^(OTAVehicleData *vehicleData, OTABLEErrorCode errorCode, NSError *error) {
-                                                     reject(@"error", @"enableEngine", error);
+                                                     reject(@(errorCode).stringValue, @"enableEngine", error);
                                                    }
      ];
   }
   @catch (NSError *error)
   {
-    reject(@"error", @"enableEngine", error);
+    reject(UNEXPECTED_ERROR_CODE, @"enableEngine", error);
   }
 }
 
@@ -454,13 +455,13 @@ RCT_REMAP_METHOD(disableEngine,
                                                         resolve(@YES);
                                                       }
                                                       failure:^(OTAVehicleData *vehicleData, OTABLEErrorCode errorCode, NSError *error) {
-                                                        reject(@"error", @"disableEngine", error);
+                                                        reject(@(errorCode).stringValue, @"disableEngine", error);
                                                       }
      ];
   }
   @catch (NSError *error)
   {
-    reject(@"error", @"disableEngine", error);
+    reject(UNEXPECTED_ERROR_CODE, @"disableEngine", error);
   }
 }
 

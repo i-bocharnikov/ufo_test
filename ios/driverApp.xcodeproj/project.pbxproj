@@ -56,6 +56,7 @@
 		E891AD1F7EA04052A232EE6C /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7288A12FC82D43E38136D624 /* Ionicons.ttf */; };
 		ED855B4EA1BB43B2AAC8DE17 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 914F449DF8E249B4A066C414 /* Entypo.ttf */; };
 		F35A65AB082F496482EEFAD0 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FDD6C0E564104784BEF4D1AC /* FontAwesome.ttf */; };
+		F54D9AC82194816900FE4741 /* libLRDRCTSimpleToast.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F54D9A982194815500FE4741 /* libLRDRCTSimpleToast.a */; };
 		F5D4833E2189AFAD00943D6B /* libRNImageRotate.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5D4833D2189AE7800943D6B /* libRNImageRotate.a */; };
 		F5D483882189B1B700943D6B /* libFastImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5D483582189B1A600943D6B /* libFastImage.a */; };
 		F5E8CC7B218AE96D001B8F8B /* OTAKeyModule.m in Sources */ = {isa = PBXBuildFile; fileRef = F5E8CC7A218AE96D001B8F8B /* OTAKeyModule.m */; };
@@ -339,6 +340,13 @@
 			remoteGlobalIDString = 358F4ED71D1E81A9004DF814;
 			remoteInfo = RCTBlob;
 		};
+		F54D9A972194815500FE4741 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F54D9A922194815400FE4741 /* LRDRCTSimpleToast.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 15209BEF1D250F63000D0F44;
+			remoteInfo = LRDRCTSimpleToast;
+		};
 		F5D48252218991E900943D6B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1E24D8E0907740728C8DF729 /* ReactNativeExceptionHandler.xcodeproj */;
@@ -466,6 +474,7 @@
 		DEC0CF07DE9F4D32AA578AB0 /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNDeviceInfo.xcodeproj; path = "../node_modules/react-native-device-info/ios/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; };
 		DF7A9F95FFA3E9A7137ED567 /* Pods-driverApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-driverApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-driverApp/Pods-driverApp.release.xcconfig"; sourceTree = "<group>"; };
 		F15388B12C6C4B7E95D746E3 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/native-base/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
+		F54D9A922194815400FE4741 /* LRDRCTSimpleToast.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LRDRCTSimpleToast.xcodeproj; path = "../node_modules/react-native-simple-toast/ios/LRDRCTSimpleToast.xcodeproj"; sourceTree = "<group>"; };
 		F5D4830A2189AE7800943D6B /* RNImageRotate.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNImageRotate.xcodeproj; path = "../node_modules/react-native-image-rotate/RNImageRotate.xcodeproj"; sourceTree = "<group>"; };
 		F5D483522189B1A600943D6B /* FastImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FastImage.xcodeproj; path = "../node_modules/react-native-fast-image/ios/FastImage.xcodeproj"; sourceTree = "<group>"; };
 		F5E8CC49218AE954001B8F8B /* OTAKeyModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OTAKeyModule.h; path = driverApp/OTAKeyModule.h; sourceTree = "<group>"; };
@@ -489,6 +498,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F54D9AC82194816900FE4741 /* libLRDRCTSimpleToast.a in Frameworks */,
 				F5D483882189B1B700943D6B /* libFastImage.a in Frameworks */,
 				F5D4833E2189AFAD00943D6B /* libRNImageRotate.a in Frameworks */,
 				FB92B94A214E63110075943D /* libRNFetchBlob.a in Frameworks */,
@@ -718,6 +728,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				F54D9A922194815400FE4741 /* LRDRCTSimpleToast.xcodeproj */,
 				F5D483522189B1A600943D6B /* FastImage.xcodeproj */,
 				F5D4830A2189AE7800943D6B /* RNImageRotate.xcodeproj */,
 				FB92B944214E62F80075943D /* RNFetchBlob.xcodeproj */,
@@ -784,6 +795,14 @@
 			children = (
 				ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */,
 				2D16E6721FA4F8DC00B85C8A /* libRCTBlob-tvOS.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F54D9A932194815400FE4741 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F54D9A982194815500FE4741 /* libLRDRCTSimpleToast.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -991,6 +1010,10 @@
 				{
 					ProductGroup = F5D483532189B1A600943D6B /* Products */;
 					ProjectRef = F5D483522189B1A600943D6B /* FastImage.xcodeproj */;
+				},
+				{
+					ProductGroup = F54D9A932194815400FE4741 /* Products */;
+					ProjectRef = F54D9A922194815400FE4741 /* LRDRCTSimpleToast.xcodeproj */;
 				},
 				{
 					ProductGroup = 00C302A81ABCB8CE00DB3ED1 /* Products */;
@@ -1337,6 +1360,13 @@
 			fileType = archive.ar;
 			path = libRCTBlob.a;
 			remoteRef = ADBDB9261DFEBF0700ED6528 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F54D9A982194815500FE4741 /* libLRDRCTSimpleToast.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libLRDRCTSimpleToast.a;
+			remoteRef = F54D9A972194815500FE4741 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		F5D48253218991E900943D6B /* libReactNativeExceptionHandler.a */ = {

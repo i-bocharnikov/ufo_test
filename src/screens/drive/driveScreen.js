@@ -24,7 +24,7 @@ import registerStore from './../../stores/registerStore';
 import UFOCard from './../../components/UFOCard';
 import UFOSlider from './../../components/UFOSlider';
 import DriveCard from './driveCard';
-import { confirm, toastError } from './../../utils/interaction';
+import { confirm, showToastError } from './../../utils/interaction';
 import { checkAndRequestLocationPermission } from './../../utils/permissions';
 
 @observer
@@ -330,7 +330,7 @@ class DriveScreen extends Component {
       await otaKeyStore.unlockDoors(false);
       await otaKeyStore.getVehicleData();
     } else {
-      toastError(this.props.t('error:localPermissionNeeded'));
+      showToastError(this.props.t('error:localPermissionNeeded'));
     }
 
     this.activityPending = false;
@@ -348,7 +348,7 @@ class DriveScreen extends Component {
       await otaKeyStore.lockDoors(false);
       await otaKeyStore.getVehicleData();
     } else {
-      toastError(this.props.t('error:localPermissionNeeded'));
+      showToastError(this.props.t('error:localPermissionNeeded'));
     }
 
     this.activityPending = false;
