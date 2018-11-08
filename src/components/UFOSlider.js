@@ -33,9 +33,7 @@ export default class UFOSlider extends React.Component {
     );
   }
 
-  onSnapDefault = slideIndex => {
-    return slideIndex;
-  };
+  onSnapDefault = slideIndex => slideIndex;
 }
 
 UFOSlider.propTypes = {
