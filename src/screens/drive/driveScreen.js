@@ -26,6 +26,7 @@ import UFOSlider from './../../components/UFOSlider';
 import DriveCard from './driveCard';
 import { confirm, showToastError } from './../../utils/interaction';
 import { checkAndRequestLocationPermission } from './../../utils/permissions';
+import { keys as screenKeys } from './../../navigators/helpers';
 
 @observer
 class DriveScreen extends Component {
@@ -150,7 +151,7 @@ class DriveScreen extends Component {
       actions.push({
         style: driveStore.hasRentalConfirmedOrOngoing ? actionStyles.DONE : actionStyles.TODO,
         icon: icons.RESERVE,
-        onPress: () => navigation.navigate(screens.RESERVE.name)
+        onPress: () => navigation.navigate(screenKeys.BookingStep1Book)
       });
       actions.push({
         style: registerStore.isUserRegistered ? actionStyles.DONE : actionStyles.TODO,

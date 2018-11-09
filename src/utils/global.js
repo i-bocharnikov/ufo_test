@@ -115,10 +115,6 @@ export const dims = {
 
 export const screens = {
     HOME: new Screen('Drive', '', backgrounds.HOME002),
-    RESERVE: new Screen('Reserve', 'RESERVE', backgrounds.RESERVE001),
-    RESERVE_LOCATION: new Screen('Location', 'RESERVE', backgrounds.RESERVE001),
-    RESERVE_DATE_AND_CAR: new Screen('DateAndCar', 'RESERVE', backgrounds.RESERVE001),
-    RESERVE_PAYMENT: new Screen('Payment', 'RESERVE', backgrounds.RESERVE001),
     REGISTER: new Screen('Register', 'REGISTER', backgrounds.REGISTER001),
     REGISTER_OVERVIEW: new Screen('SignUp', 'REGISTER', backgrounds.DRIVE001),
     REGISTER_PHONE: new Screen('Phone', 'REGISTER', backgrounds.REGISTER001),
