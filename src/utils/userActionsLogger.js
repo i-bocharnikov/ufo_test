@@ -10,7 +10,7 @@ export const severityTypes = {
     DEBUG: 'debug',
     INFO: 'info',
     WARN: 'warn',
-    ERROR: 'error',
+    ERROR: 'error'
 };
 
 export default async function userActionsLogger(
@@ -26,7 +26,7 @@ export default async function userActionsLogger(
         const date = momentDate || moment();
         const isConnectionActive = await checkConnectivity();
 
-        if (severity === severityTypes.DEBUG) {
+        if (__DEV__ && severity === severityTypes.DEBUG) {
             console.log(`${date.format('HH:mm:ss')} ${severity} ${action} ${message}`);
             return;
         }

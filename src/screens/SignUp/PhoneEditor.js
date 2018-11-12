@@ -67,9 +67,10 @@ class PhoneScreen extends Component {
                 ...ufoInputStyles,
                 paddingHorizontal: 20
               }}
-              defaultValue={registerStore.user.phone_number}
               onChangePhoneNumber={this.onChangePhoneNumber}
-              autoFocus={true}
+              textProps={{
+                autoFocus: true
+              }}
             />
             <CountryPicker
               ref={ref => (this.countryPicker = ref)}
@@ -142,9 +143,9 @@ class PhoneScreen extends Component {
 
     if (!registerStore.isConnected) {
       actions.push({
-        style: !registerStore.isConnected 
+        style: !registerStore.isConnected
           ? this.isCodeRequested
-            ? actionStyles.ACTIVE 
+            ? actionStyles.ACTIVE
             : this.phoneInput && this.phoneInput.isValidNumber()
               ? actionStyles.TODO
               : actionStyles.ACTIVE
@@ -161,14 +162,14 @@ class PhoneScreen extends Component {
           : actionStyles.DISABLE,
         icon: icons.LOGIN,
         onPress: async () => await this.doConnect(isInWizzard)
-      })
+      });
     }
 
     if (registerStore.isConnected) {
       actions.push({
         style: registerStore.isConnected ? actionStyles.ACTIVE : actionStyles.DISABLE,
         icon: icons.LOGOUT,
-        onPress: async () => await this.doDisconnect(t, isInWizzard)
+        onPress: async () => await this.doDisconnect(this.props.t, isInWizzard)
       });
     }
 
@@ -176,7 +177,7 @@ class PhoneScreen extends Component {
   }
 
   onPressFlag = () => {
-    this.countryPicker.openModal()
+    this.countryPicker.openModal();
   };
 
   selectCountry = country => {

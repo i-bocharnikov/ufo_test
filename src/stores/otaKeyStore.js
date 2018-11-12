@@ -1,7 +1,13 @@
-import { NativeModules, DeviceEventEmitter, NativeEventEmitter, Platform } from 'react-native';
+import {
+    NativeModules,
+    DeviceEventEmitter,
+    NativeEventEmitter,
+    Platform,
+    Alert
+} from 'react-native';
 import { observable, action, computed } from 'mobx';
-import { persist } from 'mobx-persist';
 import moment from 'moment';
+import i18n from 'i18next';
 
 import { driveStore } from '.';
 import { actionStyles, icons } from './../utils/global';
@@ -15,83 +21,47 @@ const PlatformEventEmitter = Platform === 'ios'
     : DeviceEventEmitter;
 
 class Vehicle {
-    @persist @observable vin: String;
-    @persist @observable otaExtId: String;
-    @persist @observable otaId: Number;
-    @persist @observable model: String;
-    @persist @observable brand: String;
-    @persist @observable plate: String;
-    @persist @observable isEnabled: boolean;
+    @observable vin;
+    @observable otaExtId;
+    @observable otaId;
+    @observable model;
+    @observable brand;
+    @observable plate;
+    @observable isEnabled;
 }
 
 class Key {
-    @persist @observable beginDate: Moment;
-    @persist @observable endDate: Moment;
-    @persist @observable mileageLimit: Number;
-    @persist @observable vehicle: Vehicle = new Vehicle;
-    @persist @observable keyId: Number;
-    @persist @observable extId: String;
-    @persist @observable isEnabled: boolean;
-    @persist @observable isUsed: boolean;
-    @persist @observable keyArgs: String;
-    @persist @observable keySensitiveArgs: String;
-}
-
-class VehicleData {
-    @persist @observable engineRunning: boolean;
-    @persist @observable doorsLocked: boolean;
-    @persist @observable energyCurrent: Number;
-/*  
-    @observable id: Number;
-    @observable date: Moment;
-    @observable mileageStart: Number;
-    @observable mileageCurrent: Number;
-    @observable distanceType: String;
-    @observable energyType: String;
-    @observable batteryVoltage: Number;
-    @observable activeDtcErrorCode: Number;
-    @observable connectedToCharger: boolean;
-    @observable energyStart: Number;
-    @observable energyCurrent: Number;
-    @observable malfunctionIndicatorLamp: boolean;
-    @observable gpsLatitude: Number;
-    @observable gpsLongitude: Number;
-    @observable gpsAccuracy: Number;
-    @observable gpsCaptureDate: Moment;
-    @observable sdkGpsLatitude: Number;
-    @observable sdkGpsLongitude: Number;
-    @observable sdkGpsAccuracy: Number;
-    @observable sdkGpsCaptureDate: Moment;
-    @observable fuelUnit: String;
-    @observable odometerUnit: String;
-    @observable isBleCaptured: boolean;
-    @observable operationCode: String;
-    @observable doorsState: String;
-    @observable operationState: String;
-*/
+    @observable beginDate;
+    @observable endDate;
+    @observable mileageLimit;
+    @observable vehicle = new Vehicle;
+    @observable keyId;
+    @observable extId;
+    @observable isEnabled;
+    @observable isUsed;
+    @observable keyArgs;
+    @observable keySensitiveArgs;
 }
 
 class OTAKeyStore {
 
-    keyAccessDeviceRegistrationNumber = 9706753;
     ota = OTAKeyModule;
+    keyAccessDeviceRegistrationNumber = 9706753;
 
-    @persist keyAccessDeviceRegistrationNumber: Number;
-    @persist keyAccessDeviceIdentifier: string;
-    @persist keyAccessDeviceToken: string;
+    keyAccessDeviceIdentifier;
+    keyAccessDeviceToken;
+    isRegistered = false;
 
-    @observable otaLog: string = "";
+    @observable otaLog = '';
 
-    @persist('object', Key) @observable key: Key = new Key;
+    @observable key = new Key;
 
-    @persist @observable isConnecting = false;
-    @persist @observable isConnected = false;
+    @observable isConnecting = false;
+    @observable isConnected = false;
 
-    @persist @observable engineRunning = false;
-    @persist @observable doorsLocked = true;
-    @persist @observable energyCurrent = 0;
-
-    @persist isRegistered = false;
+    @observable engineRunning = false;
+    @observable doorsLocked = true;
+    @observable energyCurrent = 0;
 
     otaKeyLogger = async options => {
         const date = moment();
@@ -103,7 +73,7 @@ class OTAKeyStore {
 
         await logger(severity, code, action, message, description, logExtraData);
         this.otaLog = `${date.format('HH:mm:ss')} ${severity} ${message}\n${this.otaLog}`;
-    }
+    };
 
     computeActionEnableKey(actions, onPress) {
         if (!driveStore.inUse || this.isKeyEnabled) {
@@ -137,6 +107,7 @@ class OTAKeyStore {
             onPress
         });
     }
+
     computeActionLock(actions, onPress) {
         if (!driveStore.inUse) {
             return;
@@ -178,11 +149,11 @@ class OTAKeyStore {
                 action: 'onOtaVehicleDataUpdated',
                 code: codeTypes.SUCCESS,
                 message: `>> ${
-                    otaVehicleData.doorsLocked ? "LOCKED" : "UNLOCKED"
+                    otaVehicleData.doorsLocked ? 'LOCKED' : 'UNLOCKED'
                 } / ${
-                    otaVehicleData.engineRunning ? "STARTED" : "STOPPED"
+                    otaVehicleData.engineRunning ? 'STARTED' : 'STOPPED'
                 } / ${
-                    otaVehicleData.energyCurrent + "%"
+                    otaVehicleData.energyCurrent + '%'
                 }`
             });
             this.doorsLocked = otaVehicleData.doorsLocked === true ? true : false;
@@ -365,7 +336,7 @@ class OTAKeyStore {
 
     @action
     async openSession(keyAccessDeviceToken: string, showError = true): Promise<boolean> {
-        if (!keyAccessDeviceToken || !keyAccessDeviceToken instanceof String || keyAccessDeviceToken === "") {
+        if (!keyAccessDeviceToken || !keyAccessDeviceToken instanceof String || keyAccessDeviceToken === '') {
             return false;
         }
 
@@ -454,7 +425,7 @@ class OTAKeyStore {
 
     @action
     async getKey(keyId: string, showError = true): Promise<boolean> {
-        if (!keyId || !keyId instanceof String || keyId === "") {
+        if (!keyId || !keyId instanceof String || keyId === '') {
             return false;
         }
 
@@ -540,7 +511,7 @@ class OTAKeyStore {
 
     @action
     async enableKey(keyId: string, showError = true): Promise<boolean> {
-        if (!keyId || !keyId instanceof String || keyId === "") {
+        if (!keyId || !keyId instanceof String || keyId === '') {
             return false;
         }
 
@@ -845,7 +816,7 @@ class OTAKeyStore {
                 description: error
             });
             this.handleOTABLEError(error, showError);
-            return "UNKNOWN";
+            return 'UNKNOWN';
         }
     }
 
@@ -1118,33 +1089,37 @@ class OTAKeyStore {
         }
     }
 
-    handleOTAAPIError(error, showError) {
+    handleOTAAPIError = (error, showError) => {
+        const { code, message } = error;
         if (!showError) {
             return;
         }
 
-        const code = error.code;
-        const message = error.message;
-
-        //Show error to user
-        showToastError(code, message);
-    }
+        this.showNativeOTAError(code, message);
+    };
 
     handleOTABLEError(error, showError) {
-        if (!showError) {
+        const { code, message } = error;
+        if (!showError || code === 'ALREADY_CONNECTED') {
             return;
         }
 
-        const code = error.code;
-        const message = error.message;
-
-        if (code === 'ALREADY_CONNECTED') {
-            return;
-        }
-
-        //Show error to user
-        showToastError(code, message);
+        this.showNativeOTAError(code, message);
     }
+
+    showNativeOTAError = (errorCode, errorMessage) => {
+        const defaultCode = 'notFound';
+        /*
+         * use error code
+         * if matching not found in our i18n - use errorMessage
+         * if errorMessage empty - use default message
+         */
+        const message = i18n.t(`otaKeyNativeErrors:${errorCode}`)
+            || errorMessage
+            || i18n.t(`otaKeyNativeErrors:${defaultCode}`);
+            
+        showToastError(message);
+    };
 }
 
 export default new OTAKeyStore();

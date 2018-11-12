@@ -1,33 +1,47 @@
-import { Alert, Vibration, ToastAndroid } from 'react-native';
+import { Platform, Alert, Vibration, ToastAndroid } from 'react-native';
 import prompt from 'react-native-prompt-android';
+import Toast from 'react-native-simple-toast';
 import i18n from 'i18next';
 
-export async function confirm(title = '', message='', action) {
+export function showToastError(errorMessage, yOffset = 0, xOffset = 0) {
+  const message = typeof errorMessage === 'string' ? errorMessage : i18n.t('error:unknown');
+  Vibration.vibrate();
+  Platform.OS === 'ios'
+    ? Toast.showWithGravity(
+        message,
+        Toast.LONG,
+        Toast.TOP
+      )
+    : ToastAndroid.showWithGravityAndOffset(
+        message,
+        ToastAndroid.LONG,
+        ToastAndroid.TOP,
+        xOffset,
+        yOffset
+      );
+}
+
+export async function showAlertInfo(title = '', message = '') {
+  return new Promise(resolve => {
+    Alert.alert(
+      title,
+      message,
+      [
+        {text: i18n.t('common:okBtn'), onPress: resolve}
+      ],
+    );
+  });
+}
+
+export async function confirm(title = '', message = '', confirmAction) {
   await Alert.alert(
     title,
     message,
     [
-      {text: i18n.t('common:cancelBtn'), onPress: () => null, style: 'cancel'},
-      {text: i18n.t('common:okBtn'), onPress: () => action()},
+      {text: i18n.t('common:cancelBtn'), style: 'cancel'},
+      {text: i18n.t('common:okBtn'), onPress: confirmAction}
     ],
     {cancelable: true}
-  );
-}
-
-export async function showToastError(key, error = '') {
-  const message = typeof error === 'string' ? error : i18n.t('error:unknown');
-  await Vibration.vibrate();
-  await ToastAndroid.showWithGravity(message, ToastAndroid.LONG, ToastAndroid.TOP);
-}
-
-export function toastError(message = '', yOffset = 0, xOffset = 0) {
-  Vibration.vibrate();
-  ToastAndroid.showWithGravityAndOffset(
-    message,
-    ToastAndroid.LONG,
-    ToastAndroid.TOP,
-    xOffset,
-    yOffset
   );
 }
 
@@ -47,38 +61,4 @@ export function showPrompt(title = '', descr = '', action, cancelAction, options
   }
 
   prompt(title, descr, actions, options);
-}
-
-/* not usable functions from past */
-export function showInfo(message = '') {
-  Toast.show({
-    text: message,
-    buttonText: 'Ok',
-    type: 'info',
-    duration: 5000,
-    position: 'top',
-    buttonTextStyle: {color: '#008000'},
-    buttonStyle: {backgroundColor: '#5cb85c'}
-  });
-}
-
-export function showWarning(message = '') {
-  Toast.show({
-    text: message,
-    buttonText: 'Ok',
-    type: 'warning',
-    duration: 5000,
-    position: 'top',
-    buttonTextStyle: {color: '#008000'},
-    buttonStyle: {backgroundColor: '#5cb85c'}
-  });
-}
-
-export function showActivitiesState(message = '') {
-  Toast.show({
-    text: message,
-    position: 'top',
-    type: 'warning',
-    duration: 15000
-  });
 }

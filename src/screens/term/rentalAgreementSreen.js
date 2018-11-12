@@ -9,7 +9,7 @@ import UFOActionBar from './../../components/UFOActionBar';
 import { UFOContainer } from './../../components/common';
 import { screens, actionStyles, icons } from './../../utils/global'
 import { driveStore, termStore } from './../../stores'
-import { showPrompt, toastError } from './../../utils/interaction';
+import { showPrompt, showToastError } from './../../utils/interaction';
 
 @observer
 class InspectScreen extends Component {
@@ -89,7 +89,7 @@ class InspectScreen extends Component {
         return;
       }
 
-      toastError(t('error:stringNotMatch'), 160);
+      showToastError(t('error:stringNotMatch'), 160);
       this.activityPending = false;
     };
 

@@ -74,14 +74,13 @@ export const colors = {
     PRIMARY: new Color.rgb(64, 101, 125),
     DISABLE: new Color.rgb(151, 151, 151),
     PENDING: new Color.rgb(151, 151, 151),
-    SUCCESS: new Color('#03DAC6'),
     ERROR: new Color.rgb(234, 80, 76), //new Color('#C8102E'),
     WARNING: new Color.rgb(255, 87, 34),
     WRONG: new Color('yellow'),
 
     INPUT_BG: new Color.rgb(255, 255, 255),     // #FFF
     TEXT_DARK: new Color.rgb(47, 47, 47),       // #2F2F2F
-    SUCCESS: new Color.rgb(64, 184, 68),        // #40B844
+    SUCCESS: new Color.rgb(64, 184, 68)         // #40B844
 }
 
 
@@ -116,10 +115,6 @@ export const dims = {
 
 export const screens = {
     HOME: new Screen('Drive', '', backgrounds.HOME002),
-    RESERVE: new Screen('Reserve', 'RESERVE', backgrounds.RESERVE001),
-    RESERVE_LOCATION: new Screen('Location', 'RESERVE', backgrounds.RESERVE001),
-    RESERVE_DATE_AND_CAR: new Screen('DateAndCar', 'RESERVE', backgrounds.RESERVE001),
-    RESERVE_PAYMENT: new Screen('Payment', 'RESERVE', backgrounds.RESERVE001),
     REGISTER: new Screen('Register', 'REGISTER', backgrounds.REGISTER001),
     REGISTER_OVERVIEW: new Screen('SignUp', 'REGISTER', backgrounds.DRIVE001),
     REGISTER_PHONE: new Screen('Phone', 'REGISTER', backgrounds.REGISTER001),
@@ -226,7 +221,7 @@ export const icons = {
     SELECT: new Icon('play', 'icon:select'),
     CAPTURE: new Icon('camera', 'icon:capture'),
     NEW_CAPTURE: new Icon('camera', 'icon:newCapture'),
-    TORCH: new Icon('flashlight', 'icon:torch'),
+    TORCH: new Icon('flash', 'icon:torch'),
     VALIDATE: new Icon('checkmark', 'icon:validate'),
     DONE: new Icon('checkmark', 'icon:done'),
     CANCEL: new Icon('close', 'icon:cancel'),
@@ -274,6 +269,7 @@ export const errors = {
 
 export const fonts = {
     // add fontWeight for ios
-    REGULAR: Platform.OS === 'android' ? 'Sofia Pro' : 'Sofia Pro',
+    REGULAR: Platform.OS === 'android' ? 'SofiaProRegular' : 'Sofia Pro',
     LIGHT: Platform.OS === 'android' ? 'SofiaProLight' : 'Sofia Pro',
+    BOLD: Platform.OS === 'android' ? 'SofiaProBold' : 'Sofia Pro'
 };

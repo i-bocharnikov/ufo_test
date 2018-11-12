@@ -17,7 +17,7 @@ import UFOCamera, { RNCAMERA_CONSTANTS } from './../../components/UFOCamera';
 import UFOHeader from './../../components/header/UFOHeader';
 import UFOActionBar from './../../components/UFOActionBar';
 import UFOCard from './../../components/UFOCard';
-import { UFOImage, UFOContainer } from './../../components/common'
+import { UFOImage, UFOContainer } from './../../components/common';
 import registerStore from './../../stores/registerStore';
 import {
   screens,
@@ -25,7 +25,7 @@ import {
   icons,
   colors,
   images
-} from './../../utils/global'
+} from './../../utils/global';
 import { showWarning } from './../../utils/interaction';
 import styles from './styles';
 
@@ -97,7 +97,6 @@ class IdentificationScreen extends Component {
     const sample = this.captureState === captureStates.CAPTURE_FRONT
       ? images.captureCardIdFront
       : images.captureCardIdBack;
-
     return (
       <UFOContainer image={screens.REGISTER_OVERVIEW.backgroundImage}>
         <UFOHeader
@@ -132,10 +131,9 @@ class IdentificationScreen extends Component {
         {showCamera && (
           <Fragment>
             <UFOCamera
-              t={t}
               onCameraReady={() => (this.isCameraAllowed = true)}
-              flashMode={RNCAMERA_CONSTANTS.FlashMode.on}
               ref={ref => (this.cameraRef = ref)}
+              forbiddenCallback={navigation.goBack}
             />
             <ImageBackground
               source={sample}
@@ -188,12 +186,12 @@ class IdentificationScreen extends Component {
     const cropData = {
       offset: {
         x: PADDING_WIDTH * ratioX,
-        y: PADDING_HEIGHT * ratioy,
+        y: PADDING_HEIGHT * ratioy
       },
       size: {
         width: CARD_WIDTH * ratioX,
-        height: CARD_HEIGHT * ratioy,
-      },
+        height: CARD_HEIGHT * ratioy
+      }
     };
     ImageEditor.cropImage(uri, cropData, url => {
       if (this.captureState === captureStates.CAPTURE_FRONT) {
@@ -253,7 +251,7 @@ class IdentificationScreen extends Component {
       );
 
       if (document && document.reference) {
-        registerStore.user.identification_back_side_reference = document.reference
+        registerStore.user.identification_back_side_reference = document.reference;
         const imgData = await registerStore.downloadDocument(document.reference);
         registerStore.identificationBackDocument = imgData ? `data:image/png;base64,${imgData}` : null;
       }
@@ -269,7 +267,7 @@ class IdentificationScreen extends Component {
       } else {
         this.props.navigation.popToTop();
         this.activityPending = false;
-        
+
         return;
       }
     }
@@ -312,7 +310,7 @@ class IdentificationScreen extends Component {
       actions.push({
         style: this.isCameraAllowed ? actionStyles.TODO : actionStyles.DISABLE,
         icon: icons.CAPTURE,
-        onPress: () => this.doCapture(t, isInWizzard),
+        onPress: () => this.doCapture(t, isInWizzard)
       });
     }
 

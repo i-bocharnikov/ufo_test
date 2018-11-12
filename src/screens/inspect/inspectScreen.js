@@ -41,12 +41,19 @@ class InspectScreen extends Component {
     this.refreshing = false
   }
 
-  renderDamage({ item, index }) {
-    let damage = item
+  renderDamage = ({ item, index }) => {
     return (
-      <UFOCard title={'Damage ' + (index + 1) + '/' + inspectStore.carDamages.length} text={damage.comment} imageSource={{ reference: damage.document.reference }} />
+      <UFOCard
+        title={this.props.t('inspect:damageCardTitle', {
+          index: index + 1,
+          amount: inspectStore.carDamages.length
+        })}
+        text={item.comment}
+        imageSource={{reference: item.document.reference}}
+        imageResizeMode="contain"
+      />
     );
-  }
+  };
 
   onSnapToItem = async (index) => {
     this.damageIndex = index

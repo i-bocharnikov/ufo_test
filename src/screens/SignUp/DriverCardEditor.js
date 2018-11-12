@@ -17,7 +17,7 @@ import UFOCamera, { RNCAMERA_CONSTANTS } from './../../components/UFOCamera';
 import UFOHeader from './../../components/header/UFOHeader';
 import UFOActionBar from './../../components/UFOActionBar';
 import UFOCard from './../../components/UFOCard';
-import { UFOImage, UFOContainer } from './../../components/common'
+import { UFOImage, UFOContainer } from './../../components/common';
 import registerStore from './../../stores/registerStore';
 import {
   screens,
@@ -25,7 +25,7 @@ import {
   icons,
   colors,
   images
-} from './../../utils/global'
+} from './../../utils/global';
 import { showWarning } from './../../utils/interaction';
 import styles from './styles';
 
@@ -41,7 +41,7 @@ const captureStates = {
   PREVIEW: 'PREVIEW',
   CAPTURE_FRONT: 'CAPTURE_FRONT',
   CAPTURE_BACK: 'CAPTURE_BACK',
-  VALIDATE: 'VALIDATE',
+  VALIDATE: 'VALIDATE'
 };
 
 const bgImageStyles = StyleSheet.create({
@@ -132,10 +132,9 @@ class DriverLicenceScreen extends Component {
         {showCamera && (
           <Fragment>
             <UFOCamera
-              t={t}
               onCameraReady={() => (this.isCameraAllowed = true)}
-              flashMode={RNCAMERA_CONSTANTS.FlashMode.on}
               ref={ref => (this.cameraRef = ref)}
+              forbiddenCallback={navigation.goBack}
             />
             <ImageBackground
               source={sample}
@@ -188,12 +187,12 @@ class DriverLicenceScreen extends Component {
     const cropData = {
       offset: {
         x: PADDING_WIDTH * ratioX,
-        y: PADDING_HEIGHT * ratioy,
+        y: PADDING_HEIGHT * ratioy
       },
       size: {
         width: CARD_WIDTH * ratioX,
-        height: CARD_HEIGHT * ratioy,
-      },
+        height: CARD_HEIGHT * ratioy
+      }
     };
     ImageEditor.cropImage(uri, cropData, url => {
       if (this.captureState === captureStates.CAPTURE_FRONT) {
@@ -302,7 +301,7 @@ class DriverLicenceScreen extends Component {
 
     if (this.captureState === captureStates.CAPTURE_FRONT
       || this.captureState === captureStates.CAPTURE_BACK) {
-      
+
       actions.push({
         style: this.isCameraAllowed ? actionStyles.TODO : actionStyles.DISABLE,
         icon: icons.CAPTURE,

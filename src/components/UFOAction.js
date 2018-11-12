@@ -47,7 +47,7 @@ class UFOAction extends Component {
             elevation: elevation,
             width: actionSize,
             height: actionSize,
-            borderRadius: actionSize,
+            borderRadius: actionSize
           }]}
           onPress={action.onPress}
           disabled={style === actionStyles.DISABLE}

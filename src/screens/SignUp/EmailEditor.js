@@ -7,7 +7,7 @@ import { translate } from 'react-i18next';
 import UFOHeader from './../../components/header/UFOHeader';
 import UFOActionBar from './../../components/UFOActionBar';
 import { UFOContainer, UFOTextInput } from './../../components/common';
-import { screens, actionStyles, icons } from '../../utils/global'
+import { screens, actionStyles, icons } from '../../utils/global';
 import registerStore from './../../stores/registerStore';
 import UFOCard from './../../components/UFOCard';
 import styles from './styles';
@@ -83,7 +83,7 @@ class EmailScreen extends Component {
             : actionStyles.DISABLE,
         icon: isInWizzard ? icons.NEXT : icons.SAVE,
         onPress: async () => await this.doSave(isInWizzard)
-      },
+      }
     ];
 
     return actions;

@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 import { SAVE_TOKEN } from './../../utils/api';
 import configurations from './../../utils/configurations';
 
-const authHeader = {Authorization: `Bearer ${SAVE_TOKEN}`};
 const ownStyles = StyleSheet.create({
   preloader: {
     alignItems: 'center',
@@ -28,7 +27,7 @@ export default class UFOImage extends React.Component {
         style={[style, isLoading && ownStyles.preloader]}
         source={{
           uri,
-          headers: isRefImage ? { ...authHeader } : {},
+          headers: isRefImage ? {Authorization: `Bearer ${SAVE_TOKEN}`} : {}
         }}
         {...restProps}
       >
@@ -52,7 +51,7 @@ export default class UFOImage extends React.Component {
       }/documents/${
         source.reference
       }`;
-      
+
       return uri;
     } else if (source.uri) {
       return source.uri;

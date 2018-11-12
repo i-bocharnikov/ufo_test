@@ -2,6 +2,7 @@ import React from 'react';
 import {
   StyleSheet,
   View,
+  SafeAreaView,
   ActivityIndicator,
   StatusBar,
   Alert,
@@ -30,15 +31,13 @@ import LocateDamage from './screens/inspect/locateDamage';
 import CaptureDamage from './screens/inspect/captureDamage';
 import CommentDamage from './screens/inspect/commentDamage';
 import RentalAgreementScreen from './screens/term/rentalAgreementSreen';
-import ReserveLocationScreen from './screens/reserve/locationScreen';
-import ReserveDateAndCarScreen from './screens/reserve/dateAndCarScreen';
-import ReservePaymentScreen from './screens/reserve/paymentScreen';
 import SignUpScreen from './screens/SignUp';
 import RegisterPhoneScreen from './screens/SignUp/PhoneEditor';
 import RegisterEmailScreen from './screens/SignUp/EmailEditor';
 import RegisterAddressScreen from './screens/SignUp/AddressEditor';
 import RegisterIdentificationScreen from './screens/SignUp/CardIdEditor';
 import RegisterDriverLicenceScreen from './screens/SignUp/DriverCardEditor';
+import BookingStackNavigator from './navigators/BookingStackNavigator';
 import AppStore from './stores/appStore';
 import registerStore from './stores/registerStore';
 import { screens, colors, backgrounds } from './utils/global';
@@ -46,8 +45,9 @@ import logger, { codeTypes, severityTypes } from './utils/userActionsLogger';
 import getTheme from './../native-base-theme/components';
 
 /* Handling some errors */
-YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
-YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
+YellowBox.ignoreWarnings([
+  'Module RNI18n requires main queue setup'
+]);
 
 const errorHandler = (error, isFatal) => {
   if (isFatal) {
@@ -94,25 +94,6 @@ const DriveStack = createStackNavigator(
     },
   },
   {
-    headerMode: 'none',
-    navigationOptions: commonStackNavigationOptions
-  }
-);
-
-const ReserveStack = createStackNavigator(
-  {
-    Location: {
-      screen: ReserveLocationScreen
-    },
-    DateAndCar: {
-      screen: ReserveDateAndCarScreen
-    },
-    Payment: {
-      screen: ReservePaymentScreen
-    },
-  },
-  {
-    initialRouteName: screens.RESERVE_LOCATION.name,
     headerMode: 'none',
     navigationOptions: commonStackNavigationOptions
   }
@@ -178,7 +159,7 @@ const RegisterStack = createStackNavigator(
     },
     DriverLicence: {
       screen: RegisterDriverLicenceScreen
-    },
+    }
   },
   {
     initialRouteName: screens.REGISTER_OVERVIEW.name,
@@ -193,7 +174,7 @@ const RootStack = createBottomTabNavigator(
       screen: DriveStack
     },
     Reserve: {
-      screen: ReserveStack
+      screen: BookingStackNavigator
     },
     Register: {
       screen: RegisterStack
@@ -216,7 +197,7 @@ const RootStack = createBottomTabNavigator(
   },
   {
     initialRouteName: screens.DRIVE.name,
-    navigationOptions: ({ navigation }) => ({tabBarVisible: false})
+    navigationOptions: () => ({tabBarVisible: false})
   });
 
 /* Root App component */
@@ -225,7 +206,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignSelf: 'center'
   },
-  preloadWrapper: {
+  appWrapper: {
     flex: 1,
     backgroundColor: colors.TRANSITION_BACKGROUND.string()
   }
@@ -239,17 +220,17 @@ class App extends React.Component {
 
   render() {
     return !appStore.isAppReady ? (
-      <View style={styles.preloadWrapper}>
-          <UFOContainer image={backgrounds.HOME001}>
-            <ActivityIndicator
-              style={styles.centered}
-              size='large'
-              color={colors.ACTIVE}
-            />
-          </UFOContainer>
-        </View>
+      <SafeAreaView style={styles.appWrapper}>
+        <UFOContainer image={backgrounds.HOME001}>
+          <ActivityIndicator
+            style={styles.centered}
+            size='large'
+            color={colors.ACTIVE}
+          />
+        </UFOContainer>
+      </SafeAreaView>
     ) : (
-      <Root>
+      <SafeAreaView style={styles.appWrapper}>
         <StatusBar
           backgroundColor={colors.TRANSITION_BACKGROUND.string()}
           barStyle="light-content"
@@ -258,7 +239,7 @@ class App extends React.Component {
           <RootStack />
         </StyleProvider>
         {registerStore.isAdmin && <UFOAdminMenu />}
-      </Root>
+      </SafeAreaView>
     );
   }
 }

@@ -6,7 +6,14 @@ import uuid from "uuid";
 
 import configurations from "../utils/configurations";
 import { clearAuthenticationsFromStore, getAuthenticationUUIDFromStore, setAuthenticationUUIDInStore, setAuthenticationPasswordInStore, getAuthenticationPasswordFromStore, setAuthenticationTokenInStore } from "../utils/authentications"
-import { useTokenInApi, postToApi, putToApi, downloadFromApi, uploadToApi } from '../utils/api'
+import {
+    useTokenInApi,
+    postToApi,
+    putToApi,
+    downloadFromApi,
+    uploadToApi,
+    getFromApi
+} from './../utils/api';
 
 const DEBUG = false
 
@@ -198,6 +205,19 @@ class registerStore {
             return response.data.document
         }
         return null
+    };
+
+    @action
+    getUserData = async () => {
+        const response = await getFromApi('/users/' + this.user.reference);
+
+        if (response && response.status === 'success') {
+            this.user = response.data.user;
+
+            return true;
+        }
+
+        return false;
     };
 }
 

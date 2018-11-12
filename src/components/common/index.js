@@ -1,6 +1,7 @@
 import UFOContainer from './UFOContainer';
 import UFOTextInput, { ufoInputStyles } from './UFOTextInput';
 import UFOIcon from './UFOIcon';
+import UFOIcon_next from './UFOIcon_next';
 import UFOImage from './UFOImage';
 import UFOVideo from './UFOVideo';
 
@@ -12,6 +13,7 @@ export {
     UFOTextInput,
     ufoInputStyles,
     UFOIcon,
+    UFOIcon_next,
     UFOImage,
     UFOVideo,
     // deprecated components, will be replaced with redesigning
