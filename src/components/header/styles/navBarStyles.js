@@ -3,7 +3,9 @@ import { textThemes, colors } from './../../../utils/theme';
 
 export const HEADER_HEIGHT = 60;
 export const TITLE_FONT_SIZE = 30;
+export const BACK_ICON_SIZE = 26;
 const SUBHEADER_HEIGHT = 50;
+const HEADER_TOP_PADDING = 18;
 
 export default StyleSheet.create({
   wrapper: {
@@ -16,7 +18,8 @@ export default StyleSheet.create({
     right: 0,
     top: 0,
     zIndex: 1,
-    backgroundColor: colors.BG_DEFAULT
+    backgroundColor: colors.BG_DEFAULT,
+    paddingHorizontal: 25
   },
 
   scrollContainer: {
@@ -32,7 +35,7 @@ export default StyleSheet.create({
 
   title: {
     ...textThemes.SP_BOLD,
-    paddingTop: 18,
+    paddingTop: HEADER_TOP_PADDING,
     color: colors.TEXT_INVERT_COLOR
   },
 
@@ -47,5 +50,15 @@ export default StyleSheet.create({
     ...textThemes.SP_BOLD,
     color: colors.TEXT_INVERT_COLOR,
     fontSize: 12
+  },
+
+  backBtn: {
+    position: 'absolute',
+    left: 0,
+    paddingTop: HEADER_TOP_PADDING
+  },
+
+  backIcon: {
+    color: colors.TEXT_INVERT_COLOR
   }
 });

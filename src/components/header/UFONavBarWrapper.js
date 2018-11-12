@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { View, ScrollView, Text, Animated } from 'react-native';
+import { View, ScrollView, Text, Animated, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 
-import styles, { HEADER_HEIGHT, TITLE_FONT_SIZE } from './styles/navBarStyles';
+import { UFOIcon_next } from './../common';
+import styles, { HEADER_HEIGHT, TITLE_FONT_SIZE, BACK_ICON_SIZE } from './styles/navBarStyles';
 
 export default class UFONavBarWrapper extends Component {
   constructor() {
@@ -18,6 +19,7 @@ export default class UFONavBarWrapper extends Component {
       subtitle,
       subtitleComponent,
       isCollapsible,
+      backBtnAction,
       children
     } = this.props;
     const hasSubtitle = subtitle || subtitleComponent;
@@ -29,6 +31,23 @@ export default class UFONavBarWrapper extends Component {
             styles.header,
             {height: isCollapsible ? this.getHeaderHeight() : HEADER_HEIGHT}
           ]}>
+            {backBtnAction && (
+              <TouchableOpacity
+                onPress={backBtnAction}
+                style={styles.backBtn}
+                activeOpacity={0.6}
+              >
+                <UFOIcon_next
+                  name="keyboard-backspace"
+                  iconPack="MaterialCommunity"
+                  animated={true}
+                  style={[
+                    styles.backIcon,
+                    {fontSize: isCollapsible ? this.getBackIconSize() : BACK_ICON_SIZE}
+                  ]}
+                />
+              </TouchableOpacity>
+            )}
             <Animated.Text style={[
               styles.title,
               {fontSize: isCollapsible ? this.getHeaderTitleSize() : TITLE_FONT_SIZE}
@@ -71,6 +90,12 @@ export default class UFONavBarWrapper extends Component {
     outputRange: [TITLE_FONT_SIZE, 0],
     extrapolate: 'clamp'
   });
+
+  getBackIconSize = () => this.state.scrollY.interpolate({
+    inputRange: [0, HEADER_HEIGHT],
+    outputRange: [BACK_ICON_SIZE, 0],
+    extrapolate: 'clamp'
+  });
 }
 
 UFONavBarWrapper.defaultProps = {
@@ -82,5 +107,6 @@ UFONavBarWrapper.propTypes = {
   title: PropTypes.string,
   subtitle: PropTypes.string,
   subtitleComponent: PropTypes.node,
-  isCollapsible: PropTypes.bool
+  isCollapsible: PropTypes.bool,
+  backBtnAction: PropTypes.func
 };

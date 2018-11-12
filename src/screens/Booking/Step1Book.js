@@ -1,11 +1,10 @@
 import React, { Component, Fragment } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { translate } from 'react-i18next';
-import Icon from 'react-native-vector-icons/Entypo';
 
 import { keys as screenKeys } from './../../navigators/helpers';
 import UFONavBarWrapper from './../../components/header/UFONavBarWrapper';
-import { UFOContainer, UFOIcon } from './../../components/common';
+import { UFOContainer, UFOIcon_next } from './../../components/common';
 import styles from './styles';
 
 class Step1BookScreen extends Component {
@@ -18,8 +17,9 @@ class Step1BookScreen extends Component {
           1. {t('booking:subTitleStep1')}
         </Text>
         <Text style={styles.headerSubtitleSpaces}>{' '}</Text>
-        <Icon
+        <UFOIcon_next
           name="chevron-thin-right"
+          iconPack="Entypo"
           style={[styles.headerSubtitleIcon, styles.headerFutureStep]}
         />
         <Text style={styles.headerSubtitleSpaces}>{' '}</Text>
@@ -27,8 +27,9 @@ class Step1BookScreen extends Component {
           2. {t('booking:subTitleStep2')}
         </Text>
         <Text style={styles.headerSubtitleSpaces}>{' '}</Text>
-        <Icon
+        <UFOIcon_next
           name="chevron-thin-right"
+          iconPack="Entypo"
           style={[styles.headerSubtitleIcon, styles.headerFutureStep]}
         />
         <Text style={styles.headerSubtitleSpaces}>{' '}</Text>
@@ -50,11 +51,16 @@ class Step1BookScreen extends Component {
       <UFONavBarWrapper
         title={t('booking:screenTitle')}
         subtitleComponent={this.getSubTitleComponent()}
+        backBtnAction={this.navBack}
       >
         {testContent}
       </UFONavBarWrapper>
     );
   }
+
+  navBack = () => {
+    this.props.navigation.navigate(screenKeys.Home)
+  };
 }
 
 export default translate()(Step1BookScreen);
