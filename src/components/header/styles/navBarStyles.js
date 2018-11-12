@@ -22,6 +22,13 @@ export default StyleSheet.create({
     paddingHorizontal: 25
   },
 
+  headerShadow: {
+    shadowOffset: {width: 0,  height: 4},
+    shadowColor: 'black',
+    shadowOpacity: 0.4,
+    elevation: 4
+  },
+
   scrollContainer: {
     paddingTop: HEADER_HEIGHT + SUBHEADER_HEIGHT
   },

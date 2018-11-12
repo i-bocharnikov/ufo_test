@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 import { UFOIcon_next } from './../common';
 import styles, { HEADER_HEIGHT, TITLE_FONT_SIZE, BACK_ICON_SIZE } from './styles/navBarStyles';
+import { values } from './../../utils/theme';
 
 export default class UFONavBarWrapper extends Component {
   constructor() {
@@ -17,16 +18,16 @@ export default class UFONavBarWrapper extends Component {
     const {
       title,
       subtitle,
-      subtitleComponent,
+      SubtitleComponent,
       isCollapsible,
       backBtnAction,
       children
     } = this.props;
-    const hasSubtitle = subtitle || subtitleComponent;
+    const hasSubtitle = subtitle || SubtitleComponent;
 
     return (
       <View style={styles.wrapper}>
-        <View style={styles.headerContainer}>
+        <View style={[styles.headerContainer, styles.headerShadow]}>
           <Animated.View style={[
             styles.header,
             {height: isCollapsible ? this.getHeaderHeight() : HEADER_HEIGHT}
@@ -35,7 +36,7 @@ export default class UFONavBarWrapper extends Component {
               <TouchableOpacity
                 onPress={backBtnAction}
                 style={styles.backBtn}
-                activeOpacity={0.6}
+                activeOpacity={values.BTN_OPACITY_DEFAULT}
               >
                 <UFOIcon_next
                   name="keyboard-backspace"
@@ -57,9 +58,10 @@ export default class UFONavBarWrapper extends Component {
           </Animated.View>
           {hasSubtitle && (
             <View style={styles.subHeader}>
-              <Text style={styles.subTitle}>
-                {subtitle || subtitleComponent}
-              </Text>
+              {SubtitleComponent
+                ? SubtitleComponent
+                : <Text style={styles.subTitle}>{subtitle}</Text>
+              }
             </View>
           )}
         </View>
@@ -106,7 +108,7 @@ UFONavBarWrapper.propTypes = {
   children: PropTypes.node,
   title: PropTypes.string,
   subtitle: PropTypes.string,
-  subtitleComponent: PropTypes.node,
+  SubtitleComponent: PropTypes.node,
   isCollapsible: PropTypes.bool,
   backBtnAction: PropTypes.func
 };
