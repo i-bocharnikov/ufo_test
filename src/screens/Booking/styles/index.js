@@ -6,7 +6,7 @@ export default StyleSheet.create({
   },
 
   headerSubtitleIcon: {
-    fontSize: 16,
+    fontSize: 16
   },
 
   headerSubtitleSpaces: {

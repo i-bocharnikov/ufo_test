@@ -5,7 +5,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import MaterialCommunity from 'react-native-vector-icons/MaterialCommunityIcons';
 import PropTypes from 'prop-types';
 
-export default class UFOIcon extends Component {
+export default class UFOIcon_next extends Component {
   render() {
     const { name, style, iconPack, animated } = this.props;
     let Icon;
@@ -37,11 +37,11 @@ export default class UFOIcon extends Component {
   }
 }
 
-UFOIcon.defaultProps = {
+UFOIcon_next.defaultProps = {
   iconPack: 'Ionicons'
 };
 
-UFOIcon.propTypes = {
+UFOIcon_next.propTypes = {
   name: PropTypes.string,
   style: PropTypes.any,
   animated: PropTypes.bool,

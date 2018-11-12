@@ -4,19 +4,19 @@ import { createStackNavigator } from 'react-navigation';
 import { keys, screens } from './helpers';
 
 const routeConfigs = {
-  [keys.BookingStep1Book]: {
-    screen: screens.Step1Book
+  [keys.BookingStepBook]: {
+    screen: screens.StepBook
   },
-  [keys.BookingStep2Pay]: {
-    screen: screens.Step2Pay
+  [keys.BookingStepPay]: {
+    screen: screens.StepPay
   },
-  [keys.BookingStep3Drive]: {
-    screen: screens.Step3Drive
+  [keys.BookingStepDrive]: {
+    screen: screens.StepDrive
   }
 };
 
 const navigatorConfig = {
-  initialRouteName: keys.BookingStep1Book,
+  initialRouteName: keys.BookingStepBook,
   headerMode: 'none'
 };
 

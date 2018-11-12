@@ -66,7 +66,7 @@ export default class UFONavBarWrapper extends Component {
         <ScrollView
           contentContainerStyle={styles.scrollContainer}
           onScroll={Animated.event([
-            {nativeEvent: {contentOffset: {y: this.state.scrollY}}},
+            {nativeEvent: {contentOffset: {y: this.state.scrollY}}}
           ])}
           scrollEventThrottle={16}
           showsVerticalScrollIndicator={false}

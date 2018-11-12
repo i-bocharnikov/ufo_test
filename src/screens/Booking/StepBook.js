@@ -7,7 +7,7 @@ import UFONavBarWrapper from './../../components/header/UFONavBarWrapper';
 import { UFOContainer, UFOIcon_next } from './../../components/common';
 import styles from './styles';
 
-class Step1BookScreen extends Component {
+class StepBookScreen extends Component {
   getSubTitleComponent() {
     const t = this.props.t;
 
@@ -59,8 +59,8 @@ class Step1BookScreen extends Component {
   }
 
   navBack = () => {
-    this.props.navigation.navigate(screenKeys.Home)
+    this.props.navigation.navigate(screenKeys.Home);
   };
 }
 
-export default translate()(Step1BookScreen);
+export default translate()(StepBookScreen);

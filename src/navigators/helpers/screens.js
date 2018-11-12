@@ -1,9 +1,9 @@
-import Step1Book from './../../screens/Booking/Step1Book';
-import Step2Pay from './../../screens/Booking/Step2Pay';
-import Step3Drive from './../../screens/Booking/Step3Drive';
+import StepBook from './../../screens/Booking/StepBook';
+import StepPay from './../../screens/Booking/StepPay';
+import StepDrive from './../../screens/Booking/StepDrive';
 
 export default {
-  Step1Book,
-  Step2Pay,
-  Step3Drive
+  StepBook,
+  StepPay,
+  StepDrive
 };

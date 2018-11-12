@@ -5,7 +5,7 @@ import { translate } from 'react-i18next';
 import { UFOContainer } from './../../components/common';
 import styles from './styles';
 
-class Step3DriveScreen extends Component {
+class StepPayScreen extends Component {
   render() {
     return (
       <View>
@@ -15,4 +15,4 @@ class Step3DriveScreen extends Component {
   }
 }
 
-export default translate()(Step3DriveScreen);
+export default translate()(StepPayScreen);
