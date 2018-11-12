@@ -269,6 +269,7 @@ export const errors = {
 
 export const fonts = {
     // add fontWeight for ios
-    REGULAR: Platform.OS === 'android' ? 'Sofia Pro' : 'Sofia Pro',
-    LIGHT: Platform.OS === 'android' ? 'SofiaProLight' : 'Sofia Pro'
+    REGULAR: Platform.OS === 'android' ? 'SofiaProRegular' : 'Sofia Pro',
+    LIGHT: Platform.OS === 'android' ? 'SofiaProLight' : 'Sofia Pro',
+    BOLD: Platform.OS === 'android' ? 'SofiaProBold' : 'Sofia Pro'
 };

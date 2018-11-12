@@ -2,6 +2,7 @@ import React from 'react';
 import {
   StyleSheet,
   View,
+  SafeAreaView,
   ActivityIndicator,
   StatusBar,
   Alert,
@@ -205,7 +206,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignSelf: 'center'
   },
-  preloadWrapper: {
+  appWrapper: {
     flex: 1,
     backgroundColor: colors.TRANSITION_BACKGROUND.string()
   }
@@ -219,17 +220,17 @@ class App extends React.Component {
 
   render() {
     return !appStore.isAppReady ? (
-      <View style={styles.preloadWrapper}>
-          <UFOContainer image={backgrounds.HOME001}>
-            <ActivityIndicator
-              style={styles.centered}
-              size='large'
-              color={colors.ACTIVE}
-            />
-          </UFOContainer>
-        </View>
+      <SafeAreaView style={styles.appWrapper}>
+        <UFOContainer image={backgrounds.HOME001}>
+          <ActivityIndicator
+            style={styles.centered}
+            size='large'
+            color={colors.ACTIVE}
+          />
+        </UFOContainer>
+      </SafeAreaView>
     ) : (
-      <Root>
+      <SafeAreaView style={styles.appWrapper}>
         <StatusBar
           backgroundColor={colors.TRANSITION_BACKGROUND.string()}
           barStyle="light-content"
@@ -238,7 +239,7 @@ class App extends React.Component {
           <RootStack />
         </StyleProvider>
         {registerStore.isAdmin && <UFOAdminMenu />}
-      </Root>
+      </SafeAreaView>
     );
   }
 }

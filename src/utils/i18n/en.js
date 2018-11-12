@@ -177,5 +177,11 @@ export default {
     'confirmContractTitle': 'Enter \'{{strKey}}\' to confirm',
     'confirmContractKeyString': 'I agree'
   },
+  booking: {
+    'screenTitle': 'Book your car',
+    'subTitleStep1': 'BOOK',
+    'subTitleStep2': 'PAY & CONFIRM',
+    'subTitleStep3': 'DRIVE'
+  },
   otaKeyNativeErrors
 };
