@@ -185,7 +185,10 @@ export default {
     'locSectionTitle': 'LOCATION',
     'carsSectionTitle': 'CARS',
     'notFoundData': 'Data not found',
-    'infoLink': 'infos'
+    'infoLink': 'infos',
+    'datesTooltip': 'Enter your pick-up & return date here. You can also use the calendar view.\nNeed more help? ',
+    'tooltipLink': 'Contact us',
+    'dareSectionTitle': 'PICK-UP & RETURN DATE'
   },
   otaKeyNativeErrors
 };

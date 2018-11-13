@@ -42,8 +42,20 @@ export default StyleSheet.create({
     color: colors.MAIN_COLOR,
     letterSpacing: 4,
     fontSize: 13,
+  },
+
+  sectionTitleIndents: {
     marginTop: 20,
     marginBottom: 6
+  },
+
+  datePickTitle: {
+    marginRight: 6
+  },
+
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center'
   },
 
   emptyList: {
@@ -82,7 +94,14 @@ export default StyleSheet.create({
   locSlideLabelWrapper: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    borderColor: colors.BG_INVERT,
+    borderWidth: 1.6,
+    borderTopWidth: 0
+  },
+
+  choosenLocation: {
+    borderColor: colors.BG_DEFAULT
   },
 
   locSlideMessage: {
@@ -96,12 +115,6 @@ export default StyleSheet.create({
     lineHeight: 20,
     backgroundColor: colors.ATTENTION_COLOR,
     paddingHorizontal: 8,
-  },
-
-  choosenLocation: {
-    borderWidth: 1.6,
-    borderTopWidth: 0,
-    borderColor: colors.BG_DEFAULT
   },
 
   slideShadow: {
@@ -172,5 +185,14 @@ export default StyleSheet.create({
 
   choosenCar: {
     borderColor: colors.BG_DEFAULT
+  },
+
+  tooltipLink: {
+    textDecorationLine: 'underline'
+  },
+
+  dateTolltipicon: {
+    color: colors.MAIN_COLOR,
+    fontSize: 18
   },
 });

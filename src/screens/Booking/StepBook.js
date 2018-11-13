@@ -4,7 +4,8 @@ import { translate } from 'react-i18next';
 
 import { getFromApi } from './../../utils/api';
 import { keys as screenKeys } from './../../navigators/helpers';
-import { UFOContainer, UFOImage } from './../../components/common';
+import { UFOContainer, UFOIcon_next } from './../../components/common';
+import UFOTooltip from './../../components/UFOTooltip';
 import BookingNavWrapper from './components/BookingNavWrapper';
 import LocationSlide from './components/LocationSlide';
 import CarSlide from './components/CarSlide';
@@ -15,6 +16,7 @@ class StepBookScreen extends Component {
   constructor() {
     super();
     this.state = {
+      showDateTooltip: false,
       tempLocData: [],
       tempCarData: [],
       selectedLocation: null,
@@ -46,7 +48,7 @@ class StepBookScreen extends Component {
         currentStep={1}
       >
         <UFOContainer style={styles.screenContainer}>
-          <Text style={styles.sectionTitle}>
+          <Text style={[styles.sectionTitle, styles.sectionTitleIndents]}>
             {t('booking:locSectionTitle')}
           </Text>
           <FlatList
@@ -60,7 +62,21 @@ class StepBookScreen extends Component {
             extraData={this.state.selectedLocation}
             pagingEnabled={true}
           />
-          <Text style={styles.sectionTitle}>
+          <View style={[styles.row, styles.sectionTitleIndents]}>
+            <Text style={[styles.sectionTitle, styles.datePickTitle]}>
+              {t('booking:dareSectionTitle')}
+            </Text>
+            <TouchableOpacity
+              onPress={() => this.setState({showDateTooltip: true})}
+              ref={ref => (this.dateTooltipRef = ref)}
+            >
+              <UFOIcon_next
+                name="ios-information-circle-outline"
+                style={styles.dateTolltipicon}
+              />
+            </TouchableOpacity>
+          </View>
+          <Text style={[styles.sectionTitle, styles.sectionTitleIndents]}>
             {t('booking:carsSectionTitle')}
           </Text>
           <FlatList
@@ -73,6 +89,19 @@ class StepBookScreen extends Component {
             contentContainerStyle={styles.carSlider}
             extraData={this.state.selectedCar}
           />
+          <UFOTooltip
+            isVisible={this.state.showDateTooltip}
+            onClose={() => this.setState({showDateTooltip: false})}
+            originBtn={this.dateTooltipRef}
+          >
+            {t('booking:datesTooltip')}
+            <Text
+              style={styles.tooltipLink}
+              onPress={this.onDateTooltipLink}
+            >
+              {t('booking:tooltipLink')}
+            </Text>
+          </UFOTooltip>
         </UFOContainer>
       </BookingNavWrapper>
     );
@@ -151,6 +180,10 @@ class StepBookScreen extends Component {
   navBack = () => {
     this.props.navigation.navigate(screenKeys.Home);
   };
+
+  onDateTooltipLink = () => {
+    console.log('PRESS DATE TOOLTIP');
+  }
 }
 
 export default translate()(StepBookScreen);

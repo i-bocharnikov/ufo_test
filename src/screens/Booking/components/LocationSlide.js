@@ -17,7 +17,7 @@ export default class LocationSlide extends PureComponent {
 
     return (
       <TouchableOpacity
-        onPress={this.handleSelectLocation}
+        onPress={this.handleSelect}
         activeOpacity={location.available ? values.BTN_OPACITY_DEFAULT : 1}
         style={[
           styles.locSlide,
