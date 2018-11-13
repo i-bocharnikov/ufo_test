@@ -114,7 +114,7 @@ export default StyleSheet.create({
     alignSelf: 'center',
     lineHeight: 20,
     backgroundColor: colors.ATTENTION_COLOR,
-    paddingHorizontal: 8,
+    paddingHorizontal: 8
   },
 
   slideShadow: {
@@ -127,7 +127,7 @@ export default StyleSheet.create({
   locInfoBtn: {
     position: 'absolute',
     bottom: 0,
-    right: 0,
+    right: 0
   },
 
   slideInfoLink: {
@@ -194,5 +194,5 @@ export default StyleSheet.create({
   dateTolltipicon: {
     color: colors.MAIN_COLOR,
     fontSize: 18
-  },
+  }
 });

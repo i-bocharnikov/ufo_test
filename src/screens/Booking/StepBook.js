@@ -31,7 +31,7 @@ class StepBookScreen extends Component {
     this.setState({
       tempLocData: locRes.data.locations,
       tempCarData: carRes.data.carModels
-    })
+    });
     // temp
   }
 
