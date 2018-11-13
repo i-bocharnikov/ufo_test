@@ -181,7 +181,11 @@ export default {
     'screenTitle': 'Book your car',
     'subTitleStep1': 'BOOK',
     'subTitleStep2': 'PAY & CONFIRM',
-    'subTitleStep3': 'DRIVE'
+    'subTitleStep3': 'DRIVE',
+    'locSectionTitle': 'LOCATION',
+    'carsSectionTitle': 'CARS',
+    'notFoundData': 'Data not found',
+    'infoLink': 'infos'
   },
   otaKeyNativeErrors
 };
