@@ -197,5 +197,9 @@ export default StyleSheet.create({
   dateTolltipicon: {
     color: colors.MAIN_COLOR,
     fontSize: 18
+  },
+
+  notAvailableCar: {
+    opacity: 0.5
   }
 });

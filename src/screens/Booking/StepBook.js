@@ -1,8 +1,9 @@
 import React, { Component, Fragment } from 'react';
-import { View, Text, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { translate } from 'react-i18next';
+import { observer } from 'mobx-react';
 
-import { getFromApi } from './../../utils/api';
+import { bookingStore } from './../../stores';
 import { keys as screenKeys } from './../../navigators/helpers';
 import { UFOContainer, UFOIcon_next } from './../../components/common';
 import UFOTooltip from './../../components/UFOTooltip';
@@ -10,37 +11,22 @@ import BookingNavWrapper from './components/BookingNavWrapper';
 import LocationSlide from './components/LocationSlide';
 import CarSlide from './components/CarSlide';
 import styles from './styles';
-import { values } from './../../utils/theme';
 
+@observer
 class StepBookScreen extends Component {
   constructor() {
     super();
     this.state = {
-      showDateTooltip: false,
-      tempLocData: [],
-      tempCarData: [],
-      selectedLocation: null,
-      selectedCar: null
+      showDateTooltip: false
     };
   }
 
   async componentDidMount() {
-    // temp
-    const locRes = await getFromApi('/reserve/locations');
-    const carRes = await getFromApi('/reserve/carModels');
-    this.setState({
-      tempLocData: locRes.data.locations,
-      tempCarData: carRes.data.carModels
-    });
-    // temp
+    await bookingStore.getInitialData();
   }
 
   render() {
     const { t } = this.props;
-    // temp
-    const { tempLocData, tempCarData } = this.state;
-    console.log('STATE', this.state);
-    // temp
 
     return (
       <BookingNavWrapper
@@ -52,14 +38,14 @@ class StepBookScreen extends Component {
             {t('booking:locSectionTitle')}
           </Text>
           <FlatList
-            data={tempLocData}
+            data={bookingStore.locations}
             renderItem={this.renderLocationSlide}
             keyExtractor={this.getKeyItem}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
             ListEmptyComponent={this.renderEmptyList}
             contentContainerStyle={styles.locSlider}
-            extraData={this.state.selectedLocation}
+            extraData={bookingStore.selectedLocationRef}
             pagingEnabled={true}
           />
           <View style={[styles.row, styles.sectionTitleIndents]}>
@@ -80,14 +66,14 @@ class StepBookScreen extends Component {
             {t('booking:carsSectionTitle')}
           </Text>
           <FlatList
-            data={tempCarData}
+            data={bookingStore.cars}
             renderItem={this.renderCarSlide}
             keyExtractor={this.getKeyItem}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
             ListEmptyComponent={this.renderEmptyList}
             contentContainerStyle={styles.carSlider}
-            extraData={this.state.selectedCar}
+            extraData={bookingStore.selectedCarRef}
           />
           <UFOTooltip
             isVisible={this.state.showDateTooltip}
@@ -102,6 +88,11 @@ class StepBookScreen extends Component {
               {t('booking:tooltipLink')}
             </Text>
           </UFOTooltip>
+          <ActivityIndicator
+            size="large"
+            animating={bookingStore.isLoading}
+            style={{position: 'absolute', top: '50%', left: '50%'}}
+          />
         </UFOContainer>
       </BookingNavWrapper>
     );
@@ -115,7 +106,7 @@ class StepBookScreen extends Component {
         t={this.props.t}
         location={item}
         onSelect={this.onSelectLocation}
-        isSelected={this.state.selectedLocation === item.reference}
+        isSelected={bookingStore.selectedLocationRef === item.reference}
         openInfo={this.openLocationInfo}
         isFirstItem={index === 0}
       />
@@ -128,7 +119,7 @@ class StepBookScreen extends Component {
         t={this.props.t}
         car={item}
         onSelectCar={this.onSelectCar}
-        isSelected={this.state.selectedCar === item.reference}
+        isSelected={bookingStore.selectedCarRef === item.reference}
         openCarInfo={this.openCarInfo}
         isFirstItem={index === 0}
       />
@@ -148,12 +139,7 @@ class StepBookScreen extends Component {
       return;
     }
 
-    if (ref === this.state.selectedLocation) {
-      this.setState({selectedLocation: null});
-      return;
-    }
-
-    this.setState({selectedLocation: ref});
+    bookingStore.selectLocation(ref);
   };
 
   onSelectCar = ref => {
@@ -161,12 +147,7 @@ class StepBookScreen extends Component {
       return;
     }
 
-    if (ref === this.state.selectedCar) {
-      this.setState({selectedCar: null});
-      return;
-    }
-
-    this.setState({selectedCar: ref});
+    bookingStore.selectCar(ref);
   };
 
   openCarInfo = ref => {

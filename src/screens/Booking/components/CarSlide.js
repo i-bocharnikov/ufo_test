@@ -16,42 +16,44 @@ export default class CarSlide extends PureComponent {
     } = this.props;
 
     return (
-      <TouchableOpacity
-        onPress={this.handleSelectCar}
-        activeOpacity={car.available ? values.BTN_OPACITY_DEFAULT : 1}
-        style={[
-          styles.carSlide,
-          styles.slideShadow,
-          !isFirstItem && styles.carSlideLeftSpace,
-          isSelected && styles.choosenCar
-        ]}
-      >
-        <UFOImage
-          source={{uri: car.imageUrl}}
-          style={styles.carlideImg}
-          resizeMode="contain"
-        />
-        <View style={styles.carSlideLabelWrapper}>
-          <View>
-            <Text style={styles.carSlideLabel} numberOfLines={1}>
-              {`${car.manufacturer} ${car.name}`.toUpperCase()}
-            </Text>
-            {car.message && (
-              <Text style={styles.carSlidePrice} numberOfLines={1}>
-                {car.message}
+      <View style={!car.available && styles.notAvailableCar}>
+        <TouchableOpacity
+          onPress={this.handleSelectCar}
+          activeOpacity={car.available ? values.BTN_OPACITY_DEFAULT : 1}
+          style={[
+            styles.carSlide,
+            styles.slideShadow,
+            !isFirstItem && styles.carSlideLeftSpace,
+            isSelected && styles.choosenCar
+          ]}
+        >
+          <UFOImage
+            source={{uri: car.imageUrl}}
+            style={styles.carlideImg}
+            resizeMode="contain"
+          />
+          <View style={styles.carSlideLabelWrapper}>
+            <View>
+              <Text style={styles.carSlideLabel} numberOfLines={1}>
+                {`${car.manufacturer} ${car.name}`.toUpperCase()}
               </Text>
-            )}
+              {car.message && (
+                <Text style={styles.carSlidePrice} numberOfLines={1}>
+                  {car.message}
+                </Text>
+              )}
+            </View>
+            <TouchableOpacity
+              onPress={this.handleOpenInfo}
+              activeOpacity={values.BTN_OPACITY_DEFAULT}
+            >
+              <Text style={styles.slideInfoLink}>
+                {t('booking:infoLink')}
+              </Text>
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity
-            onPress={this.handleOpenInfo}
-            activeOpacity={values.BTN_OPACITY_DEFAULT}
-          >
-            <Text style={styles.slideInfoLink}>
-              {t('booking:infoLink')}
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </TouchableOpacity>
+        </TouchableOpacity>
+      </View>
     );
   }
 
