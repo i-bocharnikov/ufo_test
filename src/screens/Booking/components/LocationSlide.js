@@ -58,11 +58,9 @@ export default class LocationSlide extends PureComponent {
   handleSelect = () => {
     const { location, onSelect } = this.props;
 
-    if (!location.available) {
-      return;
+    if (location.available) {
+      onSelect(location.reference);
     }
-
-    onSelect(location.reference);
   };
 
   handleOpenInfo = () => {

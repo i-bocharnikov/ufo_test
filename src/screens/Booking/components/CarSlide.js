@@ -58,11 +58,9 @@ export default class CarSlide extends PureComponent {
   handleSelectCar = () => {
     const { car, onSelectCar } = this.props;
 
-    if (!car.available) {
-      return;
+    if (car.available) {
+      onSelectCar(car.reference);
     }
-
-    onSelectCar(car.reference);
   };
 
   handleOpenInfo = () => {
