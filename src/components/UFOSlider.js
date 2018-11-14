@@ -8,10 +8,8 @@ const SLIDE_DEFAULT_WIDTH = SCREEN_WIDTH * 0.9;
 
 export default class UFOSlider extends React.Component {
   render() {
-    const carouselProps = this.props;
-
     return (
-      <Carousel { ...carouselProps } />
+      <Carousel { ...this.props } />
     );
   }
 }

@@ -8,7 +8,8 @@ const SCREEN_HORIZONTAL_INDENTS = 25;
 
 export default StyleSheet.create({
   screenWrapper: {
-    flex: 1
+    flex: 1,
+    backgroundColor: colors.BG_INVERT_TINT
   },
 
   wrapperBottomPadding: {
@@ -32,7 +33,6 @@ export default StyleSheet.create({
   },
 
   screenContainer: {
-    paddingHorizontal: SCREEN_HORIZONTAL_INDENTS,
     backgroundColor: colors.BG_INVERT_TINT,
     paddingTop: 12
   },
@@ -46,7 +46,8 @@ export default StyleSheet.create({
 
   sectionTitleIndents: {
     marginTop: 20,
-    marginBottom: 6
+    marginBottom: 6,
+    marginHorizontal: SCREEN_HORIZONTAL_INDENTS
   },
 
   datePickTitle: {
@@ -66,7 +67,8 @@ export default StyleSheet.create({
   },
 
   locSlider: {
-    paddingVertical: 4
+    paddingVertical: 4,
+    paddingHorizontal: SCREEN_HORIZONTAL_INDENTS
   },
 
   locSlide: {
@@ -139,7 +141,8 @@ export default StyleSheet.create({
   },
 
   carSlider: {
-    paddingVertical: 4
+    paddingVertical: 4,
+    paddingHorizontal: SCREEN_HORIZONTAL_INDENTS
   },
 
   carSlide: {
