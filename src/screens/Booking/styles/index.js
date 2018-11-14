@@ -41,7 +41,7 @@ export default StyleSheet.create({
     ...textThemes.SP_BOLD,
     color: colors.MAIN_COLOR,
     letterSpacing: 4,
-    fontSize: 13,
+    fontSize: 13
   },
 
   sectionTitleIndents: {
