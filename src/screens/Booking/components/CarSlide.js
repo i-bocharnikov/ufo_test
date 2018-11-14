@@ -27,7 +27,7 @@ export default class CarSlide extends PureComponent {
         ]}
       >
         <UFOImage
-          source={{uri: car.imageSideUrl}}
+          source={{uri: car.imageUrl}}
           style={styles.carlideImg}
           resizeMode="contain"
         />
