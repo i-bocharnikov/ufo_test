@@ -42,7 +42,7 @@ import AppStore from './stores/appStore';
 import registerStore from './stores/registerStore';
 import { screens, colors, backgrounds } from './utils/global';
 import logger, { codeTypes, severityTypes } from './utils/userActionsLogger';
-import getTheme from './../native-base-theme/components';
+import getTheme from './../native-base-theme/components'
 
 /* Handling some errors */
 YellowBox.ignoreWarnings([
