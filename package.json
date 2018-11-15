@@ -17,8 +17,8 @@
     "lint": "eslint src",
     "lint-path": "eslint",
     "lint-fix-path": "eslint --fix",
-    "lint-changes": "LIST=`git diff-index --name-only HEAD | grep .*\\.js | grep -v json`; if [ \"$LIST\" ]; then npm run lint-path \"$LIST\"; fi",
-    "lint-fix-changes": "LIST=`git diff-index --name-only HEAD | grep .*\\.js | grep -v json`; if [ \"$LIST\" ]; then npm run lint-fix-path \"$LIST\"; fi"
+    "lint-changes": "LIST=`git diff-index --name-only HEAD | grep .*\\.js | grep -v json`; if [ \"$LIST\" ]; then npm run lint-path $LIST; fi",
+    "lint-fix-changes": "LIST=`git diff-index --name-only HEAD | grep .*\\.js | grep -v json`; if [ \"$LIST\" ]; then npm run lint-fix-path $LIST; fi"
   },
   "dependencies": {
     "@babel/runtime": "^7.0.0",
