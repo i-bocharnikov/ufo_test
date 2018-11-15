@@ -27,7 +27,8 @@ export default class UFOTooltip extends PureComponent {
 
   componentDidUpdate(prevProps) {
     if (!this.props.isVisible && prevProps.isVisible) {
-      return this.setState({isVisible: false, measures: null});
+      this.setState({isVisible: false, measures: null});
+      return;
     }
 
     if (this.props.isVisible && !prevProps.isVisible) {

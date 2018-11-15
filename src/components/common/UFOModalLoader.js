@@ -29,5 +29,5 @@ export default class UFOModalLoader extends PureComponent {
 }
 
 UFOModalLoader.propTypes = {
-  isVisible : PropTypes.bool.isRequired,
+  isVisible : PropTypes.bool.isRequired
 };

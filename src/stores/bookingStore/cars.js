@@ -2,12 +2,24 @@ import _ from 'lodash';
 
 import { getFromApi } from './../../utils/api';
 
+/**
+  * @class
+  * @property {Array} fallbackCars
+  * @property fallbackCalendar
+  * @property fallbackOrder
+  * @description Class contain methods to work with booking api, carModels section
+  */
 export default class Cars {
 
   static fallbackCars = [];
   static fallbackCalendar = null;
   static fallbackOrder = null;
 
+  /**
+    * @param {string} locationRef
+    * @returns {Array}
+    * @description Get all available cars
+    */
   static async getCars(locationRef) {
      const path = locationRef
       ? `/reserve/carModels?locationReference=${locationRef}`
@@ -22,6 +34,14 @@ export default class Cars {
     }
   }
 
+  /**
+    * @param {string} location
+    * @param {string} car
+    * @param {string} minDate
+    * @param {string} maxDate
+    * @returns {Array}
+    * @description Get calendar days with rental notes
+    */
   static async getCarsCalendar(location, car, minDate, maxDate) {
     let path = `/reserve/carsCalendar/${location}/${car}`;
 

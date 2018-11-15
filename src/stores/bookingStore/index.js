@@ -1,9 +1,9 @@
 import { observable, action } from 'mobx';
 import moment from 'moment';
 
-import locations from './locations';
-import cars from './cars';
-import order from './order';
+import locations from './Locations';
+import cars from './Cars';
+import order from './Order';
 import { values } from './../../utils/theme';
 
 const TOMORROW = moment().add(1, 'day').startOf('day');
