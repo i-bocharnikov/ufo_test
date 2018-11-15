@@ -201,5 +201,63 @@ export default StyleSheet.create({
 
   notAvailableCar: {
     opacity: 0.5
+  },
+
+  bottomPanel: {
+    position: 'absolute',
+    height: BOTTOM_PANEL_HEIGHT,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    backgroundColor: colors.BG_INVERT,
+    shadowOffset: {width: 0,  height: -2},
+    shadowRadius: 8,
+    shadowColor: 'black',
+    shadowOpacity: 0.16,
+    elevation: 4
+  },
+
+  bottomPanelSection: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+
+  bottomPanelActionBtn: {
+    backgroundColor: colors.MAIN_COLOR
+  },
+
+  bottomPanelInfo: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+
+  bottomPanelActionTitle: {
+    ...textThemes.SP_BOLD,
+    color: colors.TEXT_INVERT_COLOR,
+    fontSize: 15
+  },
+
+  bottomPanelActionSubTitle: {
+    ...textThemes.SP_LIGHT,
+    color: colors.TEXT_INVERT_COLOR,
+    fontSize: 12,
+    marginTop: 6
+  },
+
+  bottomPanelPriceLabel: {
+    ...textThemes.SP_BOLD,
+    color: colors.MAIN_COLOR,
+    fontSize: 13,
+    letterSpacing: 4,
+    marginLeft: 26
+  },
+
+  bottomPanelPriceValue: {
+    ...textThemes.SP_REGULAR,
+    fontSize: 13,
+    letterSpacing: 1.3,
+    marginRight: 20
   }
 });

@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import { getFromApi } from './../../utils/api';
 
 export default class Order {
@@ -9,7 +11,7 @@ export default class Order {
 
     const response = await getFromApi(path);
 
-    if (response && response.rental && response.rental.rental) {
+    if (_.has(response, 'rental.rental')) {
       return response.rental.rental;
     } else {
       return this.fallbackOrder;

@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { translate } from 'react-i18next';
 import { observer } from 'mobx-react';
 
@@ -10,6 +10,7 @@ import UFOTooltip from './../../components/UFOTooltip';
 import BookingNavWrapper from './components/BookingNavWrapper';
 import LocationSlide from './components/LocationSlide';
 import CarSlide from './components/CarSlide';
+import BottomActionPanel from './components/BottomActionPanel';
 import styles from './styles';
 
 @observer
@@ -28,12 +29,11 @@ class StepBookScreen extends Component {
   render() {
     const { t } = this.props;
 
-    console.log(bookingStore.carCalendar);
-
     return (
       <BookingNavWrapper
         navBack={this.navBack}
         currentStep={1}
+        BottomActionPanel={this.renderBottomPanel()}
       >
         <UFOContainer style={styles.screenContainer}>
           <Text style={[styles.sectionTitle, styles.sectionTitleIndents]}>
@@ -132,20 +132,31 @@ class StepBookScreen extends Component {
     );
   };
 
-  onSelectLocation = ref => {
-    if (!ref) {
-      return;
-    }
+  renderBottomPanel = () => {
+    const { t } = this.props;
 
-    bookingStore.selectLocation(ref);
+    return (
+      <BottomActionPanel
+        t={this.props.t}
+        action={() => null}
+        actionTitle={t('booking:stepBookNextTitle')}
+        actionSubTitle={t('booking:stepBookNextSubTitle')}
+        isAvailable={false}
+        price={undefined}
+      />
+    );
+  };
+
+  onSelectLocation = ref => {
+    if (ref) {
+      bookingStore.selectLocation(ref);
+    }
   };
 
   onSelectCar = ref => {
-    if (!ref) {
-      return;
+    if (ref) {
+      bookingStore.selectCar(ref);
     }
-
-    bookingStore.selectCar(ref);
   };
 
   openCarInfo = ref => {

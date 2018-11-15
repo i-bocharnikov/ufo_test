@@ -188,7 +188,10 @@ export default {
     'infoLink': 'infos',
     'datesTooltip': 'Enter your pick-up & return date here. You can also use the calendar view.\nNeed more help? ',
     'tooltipLink': 'Contact us',
-    'dareSectionTitle': 'PICK-UP & RETURN DATE'
+    'dareSectionTitle': 'PICK-UP & RETURN DATE',
+    'totalPrice': 'TOTAL',
+    'stepBookNextTitle': 'PAY & CONFIRM',
+    'stepBookNextSubTitle': 'Go to step 2'
   },
   otaKeyNativeErrors
 };

@@ -30,13 +30,13 @@ export default class BookingStore {
   getInitialData = async () => {
     this.isLoading = true;
 
-    const [l, c] = await Promise.all([
+    const [receivedLocations, receivedCars] = await Promise.all([
       locations.getLocations(),
       cars.getCars()
     ]);
 
-    this.locations = l;
-    this.cars = c;
+    this.locations = receivedLocations;
+    this.cars = receivedCars;
 
     this.isLoading = false;
   };
@@ -49,7 +49,6 @@ export default class BookingStore {
     if (isSelectedNew) {
       this.selectedLocationRef = ref;
       this.cars = await cars.getCars(ref);
-
     } else {
       this.selectedLocationRef = null;
       this.cars = await cars.getCars();
@@ -71,7 +70,6 @@ export default class BookingStore {
     if (isSelectedNew) {
       this.selectedCarRef = ref;
       this.locations = await locations.getLocations(ref);
-
     } else {
       this.selectedCarRef = null;
       this.locations = await locations.getLocations();

@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import { getFromApi } from './../../utils/api';
 
 export default class Cars {
@@ -33,7 +35,7 @@ export default class Cars {
 
     const response = await getFromApi(path);
 
-    if (response && response.data && response.data.carsCalendarDays) {
+    if (_.has(response, 'data.carsCalendarDays')) {
       return response.data.carsCalendarDays;
     } else {
       return this.fallbackCalendar;
