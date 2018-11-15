@@ -20,8 +20,16 @@ export default class Cars {
     }
   }
 
-  static async getCarsCalendar(location, car) {
-    const path = `/reserve/carsCalendar/${location}/${car}`;
+  static async getCarsCalendar(location, car, minDate, maxDate) {
+    let path = `/reserve/carsCalendar/${location}/${car}`;
+
+    if (minDate) {
+      path = `${path}?minDate=${minDate}`;
+    }
+
+    if (maxDate) {
+      path = `${path}${minDate ? '&' : '?'}maxDate=${maxDate}`;
+    }
 
     const response = await getFromApi(path);
 
@@ -29,27 +37,6 @@ export default class Cars {
       return response.data.carsCalendarDays;
     } else {
       return this.fallbackCalendar;
-    }
-  }
-
-  static async getOrder(options) {
-    const {
-      location,
-      car,
-      startDate,
-      endDate,
-      startTime,
-      endTime
-    } = options;
-
-    const path = `/reserve/rentals/${location}/${car}/${startDate}T${startTime}/${endDate}T${endTime}/EUR`;
-
-    const response = await getFromApi(path);
-
-    if (response && response.rental && response.rental.rental) {
-      return response.rental.rental;
-    } else {
-      return this.fallbackOrder;
     }
   }
 }

@@ -5,7 +5,7 @@ import { observer } from 'mobx-react';
 
 import { bookingStore } from './../../stores';
 import { keys as screenKeys } from './../../navigators/helpers';
-import { UFOContainer, UFOIcon_next } from './../../components/common';
+import { UFOContainer, UFOIcon_next, UFOModalLoader } from './../../components/common';
 import UFOTooltip from './../../components/UFOTooltip';
 import BookingNavWrapper from './components/BookingNavWrapper';
 import LocationSlide from './components/LocationSlide';
@@ -27,6 +27,8 @@ class StepBookScreen extends Component {
 
   render() {
     const { t } = this.props;
+
+    console.log(bookingStore.carCalendar);
 
     return (
       <BookingNavWrapper
@@ -88,11 +90,7 @@ class StepBookScreen extends Component {
               {t('booking:tooltipLink')}
             </Text>
           </UFOTooltip>
-          <ActivityIndicator
-            size="large"
-            animating={bookingStore.isLoading}
-            style={{position: 'absolute', top: '50%', left: '50%'}}
-          />
+          <UFOModalLoader isVisible={bookingStore.isLoading} />
         </UFOContainer>
       </BookingNavWrapper>
     );

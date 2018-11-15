@@ -1,11 +1,13 @@
-import { observable, action, computed, autorun } from 'mobx';
+import { observable, action } from 'mobx';
 import moment from 'moment';
 
 import locations from './locations';
 import cars from './cars';
+import order from './order';
 import { values } from './../../utils/theme';
 
 const TOMORROW = moment().add(1, 'day').startOf('day');
+const MAX_RENTAL_DATE = moment().add(3, 'y').startOf('day');
 
 export default class BookingStore {
 
@@ -115,30 +117,36 @@ export default class BookingStore {
     this.isLoading = false;
   };
 
-  @action
   getCarCalendar = async () => {
     if (!this.selectedLocationRef || !this.selectedCarRef) {
       this.carCalendar = null;
       return;
     }
 
-    this.carCalendar = await cars.getCarsCalendar(this.selectedLocationRef, this.selectedCarRef);
+    const minDate = moment().format(values.DATE_STRING_FORMAT);
+    const maxDate = moment(MAX_RENTAL_DATE).format(values.DATE_STRING_FORMAT);
+
+    this.carCalendar = await cars.getCarsCalendar(
+      this.selectedLocationRef,
+      this.selectedCarRef,
+      minDate,
+      maxDate
+    );
   };
 
-  @action
   getOrderSimulation = async () => {
     if (!this.selectedLocationRef || !this.selectedCarRef) {
       this.order = null;
       return;
     }
 
-    this.order = await cars.getOrder({
-      location: this.selectedLocationRef,
-      car: this.selectedCarRef,
-      startDate: this.startRentalDate,
-      endDate: this.endRentalDate,
-      startTime: this.startRentalTime,
-      endTime: this.endRentalTime
-    });
+    this.order = await order.getOrder(
+      this.selectedLocationRef,
+      this.selectedCarRef,
+      this.startRentalDate,
+      this.endRentalDate,
+      this.startRentalTime,
+      this.endRentalTime
+    );
   };
 }
