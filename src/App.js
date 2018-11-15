@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   StyleSheet,
-  View,
   SafeAreaView,
   ActivityIndicator,
   StatusBar,
@@ -16,7 +15,7 @@ import {
   setNativeExceptionHandler
 } from 'react-native-exception-handler';
 import i18n from 'i18next';
-import { Root, StyleProvider } from 'native-base';
+import { StyleProvider } from 'native-base';
 
 import UFOAdminMenu from './components/UFOAdminMenu';
 import { UFOContainer } from './components/common';
@@ -38,11 +37,11 @@ import RegisterAddressScreen from './screens/SignUp/AddressEditor';
 import RegisterIdentificationScreen from './screens/SignUp/CardIdEditor';
 import RegisterDriverLicenceScreen from './screens/SignUp/DriverCardEditor';
 import BookingStackNavigator from './navigators/BookingStackNavigator';
-import AppStore from './stores/appStore';
+import appStore from './stores/appStore';
 import registerStore from './stores/registerStore';
 import { screens, colors, backgrounds } from './utils/global';
 import logger, { codeTypes, severityTypes } from './utils/userActionsLogger';
-import getTheme from './../native-base-theme/components'
+import getTheme from './../native-base-theme/components';
 
 /* Handling some errors */
 YellowBox.ignoreWarnings([
@@ -66,9 +65,7 @@ const errorHandler = (error, isFatal) => {
       }\n${
         error.message
       }`,
-      [{
-        text: i18n.t('common:closeBtn')
-      }]
+      [ { text: i18n.t('common:closeBtn') } ]
     );
   } else {
 
@@ -88,11 +85,7 @@ setNativeExceptionHandler(exceptionStr => {
 /* Describing navigators */
 const commonStackNavigationOptions = {};
 const DriveStack = createStackNavigator(
-  {
-    Drive: {
-      screen: DriveScreen
-    },
-  },
+  { Drive: { screen: DriveScreen } },
   {
     headerMode: 'none',
     navigationOptions: commonStackNavigationOptions
@@ -101,18 +94,10 @@ const DriveStack = createStackNavigator(
 
 const InspectStack = createStackNavigator(
   {
-    Inspect: {
-      screen: InspectScreen
-    },
-    InspectLocateDamage: {
-      screen: LocateDamage
-    },
-    InspectCaptureDamage: {
-      screen: CaptureDamage
-    },
-    InspectCommentDamage: {
-      screen: CommentDamage
-    },
+    Inspect: { screen: InspectScreen },
+    InspectLocateDamage: { screen: LocateDamage },
+    InspectCaptureDamage: { screen: CaptureDamage },
+    InspectCommentDamage: { screen: CommentDamage }
   },
   {
     initialRouteName: screens.INSPECT.name,
@@ -123,15 +108,9 @@ const InspectStack = createStackNavigator(
 
 const SupportStack = createStackNavigator(
   {
-    SupportFaqs: {
-      screen: SupportFaqsScreen
-    },
-    SupportFaq: {
-      screen: SupportFaqScreen
-    },
-    SupportChat: {
-      screen: SupportChatScreen
-    }
+    SupportFaqs: { screen: SupportFaqsScreen },
+    SupportFaq: { screen: SupportFaqScreen },
+    SupportChat: { screen: SupportChatScreen }
   },
   {
     initialRouteName: screens.SUPPORT_FAQS.name,
@@ -142,24 +121,12 @@ const SupportStack = createStackNavigator(
 
 const RegisterStack = createStackNavigator(
   {
-    SignUp: {
-      screen: SignUpScreen
-    },
-    Phone: {
-      screen: RegisterPhoneScreen
-    },
-    Email: {
-      screen: RegisterEmailScreen
-    },
-    Address: {
-      screen: RegisterAddressScreen
-    },
-    Identification: {
-      screen: RegisterIdentificationScreen
-    },
-    DriverLicence: {
-      screen: RegisterDriverLicenceScreen
-    }
+    SignUp: { screen: SignUpScreen },
+    Phone: { screen: RegisterPhoneScreen },
+    Email: { screen: RegisterEmailScreen },
+    Address: { screen: RegisterAddressScreen },
+    Identification: { screen: RegisterIdentificationScreen },
+    DriverLicence: { screen: RegisterDriverLicenceScreen }
   },
   {
     initialRouteName: screens.REGISTER_OVERVIEW.name,
@@ -170,34 +137,18 @@ const RegisterStack = createStackNavigator(
 
 const RootStack = createBottomTabNavigator(
   {
-    Drive: {
-      screen: DriveStack
-    },
-    Reserve: {
-      screen: BookingStackNavigator
-    },
-    Register: {
-      screen: RegisterStack
-    },
-    Find: {
-      screen: FindScreen
-    },
-    Return: {
-      screen: ReturnScreen
-    },
-    Inspect: {
-      screen: InspectStack
-    },
-    RentalAgreement: {
-      screen: RentalAgreementScreen
-    },
-    Support: {
-      screen: SupportStack
-    }
+    Drive: { screen: DriveStack },
+    Reserve: { screen: BookingStackNavigator },
+    Register: { screen: RegisterStack },
+    Find: { screen: FindScreen },
+    Return: { screen: ReturnScreen },
+    Inspect: { screen: InspectStack },
+    RentalAgreement: { screen: RentalAgreementScreen },
+    Support: { screen: SupportStack }
   },
   {
     initialRouteName: screens.DRIVE.name,
-    navigationOptions: () => ({tabBarVisible: false})
+    navigationOptions: () => ({ tabBarVisible: false })
   });
 
 /* Root App component */
@@ -215,7 +166,7 @@ const styles = StyleSheet.create({
 @observer
 class App extends React.Component {
   async componentDidMount() {
-    await AppStore.initialise(this.props.t);
+    await appStore.initialise(this.props.t);
   }
 
   render() {
@@ -224,7 +175,7 @@ class App extends React.Component {
         <UFOContainer image={backgrounds.HOME001}>
           <ActivityIndicator
             style={styles.centered}
-            size='large'
+            size="large"
             color={colors.ACTIVE}
           />
         </UFOContainer>
