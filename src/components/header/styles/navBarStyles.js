@@ -50,7 +50,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     height: SUBHEADER_HEIGHT,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'space-between'
   },
 
   subTitle: {

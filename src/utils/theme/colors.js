@@ -1,6 +1,11 @@
 export default {
   TEXT_DEFAULT_COLOR: '#2f2f2f',
   TEXT_INVERT_COLOR: '#fff',
+  TEXT_LIGHT_COLOR: '#979797',
   BG_DEFAULT: '#273d4c',
-  BG_INVERT: '#fff'
+  BG_INVERT: '#fff',
+  BG_INVERT_TINT: '#f4f5f5',
+  MAIN_COLOR: '#40657d',
+  MAIN_LIGHT_COLOR: '#68a3c2',
+  ATTENTION_COLOR: '#ea504c'
 };

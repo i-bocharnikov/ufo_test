@@ -181,7 +181,17 @@ export default {
     'screenTitle': 'Book your car',
     'subTitleStep1': 'BOOK',
     'subTitleStep2': 'PAY & CONFIRM',
-    'subTitleStep3': 'DRIVE'
+    'subTitleStep3': 'DRIVE',
+    'locSectionTitle': 'LOCATION',
+    'carsSectionTitle': 'CARS',
+    'notFoundData': 'Data not found',
+    'infoLink': 'infos',
+    'datesTooltip': 'Enter your pick-up & return date here. You can also use the calendar view.\nNeed more help? ',
+    'tooltipLink': 'Contact us',
+    'dareSectionTitle': 'PICK-UP & RETURN DATE',
+    'totalPrice': 'TOTAL',
+    'stepBookNextTitle': 'PAY & CONFIRM',
+    'stepBookNextSubTitle': 'Go to step 2'
   },
   otaKeyNativeErrors
 };

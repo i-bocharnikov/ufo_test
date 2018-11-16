@@ -2,29 +2,23 @@
   "name": "driverApp",
   "version": "0.1.0",
   "private": true,
-  "devDependencies": {
-    "@babel/plugin-proposal-decorators": "^7.1.2",
-    "jest": "^23.6.0",
-    "jest-react-native": "^18.0.0",
-    "jsc-android": "224109.x.x",
-    "metro-react-native-babel-preset": "^0.45.6",
-    "react-devtools": "^3.4.0",
-    "react-test-renderer": "16.5.1"
-  },
   "scripts": {
+    "start": "react-native start",
     "dev": "react-native start",
-    "link": "react-native link",
     "android": "react-native run-android",
-    "build": "cd android; ./gradlew assembleRelease; cd ..",
     "ios": "react-native run-ios",
-    "ios.stany": "react-native run-ios 'Stany Blanvalet''s iphone'",
+    "build": "cd android; ./gradlew assembleRelease; cd ..",
+    "link": "react-native link",
+    "test": "jest",
     "android.logs": "react-native log-android",
     "ios.logs": "react-native log-ios",
+    "ios.stany": "react-native run-ios 'Stany Blanvalet''s iphone'",
     "debug": "react-devtools &",
-    "test": "jest"
-  },
-  "jest": {
-    "preset": "react-native"
+    "lint": "eslint src",
+    "lint-path": "eslint",
+    "lint-fix-path": "eslint --fix",
+    "lint-changes": "LIST=`git diff-index --name-only HEAD | grep .*\\.js | grep -v json`; if [ \"$LIST\" ]; then npm run lint-path $LIST; fi",
+    "lint-fix-changes": "LIST=`git diff-index --name-only HEAD | grep .*\\.js | grep -v json`; if [ \"$LIST\" ]; then npm run lint-fix-path $LIST; fi"
   },
   "dependencies": {
     "@babel/runtime": "^7.0.0",
@@ -67,9 +61,25 @@
     "rn-fetch-blob": "^0.10.13",
     "uuid": "^3.3.2"
   },
+  "devDependencies": {
+    "@babel/plugin-proposal-decorators": "^7.1.2",
+    "jest": "^23.6.0",
+    "jest-react-native": "^18.0.0",
+    "jsc-android": "224109.x.x",
+    "metro-react-native-babel-preset": "^0.45.6",
+    "pre-commit": "^1.2.2",
+    "react-devtools": "^3.4.0",
+    "react-test-renderer": "16.5.1"
+  },
   "rnpm": {
     "assets": [
       "./src/assets/fonts/"
     ]
-  }
+  },
+  "jest": {
+    "preset": "react-native"
+  },
+  "pre-commit": [
+    "lint-changes"
+  ]
 }

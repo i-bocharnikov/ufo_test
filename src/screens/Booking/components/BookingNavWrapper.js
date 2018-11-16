@@ -3,7 +3,6 @@ import { View, Text } from 'react-native';
 import { translate } from 'react-i18next';
 import PropTypes from 'prop-types';
 
-import { keys as screenKeys } from './../../../navigators/helpers';
 import UFONavBarWrapper from './../../../components/header/UFONavBarWrapper';
 import { UFOIcon_next } from './../../../components/common';
 import styles from './../styles';
@@ -14,7 +13,7 @@ class BookingNavWrapper extends Component {
     const { t, navBack, BottomActionPanel } = this.props;
 
     return (
-      <View style={[styles.wrapper, BottomActionPanel && styles.wrapperBottomPadding]}>
+      <View style={[styles.screenWrapper, BottomActionPanel && styles.wrapperBottomPadding]}>
         <UFONavBarWrapper
           title={t('booking:screenTitle')}
           SubtitleComponent={this.getSubTitleComponent()}
@@ -31,7 +30,7 @@ class BookingNavWrapper extends Component {
     const { t, currentStep } = this.props;
 
     return (
-      <View style={styles.subTitleWrapper}>
+      <Fragment>
         <Text style={[
           navBarStyles.subTitle,
           styles.headerSubtitleLabel
@@ -70,7 +69,7 @@ class BookingNavWrapper extends Component {
         ]}>
           3. {t('booking:subTitleStep3')}
         </Text>
-      </View>
+      </Fragment>
     );
   };
 }

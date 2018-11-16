@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchebleOpacity } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { translate } from 'react-i18next';
 
 import { UFOContainer } from './../../components/common';
