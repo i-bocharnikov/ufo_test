@@ -70,12 +70,20 @@ class StepBookScreen extends Component {
               data={bookingStore.rollPickersData}
               onRowChange={this.onSelectStartRollDate}
               selectTo={bookingStore.rollPickerStartSelectedIndex}
+              wrapperStyles={styles.rollPicker}
             />
-            <View style={styles.rollPickerSeparator} />
+            <View style={styles.rollPickerSeparatorWrapper}>
+              <View style={styles.rollPickerSeparator} />
+              <UFOIcon_next
+                name="ios-calendar-outline"
+                style={styles.rollPickerSeparatorIcon}
+              />
+            </View>
             <UFORollPicker
               data={bookingStore.rollPickersData}
               onRowChange={this.onSelectEndRollDate}
               selectTo={bookingStore.rollPickerEndSelectedIndex}
+              wrapperStyles={styles.rollPicker}
             />
           </View>
           <Text style={[ styles.sectionTitle, styles.sectionTitleIndents ]}>

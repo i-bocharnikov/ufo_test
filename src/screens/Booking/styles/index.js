@@ -238,13 +238,30 @@ export default StyleSheet.create({
   rollPickerSection: {
     flexDirection: 'row',
     marginHorizontal: SCREEN_HORIZONTAL_INDENTS,
-    backgroundColor: colors.BG_INVERT,
-    paddingVertical: 8
+    backgroundColor: colors.BG_INVERT
+  },
+
+  rollPicker: { marginVertical: 12 },
+
+  rollPickerSeparatorWrapper: {
+    height: '100%',
+    width: 24,
+    alignItems: 'center'
   },
 
   rollPickerSeparator: {
-    height: '100%',
+    flex: 1,
     width: 1,
     backgroundColor: colors.BORDER_COLOR
+  },
+
+  rollPickerSeparatorIcon: {
+    position: 'absolute',
+    top: '50%',
+    marginTop: '-50%',
+    paddingBottom: 2,
+    backgroundColor: colors.BG_INVERT,
+    color: colors.TEXT_LIGHT_COLOR,
+    fontSize: 24
   }
 });

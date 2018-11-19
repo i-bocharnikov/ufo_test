@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { FlatList, Text, View, Animated } from 'react-native';
+import { FlatList, Text, View, Animated, ViewPropTypes } from 'react-native';
 import PropTypes from 'prop-types';
 
 import styles, {
@@ -31,9 +31,11 @@ export default class UFORollPicker extends PureComponent {
   }
 
   render() {
+    const { flatListProps, wrapperStyles } = this.props;
+
     return (
       <View
-        style={styles.wrapper}
+        style={[ styles.wrapper, wrapperStyles ]}
         onLayout={this.setLayoutOffset}
       >
         <FlatList
@@ -52,8 +54,8 @@ export default class UFORollPicker extends PureComponent {
           showsVerticalScrollIndicator={false}
           bounces={false}
           nestedScrollEnabled={true}
-          initialNumToRender={3}
-          {...this.props.flatListProps}
+          initialNumToRender={4}
+          {...flatListProps}
         />
       </View>
     );
@@ -228,5 +230,6 @@ UFORollPicker.propTypes = {
   ),
   selectTo: PropTypes.number,
   onRowChange: PropTypes.func,
-  flatListProps: PropTypes.shape({ ...FlatList.PropTypes })
+  flatListProps: PropTypes.shape({ ...FlatList.PropTypes }),
+  wrapperStyles: ViewPropTypes.style
 };
