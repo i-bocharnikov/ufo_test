@@ -88,6 +88,18 @@ export default class UFORollPicker extends PureComponent {
 
   keyExtractor = item => `${item.id}`;
 
+  getItemLayout = (data, index) => {
+    return {
+      length: ITEM_HEIGHT,
+      offset: ITEM_HEIGHT * index,
+      index
+    };
+  };
+
+  /**
+    * @description Add first and last empty items to list because they are can't be chosen
+    * @returns {Array}
+    */
   getShiftedData = () => {
     if (this.props.data.length) {
       const shiftedData = [ {
@@ -107,23 +119,27 @@ export default class UFORollPicker extends PureComponent {
     return this.props.data;
   };
 
-  getItemLayout = (data, index) => {
-    return {
-      length: ITEM_HEIGHT,
-      offset: ITEM_HEIGHT * index,
-      index
-    };
-  };
-
+  /**
+    * @param {Object} e
+    * @description Set offset relative for screen
+    */
   setLayoutOffset = ({ nativeEvent: { layout: { y } } }) => {
     this.setState({ layoutOffsetY: y });
   };
 
+  /**
+    * @param {Object} e
+    * @description Handling end of scroll
+    */
   onMomentumScrollEnd = e => {
     const y = e.nativeEvent.contentOffset.y;
     this.onScrollEnd(y);
   };
 
+  /**
+    * @param {number} y
+    * @description Custom reaction to scroll events
+    */
   onScrollEnd = y => {
     let y1 = y - (y % ITEM_HEIGHT);
 
@@ -134,7 +150,9 @@ export default class UFORollPicker extends PureComponent {
     const index = y1 / ITEM_HEIGHT;
 
     if (this.listView) {
-      this.listView.scrollToIndex({ index: index, animated: false });
+      index < this.props.data.length
+        ? this.listView.scrollToIndex({ index: index, animated: false })
+        : this.listView.scrollToEnd({ animated: false });
     }
 
     if (this.props.onRowChange) {
@@ -142,6 +160,10 @@ export default class UFORollPicker extends PureComponent {
     }
   };
 
+  /**
+    * @param {Object} e
+    * @description Handling onScrollEndDrag RN event
+    */
   onScrollEndDrag = e => {
     const y = e.nativeEvent.contentOffset.y;
     const onScrollEndDragCount = this.onScrollCount;
@@ -153,6 +175,12 @@ export default class UFORollPicker extends PureComponent {
     this.fixInterval = setInterval(() => this.timeFix(start, y, onScrollEndDragCount), 10);
   };
 
+  /**
+    * @param {Object} start
+    * @param {number} y
+    * @param {number} onScrollEndDragCount
+    * @description fix for case when user stop scrolling event
+    */
   timeFix = (start, y, onScrollEndDragCount) => {
     const now = Date.now();
     const end = 200;
@@ -166,13 +194,22 @@ export default class UFORollPicker extends PureComponent {
     }
   };
 
+  /**
+    * @description saving of amount of performed events for timeFix
+    */
   onScroll = async () => {
     this.onScrollCount++;
   };
 
+  /**
+    * @param {i} number
+    * @description move to item which was selected optional
+    */
   selectToItem = i => {
     if (this.listView) {
-      this.listView.scrollToIndex({ index: i, animated: false });
+      i < this.props.data.length
+       ? this.listView.scrollToIndex({ index: i, animated: false })
+       : this.listView.scrollToEnd({ animated: false });
     }
   };
 }

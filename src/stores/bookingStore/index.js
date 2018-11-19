@@ -28,6 +28,9 @@ export default class BookingStore {
   @observable startRentalTime = moment(TOMORROW).add(8, 'h').format(values.TIME_STRING_FORMAT);
   @observable endRentalTime = moment(TOMORROW).add(20, 'h').format(values.TIME_STRING_FORMAT);
 
+  /**
+    * @description Get lists of all locations and cars
+    */
   @action
   getInitialData = async () => {
     this.isLoading = true;
@@ -43,6 +46,10 @@ export default class BookingStore {
     this.isLoading = false;
   };
 
+  /**
+    * @param {string} ref
+    * @description select location for order
+    */
   @action
   selectLocation = async ref => {
     const isSelectedNew = ref && this.selectedLocationRef !== ref;
@@ -64,6 +71,10 @@ export default class BookingStore {
     this.isLoading = false;
   };
 
+  /**
+    * @param {string} ref
+    * @description Select car for order
+    */
   @action
   selectCar = async ref => {
     const isSelectedNew = ref && this.selectedCarRef !== ref;
@@ -85,6 +96,10 @@ export default class BookingStore {
     this.isLoading = false;
   };
 
+  /**
+    * @param {Object} dateMoment
+    * @description Set start rental date as 'moment' object
+    */
   @action
   selectStartDate = async dateMoment => {
     if (dateMoment.isBefore(TOMORROW)) {
@@ -102,6 +117,10 @@ export default class BookingStore {
     this.isLoading = false;
   };
 
+  /**
+    * @param {Object} dateMoment
+    * @description Set end rental date as 'moment' object
+    */
   @action
   selectEndDate = async dateMoment => {
     if (dateMoment.isBefore(TOMORROW)) {
@@ -119,6 +138,10 @@ export default class BookingStore {
     this.isLoading = false;
   };
 
+  /**
+    * @param {string} timeStr
+    * @description Set start rental time
+    */
   @action
   selectStartTime = async timeStr => {
     this.startRentalTime = timeStr;
@@ -127,6 +150,10 @@ export default class BookingStore {
     this.isLoading = false;
   };
 
+  /**
+    * @param {string} timeStr
+    * @description Set end rental time
+    */
   @action
   selectEndTime = async timeStr => {
     this.endRentalTime = timeStr;
@@ -135,6 +162,9 @@ export default class BookingStore {
     this.isLoading = false;
   };
 
+  /**
+    * @description Get array of data for roll pickers (dates) rendering
+    */
   @computed
   get rollPickersData() {
     if (!Array.isArray(this.carCalendar)) {
@@ -147,16 +177,25 @@ export default class BookingStore {
     }));
   }
 
+  /**
+    * @description Get selected row into picker for start date
+    */
   @computed
   get rollPickerStartSelectedIndex() {
     return this.startRentalDate.diff(TODAY, 'days');
   }
 
+  /**
+    * @description Get selected row into picker for end date
+    */
   @computed
   get rollPickerEndSelectedIndex() {
     return this.endRentalDate.diff(TODAY, 'days');
   }
 
+  /**
+    * @description Get formated string for price of current order
+    */
   @computed
   get orderPrice() {
     if (!this.order) {
@@ -166,6 +205,9 @@ export default class BookingStore {
     return `${this.order.price.amount}€`;
   }
 
+  /**
+    * @description Get days with description for rental current car
+    */
   getCarCalendar = async () => {
     if (!this.selectedLocationRef || !this.selectedCarRef) {
       this.carCalendar = null;
@@ -183,6 +225,9 @@ export default class BookingStore {
     );
   };
 
+  /**
+    * @description Get description how will looking the order
+    */
   getOrderSimulation = async () => {
     if (!this.selectedLocationRef || !this.selectedCarRef) {
       this.order = null;
