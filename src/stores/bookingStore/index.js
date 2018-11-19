@@ -1,11 +1,13 @@
-import { observable, action } from 'mobx';
+import { observable, action, computed } from 'mobx';
 import moment from 'moment';
 
 import locations from './Locations';
 import cars from './Cars';
 import order from './Order';
+import { getPreselectedDatesForRollPicker } from './helpers';
 import { values } from './../../utils/theme';
 
+const TODAY = moment().startOf('day');
 const TOMORROW = moment().add(1, 'day').startOf('day');
 const MAX_RENTAL_DATE = moment().add(3, 'y').startOf('day');
 
@@ -21,8 +23,8 @@ export default class BookingStore {
   @observable selectedCarRef = null;
   @observable carCalendar = null;
 
-  @observable startRentalDate = moment(TOMORROW).format(values.DATE_STRING_FORMAT);
-  @observable endRentalDate = moment(TOMORROW).format(values.DATE_STRING_FORMAT);
+  @observable startRentalDate = TOMORROW;
+  @observable endRentalDate = TOMORROW;
   @observable startRentalTime = moment(TOMORROW).add(8, 'h').format(values.TIME_STRING_FORMAT);
   @observable endRentalTime = moment(TOMORROW).add(20, 'h').format(values.TIME_STRING_FORMAT);
 
@@ -30,7 +32,7 @@ export default class BookingStore {
   getInitialData = async () => {
     this.isLoading = true;
 
-    const [receivedLocations, receivedCars] = await Promise.all([
+    const [ receivedLocations, receivedCars ] = await Promise.all([
       locations.getLocations(),
       cars.getCars()
     ]);
@@ -84,16 +86,34 @@ export default class BookingStore {
   };
 
   @action
-  selectStartDate = async dateStr => {
-    this.startRentalDate = dateStr;
+  selectStartDate = async dateMoment => {
+    if (dateMoment.isBefore(TOMORROW)) {
+      this.startRentalDate = TOMORROW;
+    } else {
+      this.startRentalDate = dateMoment;
+    }
+
+    if (this.endRentalDate.isBefore(this.startRentalDate)) {
+      this.endRentalDate = this.startRentalDate;
+    }
+
     this.isLoading = true;
     await this.getOrderSimulation();
     this.isLoading = false;
   };
 
   @action
-  selectEndDate = async dateStr => {
-    this.endRentalDate = dateStr;
+  selectEndDate = async dateMoment => {
+    if (dateMoment.isBefore(TOMORROW)) {
+      this.endRentalDate = TOMORROW;
+    } else {
+      this.endRentalDate = dateMoment;
+    }
+
+    if (this.startRentalDate.isAfter(this.endRentalDate)) {
+      this.startRentalDate = this.endRentalDate;
+    }
+
     this.isLoading = true;
     await this.getOrderSimulation();
     this.isLoading = false;
@@ -114,6 +134,37 @@ export default class BookingStore {
     await this.getOrderSimulation();
     this.isLoading = false;
   };
+
+  @computed
+  get rollPickersData() {
+    if (!Array.isArray(this.carCalendar)) {
+      return getPreselectedDatesForRollPicker();
+    }
+
+    return this.carCalendar.map(item => ({
+      label: moment(item.calendarDay).format(values.DATE_ROLLPICKER_FORMAT),
+      id: item.calendarDay
+    }));
+  }
+
+  @computed
+  get rollPickerStartSelectedIndex() {
+    return this.startRentalDate.diff(TODAY, 'days');
+  }
+
+  @computed
+  get rollPickerEndSelectedIndex() {
+    return this.endRentalDate.diff(TODAY, 'days');
+  }
+
+  @computed
+  get orderPrice() {
+    if (!this.order) {
+      return 'N/A';
+    }
+
+    return `${this.order.price.amount}€`;
+  }
 
   getCarCalendar = async () => {
     if (!this.selectedLocationRef || !this.selectedCarRef) {
@@ -141,8 +192,8 @@ export default class BookingStore {
     this.order = await order.getOrder(
       this.selectedLocationRef,
       this.selectedCarRef,
-      this.startRentalDate,
-      this.endRentalDate,
+      this.startRentalDate.format(values.DATE_STRING_FORMAT),
+      this.endRentalDate.format(values.DATE_STRING_FORMAT),
       this.startRentalTime,
       this.endRentalTime
     );

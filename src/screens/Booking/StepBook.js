@@ -1,25 +1,26 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { translate } from 'react-i18next';
 import { observer } from 'mobx-react';
+import moment from 'moment';
 
 import { bookingStore } from './../../stores';
 import { keys as screenKeys } from './../../navigators/helpers';
 import { UFOContainer, UFOIcon_next, UFOModalLoader } from './../../components/common';
 import UFOTooltip from './../../components/UFOTooltip';
+import UFORollPicker from './../../components/UFORollPicker';
 import BookingNavWrapper from './components/BookingNavWrapper';
 import LocationSlide from './components/LocationSlide';
 import CarSlide from './components/CarSlide';
 import BottomActionPanel from './components/BottomActionPanel';
 import styles from './styles';
+import { values } from './../../utils/theme';
 
 @observer
 class StepBookScreen extends Component {
   constructor() {
     super();
-    this.state = {
-      showDateTooltip: false
-    };
+    this.state = { showDateTooltip: false };
   }
 
   async componentDidMount() {
@@ -36,7 +37,7 @@ class StepBookScreen extends Component {
         BottomActionPanel={this.renderBottomPanel()}
       >
         <UFOContainer style={styles.screenContainer}>
-          <Text style={[styles.sectionTitle, styles.sectionTitleIndents]}>
+          <Text style={[ styles.sectionTitle, styles.sectionTitleIndents ]}>
             {t('booking:locSectionTitle')}
           </Text>
           <FlatList
@@ -50,12 +51,12 @@ class StepBookScreen extends Component {
             extraData={bookingStore.selectedLocationRef}
             pagingEnabled={true}
           />
-          <View style={[styles.row, styles.sectionTitleIndents]}>
-            <Text style={[styles.sectionTitle, styles.datePickTitle]}>
+          <View style={[ styles.row, styles.sectionTitleIndents ]}>
+            <Text style={[ styles.sectionTitle, styles.datePickTitle ]}>
               {t('booking:dareSectionTitle')}
             </Text>
             <TouchableOpacity
-              onPress={() => this.setState({showDateTooltip: true})}
+              onPress={() => this.setState({ showDateTooltip: true })}
               ref={ref => (this.dateTooltipRef = ref)}
             >
               <UFOIcon_next
@@ -64,7 +65,20 @@ class StepBookScreen extends Component {
               />
             </TouchableOpacity>
           </View>
-          <Text style={[styles.sectionTitle, styles.sectionTitleIndents]}>
+          <View style={styles.rollPickerSection}>
+            <UFORollPicker
+              data={bookingStore.rollPickersData}
+              onRowChange={this.onSelectStartRollDate}
+              selectTo={bookingStore.rollPickerStartSelectedIndex}
+            />
+            <View style={styles.rollPickerSeparator} />
+            <UFORollPicker
+              data={bookingStore.rollPickersData}
+              onRowChange={this.onSelectEndRollDate}
+              selectTo={bookingStore.rollPickerEndSelectedIndex}
+            />
+          </View>
+          <Text style={[ styles.sectionTitle, styles.sectionTitleIndents ]}>
             {t('booking:carsSectionTitle')}
           </Text>
           <FlatList
@@ -79,7 +93,7 @@ class StepBookScreen extends Component {
           />
           <UFOTooltip
             isVisible={this.state.showDateTooltip}
-            onClose={() => this.setState({showDateTooltip: false})}
+            onClose={() => this.setState({ showDateTooltip: false })}
             originBtn={this.dateTooltipRef}
           >
             {t('booking:datesTooltip')}
@@ -142,7 +156,7 @@ class StepBookScreen extends Component {
         actionTitle={t('booking:stepBookNextTitle')}
         actionSubTitle={t('booking:stepBookNextSubTitle')}
         isAvailable={false}
-        price={undefined}
+        price={bookingStore.orderPrice}
       />
     );
   };
@@ -160,11 +174,11 @@ class StepBookScreen extends Component {
   };
 
   openCarInfo = ref => {
-    console.log('CAR', ref);
+    console.log('NAV TO CAR DESCR', ref);
   };
 
   openLocationInfo = ref => {
-    console.log('LOCATION', ref);
+    console.log('NAV TO LOCATION DESCR', ref);
   };
 
   navBack = () => {
@@ -172,8 +186,20 @@ class StepBookScreen extends Component {
   };
 
   onDateTooltipLink = () => {
-    console.log('PRESS DATE TOOLTIP');
-  }
+    console.log('OPEN LINK');
+  };
+
+  onSelectStartRollDate = async index => {
+    const item = bookingStore.rollPickersData[index];
+    const selectedDate = moment(item.label, values.DATE_ROLLPICKER_FORMAT).startOf('day');
+    await bookingStore.selectStartDate(selectedDate);
+  };
+
+  onSelectEndRollDate = async index => {
+    const item = bookingStore.rollPickersData[index];
+    const selectedDate = moment(item.label, values.DATE_ROLLPICKER_FORMAT).startOf('day');
+    await bookingStore.selectEndDate(selectedDate);
+  };
 }
 
 export default translate()(StepBookScreen);
