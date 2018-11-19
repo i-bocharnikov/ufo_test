@@ -9,6 +9,7 @@ import { keys as screenKeys } from './../../navigators/helpers';
 import { UFOContainer, UFOIcon_next, UFOModalLoader } from './../../components/common';
 import UFOTooltip from './../../components/UFOTooltip';
 import UFORollPicker from './../../components/UFORollPicker';
+import UFODatePickerModal from './../../components/UFODatePickerModal';
 import BookingNavWrapper from './components/BookingNavWrapper';
 import LocationSlide from './components/LocationSlide';
 import CarSlide from './components/CarSlide';
@@ -98,6 +99,11 @@ class StepBookScreen extends Component {
             ListEmptyComponent={this.renderEmptyList}
             contentContainerStyle={styles.carSlider}
             extraData={bookingStore.selectedCarRef}
+          />
+          <UFODatePickerModal
+            pastScrollRange={0}
+            futureScrollRange={36}
+            minDate={Date.now()}
           />
           <UFOTooltip
             isVisible={this.state.showDateTooltip}

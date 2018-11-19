@@ -4,10 +4,12 @@ export default {
   common: {
     'okBtn': 'OK',
     'cancelBtn': 'Cancel',
-    'closeBtn': 'Close',
+    'closeBtn': 'close',
     'modeAuto': 'auto',
     'modeOn': 'on',
-    'modeOff': 'off'
+    'modeOff': 'off',
+    'calendarTitle': 'SELECT DATE',
+    'saveBtn': 'Save'
   },
   activities: {
     'internetAccessFailure': 'Unexpected internet connectivity issues. Operating in offline/degraded mode',
