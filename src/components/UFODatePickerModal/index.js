@@ -7,11 +7,11 @@ import i18n from 'i18next';
 import styles, { calendarTheme, CALENDAR_WIDTH, MONTH_HEIGHT } from './styles';
 import { values } from './../../utils/theme';
 
-LocaleConfig.locales['en'] = {
-  monthNames: ['January','February','March','April','May','June','July','August','September','October','November','December'],
-  monthNamesShort: ['Jan','Feb','Mar','Apr','May','June','July','Aug','Sept','Oct','Nov','Dec'],
-  dayNames: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
-  dayNamesShort: ['SU','M','TU','W','TH','F','SA']
+LocaleConfig.locales.en = {
+  monthNames: [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ],
+  monthNamesShort: [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec' ],
+  dayNames: [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ],
+  dayNamesShort: [ 'SU', 'M', 'TU', 'W', 'TH', 'F', 'SA' ]
 };
 
 LocaleConfig.defaultLocale = 'en';
@@ -60,7 +60,7 @@ export default class UFODatePickerModal extends PureComponent {
               calendarWidth={CALENDAR_WIDTH}
               calendarHeight={MONTH_HEIGHT}
               theme={calendarTheme}
-              { ...calendarProps }
+              {...calendarProps}
             />
           </View>
         </TouchableOpacity>
@@ -69,6 +69,4 @@ export default class UFODatePickerModal extends PureComponent {
   }
 }
 
-UFODatePickerModal.propTypes = {
-
-};
+UFODatePickerModal.propTypes = {};

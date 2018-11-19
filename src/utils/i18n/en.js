@@ -147,9 +147,7 @@ export default {
     'reservePaymentTitle': 'Confirm',
     'bookingLink': 'Coming soon, please follow this link to book a car'
   },
-  support: {
-    'supportTitle': 'How can we help you?'
-  },
+  support: { 'supportTitle': 'How can we help you?' },
   drive: {
     'driveTitle': 'Rental',
     'rentalReference': 'Rental {{rental.reference}} {{rental.status}}',

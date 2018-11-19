@@ -3,8 +3,8 @@ import { colors, textThemes } from './../../../utils/theme';
 
 const HORIZONTAL_INDENTS = 25;
 const { width: SCREEN_WIDTH } = Dimensions.get('screen');
-export const CALENDAR_WIDTH = SCREEN_WIDTH - HORIZONTAL_INDENTS*2;
-export const MONTH_HEIGHT = SCREEN_WIDTH - HORIZONTAL_INDENTS*2;
+export const CALENDAR_WIDTH = SCREEN_WIDTH - HORIZONTAL_INDENTS * 2;
+export const MONTH_HEIGHT = SCREEN_WIDTH - HORIZONTAL_INDENTS * 2;
 
 export const calendarTheme = {
   textDayFontFamily: textThemes.SP_LIGHT.fontFamily,
