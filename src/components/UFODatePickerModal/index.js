@@ -69,14 +69,27 @@ export default class UFODatePickerModal extends PureComponent {
   }
 
   getMarkedDates = () => {
+    const { startPickedDate, endPickedDate } = this.state;
+
     return {
-      '2018-11-23': { startingDay: true, color: 'green' },
-      '2018-11-24': { endingDay: true, color: 'green' }
+      [startPickedDate]: { startingDay: true, color: 'green' },
+      [endPickedDate]: { endingDay: true, color: 'green' }
     };
   };
 
-  handleDayPress = () => {
+  handleDayPress = ({ dateString }) => {
+    const { startPickedDate } = this.state;
 
+    if (!startPickedDate || moment(dateString).isBefore(startPickedDate)) {
+      this.setState({
+        startPickedDate: dateString,
+        endPickedDate: dateString
+      });
+
+      return;
+    }
+
+    this.setState({endPickedDate: dateString});
   };
 
   handleSave = () => {
