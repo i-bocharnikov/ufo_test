@@ -184,6 +184,7 @@ export default {
     'subTitleStep3': 'DRIVE',
     'locSectionTitle': 'LOCATION',
     'carsSectionTitle': 'CARS',
+    'timeSectionTitle': 'PICK-UP & RETURN TIME',
     'notFoundData': 'Data not found',
     'infoLink': 'infos',
     'datesTooltip': 'Enter your pick-up & return date here. You can also use the calendar view.\nNeed more help? ',

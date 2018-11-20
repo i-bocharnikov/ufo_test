@@ -83,7 +83,7 @@ export default class UFORollPicker extends PureComponent {
       <View style={styles.row}>
         <Animated.Text style={[
           styles.rowLabel,
-          !item.available && styles.disabledRow,
+          item.available === false && styles.disabledRow,
           { fontSize }
         ]}
         >
@@ -155,7 +155,7 @@ export default class UFORollPicker extends PureComponent {
     }
 
     let index = y1 / ITEM_HEIGHT;
-    if (!this.props.data[index].available) {
+    if (this.props.data[index] && this.props.data[index].available === false) {
       this.props.data.length - 1 > index ? index++ : index--;
     }
 
@@ -218,7 +218,7 @@ export default class UFORollPicker extends PureComponent {
   selectToItem = i => {
     let index = i;
 
-    if (!this.props.data[index].available) {
+    if (this.props.data[index] && this.props.data[index].available === false) {
       this.props.data.length - 1 > index ? index++ : index--;
     }
 
@@ -240,7 +240,7 @@ UFORollPicker.propTypes = {
     PropTypes.shape({
       label: PropTypes.string.isRequired,
       id: PropTypes.string.isRequired,
-      available: PropTypes.bool.isRequired
+      available: PropTypes.bool
     })
   ),
   selectTo: PropTypes.number,

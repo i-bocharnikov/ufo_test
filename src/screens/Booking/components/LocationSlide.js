@@ -21,7 +21,7 @@ export default class LocationSlide extends PureComponent {
         activeOpacity={location.available ? values.BTN_OPACITY_DEFAULT : 1}
         style={[
           styles.locSlide,
-          styles.slideShadow,
+          styles.blockShadow,
           !isFirstItem && styles.locSlideLeftSpace
         ]}
       >
@@ -31,13 +31,14 @@ export default class LocationSlide extends PureComponent {
           </Text>
         )}
         <UFOImage
-          source={{uri: location.imageUrl}}
+          source={{ uri: location.imageUrl }}
           style={styles.locSlideImg}
         />
         <View style={[
           styles.locSlideLabelWrapper,
           isSelected && styles.choosenLocation
-        ]}>
+        ]}
+        >
           <Text style={styles.locSlideLabel} numberOfLines={3}>
             {location.name.toUpperCase()}
           </Text>

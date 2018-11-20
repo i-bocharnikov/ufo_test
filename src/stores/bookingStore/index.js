@@ -1,10 +1,11 @@
 import { observable, action, computed } from 'mobx';
 import moment from 'moment';
+import _ from 'lodash';
 
 import locations from './Locations';
 import cars from './Cars';
 import order from './Order';
-import { getPreselectedDatesForRollPicker } from './helpers';
+import { getPreselectedDatesForRollPicker, getTimeItemsForRollPicker } from './helpers';
 import { values } from './../../utils/theme';
 
 const TODAY = moment().startOf('day');
@@ -158,8 +159,16 @@ export default class BookingStore {
     * @description Set start rental time
     */
   @action
-  selectStartTime = async timeStr => {
+  selectStartTime = async (timeStr, itemIndex) => {
     this.startRentalTime = timeStr;
+
+    if (this.rollPickerEndSelectedTimeItem <= itemIndex) {
+      const nextIndex = this.rollPickersTimeItems.length > itemIndex + 1
+        ? itemIndex + 1
+        : itemIndex;
+      this.endRentalTime = this.rollPickersTimeItems[nextIndex].label;
+    }
+
     this.isLoading = true;
     await this.getOrderSimulation();
     this.isLoading = false;
@@ -170,8 +179,14 @@ export default class BookingStore {
     * @description Set end rental time
     */
   @action
-  selectEndTime = async timeStr => {
+  selectEndTime = async (timeStr, itemIndex) => {
     this.endRentalTime = timeStr;
+
+    if (this.rollPickerStartSelectedTimeItem >= itemIndex) {
+      const prevIndex = itemIndex - 1 >= 0 ? itemIndex - 1 : itemIndex;
+      this.startRentalTime = this.rollPickersTimeItems[prevIndex].label;
+    }
+
     this.isLoading = true;
     await this.getOrderSimulation();
     this.isLoading = false;
@@ -239,6 +254,43 @@ export default class BookingStore {
     });
 
     return map;
+  }
+
+  /**
+    * @description Get array with times for choosing
+    */
+  @computed
+  get rollPickersTimeItems() {
+    return getTimeItemsForRollPicker();
+  }
+
+  @computed
+  get rollPickerStartSelectedTimeItem() {
+    const index = _.findIndex(this.rollPickersTimeItems, item => item.label === this.startRentalTime);
+
+    return index === -1 ? 0 : index;
+  }
+
+  /**
+    * @description Get selected row into picker for end date
+    */
+  @computed
+  get rollPickerEndSelectedTimeItem() {
+    const index = _.findIndex(this.rollPickersTimeItems, item => item.label === this.endRentalTime);
+
+    return index === -1 ? 0 : index;
+  }
+
+  /**
+    * @description Show is current car and location data available for order
+    */
+  @computed
+  get isOrderCarAvailable() {
+    if (!_.has(this, 'order.carAvailabilities.status')) {
+      return false;
+    }
+
+    return this.order.carAvailabilities.status === 'available';
   }
 
   /**
