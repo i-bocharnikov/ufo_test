@@ -191,7 +191,8 @@ export default {
     'dareSectionTitle': 'PICK-UP & RETURN DATE',
     'totalPrice': 'TOTAL',
     'stepBookNextTitle': 'PAY & CONFIRM',
-    'stepBookNextSubTitle': 'Go to step 2'
+    'stepBookNextSubTitle': 'Go to step 2',
+    'calendarViewBtn': 'open calendar view'
   },
   otaKeyNativeErrors
 };

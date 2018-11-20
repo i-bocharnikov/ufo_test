@@ -241,7 +241,7 @@ export default StyleSheet.create({
     backgroundColor: colors.BG_INVERT
   },
 
-  rollPicker: { marginVertical: 12 },
+  rollPicker: { marginVertical: 8 },
 
   rollPickerSeparatorWrapper: {
     height: '100%',
@@ -263,5 +263,19 @@ export default StyleSheet.create({
     backgroundColor: colors.BG_INVERT,
     color: colors.TEXT_LIGHT_COLOR,
     fontSize: 24
+  },
+
+  calendarViewBtn: {
+    marginLeft: SCREEN_HORIZONTAL_INDENTS,
+    marginTop: 16,
+    marginBottom: 16
+  },
+
+  calendarViewBtnLabel: {
+    ...textThemes.SP_BOLD,
+    color: colors.TEXT_LIGHT_COLOR,
+    fontSize: 13,
+    textDecorationLine: 'underline',
+    letterSpacing: 1.1
   }
 });

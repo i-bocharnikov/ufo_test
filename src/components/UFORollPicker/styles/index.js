@@ -3,7 +3,7 @@ import { colors, textThemes } from './../../../utils/theme';
 
 export const ITEM_HEIGHT = 32;
 export const DEFAULT_FONT_SIZE = 12;
-export const SELECTED_FONT_SIZE = 17;
+export const SELECTED_FONT_SIZE = 19;
 
 export default StyleSheet.create({
   wrapper: {

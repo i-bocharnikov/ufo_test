@@ -1,43 +1,40 @@
 import React, { PureComponent } from 'react';
 import { Modal, View, TouchableOpacity, Text } from 'react-native';
-import { CalendarList, LocaleConfig } from 'react-native-calendars';
+import { CalendarList } from 'react-native-calendars';
 import PropTypes from 'prop-types';
 import i18n from 'i18next';
+import moment from 'moment';
 
 import styles, { calendarTheme, CALENDAR_WIDTH, MONTH_HEIGHT } from './styles';
 import { values } from './../../utils/theme';
 
-LocaleConfig.locales.en = {
-  monthNames: [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ],
-  monthNamesShort: [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec' ],
-  dayNames: [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ],
-  dayNamesShort: [ 'SU', 'M', 'TU', 'W', 'TH', 'F', 'SA' ]
-};
-
-LocaleConfig.defaultLocale = 'en';
-
 export default class UFODatePickerModal extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      startPickedDate: null,
+      endPickedDate: null
+    };
+  }
+
   render() {
     const {
       isVisible,
+      onClose,
       ...calendarProps
     } = this.props;
 
     return (
       <Modal
         transparent={true}
-        visible={true}
+        visible={isVisible}
         onRequestClose={() => false}
       >
-        <TouchableOpacity
-          activeOpacity={1}
-          onPess={null}
-          style={styles.wrapper}
-        >
+        <View style={styles.wrapper}>
           <View style={styles.container}>
             <View style={styles.header}>
               <TouchableOpacity
-                onPess={null}
+                onPress={onClose}
                 activeOpacity={values.BTN_OPACITY_DEFAULT}
               >
                 <Text style={styles.closeBtn}>
@@ -48,7 +45,7 @@ export default class UFODatePickerModal extends PureComponent {
                 {i18n.t('common:calendarTitle')}
               </Text>
               <TouchableOpacity
-                onPess={null}
+                onPress={this.handleSave}
                 activeOpacity={values.BTN_OPACITY_DEFAULT}
               >
                 <Text style={styles.saveBtn}>
@@ -60,13 +57,35 @@ export default class UFODatePickerModal extends PureComponent {
               calendarWidth={CALENDAR_WIDTH}
               calendarHeight={MONTH_HEIGHT}
               theme={calendarTheme}
+              onDayPress={this.handleDayPress}
+              markingType="period"
+              markedDates={this.getMarkedDates()}
               {...calendarProps}
             />
           </View>
-        </TouchableOpacity>
+        </View>
       </Modal>
     );
   }
+
+  getMarkedDates = () => {
+    return {
+      '2018-11-23': { startingDay: true, color: 'green' },
+      '2018-11-24': { endingDay: true, color: 'green' }
+    };
+  };
+
+  handleDayPress = () => {
+
+  };
+
+  handleSave = () => {
+
+  };
 }
 
-UFODatePickerModal.propTypes = {};
+UFODatePickerModal.propTypes = {
+  isVisible: PropTypes.bool,
+  onClose: PropTypes.func.isRequired,
+  calendarProps: PropTypes.shape({ ...CalendarList.PropTypes })
+};

@@ -21,7 +21,11 @@ import { values } from './../../utils/theme';
 class StepBookScreen extends Component {
   constructor() {
     super();
-    this.state = { showDateTooltip: false };
+    this.minPickedDate = moment().add(1, 'day').format(values.DATE_STRING_FORMAT);
+    this.state = {
+      showDateTooltip: false,
+      showModalCalendar: false
+    };
   }
 
   async componentDidMount() {
@@ -87,6 +91,15 @@ class StepBookScreen extends Component {
               wrapperStyles={styles.rollPicker}
             />
           </View>
+          <TouchableOpacity
+            onPress={() => this.setState({ showModalCalendar: true })}
+            activeOpacity={values.BTN_OPACITY_DEFAULT}
+            style={styles.calendarViewBtn}
+          >
+            <Text style={styles.calendarViewBtnLabel}>
+              {t('booking:calendarViewBtn')}
+            </Text>
+          </TouchableOpacity>
           <Text style={[ styles.sectionTitle, styles.sectionTitleIndents ]}>
             {t('booking:carsSectionTitle')}
           </Text>
@@ -101,9 +114,11 @@ class StepBookScreen extends Component {
             extraData={bookingStore.selectedCarRef}
           />
           <UFODatePickerModal
+            isVisible={this.state.showModalCalendar}
+            onClose={() => this.setState({ showModalCalendar: false })}
             pastScrollRange={0}
             futureScrollRange={36}
-            minDate={Date.now()}
+            minDate={this.minPickedDate}
           />
           <UFOTooltip
             isVisible={this.state.showDateTooltip}
