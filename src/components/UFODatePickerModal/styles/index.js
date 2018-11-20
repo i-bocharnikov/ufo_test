@@ -4,7 +4,7 @@ import { colors, textThemes } from './../../../utils/theme';
 const HORIZONTAL_INDENTS = 25;
 const { width: SCREEN_WIDTH } = Dimensions.get('screen');
 export const CALENDAR_WIDTH = SCREEN_WIDTH - HORIZONTAL_INDENTS * 2;
-export const MONTH_HEIGHT = SCREEN_WIDTH - HORIZONTAL_INDENTS * 2;
+export const MONTH_HEIGHT = 340;
 
 export const calendarTheme = {
   textDayFontFamily: textThemes.SP_LIGHT.fontFamily,
@@ -19,8 +19,13 @@ export const calendarTheme = {
   textDayHeaderFontSize: 14,
   textSectionTitleColor: colors.MAIN_LIGHT_COLOR,
   backgroundColor: 'transparent',
-  calendarBackground: 'transparent'
+  calendarBackground: 'transparent',
+  selectedDayTextColor: colors.BG_INVERT
 };
+
+export const markedDaysTheme = { color: colors.MAIN_COLOR };
+
+export const forbiddenDaysTheme = { textColor: colors.ATTENTION_COLOR };
 
 export default StyleSheet.create({
   wrapper: {
@@ -37,7 +42,8 @@ export default StyleSheet.create({
     shadowOffset: { width: 0, height: 0 },
     shadowRadius: 10,
     shadowColor: 'black',
-    shadowOpacity: 0.4
+    shadowOpacity: 0.4,
+    elevation: 4
   },
   header: {
     flexDirection: 'row',

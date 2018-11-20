@@ -139,6 +139,21 @@ export default class BookingStore {
   };
 
   /**
+    * @param {Object} dateMomentStart
+    * @param {Object} dateMomentEnd
+    * @description Set dates with modal calendar component
+    */
+  @action
+  selectCalendarDates = async (dateMomentStart, dateMomentEnd) => {
+    this.startRentalDate = dateMomentStart;
+    this.endRentalDate = dateMomentEnd;
+
+    this.isLoading = true;
+    await this.getOrderSimulation();
+    this.isLoading = false;
+  };
+
+  /**
     * @param {string} timeStr
     * @description Set start rental time
     */
@@ -173,7 +188,8 @@ export default class BookingStore {
 
     return this.carCalendar.map(item => ({
       label: moment(item.calendarDay).format(values.DATE_ROLLPICKER_FORMAT),
-      id: item.calendarDay
+      id: item.calendarDay,
+      available: item.available
     }));
   }
 
@@ -203,6 +219,26 @@ export default class BookingStore {
     }
 
     return `${this.order.price.amount}€`;
+  }
+
+  /**
+    * @description Get array with unavailable dates
+    */
+  @computed
+  get calendarPickerUnavailableMap() {
+    const map = [];
+
+    if (!Array.isArray(this.carCalendar)) {
+      return map;
+    }
+
+    this.carCalendar.forEach(item => {
+      if (!item.available) {
+        map.push(item.calendarDay);
+      }
+    });
+
+    return map;
   }
 
   /**

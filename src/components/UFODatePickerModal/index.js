@@ -5,7 +5,13 @@ import PropTypes from 'prop-types';
 import i18n from 'i18next';
 import moment from 'moment';
 
-import styles, { calendarTheme, CALENDAR_WIDTH, MONTH_HEIGHT } from './styles';
+import styles, {
+  calendarTheme,
+  CALENDAR_WIDTH,
+  MONTH_HEIGHT,
+  markedDaysTheme,
+  forbiddenDaysTheme
+} from './styles';
 import { values } from './../../utils/theme';
 
 export default class UFODatePickerModal extends PureComponent {
@@ -20,7 +26,6 @@ export default class UFODatePickerModal extends PureComponent {
   render() {
     const {
       isVisible,
-      onClose,
       ...calendarProps
     } = this.props;
 
@@ -34,7 +39,7 @@ export default class UFODatePickerModal extends PureComponent {
           <View style={styles.container}>
             <View style={styles.header}>
               <TouchableOpacity
-                onPress={onClose}
+                onPress={this.handleClose}
                 activeOpacity={values.BTN_OPACITY_DEFAULT}
               >
                 <Text style={styles.closeBtn}>
@@ -68,37 +73,116 @@ export default class UFODatePickerModal extends PureComponent {
     );
   }
 
+  /**
+    * @returns {Object}
+    * @description Get dates with customizing styles
+    */
   getMarkedDates = () => {
     const { startPickedDate, endPickedDate } = this.state;
+    const dates = {};
 
-    return {
-      [startPickedDate]: { startingDay: true, color: 'green' },
-      [endPickedDate]: { endingDay: true, color: 'green' }
-    };
+    this.props.forbiddenDays.forEach(day => {
+      dates[day] = { ...forbiddenDaysTheme };
+    });
+
+    if (!startPickedDate) {
+      return dates;
+    }
+
+    if (!endPickedDate) {
+      dates[startPickedDate] = {
+        startingDay: true,
+        endingDay: true,
+        selected: true,
+        ...markedDaysTheme
+      };
+
+      return dates;
+    }
+
+    const interimDate = moment(startPickedDate);
+
+    while (!interimDate.isAfter(endPickedDate)) {
+      const dateString = interimDate.format(values.DATE_STRING_FORMAT);
+      dates[dateString] = {
+        startingDay: dateString === startPickedDate,
+        endingDay: dateString === endPickedDate,
+        selected: true,
+        ...markedDaysTheme
+      };
+      interimDate.add(1, 'days');
+    }
+
+    return dates;
   };
 
+  /**
+    * @param {string} dateString
+    * @description Handling datepicker event
+    */
   handleDayPress = ({ dateString }) => {
+    if (this.props.forbiddenDays.includes(dateString)) {
+      return;
+    }
+
     const { startPickedDate } = this.state;
+
+    if (startPickedDate && dateString === startPickedDate) {
+      this.setState({
+        startPickedDate: null,
+        endPickedDate: null
+      });
+    }
 
     if (!startPickedDate || moment(dateString).isBefore(startPickedDate)) {
       this.setState({
         startPickedDate: dateString,
-        endPickedDate: dateString
+        endPickedDate: null
       });
 
       return;
     }
 
-    this.setState({endPickedDate: dateString});
+    this.setState({ endPickedDate: dateString });
   };
 
+  /**
+    * @param {string} dateString
+    * @description Saving picked dates (throw into onSubmit prop)
+    */
   handleSave = () => {
+    const { startPickedDate, endPickedDate } = this.state;
+    const dateStart = startPickedDate;
+    const dateEnd = endPickedDate || startPickedDate;
 
+    const onSubmit = this.props.onSubmit;
+
+    if (typeof onSubmit === 'function') {
+      onSubmit(dateStart, dateEnd);
+    }
+
+    this.handleClose();
+  };
+
+  /**
+    * @param {string} dateString
+    * @description Handling closing picker
+    */
+  handleClose = () => {
+    this.setState({
+      startPickedDate: null,
+      endPickedDate: null
+    });
+    this.props.onClose();
   };
 }
+
+UFODatePickerModal.defaultProps = { forbiddenDays: [] };
 
 UFODatePickerModal.propTypes = {
   isVisible: PropTypes.bool,
   onClose: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func,
+  forbiddenDays: PropTypes.array,
   calendarProps: PropTypes.shape({ ...CalendarList.PropTypes })
 };

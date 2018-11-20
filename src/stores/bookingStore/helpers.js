@@ -11,7 +11,8 @@ export function getPreselectedDatesForRollPicker() {
     const dateString = currentDate.format(values.DATE_ROLLPICKER_FORMAT);
     dates.push({
       label: dateString,
-      id: dateString
+      id: dateString,
+      available: true
     });
     currentDate.add(1, 'days');
   }

@@ -21,5 +21,7 @@ export default StyleSheet.create({
     ...textThemes.SP_LIGHT,
     color: colors.TEXT_LIGHT_COLOR,
     letterSpacing: 1.4
-  }
+  },
+
+  disabledRow: { color: colors.ATTENTION_COLOR }
 });

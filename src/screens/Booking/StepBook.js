@@ -119,6 +119,8 @@ class StepBookScreen extends Component {
             pastScrollRange={0}
             futureScrollRange={36}
             minDate={this.minPickedDate}
+            onSubmit={this.onSelectCalendarDates}
+            forbiddenDays={bookingStore.calendarPickerUnavailableMap}
           />
           <UFOTooltip
             isVisible={this.state.showDateTooltip}
@@ -229,6 +231,16 @@ class StepBookScreen extends Component {
     const selectedDate = moment(item.label, values.DATE_ROLLPICKER_FORMAT).startOf('day');
     await bookingStore.selectEndDate(selectedDate);
   };
+
+  onSelectCalendarDates = async (dateStart, dateEnd) => {
+    if (!dateStart) {
+      return;
+    }
+
+    const startDate = moment(dateStart).startOf('day');
+    const endDate = moment(dateEnd).startOf('day');
+    await bookingStore.selectCalendarDates(startDate, endDate);
+  }
 }
 
 export default translate()(StepBookScreen);

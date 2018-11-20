@@ -81,7 +81,12 @@ export default class UFORollPicker extends PureComponent {
 
     return (
       <View style={styles.row}>
-        <Animated.Text style={[ styles.rowLabel, { fontSize } ]}>
+        <Animated.Text style={[
+          styles.rowLabel,
+          !item.available && styles.disabledRow,
+          { fontSize }
+        ]}
+        >
           {item.label}
         </Animated.Text>
       </View>
@@ -149,7 +154,10 @@ export default class UFORollPicker extends PureComponent {
       y1 = y1 + ITEM_HEIGHT;
     }
 
-    const index = y1 / ITEM_HEIGHT;
+    let index = y1 / ITEM_HEIGHT;
+    if (!this.props.data[index].available) {
+      this.props.data.length - 1 > index ? index++ : index--;
+    }
 
     if (this.listView) {
       index < this.props.data.length
@@ -208,9 +216,15 @@ export default class UFORollPicker extends PureComponent {
     * @description move to item which was selected optional
     */
   selectToItem = i => {
+    let index = i;
+
+    if (!this.props.data[index].available) {
+      this.props.data.length - 1 > index ? index++ : index--;
+    }
+
     if (this.listView) {
-      i < this.props.data.length
-       ? this.listView.scrollToIndex({ index: i, animated: false })
+      index < this.props.data.length
+       ? this.listView.scrollToIndex({ index: index, animated: false })
        : this.listView.scrollToEnd({ animated: false });
     }
   };
@@ -225,7 +239,8 @@ UFORollPicker.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.shape({
       label: PropTypes.string.isRequired,
-      id: PropTypes.string.isRequired
+      id: PropTypes.string.isRequired,
+      available: PropTypes.bool.isRequired
     })
   ),
   selectTo: PropTypes.number,
