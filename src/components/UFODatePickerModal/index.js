@@ -147,7 +147,6 @@ export default class UFODatePickerModal extends PureComponent {
   };
 
   /**
-    * @param {string} dateString
     * @description Saving picked dates (throw into onSubmit prop)
     */
   handleSave = () => {
@@ -165,7 +164,6 @@ export default class UFODatePickerModal extends PureComponent {
   };
 
   /**
-    * @param {string} dateString
     * @description Handling closing picker
     */
   handleClose = () => {

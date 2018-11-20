@@ -215,7 +215,7 @@ export default class BookingStore {
   @computed
   get orderPrice() {
     if (!this.order) {
-      return 'N/A';
+      return '-';
     }
 
     return `${this.order.price.amount}€`;
