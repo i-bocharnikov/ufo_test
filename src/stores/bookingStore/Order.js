@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import { getFromApi } from './../../utils/api';
+import { getFromApi_v2 as getFromApi } from './../../utils/api';
 
 /**
   * @class
@@ -27,8 +27,8 @@ export default class Order {
 
     const response = await getFromApi(path);
 
-    if (_.has(response, 'rental.rental')) {
-      return response.rental.rental;
+    if (_.has(response, 'rental')) {
+      return response.rental;
     } else {
       return this.fallbackOrder;
     }

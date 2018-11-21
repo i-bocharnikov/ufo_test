@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import { getFromApi } from './../../utils/api';
+import { getFromApi_v2 as getFromApi } from './../../utils/api';
 
 /**
   * @class
@@ -23,8 +23,8 @@ export default class Locations {
 
     const response = await getFromApi(path);
 
-    if (_.has(response, 'data.locations')) {
-      return response.data.locations;
+    if (_.has(response, 'locations')) {
+      return response.locations;
     } else {
       return this.fallbackLocations;
     }
