@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { FlatList, Text, View, Animated, ViewPropTypes } from 'react-native';
 import PropTypes from 'prop-types';
 
@@ -8,10 +8,11 @@ import styles, {
   SELECTED_FONT_SIZE
 } from './styles';
 
-export default class UFORollPicker extends PureComponent {
+export default class UFORollPicker extends Component {
   constructor() {
     super();
     this.onScrollCount = 0;
+    this.lastSelectedIndex = null;
     this.state = {
       scrollY: new Animated.Value(0),
       layoutOffsetY: 0
@@ -19,13 +20,13 @@ export default class UFORollPicker extends PureComponent {
   }
 
   componentDidMount() {
-    if (this.props.selectTo) {
+    if (this.props.selectTo && this.props.selectTo !== this.lastSelectedIndex) {
       this.selectToItem(this.props.selectTo);
     }
   }
 
   componentDidUpdate() {
-    if (this.props.selectTo) {
+    if (this.props.selectTo && this.props.selectTo !== this.lastSelectedIndex) {
       this.selectToItem(this.props.selectTo);
     }
   }
@@ -34,12 +35,10 @@ export default class UFORollPicker extends PureComponent {
     const { flatListProps, wrapperStyles } = this.props;
 
     return (
-      <View
-        style={[ styles.wrapper, wrapperStyles ]}
-        onLayout={this.setLayoutOffset}
-      >
+      <View style={[ styles.wrapper, wrapperStyles ]}>
         <FlatList
           ref={ref =>(this.listView = ref)}
+          onLayout={this.setLayoutOffset}
           keyExtractor={this.keyExtractor}
           data={this.getShiftedData()}
           renderItem={this.renderItem}
@@ -55,6 +54,8 @@ export default class UFORollPicker extends PureComponent {
           bounces={false}
           nestedScrollEnabled={true}
           initialNumToRender={4}
+          snapToInterval={ITEM_HEIGHT}
+          decelerationRate={0.01}
           {...flatListProps}
         />
       </View>
@@ -69,7 +70,7 @@ export default class UFORollPicker extends PureComponent {
       inputRange: [
         offset + i * ITEM_HEIGHT,
         offset + i * ITEM_HEIGHT + ITEM_HEIGHT,
-        offset + i * ITEM_HEIGHT + ITEM_HEIGHT
+        offset + i * ITEM_HEIGHT + ITEM_HEIGHT * 2
       ],
       outputRange: [
         DEFAULT_FONT_SIZE,
@@ -157,17 +158,10 @@ export default class UFORollPicker extends PureComponent {
     let index = y1 / ITEM_HEIGHT;
     if (this.props.data[index] && this.props.data[index].available === false) {
       this.props.data.length - 1 > index ? index++ : index--;
+      this.listView.scrollToIndex({ index: index });
     }
 
-    if (this.listView) {
-      index < this.props.data.length
-        ? this.listView.scrollToIndex({ index: index, animated: false })
-        : this.listView.scrollToEnd({ animated: false });
-    }
-
-    if (this.props.onRowChange) {
-      this.props.onRowChange(index);
-    }
+    this.handleRowChange(index);
   };
 
   /**
@@ -216,16 +210,26 @@ export default class UFORollPicker extends PureComponent {
     * @description move to item which was selected optional
     */
   selectToItem = i => {
-    let index = i;
+    const { data } = this.props;
+    this.lastSelectedIndex = i;
 
-    if (this.props.data[index] && this.props.data[index].available === false) {
-      this.props.data.length - 1 > index ? index++ : index--;
+    if (data[this.lastSelectedIndex] && data[this.lastSelectedIndex].available === false) {
+      data.length - 1 > this.lastSelectedIndex
+        ? this.lastSelectedIndex++
+        : this.lastSelectedIndex--;
+      this.handleRowChange(this.lastSelectedIndex);
     }
 
-    if (this.listView) {
-      index < this.props.data.length
-       ? this.listView.scrollToIndex({ index: index, animated: false })
-       : this.listView.scrollToEnd({ animated: false });
+    this.listView.scrollToIndex({ index: this.lastSelectedIndex });
+  };
+
+  /**
+    * @param {index} number
+    * @description run onRowChange props if it's function
+    */
+  handleRowChange = index => {
+    if (typeof this.props.onRowChange === 'function') {
+      this.props.onRowChange(index);
     }
   };
 }
