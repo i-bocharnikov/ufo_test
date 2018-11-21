@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import { getFromApi_v2 as getFromApi } from './../../utils/api_deprecated';
+import { getFromApi } from './../../utils/api';
 
 /**
   * @class
@@ -25,10 +25,10 @@ export default class Cars {
       ? `/reserve/carModels?locationReference=${locationRef}`
       : '/reserve/carModels';
 
-    const response = await getFromApi(path);
+    const response = await getFromApi(path, true);
 
-    if (_.has(response, 'carModels')) {
-      return response.carModels;
+    if (response.isSuccess && _.has(response, 'data.carModels')) {
+      return response.data.carModels;
     } else {
       return this.fallbackCars;
     }
@@ -53,10 +53,10 @@ export default class Cars {
       path = `${path}${minDate ? '&' : '?'}maxDate=${maxDate}`;
     }
 
-    const response = await getFromApi(path);
+    const response = await getFromApi(path, true);
 
-    if (_.has(response, 'carsCalendarDays')) {
-      return response.carsCalendarDays;
+    if (response.isSuccess && _.has(response, 'data.carsCalendarDays')) {
+      return response.data.carsCalendarDays;
     } else {
       return this.fallbackCalendar;
     }

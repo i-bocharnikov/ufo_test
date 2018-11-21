@@ -8,17 +8,17 @@ import RNFetchBlob from 'rn-fetch-blob'
 export let SAVE_TOKEN = null
 
 export const ufodrive_server_connectivity_test_api = axios.create({
-    baseURL: configurations.UFO_SERVER_PUBLIC_API_URL,
+    baseURL: `${configurations.UFO_SERVER_PUBLIC_API_URL}v1/`,
     timeout: 1000
 });
 
 export const ufodrive_server_public_api = axios.create({
-    baseURL: configurations.UFO_SERVER_PUBLIC_API_URL,
+    baseURL: `${configurations.UFO_SERVER_PUBLIC_API_URL}v1/`,
     timeout: 30000
 });
 
 export const ufodrive_server_api = axios.create({
-    baseURL: configurations.UFO_SERVER_PRIVATE_API_URL,
+    baseURL: `${configurations.UFO_SERVER_PRIVATE_API_URL}v1/`,
     timeout: 30000
 });
 

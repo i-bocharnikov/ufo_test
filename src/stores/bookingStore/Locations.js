@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import { getFromApi_v2 as getFromApi } from './../../utils/api_deprecated';
+import { getFromApi } from './../../utils/api';
 
 /**
   * @class
@@ -21,10 +21,10 @@ export default class Locations {
       ? `/reserve/locations?carModelReference=${carRef}`
       : '/reserve/locations';
 
-    const response = await getFromApi(path);
+    const response = await getFromApi(path, true);
 
-    if (_.has(response, 'locations')) {
-      return response.locations;
+    if (response.isSuccess && _.has(response, 'data.locations')) {
+      return response.data.locations;
     } else {
       return this.fallbackLocations;
     }
