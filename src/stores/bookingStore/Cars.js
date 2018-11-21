@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import { getFromApi_v2 as getFromApi } from './../../utils/api';
+import { getFromApi_v2 as getFromApi } from './../../utils/api_deprecated';
 
 /**
   * @class

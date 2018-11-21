@@ -13,7 +13,7 @@ import {
     downloadFromApi,
     uploadToApi,
     getFromApi
-} from './../utils/api';
+} from './../utils/api_deprecated';
 
 const DEBUG = false
 

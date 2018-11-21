@@ -5,7 +5,7 @@ import { observable, action, computed } from 'mobx';
 import { persist } from 'mobx-persist'
 import _ from 'lodash'
 
-import { getFromApi, putToApi } from '../utils/api'
+import { getFromApi, putToApi } from '../utils/api_deprecated'
 import { dateFormats, actionStyles, icons } from '../utils/global'
 
 

@@ -2,7 +2,7 @@ import { observable, action } from 'mobx';
 import { persist } from 'mobx-persist'
 import _ from 'lodash'
 
-import { getFromApi, postToApi, uploadToApi, putToApi } from '../utils/api'
+import { getFromApi, postToApi, uploadToApi, putToApi } from '../utils/api_deprecated'
 import { driveStore } from './';
 
 const DEBUG = false
