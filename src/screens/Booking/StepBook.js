@@ -141,7 +141,7 @@ class StepBookScreen extends Component {
             isVisible={this.state.showModalCalendar}
             onClose={() => this.setState({ showModalCalendar: false })}
             pastScrollRange={0}
-            futureScrollRange={36}
+            futureScrollRange={bookingStore.maxRentalPeriodInMonths}
             minDate={this.minPickedDate}
             onSubmit={this.onSelectCalendarDates}
             forbiddenDays={bookingStore.calendarPickerUnavailableMap}

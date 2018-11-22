@@ -1,5 +1,5 @@
 import { observable, action, computed } from 'mobx';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import _ from 'lodash';
 
 import locations from './Locations';
@@ -8,9 +8,11 @@ import order from './Order';
 import { getPreselectedDatesForRollPicker, getTimeItemsForRollPicker } from './helpers';
 import { values } from './../../utils/theme';
 
+// period in months
+const MAX_RENTAL_PERIOD = 36;
 const TODAY = moment().startOf('day');
 const TOMORROW = moment().add(1, 'day').startOf('day');
-const MAX_RENTAL_DATE = moment().add(3, 'y').startOf('day');
+const MAX_RENTAL_DATE = moment().add(MAX_RENTAL_PERIOD, 'month').startOf('day');
 
 export default class BookingStore {
 
@@ -198,7 +200,7 @@ export default class BookingStore {
   @computed
   get rollPickersData() {
     if (!Array.isArray(this.carCalendar)) {
-      return getPreselectedDatesForRollPicker();
+      return getPreselectedDatesForRollPicker(MAX_RENTAL_PERIOD);
     }
 
     return this.carCalendar.map(item => ({
@@ -294,6 +296,13 @@ export default class BookingStore {
   }
 
   /**
+    * @description Get max period for calender view settings
+    */
+  get maxRentalPeriodInMonths() {
+    return MAX_RENTAL_PERIOD;
+  }
+
+  /**
     * @description Get days with description for rental current car
     */
   getCarCalendar = async () => {
@@ -322,13 +331,39 @@ export default class BookingStore {
       return;
     }
 
+    const timeZone = _.find(this.locations, { 'reference': this.selectedLocationRef }).timezone;
+    const startRentalTime = this.convertTimeToUTC(this.startRentalTime, timeZone);
+    const endRentalTime = this.convertTimeToUTC(this.endRentalTime, timeZone);
+
     this.order = await order.getOrder(
       this.selectedLocationRef,
       this.selectedCarRef,
       this.startRentalDate.format(values.DATE_STRING_FORMAT),
       this.endRentalDate.format(values.DATE_STRING_FORMAT),
-      this.startRentalTime,
-      this.endRentalTime
+      startRentalTime,
+      endRentalTime
     );
+  };
+
+  /**
+    * @param {string} timeStr
+    * @param {string} timeZoneStr
+    * @returns {string}
+    * @description Convert time from specified timeZome to UTC
+    */
+  convertTimeToUTC = (timeStr, timeZoneStr) => {
+    const m = moment.tz(timeStr, values.TIME_STRING_FORMAT, timeZoneStr);
+    return m.tz('UTC').format(values.TIME_STRING_FORMAT);
+  };
+
+  /**
+    * @param {string} timeStr
+    * @param {string} timeZoneStr
+    * @returns {string}
+    * @description Convert time from UTC to specified timeZome
+    */
+  convertTimeFromUTC = (timeStr, timeZoneStr) => {
+    const m = moment.tz(timeStr, values.TIME_STRING_FORMAT, 'UTC');
+    return m.tz(timeZoneStr).format(values.TIME_STRING_FORMAT);
   };
 }

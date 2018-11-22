@@ -2,8 +2,8 @@ import { StyleSheet } from 'react-native';
 import { colors, textThemes } from './../../../utils/theme';
 
 export const ITEM_HEIGHT = 32;
-export const DEFAULT_FONT_SIZE = 12;
-export const SELECTED_FONT_SIZE = 19;
+export const DEFAULT_TEXT_SCALE = 1;
+export const SELECTED_TEXT_SCALE = 1.4;
 
 export default StyleSheet.create({
   wrapper: {
@@ -20,7 +20,8 @@ export default StyleSheet.create({
   rowLabel: {
     ...textThemes.SP_LIGHT,
     color: colors.TEXT_LIGHT_COLOR,
-    letterSpacing: 1.4
+    letterSpacing: 1.4,
+    fontSize: 12
   },
 
   disabledRow: { color: colors.ATTENTION_COLOR }
