@@ -13,10 +13,8 @@ export default class UFORollPicker extends Component {
     super();
     this.onScrollCount = 0;
     this.lastSelectedIndex = null;
-    this.state = {
-      scrollY: new Animated.Value(0),
-      layoutOffsetY: 0
-    };
+    this.layoutOffsetY = 0;
+    this.scrollY = new Animated.Value(0);
   }
 
   componentDidMount() {
@@ -46,16 +44,15 @@ export default class UFORollPicker extends Component {
           onMomentumScrollEnd={this.onMomentumScrollEnd}
           onScrollEndDrag={this.onScrollEndDrag}
           onScroll={Animated.event(
-            [ { nativeEvent: { contentOffset: { y: this.state.scrollY } } } ],
+            [ { nativeEvent: { contentOffset: { y: this.scrollY } } } ],
             { listener: this.onScroll }
           )}
           scrollEventThrottle={16}
           showsVerticalScrollIndicator={false}
           bounces={false}
           nestedScrollEnabled={true}
-          initialNumToRender={4}
+          windowSize={5}
           snapToInterval={ITEM_HEIGHT}
-          decelerationRate={0.01}
           {...flatListProps}
         />
       </View>
@@ -63,10 +60,10 @@ export default class UFORollPicker extends Component {
   }
 
   renderItem = ({ item, index }) => {
-    const offset = this.state.layoutOffsetY;
+    const offset = this.layoutOffsetY;
     const i = index - 2;
 
-    const fontSize = this.state.scrollY.interpolate({
+    const fontSize = this.scrollY.interpolate({
       inputRange: [
         offset + i * ITEM_HEIGHT,
         offset + i * ITEM_HEIGHT + ITEM_HEIGHT,
@@ -132,7 +129,7 @@ export default class UFORollPicker extends Component {
     * @description Set offset relative for screen
     */
   setLayoutOffset = ({ nativeEvent: { layout: { y } } }) => {
-    this.setState({ layoutOffsetY: y });
+    this.layoutOffsetY = y;
   };
 
   /**
@@ -206,7 +203,7 @@ export default class UFORollPicker extends Component {
   };
 
   /**
-    * @param {i} number
+    * @param {number} i
     * @description move to item which was selected optional
     */
   selectToItem = i => {
@@ -220,7 +217,8 @@ export default class UFORollPicker extends Component {
       this.handleRowChange(this.lastSelectedIndex);
     }
 
-    this.listView.scrollToIndex({ index: this.lastSelectedIndex });
+    // setTimeout needed because on android scroll is missing at component mounting
+    setTimeout(() => this.listView.scrollToIndex({ index: this.lastSelectedIndex }), 10);
   };
 
   /**
