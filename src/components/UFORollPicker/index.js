@@ -230,7 +230,9 @@ export default class UFORollPicker extends Component {
   selectToItem = i => {
     if (this.state.page * this.perPage < i) {
       const neededPage = Math.ceil(i / this.perPage);
-      return this.setState({ page: neededPage }, () => this.selectToItem(i));
+      this.setState({ page: neededPage }, () => this.selectToItem(i));
+
+      return;
     }
 
     const { data } = this.props;

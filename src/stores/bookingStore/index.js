@@ -353,7 +353,7 @@ export default class BookingStore {
     */
   convertTimeToUTC = (timeStr, timeZoneStr) => {
     const m = moment.tz(timeStr, values.TIME_STRING_FORMAT, timeZoneStr);
-    return m.tz('UTC').format(values.TIME_STRING_FORMAT);
+    return m.utc().format(values.TIME_STRING_FORMAT);
   };
 
   /**
@@ -363,7 +363,7 @@ export default class BookingStore {
     * @description Convert time from UTC to specified timeZome
     */
   convertTimeFromUTC = (timeStr, timeZoneStr) => {
-    const m = moment.tz(timeStr, values.TIME_STRING_FORMAT, 'UTC');
+    const m = moment.utc(timeStr, values.TIME_STRING_FORMAT);
     return m.tz(timeZoneStr).format(values.TIME_STRING_FORMAT);
   };
 }
