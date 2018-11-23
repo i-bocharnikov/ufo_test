@@ -12,25 +12,15 @@ export default StyleSheet.create({
     backgroundColor: colors.BG_INVERT_TINT
   },
 
-  wrapperBottomPadding: {
-    paddingBottom: BOTTOM_PANEL_HEIGHT
-  },
+  wrapperBottomPadding: { paddingBottom: BOTTOM_PANEL_HEIGHT },
 
-  headerSubtitleLabel: {
-    lineHeight: 16
-  },
+  headerSubtitleLabel: { lineHeight: 16 },
 
-  headerSubtitleIcon: {
-    fontSize: 16
-  },
+  headerSubtitleIcon: { fontSize: 16 },
 
-  headerSubtitleSpaces: {
-    letterSpacing: 12
-  },
+  headerSubtitleSpaces: { letterSpacing: 12 },
 
-  headerFutureStep: {
-    opacity: 0.4
-  },
+  headerFutureStep: { opacity: 0.4 },
 
   screenContainer: {
     backgroundColor: colors.BG_INVERT_TINT,
@@ -50,9 +40,7 @@ export default StyleSheet.create({
     marginHorizontal: SCREEN_HORIZONTAL_INDENTS
   },
 
-  datePickTitle: {
-    marginRight: 6
-  },
+  datePickTitle: { marginRight: 6 },
 
   row: {
     flexDirection: 'row',
@@ -77,9 +65,7 @@ export default StyleSheet.create({
     backgroundColor: colors.BG_INVERT
   },
 
-  locSlideLeftSpace: {
-    marginLeft: 15
-  },
+  locSlideLeftSpace: { marginLeft: 15 },
 
   locSlideImg: {
     width: '100%',
@@ -102,9 +88,7 @@ export default StyleSheet.create({
     borderTopWidth: 0
   },
 
-  choosenLocation: {
-    borderColor: colors.BG_DEFAULT
-  },
+  choosenLocation: { borderColor: colors.BG_DEFAULT },
 
   locSlideMessage: {
     ...textThemes.SP_BOLD,
@@ -120,7 +104,7 @@ export default StyleSheet.create({
   },
 
   slideShadow: {
-    shadowOffset: {width: 0,  height: 2},
+    shadowOffset: { width: 0, height: 2 },
     shadowRadius: 10,
     shadowColor: 'black',
     shadowOpacity: 0.1
@@ -156,9 +140,7 @@ export default StyleSheet.create({
     borderColor: colors.BG_INVERT
   },
 
-  carSlideLeftSpace: {
-    marginLeft: 15
-  },
+  carSlideLeftSpace: { marginLeft: 15 },
 
   carlideImg: {
     width: 210,
@@ -186,22 +168,16 @@ export default StyleSheet.create({
     marginTop: 8
   },
 
-  choosenCar: {
-    borderColor: colors.BG_DEFAULT
-  },
+  choosenCar: { borderColor: colors.BG_DEFAULT },
 
-  tooltipLink: {
-    textDecorationLine: 'underline'
-  },
+  tooltipLink: { textDecorationLine: 'underline' },
 
   dateTolltipicon: {
     color: colors.MAIN_COLOR,
     fontSize: 18
   },
 
-  notAvailableCar: {
-    opacity: 0.5
-  },
+  notAvailableCar: { opacity: 0.5 },
 
   bottomPanel: {
     position: 'absolute',
@@ -211,7 +187,7 @@ export default StyleSheet.create({
     right: 0,
     flexDirection: 'row',
     backgroundColor: colors.BG_INVERT,
-    shadowOffset: {width: 0,  height: -2},
+    shadowOffset: { width: 0, height: -2 },
     shadowRadius: 8,
     shadowColor: 'black',
     shadowOpacity: 0.16,
@@ -224,9 +200,7 @@ export default StyleSheet.create({
     justifyContent: 'center'
   },
 
-  bottomPanelActionBtn: {
-    backgroundColor: colors.MAIN_COLOR
-  },
+  bottomPanelActionBtn: { backgroundColor: colors.MAIN_COLOR },
 
   bottomPanelInfo: {
     flexDirection: 'row',
@@ -259,5 +233,49 @@ export default StyleSheet.create({
     fontSize: 13,
     letterSpacing: 1.3,
     marginRight: 20
+  },
+
+  rollPickerSection: {
+    flexDirection: 'row',
+    marginHorizontal: SCREEN_HORIZONTAL_INDENTS,
+    backgroundColor: colors.BG_INVERT
+  },
+
+  rollPicker: { marginVertical: 8 },
+
+  rollPickerSeparatorWrapper: {
+    height: '100%',
+    width: 24,
+    alignItems: 'center'
+  },
+
+  rollPickerSeparator: {
+    flex: 1,
+    width: 1,
+    backgroundColor: colors.BORDER_COLOR
+  },
+
+  rollPickerSeparatorIcon: {
+    position: 'absolute',
+    top: '50%',
+    marginTop: '-50%',
+    paddingBottom: 2,
+    backgroundColor: colors.BG_INVERT,
+    color: colors.TEXT_LIGHT_COLOR,
+    fontSize: 24
+  },
+
+  calendarViewBtn: {
+    marginLeft: SCREEN_HORIZONTAL_INDENTS,
+    marginTop: 16,
+    marginBottom: 16
+  },
+
+  calendarViewBtnLabel: {
+    ...textThemes.SP_BOLD,
+    color: colors.TEXT_LIGHT_COLOR,
+    fontSize: 13,
+    textDecorationLine: 'underline',
+    letterSpacing: 1.1
   }
 });

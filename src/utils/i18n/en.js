@@ -4,10 +4,12 @@ export default {
   common: {
     'okBtn': 'OK',
     'cancelBtn': 'Cancel',
-    'closeBtn': 'Close',
+    'closeBtn': 'close',
     'modeAuto': 'auto',
     'modeOn': 'on',
-    'modeOff': 'off'
+    'modeOff': 'off',
+    'calendarTitle': 'SELECT DATE',
+    'saveBtn': 'Save'
   },
   activities: {
     'internetAccessFailure': 'Unexpected internet connectivity issues. Operating in offline/degraded mode',
@@ -145,9 +147,7 @@ export default {
     'reservePaymentTitle': 'Confirm',
     'bookingLink': 'Coming soon, please follow this link to book a car'
   },
-  support: {
-    'supportTitle': 'How can we help you?'
-  },
+  support: { 'supportTitle': 'How can we help you?' },
   drive: {
     'driveTitle': 'Rental',
     'rentalReference': 'Rental {{rental.reference}} {{rental.status}}',
@@ -191,7 +191,8 @@ export default {
     'dareSectionTitle': 'PICK-UP & RETURN DATE',
     'totalPrice': 'TOTAL',
     'stepBookNextTitle': 'PAY & CONFIRM',
-    'stepBookNextSubTitle': 'Go to step 2'
+    'stepBookNextSubTitle': 'Go to step 2',
+    'calendarViewBtn': 'open calendar view'
   },
   otaKeyNativeErrors
 };

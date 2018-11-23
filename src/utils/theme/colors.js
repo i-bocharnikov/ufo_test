@@ -7,5 +7,6 @@ export default {
   BG_INVERT_TINT: '#f4f5f5',
   MAIN_COLOR: '#40657d',
   MAIN_LIGHT_COLOR: '#68a3c2',
-  ATTENTION_COLOR: '#ea504c'
+  ATTENTION_COLOR: '#ea504c',
+  BORDER_COLOR: '#d9d9d9'
 };

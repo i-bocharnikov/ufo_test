@@ -18,11 +18,12 @@ export default class Order {
     * @param {string} endDate
     * @param {string} startTime
     * @param {string} endTime
+    * @param {string} currency
     * @returns {Object}
     * @description Get simulation (object) of future order
     */
-  static async getOrder(location, car, startDate, endDate, startTime, endTime) {
-    const path = `/reserve/rentals/${location}/${car}/${startDate}T${startTime}/${endDate}T${endTime}/EUR`;
+  static async getOrder(location, car, startDate, endDate, startTime, endTime, currency = 'EUR') {
+    const path = `/reserve/rentals/${location}/${car}/${startDate}T${startTime}/${endDate}T${endTime}/${currency}`;
 
     const response = await getFromApi(path);
 
