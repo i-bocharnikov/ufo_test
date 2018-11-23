@@ -229,11 +229,13 @@ class StepBookScreen extends Component {
   };
 
   openCarInfo = ref => {
+    bookingStore.carInfoRef = ref;
     this.props.navigation.push(screenKeys.BookingDetails);
   };
 
   openLocationInfo = ref => {
-   this.props.navigation.push(screenKeys.BookingDetails);
+    bookingStore.locationInfoRef = ref;
+    this.props.navigation.push(screenKeys.BookingDetails);
   };
 
   navBack = () => {

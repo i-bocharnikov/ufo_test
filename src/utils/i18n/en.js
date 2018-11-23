@@ -193,7 +193,14 @@ export default {
     'totalPrice': 'TOTAL',
     'stepBookNextTitle': 'PAY & CONFIRM',
     'stepBookNextSubTitle': 'Go to step 2',
-    'calendarViewBtn': 'open calendar view'
+    'calendarViewBtn': 'open calendar view',
+    'locationInfoTitle': 'LOCATION',
+    'carInfoTitle': 'CAR',
+    'infoRange': 'RANGE',
+    'infoPeople': 'PEOPLE',
+    'address': 'Address',
+    'seclectInfoBtn': 'SELECT THIS',
+    'unseclectInfoBtn': 'UNSELECT THIS'
   },
   otaKeyNativeErrors
 };

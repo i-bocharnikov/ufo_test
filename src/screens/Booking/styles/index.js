@@ -4,7 +4,7 @@ import { colors, textThemes } from './../../../utils/theme';
 
 export const BOTTOM_PANEL_HEIGHT = 70;
 export const LOCATION_SLIDE_WIDTH = 128;
-const SCREEN_HORIZONTAL_INDENTS = 25;
+export const SCREEN_HORIZONTAL_INDENTS = 25;
 
 export default StyleSheet.create({
   screenWrapper: {

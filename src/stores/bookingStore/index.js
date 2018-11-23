@@ -31,6 +31,11 @@ export default class BookingStore {
   @observable startRentalTime = moment(TOMORROW).add(8, 'h').format(values.TIME_STRING_FORMAT);
   @observable endRentalTime = moment(TOMORROW).add(20, 'h').format(values.TIME_STRING_FORMAT);
 
+  @observable locationInfoRef = null;
+  @observable carInfoRef = null;
+  @observable locationInfoDescription = {};
+  @observable carInfoDescription = {};
+
   /**
     * @description Get lists of all locations and cars
     */
@@ -195,6 +200,24 @@ export default class BookingStore {
   };
 
   /**
+    * @description Get description for location or car
+    */
+  @action
+  getDescriptionData = async () => {
+    this.isLoading = true;
+
+    if (this.locationInfoRef && this.locationInfoRef !== this.locationInfoDescription.reference) {
+      this.locationInfoDescription = await locations.getDescription(this.locationInfoRef);
+    }
+
+    if (this.carInfoRef && this.carInfoRef !== this.carInfoDescription.reference) {
+      this.carInfoDescription = await cars.getDescription(this.carInfoRef);
+    }
+
+    this.isLoading = false;
+  };
+
+  /**
     * @description Get array of data for roll pickers (dates) rendering
     */
   @computed
@@ -293,6 +316,22 @@ export default class BookingStore {
     }
 
     return this.order.carAvailabilities.status === 'available';
+  }
+
+  /**
+    * @description Get data for BookingDetailsScreen
+    */
+  @computed
+  get infoDescription() {
+    if (this.locationInfoRef && this.locationInfoRef === this.locationInfoDescription.reference) {
+      return { isLocation: true, ...this.locationInfoDescription };
+    }
+
+    if (this.carInfoRef && this.carInfoRef === this.carInfoDescription.reference) {
+      return { isCar: true, ...this.carInfoDescription };
+    }
+
+    return {};
   }
 
   /**

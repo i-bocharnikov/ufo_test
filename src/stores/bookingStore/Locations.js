@@ -10,6 +10,7 @@ import { getFromApi } from './../../utils/api';
 export default class Locations {
 
   static fallbackLocations = [];
+  static fallbackDescription = {};
 
   /**
     * @param {string} carRef
@@ -27,6 +28,21 @@ export default class Locations {
       return response.data.locations;
     } else {
       return this.fallbackLocations;
+    }
+  }
+
+  /**
+    * @param {string} locationRef
+    * @returns {Object}
+    * @description Get description for specific location
+    */
+  static async getDescription(locationRef) {
+    const response = await getFromApi(`/reserve/locations/${locationRef}`, true);
+
+    if (response.isSuccess && _.has(response, 'data.location')) {
+      return response.data.location;
+    } else {
+      return this.fallbackDescription;
     }
   }
 }
