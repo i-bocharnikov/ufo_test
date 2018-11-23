@@ -39,9 +39,7 @@ export default StyleSheet.create({
     marginHorizontal: 6
   },
 
-  sliderDotActive: {
-    backgroundColor: colors.MAIN_LIGHT_COLOR
-  },
+  sliderDotActive: { backgroundColor: colors.MAIN_LIGHT_COLOR },
 
   separateLine: {
     height: 1,
@@ -56,7 +54,7 @@ export default StyleSheet.create({
 
   commonBoldText: {
     ...textThemes.SP_BOLD,
-    fontSize: 13,
+    fontSize: 13
   },
 
   descriptionTitle: {
