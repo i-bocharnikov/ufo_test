@@ -36,6 +36,8 @@ export default class BookingStore {
   @observable locationInfoDescription = {};
   @observable carInfoDescription = {};
 
+  @observable voucherCode = '';
+
   /**
     * @description Get lists of all locations and cars
     */
@@ -332,6 +334,38 @@ export default class BookingStore {
     }
 
     return {};
+  }
+
+  /*
+   *  @description Get start rental time for chosen location
+  */
+  @computed
+  get rentalScheduleStart() {
+    if (!_.has(this, 'order.schedule')) {
+      return '';
+    }
+
+    const m = moment.utc(this.order.schedule.startAt);
+    const dateStr =  m.tz(this.order.schedule.timezone).format(values.DATE_ROLLPICKER_FORMAT);
+    const timeStr = m.tz(this.order.schedule.timezone).format(values.TIME_STRING_FORMAT);
+
+    return `${dateStr} (${timeStr})`;
+  }
+
+  /*
+   *  @description Get end rental time for chosen location
+  */
+  @computed
+  get rentalScheduleEnd() {
+    if (!_.has(this, 'order.schedule')) {
+      return '';
+    }
+
+    const m = moment.utc(this.order.schedule.endAt);
+    const dateStr =  m.tz(this.order.schedule.timezone).format(values.DATE_ROLLPICKER_FORMAT);
+    const timeStr = m.tz(this.order.schedule.timezone).format(values.TIME_STRING_FORMAT);
+
+    return `${dateStr} (${timeStr})`;
   }
 
   /**

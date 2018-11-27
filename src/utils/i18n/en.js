@@ -9,7 +9,9 @@ export default {
     'modeOn': 'on',
     'modeOff': 'off',
     'calendarTitle': 'SELECT DATE',
-    'saveBtn': 'Save'
+    'saveBtn': 'Save',
+    'scheduleFrom': 'from',
+    'scheduleTo': 'to'
   },
   activities: {
     'internetAccessFailure': 'Unexpected internet connectivity issues. Operating in offline/degraded mode',
@@ -200,7 +202,15 @@ export default {
     'infoPeople': 'PEOPLE',
     'address': 'Address',
     'seclectInfoBtn': 'SELECT THIS',
-    'unseclectInfoBtn': 'UNSELECT THIS'
+    'unseclectInfoBtn': 'UNSELECT THIS',
+    'stepPayNextTitle': 'DRIVE',
+    'stepPayNextSubTitle': 'Go to step 3',
+    'creditCardTitle': 'CREDIT CARD INFOS',
+    'loyalityProgramtitle': 'VOUCHER & LOYALTY PROGRAM',
+    'infoAtPaymentTitle': 'BOOKING INFORMATIONS',
+    'totalPricePayment': 'TOTAL ALL INCLUDED',
+    'voucherPlaceholder': 'Voucher code number',
+    'voucherTooltip': 'Info about loyality program'
   },
   otaKeyNativeErrors
 };

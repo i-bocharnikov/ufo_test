@@ -151,5 +151,6 @@ UFOTooltip.propTypes = {
   children: PropTypes.node,
   isVisible: PropTypes.bool,
   onClose: PropTypes.func,
-  backgroundColor: PropTypes.string
+  backgroundColor: PropTypes.string,
+  originBtn: PropTypes.any
 };

@@ -2,14 +2,13 @@ import React, { Component } from 'react';
 import { StyleSheet, TextInput, TouchableOpacity, ViewPropTypes } from 'react-native';
 import PropTypes from 'prop-types';
 
-import { colors, fonts } from './../../utils/global';
+import { colors, textThemes } from './../../utils/theme';
 
 export const ufoInputStyles = {
+  ...textThemes.SP_LIGHT,
   height: 50,
   fontSize: 17,
-  fontFamily: fonts.LIGHT,
-  color: colors.TEXT_DARK,
-  backgroundColor: colors.INPUT_BG
+  backgroundColor: colors.BG_INVERT
 };
 
 const ownStyles = StyleSheet.create({
@@ -24,7 +23,7 @@ const ownStyles = StyleSheet.create({
     alignItems: 'center',
     paddingLeft: 20,
     paddingRight: 12,
-    backgroundColor: colors.INPUT_BG
+    backgroundColor: colors.BG_INVERT
   }
 });
 
@@ -48,7 +47,7 @@ export default class UFOTextInput extends Component {
       >
         <TextInput
           style={[ownStyles.input, style]}
-          placeholderColor={colors.DISABLE}
+          placeholderColor={colors.TEXT_LIGHT_COLOR}
           underlineColorAndroid="transparent"
           editable={!isClickable}
           { ...restInputProps }

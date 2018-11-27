@@ -22,6 +22,8 @@ export default StyleSheet.create({
 
   headerFutureStep: { opacity: 0.4 },
 
+  headerPastStep: { color: colors.MAIN_LIGHT_COLOR },
+
   screenContainer: {
     backgroundColor: colors.BG_INVERT_TINT,
     paddingTop: 2
@@ -277,5 +279,92 @@ export default StyleSheet.create({
     fontSize: 13,
     textDecorationLine: 'underline',
     letterSpacing: 1.1
+  },
+
+  /* styles specific for StepPayScreen */
+  infoBlock: {
+    marginHorizontal: SCREEN_HORIZONTAL_INDENTS,
+    backgroundColor: colors.BG_INVERT,
+    paddingHorizontal: 24,
+    paddingVertical: 20,
+    marginBottom: 36
+  },
+
+  infoBlockCarImg: {
+    position: 'absolute',
+    right: 20,
+    top: 20,
+    width: 120,
+    height: 50
+  },
+
+  infoText: {
+    ...textThemes.SP_LIGHT,
+    fontSize: 13,
+    lineHeight: 19,
+    letterSpacing: 1.3,
+    marginRight: 120
+  },
+
+  infoTitle: {
+    ...textThemes.SP_BOLD,
+    fontSize: 11,
+    lineHeight: 28,
+    letterSpacing: 3.5,
+    color: colors.MAIN_COLOR
+  },
+
+  infoTitlePrice: {
+    ...textThemes.SP_LIGHT,
+    fontSize: 18,
+    letterSpacing: 1.8,
+    color: colors.TEXT_DEFAULT_COLOR,
+    flex: 1,
+    textAlign: 'right'
+  },
+
+  separateLine: {
+    height: 1.6,
+    backgroundColor: colors.MAIN_COLOR
+  },
+
+  separateLineInfoBlock: {
+    marginTop: 16,
+    marginBottom: 24
+  },
+
+  voucherInput: {
+    height: 55,
+    marginHorizontal: SCREEN_HORIZONTAL_INDENTS
+  },
+
+  loyalityBlock: {
+    flexDirection: 'row',
+    height: 55,
+    alignItems: 'center',
+    marginHorizontal: SCREEN_HORIZONTAL_INDENTS,
+    marginTop: 10,
+    paddingHorizontal: 20,
+    backgroundColor: colors.MAIN_COLOR
+  },
+
+  loyalityLabel: {
+    ...textThemes.SP_BOLD,
+    fontSize: 13,
+    color: colors.TEXT_INVERT_COLOR,
+    letterSpacing: 0.9,
+    flex: 1
+  },
+
+  loyalityIcon: {
+    color: colors.TEXT_INVERT_COLOR,
+    fontSize: 28,
+    marginRight: 12
+  },
+
+  loyalityTolltipIcon: {
+    color: colors.TEXT_INVERT_COLOR,
+    fontSize: 16,
+    marginLeft: 8
   }
 });

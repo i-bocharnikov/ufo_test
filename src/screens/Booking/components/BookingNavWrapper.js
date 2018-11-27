@@ -33,7 +33,8 @@ class BookingNavWrapper extends Component {
       <Fragment>
         <Text style={[
           navBarStyles.subTitle,
-          styles.headerSubtitleLabel
+          styles.headerSubtitleLabel,
+          currentStep > 1 && styles.headerPastStep
         ]}>
           1. {t('booking:subTitleStep1')}
         </Text>
@@ -49,7 +50,8 @@ class BookingNavWrapper extends Component {
         <Text style={[
           navBarStyles.subTitle,
           styles.headerSubtitleLabel,
-          currentStep < 2 && styles.headerFutureStep
+          currentStep < 2 && styles.headerFutureStep,
+          currentStep > 2 && styles.headerPastStep
         ]}>
           2. {t('booking:subTitleStep2')}
         </Text>
