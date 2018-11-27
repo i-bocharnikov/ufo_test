@@ -41,7 +41,6 @@ class StepPayScreen extends Component {
             {t('creditCardTitle')}
           </Text>
 
-
           <Text style={[ styles.sectionTitle, styles.sectionTitleIndents ]}>
             {t('loyalityProgramtitle')}
           </Text>
@@ -79,7 +78,7 @@ class StepPayScreen extends Component {
           <View style={[ styles.infoBlock, styles.blockShadow ]}>
             <UFOImage
               style={styles.infoBlockCarImg}
-              source={{uri: bookingStore.order.carModel.imageUrl}}
+              source={{ uri: bookingStore.order.carModel.imageUrl }}
               resizeMode="contain"
             />
             <Text style={styles.infoTitle}>
@@ -97,7 +96,7 @@ class StepPayScreen extends Component {
             <Text style={styles.infoText}>
               {t('common:scheduleTo')} {bookingStore.rentalScheduleEnd}
             </Text>
-            <View style={[styles.separateLine, styles.separateLineInfoBlock]} />
+            <View style={[ styles.separateLine, styles.separateLineInfoBlock ]} />
             <View style={styles.row}>
               <Text style={styles.infoTitle}>
                 {t('totalPricePayment')} :

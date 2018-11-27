@@ -13,7 +13,7 @@ class BookingNavWrapper extends Component {
     const { t, navBack, BottomActionPanel } = this.props;
 
     return (
-      <View style={[styles.screenWrapper, BottomActionPanel && styles.wrapperBottomPadding]}>
+      <View style={[ styles.screenWrapper, BottomActionPanel && styles.wrapperBottomPadding ]}>
         <UFONavBarWrapper
           title={t('booking:screenTitle')}
           SubtitleComponent={this.getSubTitleComponent()}
@@ -35,7 +35,8 @@ class BookingNavWrapper extends Component {
           navBarStyles.subTitle,
           styles.headerSubtitleLabel,
           currentStep > 1 && styles.headerPastStep
-        ]}>
+        ]}
+        >
           1. {t('booking:subTitleStep1')}
         </Text>
         <UFOIcon_next
@@ -52,7 +53,8 @@ class BookingNavWrapper extends Component {
           styles.headerSubtitleLabel,
           currentStep < 2 && styles.headerFutureStep,
           currentStep > 2 && styles.headerPastStep
-        ]}>
+        ]}
+        >
           2. {t('booking:subTitleStep2')}
         </Text>
         <UFOIcon_next
@@ -68,7 +70,8 @@ class BookingNavWrapper extends Component {
           navBarStyles.subTitle,
           styles.headerSubtitleLabel,
           currentStep < 3 && styles.headerFutureStep
-        ]}>
+        ]}
+        >
           3. {t('booking:subTitleStep3')}
         </Text>
       </Fragment>

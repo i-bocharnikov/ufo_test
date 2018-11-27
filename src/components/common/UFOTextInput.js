@@ -42,19 +42,19 @@ export default class UFOTextInput extends Component {
     return (
       <TouchableOpacity
         onPress={isClickable ? onPress : null}
-        style={[ownStyles.wrapper, wrapperStyle]}
+        style={[ ownStyles.wrapper, wrapperStyle ]}
         activeOpacity={isClickable ? 0.8 : 1}
       >
         <TextInput
-          style={[ownStyles.input, style]}
+          style={[ ownStyles.input, style ]}
           placeholderColor={colors.TEXT_LIGHT_COLOR}
           underlineColorAndroid="transparent"
           editable={!isClickable}
-          { ...restInputProps }
+          {...restInputProps}
         />
         {IconComponent}
       </TouchableOpacity>
-    )
+    );
   }
 }
 

@@ -346,7 +346,7 @@ export default class BookingStore {
     }
 
     const m = moment.utc(this.order.schedule.startAt);
-    const dateStr =  m.tz(this.order.schedule.timezone).format(values.DATE_ROLLPICKER_FORMAT);
+    const dateStr = m.tz(this.order.schedule.timezone).format(values.DATE_ROLLPICKER_FORMAT);
     const timeStr = m.tz(this.order.schedule.timezone).format(values.TIME_STRING_FORMAT);
 
     return `${dateStr} (${timeStr})`;
@@ -362,7 +362,7 @@ export default class BookingStore {
     }
 
     const m = moment.utc(this.order.schedule.endAt);
-    const dateStr =  m.tz(this.order.schedule.timezone).format(values.DATE_ROLLPICKER_FORMAT);
+    const dateStr = m.tz(this.order.schedule.timezone).format(values.DATE_ROLLPICKER_FORMAT);
     const timeStr = m.tz(this.order.schedule.timezone).format(values.TIME_STRING_FORMAT);
 
     return `${dateStr} (${timeStr})`;
