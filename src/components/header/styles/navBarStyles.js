@@ -27,7 +27,9 @@ export default StyleSheet.create({
     elevation: 4
   },
 
-  scrollContainer: { paddingTop: HEADER_HEIGHT + SUBHEADER_HEIGHT },
+  container: { paddingTop: HEADER_HEIGHT },
+
+  containerWithSubtitle: { paddingTop: HEADER_HEIGHT + SUBHEADER_HEIGHT },
 
   header: {
     flexDirection: 'row',

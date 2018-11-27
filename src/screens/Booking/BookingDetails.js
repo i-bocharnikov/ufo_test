@@ -2,14 +2,13 @@ import React, { Component, Fragment } from 'react';
 import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
 import { translate } from 'react-i18next';
 import { observer } from 'mobx-react';
-import moment from 'moment';
 
 import { bookingStore } from './../../stores';
 import UFONavBarWrapper from './../../components/header/UFONavBarWrapper';
 import UFOSlider from './../../components/UFOSlider';
 import { UFOContainer, UFOModalLoader, UFOImage, UFOIcon_next } from './../../components/common';
 import styles from './styles/details';
-import { values } from './../../utils/theme';
+import { values, colors } from './../../utils/theme';
 
 const SCREEN_WIDTH = Dimensions.get('screen').width;
 
@@ -33,6 +32,7 @@ class BookingDetailsScreen extends Component {
         backBtnAction={this.navBack}
         title={this.getTitle()}
         subtitle={data.name ? data.name.toUpperCase() : ''}
+        backgroundWrapper={colors.BG_INVERT}
       >
         <UFOContainer style={styles.container}>
           <UFOSlider

@@ -19,12 +19,13 @@ export default class UFONavBarWrapper extends Component {
       SubtitleComponent,
       isCollapsible,
       backBtnAction,
+      backgroundWrapper,
       children
     } = this.props;
     const hasSubtitle = subtitle || SubtitleComponent;
 
     return (
-      <View style={styles.wrapper}>
+      <View style={[ styles.wrapper, backgroundWrapper && { backgroundColor: backgroundWrapper } ]}>
         <View style={[ styles.headerContainer, styles.headerShadow ]}>
           <Animated.View style={[
             styles.header,
@@ -66,7 +67,7 @@ export default class UFONavBarWrapper extends Component {
           )}
         </View>
         <ScrollView
-          contentContainerStyle={styles.scrollContainer}
+          contentContainerStyle={hasSubtitle ? styles.containerWithSubtitle : styles.container}
           onScroll={Animated.event([
             { nativeEvent: { contentOffset: { y: this.state.scrollY } } }
           ])}
@@ -108,5 +109,6 @@ UFONavBarWrapper.propTypes = {
   subtitle: PropTypes.string,
   SubtitleComponent: PropTypes.node,
   isCollapsible: PropTypes.bool,
-  backBtnAction: PropTypes.func
+  backBtnAction: PropTypes.func,
+  backgroundWrapper: PropTypes.string
 };
