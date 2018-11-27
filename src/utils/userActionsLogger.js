@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { checkConnectivity, postToApi } from './api';
+import { checkConnectivity, postToApi } from './api_deprecated';
 
 export const codeTypes = {
     SUCCESS: 0,

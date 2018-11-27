@@ -4,15 +4,10 @@ import { createStackNavigator } from 'react-navigation';
 import { keys, screens } from './helpers';
 
 const routeConfigs = {
-  [keys.BookingStepBook]: {
-    screen: screens.StepBook
-  },
-  [keys.BookingStepPay]: {
-    screen: screens.StepPay
-  },
-  [keys.BookingStepDrive]: {
-    screen: screens.StepDrive
-  }
+  [keys.BookingStepBook]: { screen: screens.StepBook },
+  [keys.BookingStepPay]: { screen: screens.StepPay },
+  [keys.BookingStepDrive]: { screen: screens.StepDrive },
+  [keys.BookingDetails]: { screen: screens.BookingDetails }
 };
 
 const navigatorConfig = {

@@ -3,7 +3,7 @@ import 'moment-timezone';
 import { observable, action } from 'mobx';
 import { persist } from 'mobx-persist';
 
-import { getFromApi } from './../utils/api';
+import { getFromApi } from './../utils/api_deprecated';
 import logger, { codeTypes, severityTypes } from './../utils/userActionsLogger';
 
 class FaqCategory {

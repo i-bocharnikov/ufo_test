@@ -1,7 +1,8 @@
 export default {
   Home: 'Drive',
   Drive: 'Drive',
-  BookingStepBook : 'BookingStepBook',
-  BookingStepPay : 'BookingStepPay',
-  BookingStepDrive : 'BookingStepDrive'
+  BookingStepBook: 'BookingStepBook',
+  BookingStepPay: 'BookingStepPay',
+  BookingStepDrive: 'BookingStepDrive',
+  BookingDetails: 'BookingDetails'
 };

@@ -1,15 +1,18 @@
 import { observable, action, computed } from 'mobx';
-import moment from 'moment';
+import moment from 'moment-timezone';
+import _ from 'lodash';
 
 import locations from './Locations';
 import cars from './Cars';
 import order from './Order';
-import { getPreselectedDatesForRollPicker } from './helpers';
+import { getPreselectedDatesForRollPicker, getTimeItemsForRollPicker } from './helpers';
 import { values } from './../../utils/theme';
 
+// period in months
+const MAX_RENTAL_PERIOD = 36;
 const TODAY = moment().startOf('day');
 const TOMORROW = moment().add(1, 'day').startOf('day');
-const MAX_RENTAL_DATE = moment().add(3, 'y').startOf('day');
+const MAX_RENTAL_DATE = moment().add(MAX_RENTAL_PERIOD, 'month').startOf('day');
 
 export default class BookingStore {
 
@@ -27,6 +30,11 @@ export default class BookingStore {
   @observable endRentalDate = TOMORROW;
   @observable startRentalTime = moment(TOMORROW).add(8, 'h').format(values.TIME_STRING_FORMAT);
   @observable endRentalTime = moment(TOMORROW).add(20, 'h').format(values.TIME_STRING_FORMAT);
+
+  @observable locationInfoRef = null;
+  @observable carInfoRef = null;
+  @observable locationInfoDescription = {};
+  @observable carInfoDescription = {};
 
   /**
     * @description Get lists of all locations and cars
@@ -158,8 +166,16 @@ export default class BookingStore {
     * @description Set start rental time
     */
   @action
-  selectStartTime = async timeStr => {
+  selectStartTime = async (timeStr, itemIndex) => {
     this.startRentalTime = timeStr;
+
+    if (this.rollPickerEndSelectedTimeItem <= itemIndex) {
+      const nextIndex = this.rollPickersTimeItems.length > itemIndex + 1
+        ? itemIndex + 1
+        : itemIndex;
+      this.endRentalTime = this.rollPickersTimeItems[nextIndex].label;
+    }
+
     this.isLoading = true;
     await this.getOrderSimulation();
     this.isLoading = false;
@@ -170,10 +186,34 @@ export default class BookingStore {
     * @description Set end rental time
     */
   @action
-  selectEndTime = async timeStr => {
+  selectEndTime = async (timeStr, itemIndex) => {
     this.endRentalTime = timeStr;
+
+    if (this.rollPickerStartSelectedTimeItem >= itemIndex) {
+      const prevIndex = itemIndex - 1 >= 0 ? itemIndex - 1 : itemIndex;
+      this.startRentalTime = this.rollPickersTimeItems[prevIndex].label;
+    }
+
     this.isLoading = true;
     await this.getOrderSimulation();
+    this.isLoading = false;
+  };
+
+  /**
+    * @description Get description for location or car
+    */
+  @action
+  getDescriptionData = async () => {
+    this.isLoading = true;
+
+    if (this.locationInfoRef && this.locationInfoRef !== this.locationInfoDescription.reference) {
+      this.locationInfoDescription = await locations.getDescription(this.locationInfoRef);
+    }
+
+    if (this.carInfoRef && this.carInfoRef !== this.carInfoDescription.reference) {
+      this.carInfoDescription = await cars.getDescription(this.carInfoRef);
+    }
+
     this.isLoading = false;
   };
 
@@ -183,7 +223,7 @@ export default class BookingStore {
   @computed
   get rollPickersData() {
     if (!Array.isArray(this.carCalendar)) {
-      return getPreselectedDatesForRollPicker();
+      return getPreselectedDatesForRollPicker(MAX_RENTAL_PERIOD);
     }
 
     return this.carCalendar.map(item => ({
@@ -242,6 +282,66 @@ export default class BookingStore {
   }
 
   /**
+    * @description Get array with times for choosing
+    */
+  @computed
+  get rollPickersTimeItems() {
+    return getTimeItemsForRollPicker();
+  }
+
+  @computed
+  get rollPickerStartSelectedTimeItem() {
+    const index = _.findIndex(this.rollPickersTimeItems, item => item.label === this.startRentalTime);
+
+    return index === -1 ? 0 : index;
+  }
+
+  /**
+    * @description Get selected row into picker for end date
+    */
+  @computed
+  get rollPickerEndSelectedTimeItem() {
+    const index = _.findIndex(this.rollPickersTimeItems, item => item.label === this.endRentalTime);
+
+    return index === -1 ? 0 : index;
+  }
+
+  /**
+    * @description Show is current car and location data available for order
+    */
+  @computed
+  get isOrderCarAvailable() {
+    if (!_.has(this, 'order.carAvailabilities.status')) {
+      return false;
+    }
+
+    return this.order.carAvailabilities.status === 'available';
+  }
+
+  /**
+    * @description Get data for BookingDetailsScreen
+    */
+  @computed
+  get infoDescription() {
+    if (this.locationInfoRef && this.locationInfoRef === this.locationInfoDescription.reference) {
+      return { isLocation: true, ...this.locationInfoDescription };
+    }
+
+    if (this.carInfoRef && this.carInfoRef === this.carInfoDescription.reference) {
+      return { isCar: true, ...this.carInfoDescription };
+    }
+
+    return {};
+  }
+
+  /**
+    * @description Get max period for calender view settings
+    */
+  get maxRentalPeriodInMonths() {
+    return MAX_RENTAL_PERIOD;
+  }
+
+  /**
     * @description Get days with description for rental current car
     */
   getCarCalendar = async () => {
@@ -270,13 +370,39 @@ export default class BookingStore {
       return;
     }
 
+    const timeZone = _.find(this.locations, { 'reference': this.selectedLocationRef }).timezone;
+    const startRentalTime = this.convertTimeToUTC(this.startRentalTime, timeZone);
+    const endRentalTime = this.convertTimeToUTC(this.endRentalTime, timeZone);
+
     this.order = await order.getOrder(
       this.selectedLocationRef,
       this.selectedCarRef,
       this.startRentalDate.format(values.DATE_STRING_FORMAT),
       this.endRentalDate.format(values.DATE_STRING_FORMAT),
-      this.startRentalTime,
-      this.endRentalTime
+      startRentalTime,
+      endRentalTime
     );
+  };
+
+  /**
+    * @param {string} timeStr
+    * @param {string} timeZoneStr
+    * @returns {string}
+    * @description Convert time from specified timeZome to UTC
+    */
+  convertTimeToUTC = (timeStr, timeZoneStr) => {
+    const m = moment.tz(timeStr, values.TIME_STRING_FORMAT, timeZoneStr);
+    return m.utc().format(values.TIME_STRING_FORMAT);
+  };
+
+  /**
+    * @param {string} timeStr
+    * @param {string} timeZoneStr
+    * @returns {string}
+    * @description Convert time from UTC to specified timeZome
+    */
+  convertTimeFromUTC = (timeStr, timeZoneStr) => {
+    const m = moment.utc(timeStr, values.TIME_STRING_FORMAT);
+    return m.tz(timeZoneStr).format(values.TIME_STRING_FORMAT);
   };
 }

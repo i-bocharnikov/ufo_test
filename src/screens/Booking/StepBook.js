@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, Linking } from 'react-native';
 import { translate } from 'react-i18next';
 import { observer } from 'mobx-react';
 import moment from 'moment';
@@ -70,7 +70,7 @@ class StepBookScreen extends Component {
               />
             </TouchableOpacity>
           </View>
-          <View style={styles.rollPickerSection}>
+          <View style={[ styles.rollPickerSection, styles.blockShadow ]}>
             <UFORollPicker
               data={bookingStore.rollPickersData}
               onRowChange={this.onSelectStartRollDate}
@@ -101,6 +101,30 @@ class StepBookScreen extends Component {
             </Text>
           </TouchableOpacity>
           <Text style={[ styles.sectionTitle, styles.sectionTitleIndents ]}>
+            {t('booking:timeSectionTitle')}
+          </Text>
+          <View style={[ styles.rollPickerSection, styles.blockShadow ]}>
+            <UFORollPicker
+              data={bookingStore.rollPickersTimeItems}
+              onRowChange={this.onSelectStartTime}
+              selectTo={bookingStore.rollPickerStartSelectedTimeItem}
+              wrapperStyles={styles.rollPicker}
+            />
+            <View style={styles.rollPickerSeparatorWrapper}>
+              <View style={styles.rollPickerSeparator} />
+              <UFOIcon_next
+                name="ios-clock-outline"
+                style={styles.rollPickerSeparatorIcon}
+              />
+            </View>
+            <UFORollPicker
+              data={bookingStore.rollPickersTimeItems}
+              onRowChange={this.onSelectEndTime}
+              selectTo={bookingStore.rollPickerEndSelectedTimeItem}
+              wrapperStyles={styles.rollPicker}
+            />
+          </View>
+          <Text style={[ styles.sectionTitle, styles.sectionTitleIndents ]}>
             {t('booking:carsSectionTitle')}
           </Text>
           <FlatList
@@ -117,7 +141,7 @@ class StepBookScreen extends Component {
             isVisible={this.state.showModalCalendar}
             onClose={() => this.setState({ showModalCalendar: false })}
             pastScrollRange={0}
-            futureScrollRange={36}
+            futureScrollRange={bookingStore.maxRentalPeriodInMonths}
             minDate={this.minPickedDate}
             onSubmit={this.onSelectCalendarDates}
             forbiddenDays={bookingStore.calendarPickerUnavailableMap}
@@ -183,10 +207,10 @@ class StepBookScreen extends Component {
     return (
       <BottomActionPanel
         t={this.props.t}
-        action={() => null}
+        action={this.navToNextStep}
         actionTitle={t('booking:stepBookNextTitle')}
         actionSubTitle={t('booking:stepBookNextSubTitle')}
-        isAvailable={false}
+        isAvailable={bookingStore.isOrderCarAvailable}
         price={bookingStore.orderPrice}
       />
     );
@@ -205,11 +229,13 @@ class StepBookScreen extends Component {
   };
 
   openCarInfo = ref => {
-    console.log('NAV TO CAR DESCR', ref);
+    bookingStore.carInfoRef = ref;
+    this.props.navigation.navigate({ routeName: screenKeys.BookingDetails });
   };
 
   openLocationInfo = ref => {
-    console.log('NAV TO LOCATION DESCR', ref);
+    bookingStore.locationInfoRef = ref;
+    this.props.navigation.navigate({ routeName: screenKeys.BookingDetails });
   };
 
   navBack = () => {
@@ -217,7 +243,7 @@ class StepBookScreen extends Component {
   };
 
   onDateTooltipLink = () => {
-    console.log('OPEN LINK');
+    Linking.openURL('https://booking-uft.ufodrive.com/');
   };
 
   onSelectStartRollDate = async index => {
@@ -240,7 +266,23 @@ class StepBookScreen extends Component {
     const startDate = moment(dateStart).startOf('day');
     const endDate = moment(dateEnd).startOf('day');
     await bookingStore.selectCalendarDates(startDate, endDate);
-  }
+  };
+
+  onSelectStartTime = async index => {
+    const item = bookingStore.rollPickersTimeItems[index];
+    const selectedTime = item.label;
+    await bookingStore.selectStartTime(selectedTime, index);
+  };
+
+  onSelectEndTime = async index => {
+    const item = bookingStore.rollPickersTimeItems[index];
+    const selectedTime = item.label;
+    await bookingStore.selectEndTime(selectedTime, index);
+  };
+
+  navToNextStep = () => {
+    this.props.navigation.push(screenKeys.BookingStepPay);
+  };
 }
 
 export default translate()(StepBookScreen);

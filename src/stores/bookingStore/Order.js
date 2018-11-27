@@ -25,10 +25,10 @@ export default class Order {
   static async getOrder(location, car, startDate, endDate, startTime, endTime, currency = 'EUR') {
     const path = `/reserve/rentals/${location}/${car}/${startDate}T${startTime}/${endDate}T${endTime}/${currency}`;
 
-    const response = await getFromApi(path);
+    const response = await getFromApi(path, true);
 
-    if (_.has(response, 'rental.rental')) {
-      return response.rental.rental;
+    if (response.isSuccess && _.has(response, 'data.rental')) {
+      return response.data.rental;
     } else {
       return this.fallbackOrder;
     }

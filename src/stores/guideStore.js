@@ -3,7 +3,7 @@ import { persist } from 'mobx-persist'
 import _ from 'lodash'
 import { driveStore } from './'
 
-import { getFromApi } from '../utils/api'
+import { getFromApi } from '../utils/api_deprecated'
 
 const DEBUG = false
 

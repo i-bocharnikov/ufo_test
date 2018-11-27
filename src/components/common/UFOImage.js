@@ -3,7 +3,7 @@ import { Image, ActivityIndicator, StyleSheet } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import PropTypes from 'prop-types';
 
-import { SAVE_TOKEN } from './../../utils/api';
+import { SAVE_TOKEN } from './../../utils/api_deprecated';
 import configurations from './../../utils/configurations';
 
 const ownStyles = StyleSheet.create({

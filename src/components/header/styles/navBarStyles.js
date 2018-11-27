@@ -8,9 +8,7 @@ const SUBHEADER_HEIGHT = 50;
 const HEADER_TOP_PADDING = 18;
 
 export default StyleSheet.create({
-  wrapper: {
-    flex: 1
-  },
+  wrapper: { flex: 1 },
 
   headerContainer: {
     position: 'absolute',
@@ -23,15 +21,15 @@ export default StyleSheet.create({
   },
 
   headerShadow: {
-    shadowOffset: {width: 0,  height: 4},
+    shadowOffset: { width: 0, height: 4 },
     shadowColor: 'black',
     shadowOpacity: 0.4,
     elevation: 4
   },
 
-  scrollContainer: {
-    paddingTop: HEADER_HEIGHT + SUBHEADER_HEIGHT
-  },
+  container: { paddingTop: HEADER_HEIGHT },
+
+  containerWithSubtitle: { paddingTop: HEADER_HEIGHT + SUBHEADER_HEIGHT },
 
   header: {
     flexDirection: 'row',
@@ -59,13 +57,16 @@ export default StyleSheet.create({
     fontSize: 12
   },
 
+  subTitleCenter: {
+    flex: 1,
+    textAlign: 'center'
+  },
+
   backBtn: {
     position: 'absolute',
     left: 0,
     paddingTop: HEADER_TOP_PADDING
   },
 
-  backIcon: {
-    color: colors.TEXT_INVERT_COLOR
-  }
+  backIcon: { color: colors.TEXT_INVERT_COLOR }
 });

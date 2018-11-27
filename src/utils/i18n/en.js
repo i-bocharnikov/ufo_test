@@ -184,6 +184,7 @@ export default {
     'subTitleStep3': 'DRIVE',
     'locSectionTitle': 'LOCATION',
     'carsSectionTitle': 'CARS',
+    'timeSectionTitle': 'PICK-UP & RETURN TIME',
     'notFoundData': 'Data not found',
     'infoLink': 'infos',
     'datesTooltip': 'Enter your pick-up & return date here. You can also use the calendar view.\nNeed more help? ',
@@ -192,7 +193,14 @@ export default {
     'totalPrice': 'TOTAL',
     'stepBookNextTitle': 'PAY & CONFIRM',
     'stepBookNextSubTitle': 'Go to step 2',
-    'calendarViewBtn': 'open calendar view'
+    'calendarViewBtn': 'open calendar view',
+    'locationInfoTitle': 'LOCATION',
+    'carInfoTitle': 'CAR',
+    'infoRange': 'RANGE',
+    'infoPeople': 'PEOPLE',
+    'address': 'Address',
+    'seclectInfoBtn': 'SELECT THIS',
+    'unseclectInfoBtn': 'UNSELECT THIS'
   },
   otaKeyNativeErrors
 };

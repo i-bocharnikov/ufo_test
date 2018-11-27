@@ -1,31 +1,37 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { FlatList, Text, View, Animated, ViewPropTypes } from 'react-native';
 import PropTypes from 'prop-types';
 
 import styles, {
   ITEM_HEIGHT,
-  DEFAULT_FONT_SIZE,
-  SELECTED_FONT_SIZE
+  DEFAULT_TEXT_SCALE,
+  SELECTED_TEXT_SCALE
 } from './styles';
 
-export default class UFORollPicker extends PureComponent {
+const FlatListAnimated = Animated.createAnimatedComponent(FlatList);
+
+export default class UFORollPicker extends Component {
   constructor() {
     super();
     this.onScrollCount = 0;
+    this.lastSelectedIndex = null;
+    this.layoutOffsetY = 0;
+    this.scrollY = new Animated.Value(0);
+    this.perPage = 30;
     this.state = {
-      scrollY: new Animated.Value(0),
-      layoutOffsetY: 0
+      /* simulation of page for big lists */
+      page: 1
     };
   }
 
   componentDidMount() {
-    if (this.props.selectTo) {
+    if (this.props.selectTo && this.props.selectTo !== this.lastSelectedIndex) {
       this.selectToItem(this.props.selectTo);
     }
   }
 
   componentDidUpdate() {
-    if (this.props.selectTo) {
+    if (this.props.selectTo && this.props.selectTo !== this.lastSelectedIndex) {
       this.selectToItem(this.props.selectTo);
     }
   }
@@ -34,12 +40,10 @@ export default class UFORollPicker extends PureComponent {
     const { flatListProps, wrapperStyles } = this.props;
 
     return (
-      <View
-        style={[ styles.wrapper, wrapperStyles ]}
-        onLayout={this.setLayoutOffset}
-      >
-        <FlatList
+      <View style={[ styles.wrapper, wrapperStyles ]}>
+        <FlatListAnimated
           ref={ref =>(this.listView = ref)}
+          onLayout={this.setLayoutOffset}
           keyExtractor={this.keyExtractor}
           data={this.getShiftedData()}
           renderItem={this.renderItem}
@@ -47,14 +51,15 @@ export default class UFORollPicker extends PureComponent {
           onMomentumScrollEnd={this.onMomentumScrollEnd}
           onScrollEndDrag={this.onScrollEndDrag}
           onScroll={Animated.event(
-            [ { nativeEvent: { contentOffset: { y: this.state.scrollY } } } ],
-            { listener: this.onScroll }
+            [ { nativeEvent: { contentOffset: { y: this.scrollY } } } ],
+            { listener: this.onScroll, useNativeDriver: true }
           )}
-          scrollEventThrottle={16}
           showsVerticalScrollIndicator={false}
           bounces={false}
           nestedScrollEnabled={true}
-          initialNumToRender={4}
+          windowSize={7}
+          snapToInterval={ITEM_HEIGHT}
+          onEndReached={this.incrementPage}
           {...flatListProps}
         />
       </View>
@@ -62,19 +67,19 @@ export default class UFORollPicker extends PureComponent {
   }
 
   renderItem = ({ item, index }) => {
-    const offset = this.state.layoutOffsetY;
+    const offset = this.layoutOffsetY;
     const i = index - 2;
 
-    const fontSize = this.state.scrollY.interpolate({
+    const fontSize = this.scrollY.interpolate({
       inputRange: [
         offset + i * ITEM_HEIGHT,
         offset + i * ITEM_HEIGHT + ITEM_HEIGHT,
-        offset + i * ITEM_HEIGHT + ITEM_HEIGHT
+        offset + i * ITEM_HEIGHT + ITEM_HEIGHT * 2
       ],
       outputRange: [
-        DEFAULT_FONT_SIZE,
-        SELECTED_FONT_SIZE,
-        DEFAULT_FONT_SIZE
+        DEFAULT_TEXT_SCALE,
+        SELECTED_TEXT_SCALE,
+        DEFAULT_TEXT_SCALE
       ],
       extrapolate: 'clamp'
     });
@@ -83,8 +88,8 @@ export default class UFORollPicker extends PureComponent {
       <View style={styles.row}>
         <Animated.Text style={[
           styles.rowLabel,
-          !item.available && styles.disabledRow,
-          { fontSize }
+          item.available === false && styles.disabledRow,
+          { transform: [ { scaleX: fontSize }, { scaleY: fontSize } ] }
         ]}
         >
           {item.label}
@@ -108,22 +113,36 @@ export default class UFORollPicker extends PureComponent {
     * @returns {Array}
     */
   getShiftedData = () => {
-    if (this.props.data.length) {
-      const shiftedData = [ {
-        id: 'empty-start',
-        label: ''
-      } ].concat(
-        this.props.data,
-        {
-          id: 'empty-end',
-          label: ''
-        }
-      );
+    const { data } = this.props;
 
-      return shiftedData;
+    if (!data.length) {
+      return data;
     }
 
-    return this.props.data;
+    const currentCount = this.state.page * this.perPage;
+    const dataForRender = data.length > currentCount
+      ? data.slice(0, currentCount)
+      : data;
+
+    return [
+      {
+        id: 'empty-start',
+        label: ''
+      }
+    ].concat(
+      dataForRender,
+      {
+        id: 'empty-end',
+        label: ''
+      }
+    );
+  };
+
+  /**
+    * @description Increment page to add more data for list rendering
+    */
+  incrementPage = () => {
+    this.setState({ page: this.state.page + 1 });
   };
 
   /**
@@ -131,7 +150,7 @@ export default class UFORollPicker extends PureComponent {
     * @description Set offset relative for screen
     */
   setLayoutOffset = ({ nativeEvent: { layout: { y } } }) => {
-    this.setState({ layoutOffsetY: y });
+    this.layoutOffsetY = y;
   };
 
   /**
@@ -155,19 +174,12 @@ export default class UFORollPicker extends PureComponent {
     }
 
     let index = y1 / ITEM_HEIGHT;
-    if (!this.props.data[index].available) {
+    if (this.props.data[index] && this.props.data[index].available === false) {
       this.props.data.length - 1 > index ? index++ : index--;
+      this.listView._component.scrollToIndex({ index: index });
     }
 
-    if (this.listView) {
-      index < this.props.data.length
-        ? this.listView.scrollToIndex({ index: index, animated: false })
-        : this.listView.scrollToEnd({ animated: false });
-    }
-
-    if (this.props.onRowChange) {
-      this.props.onRowChange(index);
-    }
+    this.handleRowChange(index);
   };
 
   /**
@@ -212,20 +224,38 @@ export default class UFORollPicker extends PureComponent {
   };
 
   /**
-    * @param {i} number
+    * @param {number} i
     * @description move to item which was selected optional
     */
   selectToItem = i => {
-    let index = i;
+    if (this.state.page * this.perPage < i) {
+      const neededPage = Math.ceil(i / this.perPage);
+      this.setState({ page: neededPage }, () => this.selectToItem(i));
 
-    if (!this.props.data[index].available) {
-      this.props.data.length - 1 > index ? index++ : index--;
+      return;
     }
 
-    if (this.listView) {
-      index < this.props.data.length
-       ? this.listView.scrollToIndex({ index: index, animated: false })
-       : this.listView.scrollToEnd({ animated: false });
+    const { data } = this.props;
+    this.lastSelectedIndex = i;
+
+    if (data[this.lastSelectedIndex] && data[this.lastSelectedIndex].available === false) {
+      data.length - 1 > this.lastSelectedIndex
+        ? this.lastSelectedIndex++
+        : this.lastSelectedIndex--;
+      this.handleRowChange(this.lastSelectedIndex);
+    }
+
+    // setTimeout needed because on android scroll is missing at component mounting
+    setTimeout(() => this.listView._component.scrollToIndex({ index: this.lastSelectedIndex }), 10);
+  };
+
+  /**
+    * @param {index} number
+    * @description run onRowChange props if it's function
+    */
+  handleRowChange = index => {
+    if (typeof this.props.onRowChange === 'function') {
+      this.props.onRowChange(index);
     }
   };
 }
@@ -240,7 +270,7 @@ UFORollPicker.propTypes = {
     PropTypes.shape({
       label: PropTypes.string.isRequired,
       id: PropTypes.string.isRequired,
-      available: PropTypes.bool.isRequired
+      available: PropTypes.bool
     })
   ),
   selectTo: PropTypes.number,

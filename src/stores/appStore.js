@@ -4,7 +4,7 @@ import supportStore from "../stores/supportStore";
 import registerStore from "../stores/registerStore"
 import { driveStore } from "../stores"
 import OTAKeyStore from '../stores/otaKeyStore'
-import { checkConnectivity } from '../utils/api'
+import { checkConnectivity } from '../utils/api_deprecated'
 import { hydrate } from '../utils/store'
 import { confirm } from '../utils/interaction';
 import otaKeyStore from '../stores/otaKeyStore';

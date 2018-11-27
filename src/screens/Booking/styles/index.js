@@ -4,7 +4,7 @@ import { colors, textThemes } from './../../../utils/theme';
 
 export const BOTTOM_PANEL_HEIGHT = 70;
 export const LOCATION_SLIDE_WIDTH = 128;
-const SCREEN_HORIZONTAL_INDENTS = 25;
+export const SCREEN_HORIZONTAL_INDENTS = 25;
 
 export default StyleSheet.create({
   screenWrapper: {
@@ -24,7 +24,7 @@ export default StyleSheet.create({
 
   screenContainer: {
     backgroundColor: colors.BG_INVERT_TINT,
-    paddingTop: 12
+    paddingTop: 2
   },
 
   sectionTitle: {
@@ -35,8 +35,8 @@ export default StyleSheet.create({
   },
 
   sectionTitleIndents: {
-    marginTop: 20,
-    marginBottom: 6,
+    marginTop: 28,
+    marginBottom: 10,
     marginHorizontal: SCREEN_HORIZONTAL_INDENTS
   },
 
@@ -54,15 +54,13 @@ export default StyleSheet.create({
     opacity: 0.6
   },
 
-  locSlider: {
-    paddingVertical: 4,
-    paddingHorizontal: SCREEN_HORIZONTAL_INDENTS
-  },
+  locSlider: { paddingHorizontal: SCREEN_HORIZONTAL_INDENTS },
 
   locSlide: {
     width: 128,
     height: 125,
-    backgroundColor: colors.BG_INVERT
+    backgroundColor: colors.BG_INVERT,
+    marginVertical: 4
   },
 
   locSlideLeftSpace: { marginLeft: 15 },
@@ -103,11 +101,12 @@ export default StyleSheet.create({
     paddingHorizontal: 8
   },
 
-  slideShadow: {
+  blockShadow: {
     shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 10,
+    shadowRadius: 8,
     shadowColor: 'black',
-    shadowOpacity: 0.1
+    shadowOpacity: 0.1,
+    elevation: 1
   },
 
   locInfoBtn: {
@@ -125,8 +124,8 @@ export default StyleSheet.create({
   },
 
   carSlider: {
-    paddingVertical: 4,
-    paddingHorizontal: SCREEN_HORIZONTAL_INDENTS
+    paddingHorizontal: SCREEN_HORIZONTAL_INDENTS,
+    marginBottom: 26
   },
 
   carSlide: {
@@ -135,6 +134,7 @@ export default StyleSheet.create({
     paddingTop: 16,
     paddingBottom: 20,
     paddingHorizontal: 20,
+    marginVertical: 4,
     backgroundColor: colors.BG_INVERT,
     borderWidth: 1.6,
     borderColor: colors.BG_INVERT
@@ -267,8 +267,8 @@ export default StyleSheet.create({
 
   calendarViewBtn: {
     marginLeft: SCREEN_HORIZONTAL_INDENTS,
-    marginTop: 16,
-    marginBottom: 16
+    marginTop: 18,
+    marginBottom: 14
   },
 
   calendarViewBtnLabel: {

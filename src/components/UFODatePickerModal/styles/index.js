@@ -24,7 +24,6 @@ export const calendarTheme = {
 };
 
 export const markedDaysTheme = { color: colors.MAIN_COLOR };
-
 export const forbiddenDaysTheme = { textColor: colors.ATTENTION_COLOR };
 
 export default StyleSheet.create({

@@ -22,13 +22,13 @@ export default class CarSlide extends PureComponent {
           activeOpacity={car.available ? values.BTN_OPACITY_DEFAULT : 1}
           style={[
             styles.carSlide,
-            styles.slideShadow,
+            styles.blockShadow,
             !isFirstItem && styles.carSlideLeftSpace,
             isSelected && styles.choosenCar
           ]}
         >
           <UFOImage
-            source={{uri: car.imageUrl}}
+            source={{ uri: car.imageUrl }}
             style={styles.carlideImg}
             resizeMode="contain"
           />

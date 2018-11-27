@@ -14,6 +14,7 @@ export default class Cars {
   static fallbackCars = [];
   static fallbackCalendar = null;
   static fallbackOrder = null;
+  static fallbackDescription = {};
 
   /**
     * @param {string} locationRef
@@ -25,9 +26,9 @@ export default class Cars {
       ? `/reserve/carModels?locationReference=${locationRef}`
       : '/reserve/carModels';
 
-    const response = await getFromApi(path);
+    const response = await getFromApi(path, true);
 
-    if (response && response.data && response.data.carModels) {
+    if (response.isSuccess && _.has(response, 'data.carModels')) {
       return response.data.carModels;
     } else {
       return this.fallbackCars;
@@ -53,12 +54,27 @@ export default class Cars {
       path = `${path}${minDate ? '&' : '?'}maxDate=${maxDate}`;
     }
 
-    const response = await getFromApi(path);
+    const response = await getFromApi(path, true);
 
-    if (_.has(response, 'data.carsCalendarDays')) {
+    if (response.isSuccess && _.has(response, 'data.carsCalendarDays')) {
       return response.data.carsCalendarDays;
     } else {
       return this.fallbackCalendar;
+    }
+  }
+
+  /**
+    * @param {string} carRef
+    * @returns {Object}
+    * @description Get description for specific car
+    */
+  static async getDescription(carRef) {
+    const response = await getFromApi(`/reserve/carModels/${carRef}`, true);
+
+    if (response.isSuccess && _.has(response, 'data.carModel')) {
+      return response.data.carModel;
+    } else {
+      return this.fallbackDescription;
     }
   }
 }

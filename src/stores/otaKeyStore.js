@@ -11,7 +11,7 @@ import i18n from 'i18next';
 
 import { driveStore } from '.';
 import { actionStyles, icons } from './../utils/global';
-import { postToApi, checkConnectivity } from './../utils/api';
+import { postToApi, checkConnectivity } from './../utils/api_deprecated';
 import { showToastError } from './../utils/interaction';
 import logger, { codeTypes, severityTypes } from './../utils/userActionsLogger';
 
