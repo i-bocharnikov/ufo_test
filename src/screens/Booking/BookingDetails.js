@@ -40,7 +40,7 @@ class BookingDetailsScreen extends Component {
             renderItem={this.renderSlide}
             itemWidth={SCREEN_WIDTH}
             inactiveSlideScale={1}
-            onSnapToItem={i => this.setState({ activeSlide: i })}
+            onSnapToItem={this.onSnapToItem}
             loop={true}
             autoplay={true}
             lockScrollWhileSnapping={true}
@@ -122,6 +122,8 @@ class BookingDetailsScreen extends Component {
       </View>
     );
   };
+
+  onSnapToItem = i => this.setState({ activeSlide: i });
 
   getFuturesBlock = () => {
     const { t } = this.props;
