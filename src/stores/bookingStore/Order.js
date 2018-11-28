@@ -10,6 +10,7 @@ import { getFromApi } from './../../utils/api';
 export default class Order {
 
   static fallbackOrder = null;
+  static fallbackPaymentOptions = {};
 
   /**
     * @param {string} location
@@ -31,6 +32,23 @@ export default class Order {
       return response.data.rental;
     } else {
       return this.fallbackOrder;
+    }
+  }
+
+  /**
+   * @param {string} locationRef
+   * @returns {Object}
+   * @description Return object with available user's credit cards and public api key for stripe
+  */
+  static async getPaymentOptions(locationRef) {
+    const path = `/reserve/userPaymentOptions/${locationRef}`;
+
+    const response = await getFromApi(path, true);
+
+    if (response.isSuccess) {
+      return response.data;
+    } else {
+      return this.fallbackPaymentOptions;
     }
   }
 }

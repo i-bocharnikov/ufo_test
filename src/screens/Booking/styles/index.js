@@ -42,6 +42,10 @@ export default StyleSheet.create({
     marginHorizontal: SCREEN_HORIZONTAL_INDENTS
   },
 
+  screenHorizIndents: {
+    marginHorizontal: SCREEN_HORIZONTAL_INDENTS
+  },
+
   datePickTitle: { marginRight: 6 },
 
   row: {
@@ -281,13 +285,42 @@ export default StyleSheet.create({
     letterSpacing: 1.1
   },
 
+  actionBtn: {
+    flex: 1,
+    flexDirection: 'row',
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: SCREEN_HORIZONTAL_INDENTS,
+    borderWidth: 1,
+    borderColor: colors.MAIN_COLOR
+  },
+
+  actionBtnLabel: {
+    ...textThemes.SP_SEMIBOLD,
+    fontSize: 15,
+    letterSpacing: 1.25,
+    color: colors.MAIN_COLOR
+  },
+
   /* styles specific for StepPayScreen */
+  screenPaymentContainer: {
+    backgroundColor: colors.BG_INVERT,
+    paddingTop: 2
+  },
+
+  infoSectionWrapper: {
+    backgroundColor: colors.BG_INVERT_TINT,
+    marginTop: 28,
+    paddingTop: 16,
+    paddingBottom: 48
+  },
+
   infoBlock: {
     marginHorizontal: SCREEN_HORIZONTAL_INDENTS,
     backgroundColor: colors.BG_INVERT,
     paddingHorizontal: 24,
-    paddingVertical: 20,
-    marginBottom: 36
+    paddingVertical: 20
   },
 
   infoBlockCarImg: {
@@ -334,8 +367,8 @@ export default StyleSheet.create({
   },
 
   voucherInput: {
-    height: 55,
-    marginHorizontal: SCREEN_HORIZONTAL_INDENTS
+    flex: 1,
+    height: 55
   },
 
   loyalityBlock: {
@@ -366,5 +399,31 @@ export default StyleSheet.create({
     color: colors.TEXT_INVERT_COLOR,
     fontSize: 16,
     marginLeft: 8
+  },
+
+  voucherApplyBtn: {
+    height: 55,
+    justifyContent: 'center',
+    paddingHorizontal: 8,
+    backgroundColor: colors.MAIN_COLOR
+  },
+
+  voucherApplyLabel: {
+    ...textThemes.SP_LIGHT,
+    fontSize: 12,
+    color: colors.TEXT_INVERT_COLOR,
+    letterSpacing: 0.9
+  },
+
+  scanCardBtn: {
+    marginBottom: 12
+  },
+
+  creditCardItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginHorizontal: SCREEN_HORIZONTAL_INDENTS,
+    marginBottom: 14
   }
 });

@@ -21,5 +21,11 @@ export default {
     fontSize: sizes.DEFAULT_FONT_SIZE,
     color: colors.TEXT_DEFAULT_COLOR,
     fontWeight: '700'
+  },
+  SP_SEMIBOLD: {
+    fontFamily: SP_FONT,
+    fontSize: sizes.DEFAULT_FONT_SIZE,
+    color: colors.TEXT_DEFAULT_COLOR,
+    fontWeight: '600'
   }
 };

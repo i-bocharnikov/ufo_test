@@ -209,8 +209,10 @@ export default {
     'loyalityProgramtitle': 'VOUCHER & LOYALTY PROGRAM',
     'infoAtPaymentTitle': 'BOOKING INFORMATIONS',
     'totalPricePayment': 'TOTAL ALL INCLUDED',
-    'voucherPlaceholder': 'Voucher code number',
-    'voucherTooltip': 'Info about loyality program'
+    'voucherPlaceholder': 'Voucher / referral code',
+    'voucherTooltip': 'Info about loyality program',
+    'scanCreditCardBtn': 'SCAN NEW CREDIT CARD',
+    'applyBtn': 'Apply'
   },
   otaKeyNativeErrors
 };

@@ -58,6 +58,8 @@
 		F540751421984D5300BB787A /* SofiaProLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F54075102198486800BB787A /* SofiaProLight.ttf */; };
 		F540751521984D5500BB787A /* SofiaProBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F54075122198486800BB787A /* SofiaProBold.ttf */; };
 		F54D9AC82194816900FE4741 /* libLRDRCTSimpleToast.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F54D9A982194815500FE4741 /* libLRDRCTSimpleToast.a */; };
+		F576CEE321AEEA0700D02887 /* SofiaProSemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F576CEB021AEEA0700D02887 /* SofiaProSemiBold.ttf */; };
+		F5CD80AC21AEAD84005F86F6 /* libRNCardIO.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5CD80A521AEAD65005F86F6 /* libRNCardIO.a */; };
 		F5D4833E2189AFAD00943D6B /* libRNImageRotate.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5D4833D2189AE7800943D6B /* libRNImageRotate.a */; };
 		F5D483882189B1B700943D6B /* libFastImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5D483582189B1A600943D6B /* libFastImage.a */; };
 		F5E8CC7B218AE96D001B8F8B /* OTAKeyModule.m in Sources */ = {isa = PBXBuildFile; fileRef = F5E8CC7A218AE96D001B8F8B /* OTAKeyModule.m */; };
@@ -348,6 +350,13 @@
 			remoteGlobalIDString = 15209BEF1D250F63000D0F44;
 			remoteInfo = LRDRCTSimpleToast;
 		};
+		F5CD80A421AEAD65005F86F6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5CD807521AEAD65005F86F6 /* RNCardIO.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNCardIO;
+		};
 		F5D48252218991E900943D6B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1E24D8E0907740728C8DF729 /* ReactNativeExceptionHandler.xcodeproj */;
@@ -477,6 +486,8 @@
 		F54075112198486800BB787A /* SofiaProRegular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = SofiaProRegular.ttf; path = ../src/assets/fonts/SofiaProRegular.ttf; sourceTree = "<group>"; };
 		F54075122198486800BB787A /* SofiaProBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = SofiaProBold.ttf; path = ../src/assets/fonts/SofiaProBold.ttf; sourceTree = "<group>"; };
 		F54D9A922194815400FE4741 /* LRDRCTSimpleToast.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LRDRCTSimpleToast.xcodeproj; path = "../node_modules/react-native-simple-toast/ios/LRDRCTSimpleToast.xcodeproj"; sourceTree = "<group>"; };
+		F576CEB021AEEA0700D02887 /* SofiaProSemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = SofiaProSemiBold.ttf; path = ../src/assets/fonts/SofiaProSemiBold.ttf; sourceTree = "<group>"; };
+		F5CD807521AEAD65005F86F6 /* RNCardIO.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNCardIO.xcodeproj; path = "../node_modules/react-native-awesome-card-io/ios/RNCardIO.xcodeproj"; sourceTree = "<group>"; };
 		F5D4830A2189AE7800943D6B /* RNImageRotate.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNImageRotate.xcodeproj; path = "../node_modules/react-native-image-rotate/RNImageRotate.xcodeproj"; sourceTree = "<group>"; };
 		F5D483522189B1A600943D6B /* FastImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FastImage.xcodeproj; path = "../node_modules/react-native-fast-image/ios/FastImage.xcodeproj"; sourceTree = "<group>"; };
 		F5E8CC49218AE954001B8F8B /* OTAKeyModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OTAKeyModule.h; path = driverApp/OTAKeyModule.h; sourceTree = "<group>"; };
@@ -500,6 +511,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F5CD80AC21AEAD84005F86F6 /* libRNCardIO.a in Frameworks */,
 				F54D9AC82194816900FE4741 /* libLRDRCTSimpleToast.a in Frameworks */,
 				F5D483882189B1B700943D6B /* libFastImage.a in Frameworks */,
 				F5D4833E2189AFAD00943D6B /* libRNImageRotate.a in Frameworks */,
@@ -694,6 +706,7 @@
 				F54075112198486800BB787A /* SofiaProRegular.ttf */,
 				914F449DF8E249B4A066C414 /* Entypo.ttf */,
 				F15388B12C6C4B7E95D746E3 /* EvilIcons.ttf */,
+				F576CEB021AEEA0700D02887 /* SofiaProSemiBold.ttf */,
 				56313FFC2225499F8F00720B /* Feather.ttf */,
 				FDD6C0E564104784BEF4D1AC /* FontAwesome.ttf */,
 				FA634670A487447AAB94D336 /* Foundation.ttf */,
@@ -731,6 +744,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				F5CD807521AEAD65005F86F6 /* RNCardIO.xcodeproj */,
 				F54D9A922194815400FE4741 /* LRDRCTSimpleToast.xcodeproj */,
 				F5D483522189B1A600943D6B /* FastImage.xcodeproj */,
 				F5D4830A2189AE7800943D6B /* RNImageRotate.xcodeproj */,
@@ -806,6 +820,14 @@
 			isa = PBXGroup;
 			children = (
 				F54D9A982194815500FE4741 /* libLRDRCTSimpleToast.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F5CD807621AEAD65005F86F6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F5CD80A521AEAD65005F86F6 /* libRNCardIO.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1077,6 +1099,10 @@
 				{
 					ProductGroup = FBEED2492144836E000F2874 /* Products */;
 					ProjectRef = D7645941869E41EDB5F27410 /* RNCamera.xcodeproj */;
+				},
+				{
+					ProductGroup = F5CD807621AEAD65005F86F6 /* Products */;
+					ProjectRef = F5CD807521AEAD65005F86F6 /* RNCardIO.xcodeproj */;
 				},
 				{
 					ProductGroup = FB941B3A214044A4003DBD7E /* Products */;
@@ -1372,6 +1398,13 @@
 			remoteRef = F54D9A972194815500FE4741 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		F5CD80A521AEAD65005F86F6 /* libRNCardIO.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNCardIO.a;
+			remoteRef = F5CD80A421AEAD65005F86F6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		F5D48253218991E900943D6B /* libReactNativeExceptionHandler.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1465,6 +1498,7 @@
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
+				F576CEE321AEEA0700D02887 /* SofiaProSemiBold.ttf in Resources */,
 				F540751521984D5500BB787A /* SofiaProBold.ttf in Resources */,
 				ED855B4EA1BB43B2AAC8DE17 /* Entypo.ttf in Resources */,
 				610D9A2B4AEA48008499C1AE /* EvilIcons.ttf in Resources */,

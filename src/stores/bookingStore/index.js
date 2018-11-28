@@ -37,6 +37,8 @@ export default class BookingStore {
   @observable carInfoDescription = {};
 
   @observable voucherCode = '';
+  @observable stripeApiKey = null;
+  @observable userCreditCards = [];
 
   /**
     * @description Get lists of all locations and cars
@@ -217,6 +219,25 @@ export default class BookingStore {
     }
 
     this.isLoading = false;
+  };
+
+  /**
+    * @returns {boolean}
+    * @description Get options for payment and return bool about is any option available
+    */
+  @action
+  getUserPaymentOptions = async () => {
+    if (!this.selectedLocationRef) {
+      return false;
+    }
+
+    this.isLoading = true;
+    const data = await order.getPaymentOptions(this.selectedLocationRef);
+    this.stripeApiKey = data.paymentPublicApi;
+    this.userCreditCards = data.userCreditCards;
+    this.isLoading = false;
+
+    return this.userCreditCards.length ? true : false;
   };
 
   /**

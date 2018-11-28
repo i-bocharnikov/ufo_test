@@ -8,6 +8,7 @@ import UFONavBarWrapper from './../../components/header/UFONavBarWrapper';
 import UFOSlider from './../../components/UFOSlider';
 import { UFOContainer, UFOModalLoader, UFOImage, UFOIcon_next } from './../../components/common';
 import styles from './styles/details';
+import commonStyles from './styles';
 import { values, colors } from './../../utils/theme';
 
 const SCREEN_WIDTH = Dimensions.get('screen').width;
@@ -75,13 +76,13 @@ class BookingDetailsScreen extends Component {
           <TouchableOpacity
             onPress={this.handleSelect}
             activeOpacity={values.BTN_OPACITY_DEFAULT}
-            style={styles.selectBtn}
+            style={[ commonStyles.actionBtn, styles.selectBtn ]}
           >
             <UFOIcon_next
               name={isSelected ? 'md-close' : 'md-checkmark'}
               style={styles.selectbtnIcon}
             />
-            <Text style={styles.selectBtnLabel}>
+            <Text style={commonStyles.actionBtnLabel}>
               {this.props.t(isSelected ? 'booking:unseclectInfoBtn' : 'booking:seclectInfoBtn')}
             </Text>
           </TouchableOpacity>
