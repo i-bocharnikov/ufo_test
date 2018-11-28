@@ -118,6 +118,7 @@ class BookingDetailsScreen extends Component {
         <UFOImage
           source={{ uri: item }}
           style={styles.slideImg}
+          resizeMode="contain"
         />
       </View>
     );

@@ -12,7 +12,7 @@ export default StyleSheet.create({
 
   slideWrapper: {
     flex: 1,
-    height: 175,
+    height: 170,
     paddingHorizontal: SCREEN_HORIZONTAL_INDENTS,
     alignItems: 'center',
     justifyContent: 'center'
