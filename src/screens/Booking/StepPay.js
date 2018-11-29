@@ -29,8 +29,6 @@ class StepPayScreen extends Component {
       languageOrLocale: props.i18n.language,
       guideColor: Platform.OS === 'ios' ? processColor(colors.MAIN_COLOR) : colors.MAIN_COLOR,
       hideCardIOLogo: true
-
-      //suppressScannedCardImage: true,
     };
     this.state = { showVoucherTooltip: false };
   }
