@@ -11,29 +11,28 @@ import {
   UFOIcon_next,
   UFOModalLoader,
   UFOImage,
-  UFOTextInput
+  UFOTextInput,
+  UFOGradientView
 } from './../../components/common';
 import UFOTooltip from './../../components/UFOTooltip';
 import BookingNavWrapper from './components/BookingNavWrapper';
 import BottomActionPanel from './components/BottomActionPanel';
 import styles from './styles';
-import { values } from './../../utils/theme';
+import { values, colors } from './../../utils/theme';
 
 @observer
 class StepPayScreen extends Component {
+  constructor() {
+    super();
+    this.state = { showVoucherTooltip: false };
+  }
+
   async componentDidMount() {
     const hasOptions = await bookingStore.getUserPaymentOptions();
 
     if (!hasOptions) {
       // propose/scan card
     }
-  }
-
-  constructor() {
-    super();
-    this.state = {
-      showVoucherTooltip: false
-    };
   }
 
   render() {
@@ -49,41 +48,7 @@ class StepPayScreen extends Component {
           <Text style={[ styles.sectionTitle, styles.sectionTitleIndents ]}>
             {t('creditCardTitle')}
           </Text>
-          {bookingStore.userCreditCards.map(item => this.renderCreditCardsList(item))}
-
-
-          {this.renderCreditCardsList({
-            reference: 'card_1DZhW5KVP4j7hWqd7SxLykGF',
-            default: true,
-            brand: 'Visa',
-            country: 'US',
-            expMonth: 4,
-            expYear: 2024,
-            last4: 4242,
-            name: null
-          })}
-          {this.renderCreditCardsList({
-            reference: 'card_1DZhW5KVP4j7hWqd7SxLykGG',
-            default: false,
-            brand: 'MasterCard',
-            country: 'US',
-            expMonth: 4,
-            expYear: 2024,
-            last4: 8193,
-            name: null
-          })}
-          {this.renderCreditCardsList({
-            reference: 'card_1DZhW5KVP4j7hWqd7SxLykGD',
-            default: false,
-            brand: 'AMEX',
-            country: 'US',
-            expMonth: 4,
-            expYear: 2024,
-            last4: 1157,
-            name: null
-          })}
-
-
+          {bookingStore.userCreditCards.map(item => this.renderCreditCardItem(item))}
           <TouchableOpacity
             onPress={this.scranCreditCard}
             activeOpacity={values.BTN_OPACITY_DEFAULT}
@@ -158,20 +123,40 @@ class StepPayScreen extends Component {
     );
   };
 
-  renderCreditCardsList = data => {
+  renderCreditCardItem = data => {
+    const isActive = bookingStore.currentCreditCardRef === data.reference;
+
     return (
-      <View
+      <TouchableOpacity
         key={data.reference}
-        style={styles.creditCardItem}
+        onPress={() => (bookingStore.currentCreditCardRef = data.reference)}
+        activeOpacity={values.BTN_OPACITY_DEFAULT}
       >
-        <View>
-          <Text>o</Text>
-        </View>
-        <View>
-          <Text>**** **** **** {data.last4}</Text>
-          <Text>{data.brand}</Text>
-        </View>
-      </View>
+        <UFOGradientView
+          style={[styles.creditCardItem, isActive && styles.selectedCreditCardItem]}
+          topColor={colors.BG_INVERT}
+          bottomColor={colors.BG_INVERT_TINT}
+        >
+          <View style={styles.row}>
+            <View style={styles.radioCircle}>
+              {isActive && <View style={styles.radioDot} />}
+            </View>
+            <UFOImage
+              style={styles.creditCardImg}
+              source={{ uri: data.imageUrl }}
+              resizeMode="contain"
+            />
+          </View>
+          <View>
+            <Text style={styles.creditCardNum}>
+              **** **** **** {data.last4}
+            </Text>
+            <Text style={styles.creditCardType}>
+              {data.brand}
+            </Text>
+          </View>
+        </UFOGradientView>
+      </TouchableOpacity>
     );
   };
 

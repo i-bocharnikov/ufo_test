@@ -17,6 +17,7 @@ import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.otakeys.sdk.OtaKeysApplication;
 import com.cardio.RNCardIOPackage;
+import com.BV.LinearGradient.LinearGradientPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -44,7 +45,8 @@ public class MainApplication extends OtaKeysApplication implements ReactApplicat
             new OTAKeyPackage(),
             new ReactNativeI18n(),
             new RNDeviceInfo(),
-            new RNCardIOPackage()
+            new RNCardIOPackage(),
+            new LinearGradientPackage()
       );
     }
 

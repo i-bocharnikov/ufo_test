@@ -101,9 +101,7 @@ export default StyleSheet.create({
     marginHorizontal: SCREEN_HORIZONTAL_INDENTS
   },
 
-  selectBtn: {
-    marginTop: 28,
-  },
+  selectBtn: { marginTop: 28 },
 
   selectbtnIcon: {
     fontSize: 32,

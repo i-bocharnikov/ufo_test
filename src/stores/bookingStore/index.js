@@ -14,6 +14,39 @@ const TODAY = moment().startOf('day');
 const TOMORROW = moment().add(1, 'day').startOf('day');
 const MAX_RENTAL_DATE = moment().add(MAX_RENTAL_PERIOD, 'month').startOf('day');
 
+const TEST_DATA = [
+  {
+    reference: 'card_1DZhW5KVP4j7hWqd7SxLykGF',
+    default: true,
+    brand: 'VISA',
+    country: 'US',
+    expMonth: 4,
+    expYear: 2024,
+    last4: 4242,
+    name: null
+  },
+  {
+    reference: 'card_1DZhW5KVP4j7hWqd7SxLykGG',
+    default: false,
+    brand: 'MasterCard',
+    country: 'US',
+    expMonth: 4,
+    expYear: 2024,
+    last4: 8193,
+    name: null
+  },
+  {
+    reference: 'card_1DZhW5KVP4j7hWqd7SxLykGD',
+    default: false,
+    brand: 'AMEX',
+    country: 'US',
+    expMonth: 4,
+    expYear: 2024,
+    last4: 1157,
+    name: null
+  }
+];
+
 export default class BookingStore {
 
   @observable isLoading = false;
@@ -39,6 +72,7 @@ export default class BookingStore {
   @observable voucherCode = '';
   @observable stripeApiKey = null;
   @observable userCreditCards = [];
+  @observable currentCreditCardRef = null;
 
   /**
     * @description Get lists of all locations and cars
@@ -234,7 +268,10 @@ export default class BookingStore {
     this.isLoading = true;
     const data = await order.getPaymentOptions(this.selectedLocationRef);
     this.stripeApiKey = data.paymentPublicApi;
-    this.userCreditCards = data.userCreditCards;
+    //this.userCreditCards = data.userCreditCards;
+    this.userCreditCards = TEST_DATA;
+    const defaultCard = _.find(this.userCreditCards, ['default', true]);
+    this.currentCreditCardRef = defaultCard ? defaultCard.reference : null;
     this.isLoading = false;
 
     return this.userCreditCards.length ? true : false;

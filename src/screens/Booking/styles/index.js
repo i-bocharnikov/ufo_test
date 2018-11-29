@@ -42,9 +42,7 @@ export default StyleSheet.create({
     marginHorizontal: SCREEN_HORIZONTAL_INDENTS
   },
 
-  screenHorizIndents: {
-    marginHorizontal: SCREEN_HORIZONTAL_INDENTS
-  },
+  screenHorizIndents: { marginHorizontal: SCREEN_HORIZONTAL_INDENTS },
 
   datePickTitle: { marginRight: 6 },
 
@@ -415,15 +413,63 @@ export default StyleSheet.create({
     letterSpacing: 0.9
   },
 
-  scanCardBtn: {
-    marginBottom: 12
-  },
+  scanCardBtn: { marginBottom: 28 },
 
   creditCardItem: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    height: 46,
+    paddingHorizontal: 12,
     marginHorizontal: SCREEN_HORIZONTAL_INDENTS,
-    marginBottom: 14
+    marginBottom: 14,
+    borderWidth: 1.2,
+    borderColor: colors.BORDER_COLOR,
+    borderRadius: 4
+  },
+
+  selectedCreditCardItem: {
+    borderColor: colors.SUCCESS_COLOR
+  },
+
+  creditCardNum: {
+    ...textThemes.SP_REGULAR,
+    fontSize: 14,
+    color: colors.TEXT_LIGHT_COLOR,
+    marginBottom: 4
+  },
+
+  creditCardType: {
+    ...textThemes.SP_LIGHT,
+    fontSize: 12,
+    color: colors.TEXT_LIGHT_COLOR,
+    textAlign: 'right'
+  },
+
+  radioCircle: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 12,
+    width: 12,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: colors.BORDER_COLOR,
+    backgroundColor: colors.BG_INVERT
+  },
+
+  radioDot: {
+    height: 8,
+    width: 8,
+    borderRadius: 4,
+    backgroundColor: colors.SUCCESS_COLOR
+  },
+
+  creditCardImg: {
+    width: 36,
+    height: 24,
+    borderWidth: 1,
+    borderColor: colors.BORDER_COLOR,
+    marginLeft: 10,
+    borderRadius: 2
   }
 });

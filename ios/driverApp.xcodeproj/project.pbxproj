@@ -62,6 +62,7 @@
 		F5CD80AC21AEAD84005F86F6 /* libRNCardIO.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5CD80A521AEAD65005F86F6 /* libRNCardIO.a */; };
 		F5D4833E2189AFAD00943D6B /* libRNImageRotate.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5D4833D2189AE7800943D6B /* libRNImageRotate.a */; };
 		F5D483882189B1B700943D6B /* libFastImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5D483582189B1A600943D6B /* libFastImage.a */; };
+		F5E380A521AFD4F8000C4486 /* libBVLinearGradient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5E3807021AFD360000C4486 /* libBVLinearGradient.a */; };
 		F5E8CC7B218AE96D001B8F8B /* OTAKeyModule.m in Sources */ = {isa = PBXBuildFile; fileRef = F5E8CC7A218AE96D001B8F8B /* OTAKeyModule.m */; };
 		FB92B94A214E63110075943D /* libRNFetchBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FB92B949214E62F80075943D /* libRNFetchBlob.a */; };
 		FBA35D7F214E465100AD6D41 /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FB941B66214044A4003DBD7E /* libRNDeviceInfo.a */; };
@@ -378,6 +379,20 @@
 			remoteGlobalIDString = A287971D1DE0C0A60081BDFA;
 			remoteInfo = FastImage;
 		};
+		F5E3806F21AFD360000C4486 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5E3806A21AFD35F000C4486 /* BVLinearGradient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = BVLinearGradient;
+		};
+		F5E3807121AFD360000C4486 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5E3806A21AFD35F000C4486 /* BVLinearGradient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 64AA15081EF7F30100718508;
+			remoteInfo = "BVLinearGradient-tvOS";
+		};
 		FB2468B5213EE7B40061F009 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 6CDC3890F782411F8BBE1D50 /* RCTVideo.xcodeproj */;
@@ -490,6 +505,7 @@
 		F5CD807521AEAD65005F86F6 /* RNCardIO.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNCardIO.xcodeproj; path = "../node_modules/react-native-awesome-card-io/ios/RNCardIO.xcodeproj"; sourceTree = "<group>"; };
 		F5D4830A2189AE7800943D6B /* RNImageRotate.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNImageRotate.xcodeproj; path = "../node_modules/react-native-image-rotate/RNImageRotate.xcodeproj"; sourceTree = "<group>"; };
 		F5D483522189B1A600943D6B /* FastImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FastImage.xcodeproj; path = "../node_modules/react-native-fast-image/ios/FastImage.xcodeproj"; sourceTree = "<group>"; };
+		F5E3806A21AFD35F000C4486 /* BVLinearGradient.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BVLinearGradient.xcodeproj; path = "../node_modules/react-native-linear-gradient/BVLinearGradient.xcodeproj"; sourceTree = "<group>"; };
 		F5E8CC49218AE954001B8F8B /* OTAKeyModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OTAKeyModule.h; path = driverApp/OTAKeyModule.h; sourceTree = "<group>"; };
 		F5E8CC7A218AE96D001B8F8B /* OTAKeyModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = OTAKeyModule.m; path = driverApp/OTAKeyModule.m; sourceTree = "<group>"; };
 		F8C027423513C988E072D1C0 /* libPods-driverApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-driverApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -511,6 +527,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F5E380A521AFD4F8000C4486 /* libBVLinearGradient.a in Frameworks */,
 				F5CD80AC21AEAD84005F86F6 /* libRNCardIO.a in Frameworks */,
 				F54D9AC82194816900FE4741 /* libLRDRCTSimpleToast.a in Frameworks */,
 				F5D483882189B1B700943D6B /* libFastImage.a in Frameworks */,
@@ -744,6 +761,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				F5E3806A21AFD35F000C4486 /* BVLinearGradient.xcodeproj */,
 				F5CD807521AEAD65005F86F6 /* RNCardIO.xcodeproj */,
 				F54D9A922194815400FE4741 /* LRDRCTSimpleToast.xcodeproj */,
 				F5D483522189B1A600943D6B /* FastImage.xcodeproj */,
@@ -852,6 +870,15 @@
 			isa = PBXGroup;
 			children = (
 				F5D483582189B1A600943D6B /* libFastImage.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F5E3806B21AFD35F000C4486 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F5E3807021AFD360000C4486 /* libBVLinearGradient.a */,
+				F5E3807221AFD360000C4486 /* libBVLinearGradient.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1000,7 +1027,8 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						ProvisioningStyle = Manual;
+						DevelopmentTeam = 44JX5RRRZZ;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -1032,6 +1060,10 @@
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
 			projectReferences = (
+				{
+					ProductGroup = F5E3806B21AFD35F000C4486 /* Products */;
+					ProjectRef = F5E3806A21AFD35F000C4486 /* BVLinearGradient.xcodeproj */;
+				},
 				{
 					ProductGroup = F5D483532189B1A600943D6B /* Products */;
 					ProjectRef = F5D483522189B1A600943D6B /* FastImage.xcodeproj */;
@@ -1426,6 +1458,20 @@
 			remoteRef = F5D483572189B1A600943D6B /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		F5E3807021AFD360000C4486 /* libBVLinearGradient.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libBVLinearGradient.a;
+			remoteRef = F5E3806F21AFD360000C4486 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5E3807221AFD360000C4486 /* libBVLinearGradient.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libBVLinearGradient.a;
+			remoteRef = F5E3807121AFD360000C4486 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		FB2468B6213EE7B40061F009 /* libRCTVideo.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1753,10 +1799,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 44JX5RRRZZ;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-video/ios",
@@ -1786,9 +1832,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 44JX5RRRZZ;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-video/ios",
