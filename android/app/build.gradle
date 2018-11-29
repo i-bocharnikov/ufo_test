@@ -158,6 +158,7 @@ dependencies {
     implementation project(':react-native-awesome-card-io')
     implementation project(':react-native-prompt-android')
     implementation project(':react-native-linear-gradient')
+    implementation project(':tipsi-stripe')
     
     implementation 'com.google.firebase:firebase-core:16.0.1'
     implementation 'com.google.android.gms:play-services-location:15+'

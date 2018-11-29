@@ -113,6 +113,11 @@ export default StyleSheet.create({
     elevation: 1
   },
 
+  blockShadowAndroidFix: {
+    // android shadow fix for elements without borders
+    borderWidth: 0
+  },
+
   locInfoBtn: {
     position: 'absolute',
     bottom: 0,

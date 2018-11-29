@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Platform, processColor } from 'react-native';
 import { translate } from 'react-i18next';
 import { observer } from 'mobx-react';
 import { CardIOModule, CardIOUtilities } from 'react-native-awesome-card-io';
+import stripe from 'tipsi-stripe';
 
 import { bookingStore } from './../../stores';
 import { keys as screenKeys } from './../../navigators/helpers';
@@ -22,16 +23,29 @@ import { values, colors } from './../../utils/theme';
 
 @observer
 class StepPayScreen extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+    this.CARDIO_SCAN_OPTIONS = {
+      languageOrLocale: props.i18n.language,
+      guideColor: Platform.OS === 'ios' ? processColor(colors.MAIN_COLOR) : colors.MAIN_COLOR,
+      hideCardIOLogo: true
+
+      //suppressScannedCardImage: true,
+    };
     this.state = { showVoucherTooltip: false };
   }
 
   async componentDidMount() {
     const hasOptions = await bookingStore.getUserPaymentOptions();
+    stripe.setOptions({ publishableKey: bookingStore.stripeApiKey });
+
+    if (Platform.OS === 'ios') {
+      await CardIOUtilities.preload();
+    }
 
     if (!hasOptions) {
-      // propose/scan card
+      /* timeout needed to avoid conflict between modal views at fast re-render (ios) */
+      setTimeout(this.scranCreditCard, 100);
     }
   }
 
@@ -61,7 +75,13 @@ class StepPayScreen extends Component {
           <Text style={[ styles.sectionTitle, styles.sectionTitleIndents ]}>
             {t('loyalityProgramtitle')}
           </Text>
-          <View style={[ styles.row, styles.screenHorizIndents, styles.blockShadow ]}>
+          <View style={[
+            styles.row,
+            styles.screenHorizIndents,
+            styles.blockShadow,
+            Platform.OS === 'android' && styles.blockShadowAndroidFix
+          ]}
+          >
             <UFOTextInput
               wrapperStyle={styles.voucherInput}
               keyboardType="numeric"
@@ -223,12 +243,17 @@ class StepPayScreen extends Component {
     this.props.navigation.navigate(screenKeys.BookingStepDrive);
   };
 
-  scranCreditCard = () => {
-    console.log('SCAN CARD HANDLER');
+  scranCreditCard = async () => {
+    try {
+      const card = await CardIOModule.scanCard(this.CARDIO_SCAN_OPTIONS);
+      console.log('CARD DATA:', card);
+    } catch (error) {
+      console.log('CARDIO ERROR:', error);
+    }
   };
 
   applyVoucher = () => {
-    console.log('APPLY VOUCHER ACTION');
+    console.log('APPLY VOUCHER');
   };
 }
 

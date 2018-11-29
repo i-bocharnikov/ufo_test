@@ -37,3 +37,7 @@ allprojects {
         jcenter()
     }
 }
+
+ext {
+    googlePlayServicesVersion = "15+"
+}

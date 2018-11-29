@@ -14,39 +14,6 @@ const TODAY = moment().startOf('day');
 const TOMORROW = moment().add(1, 'day').startOf('day');
 const MAX_RENTAL_DATE = moment().add(MAX_RENTAL_PERIOD, 'month').startOf('day');
 
-const TEST_DATA = [
-  {
-    reference: 'card_1DZhW5KVP4j7hWqd7SxLykGF',
-    default: true,
-    brand: 'VISA',
-    country: 'US',
-    expMonth: 4,
-    expYear: 2024,
-    last4: 4242,
-    name: null
-  },
-  {
-    reference: 'card_1DZhW5KVP4j7hWqd7SxLykGG',
-    default: false,
-    brand: 'MasterCard',
-    country: 'US',
-    expMonth: 4,
-    expYear: 2024,
-    last4: 8193,
-    name: null
-  },
-  {
-    reference: 'card_1DZhW5KVP4j7hWqd7SxLykGD',
-    default: false,
-    brand: 'AMEX',
-    country: 'US',
-    expMonth: 4,
-    expYear: 2024,
-    last4: 1157,
-    name: null
-  }
-];
-
 export default class BookingStore {
 
   @observable isLoading = false;
@@ -268,8 +235,7 @@ export default class BookingStore {
     this.isLoading = true;
     const data = await order.getPaymentOptions(this.selectedLocationRef);
     this.stripeApiKey = data.paymentPublicApi;
-    //this.userCreditCards = data.userCreditCards;
-    this.userCreditCards = TEST_DATA;
+    this.userCreditCards = data.userCreditCards;
     const defaultCard = _.find(this.userCreditCards, [ 'default', true ]);
     this.currentCreditCardRef = defaultCard ? defaultCard.reference : null;
     this.isLoading = false;
@@ -349,6 +315,9 @@ export default class BookingStore {
     return getTimeItemsForRollPicker();
   }
 
+  /**
+    * @description Get selected row into picker for start date
+    */
   @computed
   get rollPickerStartSelectedTimeItem() {
     const index = _.findIndex(this.rollPickersTimeItems, item => item.label === this.startRentalTime);
