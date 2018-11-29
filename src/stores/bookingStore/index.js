@@ -270,7 +270,7 @@ export default class BookingStore {
     this.stripeApiKey = data.paymentPublicApi;
     //this.userCreditCards = data.userCreditCards;
     this.userCreditCards = TEST_DATA;
-    const defaultCard = _.find(this.userCreditCards, ['default', true]);
+    const defaultCard = _.find(this.userCreditCards, [ 'default', true ]);
     this.currentCreditCardRef = defaultCard ? defaultCard.reference : null;
     this.isLoading = false;
 

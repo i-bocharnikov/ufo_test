@@ -8,9 +8,10 @@ export default class UFOGradientView extends Component {
 
     return (
       <LinearGradient
-        colors={[topColor, bottomColor]}
-        start={{x: 1, y: 0}} end={{x: 1, y: 1}}
-        { ...viewProps }
+        colors={[ topColor, bottomColor ]}
+        start={{ x: 1, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        {...viewProps}
       >
         {children}
       </LinearGradient>

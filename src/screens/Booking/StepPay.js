@@ -133,7 +133,7 @@ class StepPayScreen extends Component {
         activeOpacity={values.BTN_OPACITY_DEFAULT}
       >
         <UFOGradientView
-          style={[styles.creditCardItem, isActive && styles.selectedCreditCardItem]}
+          style={[ styles.creditCardItem, isActive && styles.selectedCreditCardItem ]}
           topColor={colors.BG_INVERT}
           bottomColor={colors.BG_INVERT_TINT}
         >

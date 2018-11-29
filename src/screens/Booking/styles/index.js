@@ -428,9 +428,7 @@ export default StyleSheet.create({
     borderRadius: 4
   },
 
-  selectedCreditCardItem: {
-    borderColor: colors.SUCCESS_COLOR
-  },
+  selectedCreditCardItem: { borderColor: colors.SUCCESS_COLOR },
 
   creditCardNum: {
     ...textThemes.SP_REGULAR,
