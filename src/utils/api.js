@@ -21,7 +21,11 @@ const ufoServerPublicApi = axios.create({
 function defaultErrorHandler(error) {
   __DEV__ && console.info(error);
   const message = getErrorMessage(error);
-  showToastError(message);
+  /*
+   * use small timeout to avoid this bug https://github.com/facebook/react-native/issues/10471
+   * because almost all requests are handling with ModalLoader indicator
+  */
+  setTimeout(() => showToastError(message), 100);
 }
 
 function formatResponse(axiosRes, isSuccess = true) {

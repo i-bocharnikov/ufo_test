@@ -168,6 +168,7 @@ export default class BookingStore {
 
   /**
     * @param {string} timeStr
+    * @param {number} itemIndex
     * @description Set start rental time
     */
   @action
@@ -230,6 +231,9 @@ export default class BookingStore {
   getUserPaymentOptions = async () => {
     if (!this.selectedLocationRef) {
       return false;
+    } else if (this.stripeApiKey) {
+      // data was already fetched
+      return this.userCreditCards.length ? true : false;
     }
 
     this.isLoading = true;
@@ -241,6 +245,68 @@ export default class BookingStore {
     this.isLoading = false;
 
     return this.userCreditCards.length ? true : false;
+  };
+
+  /**
+    * @param {Object} cardIoObj
+    * @description Add new scanned credit card to list
+    */
+  @action
+  addCreditCardToList = cardStripeObj => {
+    const cardData = cardStripeObj.card;
+
+    if (!cardData) {
+      return;
+    }
+
+    const card = {
+      reference: cardData.cardId,
+      brand: cardData.brand,
+      country: cardData.country,
+      expMonth: cardData.expMonth,
+      expYear: cardData.expYear,
+      last4: cardData.last4,
+      default: !this.currentCreditCardRef
+    };
+
+    if (card.default) {
+      this.currentCreditCardRef = card.reference;
+    }
+
+    this.userCreditCards.push(card);
+  };
+
+  /**
+    * @param {string} code
+    * @description Apply voucher code to exist order
+    */
+  @action
+  appyVoucherCode = async code => {
+    if (!this.order) {
+      return;
+    }
+
+    this.isLoading = true;
+    const timeZone = this.order.schedule.timezone;
+    const startRentalTime = this.convertTimeToUTC(this.startRentalTime, timeZone);
+    const endRentalTime = this.convertTimeToUTC(this.endRentalTime, timeZone);
+
+    const newOrder = await order.getOrder(
+      this.selectedLocationRef,
+      this.selectedCarRef,
+      this.startRentalDate.format(values.DATE_STRING_FORMAT),
+      this.endRentalDate.format(values.DATE_STRING_FORMAT),
+      startRentalTime,
+      endRentalTime,
+      { voucherCode: code }
+    );
+
+    if (newOrder) {
+      this.order = newOrder;
+      this.voucherCode = code;
+    }
+
+    this.isLoading = false;
   };
 
   /**
@@ -441,7 +507,8 @@ export default class BookingStore {
       this.startRentalDate.format(values.DATE_STRING_FORMAT),
       this.endRentalDate.format(values.DATE_STRING_FORMAT),
       startRentalTime,
-      endRentalTime
+      endRentalTime,
+      { voucherCode: this.voucherCode }
     );
   };
 

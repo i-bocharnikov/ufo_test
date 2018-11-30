@@ -30,7 +30,10 @@ class StepPayScreen extends Component {
       guideColor: Platform.OS === 'ios' ? processColor(colors.MAIN_COLOR) : colors.MAIN_COLOR,
       hideCardIOLogo: true
     };
-    this.state = { showVoucherTooltip: false };
+    this.state = {
+      showVoucherTooltip: false,
+      voucherCodeStr: ''
+    };
   }
 
   async componentDidMount() {
@@ -85,7 +88,7 @@ class StepPayScreen extends Component {
               keyboardType="numeric"
               placeholder={t('voucherPlaceholder')}
               defaultValue={bookingStore.voucherCode}
-              onChangeText={value => (bookingStore.voucherCode = value)}
+              onChangeText={voucherCodeStr => this.setState({ voucherCodeStr })}
             />
             <TouchableOpacity
               onPress={this.applyVoucher}
@@ -106,7 +109,7 @@ class StepPayScreen extends Component {
               style={styles.loyalityLabel}
               numberOfLines={1}
             >
-              You have €30 on you account
+              {bookingStore.order.price.marketingLabel}
             </Text>
             <TouchableOpacity
               onPress={() => this.setState({ showVoucherTooltip: true })}
@@ -132,10 +135,10 @@ class StepPayScreen extends Component {
     return (
       <BottomActionPanel
         t={t}
-        action={this.navToNextStep}
+        action={this.handleToNextStep}
         actionTitle={t('stepPayNextTitle')}
         actionSubTitle={t('stepPayNextSubTitle')}
-        isAvailable={true}
+        isAvailable={Boolean(bookingStore.currentCreditCardRef)}
         price={bookingStore.orderPrice}
       />
     );
@@ -233,25 +236,35 @@ class StepPayScreen extends Component {
     );
   };
 
-  navBack = () => {
-    this.props.navigation.goBack();
-  };
-
-  navToNextStep = () => {
-    this.props.navigation.navigate(screenKeys.BookingStepDrive);
-  };
-
   scranCreditCard = async () => {
     try {
-      const card = await CardIOModule.scanCard(this.CARDIO_SCAN_OPTIONS);
-      console.log('CARD DATA:', card);
+      const cardIoData = await CardIOModule.scanCard(this.CARDIO_SCAN_OPTIONS);
+      const cardStripeObj = await stripe.createTokenWithCard({
+        number: cardIoData.cardNumber,
+        expMonth: cardIoData.expiryMonth,
+        expYear: cardIoData.expiryYear,
+        cvc: cardIoData.cvv
+      });
+      bookingStore.addCreditCardToList(cardStripeObj);
     } catch (error) {
       console.log('CARDIO ERROR:', error);
     }
   };
 
   applyVoucher = () => {
-    console.log('APPLY VOUCHER');
+    const code = this.state.voucherCodeStr;
+    if (code !== bookingStore.voucherCode) {
+      bookingStore.appyVoucherCode(code);
+    }
+  };
+
+  navBack = () => {
+    this.props.navigation.goBack();
+  };
+
+  handleToNextStep = async () => {
+    console.log('HANDLE PAYMENT, THEN NAV NEXT');
+    this.props.navigation.navigate(screenKeys.BookingStepDrive);
   };
 }
 
