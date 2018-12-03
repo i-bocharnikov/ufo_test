@@ -100,27 +100,7 @@ class StepPayScreen extends Component {
               </Text>
             </TouchableOpacity>
           </View>
-          <View style={styles.loyalityBlock}>
-            <UFOIcon_next
-              name="ios-planet-outline"
-              style={styles.loyalityIcon}
-            />
-            <Text
-              style={styles.loyalityLabel}
-              numberOfLines={1}
-            >
-              {bookingStore.order.price.marketingLabel}
-            </Text>
-            <TouchableOpacity
-              onPress={() => this.setState({ showVoucherTooltip: true })}
-              ref={ref => (this.voucherTooltipRef = ref)}
-            >
-              <UFOIcon_next
-                name="ios-information-circle-outline"
-                style={styles.loyalityTolltipIcon}
-              />
-            </TouchableOpacity>
-          </View>
+          {this.renderLoyaltyBlock()}
           {this.renderBookingInfoSection()}
           {this.renderVoucherTooltip()}
           <UFOModalLoader isVisible={bookingStore.isLoading} />
@@ -181,6 +161,39 @@ class StepPayScreen extends Component {
     );
   };
 
+  renderLoyaltyBlock = () => {
+    return !bookingStore.loyaltyProgramInfo ? null : (
+      <View style={styles.loyalityBlock}>
+        <TouchableOpacity
+          style={styles.loyalityCheckbox}
+          onPress={bookingStore.switchReferralUsing}
+        >
+          {bookingStore.useRefferalAmount && (
+            <UFOIcon_next
+              name="md-checkmark"
+              style={styles.loyalityIcon}
+            />
+          )}
+        </TouchableOpacity>
+        <Text
+          style={styles.loyalityLabel}
+          numberOfLines={1}
+        >
+          {bookingStore.loyaltyProgramInfo}
+        </Text>
+        <TouchableOpacity
+          onPress={() => this.setState({ showVoucherTooltip: true })}
+          ref={ref => (this.voucherTooltipRef = ref)}
+        >
+          <UFOIcon_next
+            name="ios-information-circle-outline"
+            style={styles.loyalityTolltipIcon}
+          />
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
   renderBookingInfoSection = () => {
     const { t } = this.props;
 
@@ -236,6 +249,9 @@ class StepPayScreen extends Component {
     );
   };
 
+  /*
+   * Launch camera to credit card, then handle card with stripe and locally save it into card list
+  */
   scranCreditCard = async () => {
     try {
       const cardIoData = await CardIOModule.scanCard(this.CARDIO_SCAN_OPTIONS);
@@ -251,6 +267,9 @@ class StepPayScreen extends Component {
     }
   };
 
+  /*
+   * Apply voucher code, receive new order object into bookingStore
+  */
   applyVoucher = () => {
     const code = this.state.voucherCodeStr;
     if (code !== bookingStore.voucherCode) {
@@ -258,13 +277,22 @@ class StepPayScreen extends Component {
     }
   };
 
+  /*
+   * To previous screen
+  */
   navBack = () => {
     this.props.navigation.goBack();
   };
 
+  /*
+   * Handle payment and go to next step
+  */
   handleToNextStep = async () => {
-    console.log('HANDLE PAYMENT, THEN NAV NEXT');
-    this.props.navigation.navigate(screenKeys.BookingStepDrive);
+    const result = await bookingStore.confirmBooking();
+
+    if (result) {
+      this.props.navigation.navigate(screenKeys.BookingStepDrive);
+    }
   };
 }
 

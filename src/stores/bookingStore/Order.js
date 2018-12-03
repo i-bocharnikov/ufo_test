@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import { getFromApi } from './../../utils/api';
+import { getFromApi, postToApi } from './../../utils/api';
 
 /**
   * @class
@@ -11,6 +11,7 @@ export default class Order {
 
   static fallbackOrder = null;
   static fallbackPaymentOptions = {};
+  static fallbackOrderConfirmation = null;
 
   /**
     * @param {string} location
@@ -26,19 +27,24 @@ export default class Order {
   static async getOrder(location, car, startDate, endDate, startTime, endTime, options = {}) {
     const {
       currency = 'EUR',
-      voucherCode
+      voucherCode,
+      useRefferal
     } = options;
 
-    let path = `/reserve/rentals/${location}/${car}/${startDate}T${startTime}/${endDate}T${endTime}/${currency}`;
+    let path = `/reserve/bookings/${location}/${car}/${startDate}T${startTime}/${endDate}T${endTime}/${currency}`;
 
     if (voucherCode) {
       path = `${path}?voucherOrReferralCode=${voucherCode}`;
     }
 
+    if (useRefferal) {
+      path = `${path}${voucherCode ? '&' : '?'}referralAmountUsed=true`;
+    }
+
     const response = await getFromApi(path, true);
 
-    if (response.isSuccess && _.has(response, 'data.rental')) {
-      return response.data.rental;
+    if (response.isSuccess && _.has(response, 'data.booking')) {
+      return response.data.booking;
     } else {
       return this.fallbackOrder;
     }
@@ -58,6 +64,22 @@ export default class Order {
       return response.data;
     } else {
       return this.fallbackPaymentOptions;
+    }
+  }
+
+  /**
+   * @param {Object} payload
+   * @returns {Object}
+   * @description Send confirmation of booking for current order
+  */
+  static async confirmOrder(payload) {
+    const response = await postToApi('/reserve/bookings', payload, true);
+    console.log('CONFIRM BOOKING', response);
+
+    if (response.isSuccess) {
+      return response.data;
+    } else {
+      return this.fallbackOrderConfirmation;
     }
   }
 }

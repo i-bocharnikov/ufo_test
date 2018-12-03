@@ -392,12 +392,6 @@ export default StyleSheet.create({
     flex: 1
   },
 
-  loyalityIcon: {
-    color: colors.TEXT_INVERT_COLOR,
-    fontSize: 28,
-    marginRight: 12
-  },
-
   loyalityTolltipIcon: {
     color: colors.TEXT_INVERT_COLOR,
     fontSize: 16,
@@ -474,5 +468,20 @@ export default StyleSheet.create({
     borderColor: colors.BORDER_COLOR,
     marginLeft: 10,
     borderRadius: 2
+  },
+
+  loyalityCheckbox: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 22,
+    height: 22,
+    borderWidth: 1,
+    borderColor: colors.TEXT_INVERT_COLOR,
+    marginRight: 12
+  },
+
+  loyalityIcon: {
+    color: colors.TEXT_INVERT_COLOR,
+    fontSize: 16
   }
 });

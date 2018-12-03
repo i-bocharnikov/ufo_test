@@ -36,10 +36,13 @@ export default class BookingStore {
   @observable locationInfoDescription = {};
   @observable carInfoDescription = {};
 
-  @observable voucherCode = '';
   @observable stripeApiKey = null;
   @observable userCreditCards = [];
   @observable currentCreditCardRef = null;
+
+  @observable voucherCode = '';
+  @observable loyaltyProgramInfo = '';
+  @observable useRefferalAmount = false;
 
   /**
     * @description Get lists of all locations and cars
@@ -237,11 +240,15 @@ export default class BookingStore {
     }
 
     this.isLoading = true;
+
     const data = await order.getPaymentOptions(this.selectedLocationRef);
     this.stripeApiKey = data.paymentPublicApi;
+    this.loyaltyProgramInfo = data.loyaltyProgram.message;
+
     this.userCreditCards = data.userCreditCards;
     const defaultCard = _.find(this.userCreditCards, [ 'default', true ]);
     this.currentCreditCardRef = defaultCard ? defaultCard.reference : null;
+
     this.isLoading = false;
 
     return this.userCreditCards.length ? true : false;
@@ -282,31 +289,45 @@ export default class BookingStore {
     */
   @action
   appyVoucherCode = async code => {
-    if (!this.order) {
-      return;
-    }
-
     this.isLoading = true;
-    const timeZone = this.order.schedule.timezone;
-    const startRentalTime = this.convertTimeToUTC(this.startRentalTime, timeZone);
-    const endRentalTime = this.convertTimeToUTC(this.endRentalTime, timeZone);
-
-    const newOrder = await order.getOrder(
-      this.selectedLocationRef,
-      this.selectedCarRef,
-      this.startRentalDate.format(values.DATE_STRING_FORMAT),
-      this.endRentalDate.format(values.DATE_STRING_FORMAT),
-      startRentalTime,
-      endRentalTime,
-      { voucherCode: code }
-    );
+    this.voucherCode = code;
+    const newOrder = await this.getOrderSimulation(false);
 
     if (newOrder) {
       this.order = newOrder;
-      this.voucherCode = code;
+    } else {
+      this.voucherCode = '';
     }
 
     this.isLoading = false;
+  };
+
+  /*
+   * @description Switch referral program status, refresh order object
+  */
+  @action
+  switchReferralUsing = async () => {
+    this.isLoading = true;
+    this.useRefferalAmount = !this.useRefferalAmount;
+    await this.getOrderSimulation();
+    this.isLoading = false;
+  };
+
+  /*
+   * @returns {boolean}
+   * @description Confirm booking with all chosen data
+  */
+  @action
+  confirmBooking = async () => {
+    this.isLoading = true;
+    const payload = {
+      ...this.order,
+      payment: { token: this.currentCreditCardRef }
+    };
+    await order.confirmOrder(payload);
+    this.isLoading = false;
+
+    return false;
   };
 
   /**
@@ -489,27 +510,42 @@ export default class BookingStore {
   };
 
   /**
+    * @param {string} handleRequest
+    * @returns {Object | null}
     * @description Get description how will looking the order
     */
-  getOrderSimulation = async () => {
+  getOrderSimulation = async (handleRequest = true) => {
     if (!this.selectedLocationRef || !this.selectedCarRef) {
-      this.order = null;
-      return;
+
+      if (handleRequest) {
+        this.order = null;
+      }
+
+      return null;
     }
 
     const timeZone = _.find(this.locations, { 'reference': this.selectedLocationRef }).timezone;
     const startRentalTime = this.convertTimeToUTC(this.startRentalTime, timeZone);
     const endRentalTime = this.convertTimeToUTC(this.endRentalTime, timeZone);
 
-    this.order = await order.getOrder(
+    const orderSimulation = await order.getOrder(
       this.selectedLocationRef,
       this.selectedCarRef,
       this.startRentalDate.format(values.DATE_STRING_FORMAT),
       this.endRentalDate.format(values.DATE_STRING_FORMAT),
       startRentalTime,
       endRentalTime,
-      { voucherCode: this.voucherCode }
+      {
+        voucherCode: this.voucherCode,
+        useRefferal: this.useRefferalAmount
+      }
     );
+
+    if (handleRequest) {
+      this.order = orderSimulation;
+    }
+
+    return orderSimulation;
   };
 
   /**
