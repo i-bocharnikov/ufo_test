@@ -117,7 +117,7 @@ class StepPayScreen extends Component {
         action={this.handleToNextStep}
         actionTitle={t('stepPayNextTitle')}
         actionSubTitle={t('stepPayNextSubTitle')}
-        isAvailable={Boolean(bookingStore.currentCreditCardRef)}
+        isAvailable={!!bookingStore.currentCreditCardRef}
         price={bookingStore.orderPrice}
       />
     );

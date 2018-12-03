@@ -236,7 +236,7 @@ export default class BookingStore {
       return false;
     } else if (this.stripeApiKey) {
       // data was already fetched
-      return this.userCreditCards.length ? true : false;
+      return !!this.userCreditCards.length;
     }
 
     this.isLoading = true;
@@ -251,7 +251,7 @@ export default class BookingStore {
 
     this.isLoading = false;
 
-    return this.userCreditCards.length ? true : false;
+    return !!this.userCreditCards.length;
   };
 
   /**
@@ -510,14 +510,14 @@ export default class BookingStore {
   };
 
   /**
-    * @param {string} handleRequest
+    * @param {string} requestHandling
     * @returns {Object | null}
     * @description Get description how will looking the order
     */
-  getOrderSimulation = async (handleRequest = true) => {
+  getOrderSimulation = async (requestHandling = true) => {
     if (!this.selectedLocationRef || !this.selectedCarRef) {
 
-      if (handleRequest) {
+      if (requestHandling) {
         this.order = null;
       }
 
@@ -541,7 +541,7 @@ export default class BookingStore {
       }
     );
 
-    if (handleRequest) {
+    if (requestHandling) {
       this.order = orderSimulation;
     }
 
