@@ -85,7 +85,6 @@ class StepPayScreen extends Component {
           >
             <UFOTextInput
               wrapperStyle={styles.voucherInput}
-              keyboardType="numeric"
               placeholder={t('voucherPlaceholder')}
               defaultValue={bookingStore.voucherCode}
               onChangeText={voucherCodeStr => this.setState({ voucherCodeStr })}
