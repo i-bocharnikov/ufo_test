@@ -287,9 +287,9 @@ class StepPayScreen extends Component {
    * Handle payment and go to next step
   */
   handleToNextStep = async () => {
-    const result = await bookingStore.confirmBooking();
+    await bookingStore.confirmBooking();
 
-    if (result) {
+    if (bookingStore.bookingConfirmation) {
       this.props.navigation.navigate(screenKeys.BookingStepDrive);
     }
   };

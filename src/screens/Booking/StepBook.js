@@ -21,7 +21,7 @@ import { values } from './../../utils/theme';
 class StepBookScreen extends Component {
   constructor() {
     super();
-    this.minPickedDate = moment().add(1, 'day').format(values.DATE_STRING_FORMAT);
+    this.minPickedDate = moment().format(values.DATE_STRING_FORMAT);
     this.state = {
       showDateTooltip: false,
       showModalCalendar: false

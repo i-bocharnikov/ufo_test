@@ -57,6 +57,16 @@ export function getErrorMessage(errorObj) {
   return errorMsg || errorObj.message || i18n.t('error:unknown');
 }
 
+/*
+ * @param {string} token
+ * @description Save auth token to using it in api headers
+*/
+export async function setAuthTokenForApi(token) {
+  if (token) {
+    ufoServerPrivateApi.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  }
+}
+
 /**
   * @param {string} path
   * @returns {boolean} errorHandling

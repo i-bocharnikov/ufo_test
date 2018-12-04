@@ -44,6 +44,8 @@ export default class BookingStore {
   @observable loyaltyProgramInfo = '';
   @observable useRefferalAmount = false;
 
+  @observable bookingConfirmation = null;
+
   /**
     * @description Get lists of all locations and cars
     */
@@ -118,8 +120,12 @@ export default class BookingStore {
     */
   @action
   selectStartDate = async dateMoment => {
-    if (dateMoment.isBefore(TOMORROW)) {
-      this.startRentalDate = TOMORROW;
+    if (this.startRentalDate.diff(dateMoment, 'days') === 0) {
+      return;
+    }
+
+    if (dateMoment.isBefore(TODAY)) {
+      this.startRentalDate = TODAY;
     } else {
       this.startRentalDate = dateMoment;
     }
@@ -139,6 +145,10 @@ export default class BookingStore {
     */
   @action
   selectEndDate = async dateMoment => {
+    if (this.endRentalDate.diff(dateMoment, 'days') === 0) {
+      return;
+    }
+
     if (dateMoment.isBefore(TOMORROW)) {
       this.endRentalDate = TOMORROW;
     } else {
@@ -176,7 +186,17 @@ export default class BookingStore {
     */
   @action
   selectStartTime = async (timeStr, itemIndex) => {
-    this.startRentalTime = timeStr;
+    if (this.startRentalTime === timeStr) {
+      return;
+    }
+
+    const isOneDayRental = this.startRentalDate.diff(this.endRentalDate, 'days') === 0;
+    if (isOneDayRental && itemIndex + 1 >= this.rollPickersTimeItems.length) {
+      // forbid to choose last time-item of day as start
+      this.startRentalTime = this.rollPickersTimeItems[itemIndex - 1].label;
+    } else {
+      this.startRentalTime = timeStr;
+    }
 
     if (this.rollPickerEndSelectedTimeItem <= itemIndex) {
       const nextIndex = this.rollPickersTimeItems.length > itemIndex + 1
@@ -196,7 +216,17 @@ export default class BookingStore {
     */
   @action
   selectEndTime = async (timeStr, itemIndex) => {
-    this.endRentalTime = timeStr;
+    if (this.endRentalTime === timeStr) {
+      return;
+    }
+
+    const isOneDayRental = this.startRentalDate.diff(this.endRentalDate, 'days') === 0;
+    if (isOneDayRental && itemIndex === 0) {
+      // forbid to choose first time-item of day as end
+      this.endRentalTime = this.rollPickersTimeItems[itemIndex + 1].label;
+    } else {
+      this.endRentalTime = timeStr;
+    }
 
     if (this.rollPickerStartSelectedTimeItem >= itemIndex) {
       const prevIndex = itemIndex - 1 >= 0 ? itemIndex - 1 : itemIndex;
@@ -273,7 +303,8 @@ export default class BookingStore {
       expMonth: cardData.expMonth,
       expYear: cardData.expYear,
       last4: cardData.last4,
-      default: !this.currentCreditCardRef
+      default: !this.currentCreditCardRef,
+      token: cardStripeObj.tokenId
     };
 
     if (card.default) {
@@ -320,11 +351,17 @@ export default class BookingStore {
   @action
   confirmBooking = async () => {
     this.isLoading = true;
-    const payload = {
-      ...this.order,
-      payment: { token: this.currentCreditCardRef }
-    };
-    await order.confirmOrder(payload);
+    const payment = {};
+    const currentCreditCard = _.find(this.userCreditCards, [ 'reference', this.currentCreditCardRef ]);
+
+    if (currentCreditCard.token) {
+      payment.token = currentCreditCard.token;
+    } else {
+      payment.creditCardReference = this.currentCreditCardRef;
+    }
+
+    const payload = { ...this.order, payment };
+    this.bookingConfirmation = await order.confirmOrder(payload);
     this.isLoading = false;
 
     return false;

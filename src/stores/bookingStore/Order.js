@@ -74,7 +74,6 @@ export default class Order {
   */
   static async confirmOrder(payload) {
     const response = await postToApi('/reserve/bookings', payload, true);
-    console.log('CONFIRM BOOKING', response);
 
     if (response.isSuccess) {
       return response.data;
