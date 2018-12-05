@@ -29,7 +29,9 @@ class StepBookScreen extends Component {
   }
 
   async componentDidMount() {
-    await bookingStore.getInitialData();
+    if (!bookingStore.locations.length || !bookingStore.cars.length) {
+      await bookingStore.getInitialData();
+    }
   }
 
   render() {

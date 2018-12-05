@@ -16,41 +16,83 @@ const MAX_RENTAL_DATE = moment().add(MAX_RENTAL_PERIOD, 'month').startOf('day');
 
 export default class BookingStore {
 
-  @observable isLoading = false;
+  @observable isLoading = this._defaultStore.isLoading;
 
   /* step book */
-  @observable order = null;
-  @observable locations = [];
-  @observable cars = [];
-  @observable selectedLocationRef = null;
-  @observable selectedCarRef = null;
-  @observable carCalendar = null;
+  @observable order = this._defaultStore.order;
+  @observable locations = this._defaultStore.locations;
+  @observable cars = this._defaultStore.cars;
+  @observable selectedLocationRef = this._defaultStore.selectedLocationRef;
+  @observable selectedCarRef = this._defaultStore.selectedCarRef;
+  @observable carCalendar = this._defaultStore.carCalendar;
 
-  @observable startRentalDate = TOMORROW;
-  @observable endRentalDate = TOMORROW;
-  @observable startRentalTime = moment(TOMORROW).add(8, 'h').format(values.TIME_STRING_FORMAT);
-  @observable endRentalTime = moment(TOMORROW).add(20, 'h').format(values.TIME_STRING_FORMAT);
+  @observable startRentalDate = this._defaultStore.startRentalDate;
+  @observable endRentalDate = this._defaultStore.endRentalDate;
+  @observable startRentalTime = this._defaultStore.startRentalTime;
+  @observable endRentalTime = this._defaultStore.endRentalTime;
 
-  @observable locationInfoRef = null;
-  @observable carInfoRef = null;
-  @observable locationInfoDescription = {};
-  @observable carInfoDescription = {};
+  @observable locationInfoRef = this._defaultStore.locationInfoRef;
+  @observable carInfoRef = this._defaultStore.carInfoRef;
+  @observable locationInfoDescription = this._defaultStore.locationInfoDescription;
+  @observable carInfoDescription = this._defaultStore.carInfoDescription;
 
-  @observable stripeApiKey = null;
-  @observable userCreditCards = [];
-  @observable currentCreditCardRef = null;
+  /* step pay & confirm */
+  @observable stripeApiKey = this._defaultStore.stripeApiKey;
+  @observable userCreditCards = this._defaultStore.userCreditCards;
+  @observable currentCreditCardRef = this._defaultStore.currentCreditCardRef;
 
-  @observable voucherCode = '';
-  @observable loyaltyProgramInfo = '';
-  @observable useRefferalAmount = false;
+  @observable voucherCode = this._defaultStore.voucherCode;
+  @observable loyaltyProgramInfo = this._defaultStore.loyaltyProgramInfo;
+  @observable useRefferalAmount = this._defaultStore.useRefferalAmount;
 
-  @observable bookingConfirmation = null;
+  @observable bookingConfirmation = this._defaultStore.bookingConfirmation;
+
+  /**
+    * @description Default data for store
+    */
+  get _defaultStore() {
+    return {
+      isLoading: false,
+      order: null,
+      locations: [],
+      cars: [],
+      selectedLocationRef: null,
+      selectedCarRef: null,
+      carCalendar: null,
+      startRentalDate: TOMORROW,
+      endRentalDate: TOMORROW,
+      startRentalTime: moment(TOMORROW).add(8, 'h').format(values.TIME_STRING_FORMAT),
+      endRentalTime: moment(TOMORROW).add(20, 'h').format(values.TIME_STRING_FORMAT),
+      locationInfoRef: null,
+      carInfoRef: null,
+      locationInfoDescription: {},
+      carInfoDescription: {},
+      stripeApiKey: null,
+      userCreditCards: [],
+      currentCreditCardRef: null,
+      voucherCode: '',
+      loyaltyProgramInfo: '',
+      useRefferalAmount: false,
+      bookingConfirmation: null
+    };
+  };
+
+  /*
+   * @description Reset store to default values
+  */
+  @action
+  resetStore = () => {
+    for (const key in this._defaultStore) {
+      this[key] = this._defaultStore[key];
+    }
+  };
 
   /**
     * @description Get lists of all locations and cars
     */
   @action
   getInitialData = async () => {
+    this.resetStore();
     this.isLoading = true;
 
     const [ receivedLocations, receivedCars ] = await Promise.all([
@@ -552,7 +594,9 @@ export default class BookingStore {
     * @description Get description how will looking the order
     */
   getOrderSimulation = async (requestHandling = true) => {
-    if (!this.selectedLocationRef || !this.selectedCarRef) {
+    const location = _.find(this.locations, { 'reference': this.selectedLocationRef });
+
+    if (!this.selectedLocationRef || !this.selectedCarRef || !location) {
 
       if (requestHandling) {
         this.order = null;
@@ -561,17 +605,22 @@ export default class BookingStore {
       return null;
     }
 
-    const timeZone = _.find(this.locations, { 'reference': this.selectedLocationRef }).timezone;
-    const startRentalTime = this.convertTimeToUTC(this.startRentalTime, timeZone);
-    const endRentalTime = this.convertTimeToUTC(this.endRentalTime, timeZone);
+    /* prepare order times to utc format */
+    const momentFormat = `${values.DATE_STRING_FORMAT}T${values.TIME_STRING_FORMAT}`;
+    const startRentalStr = `${this.startRentalDate.format(values.DATE_STRING_FORMAT)}T${this.startRentalTime}`;
+    const endRentalStr = `${this.endRentalDate.format(values.DATE_STRING_FORMAT)}T${this.endRentalTime}`;
 
+    const startRental = moment.tz(startRentalStr, momentFormat, location.timezone);
+    const endRental = moment.tz(endRentalStr, momentFormat, location.timezone);
+
+    /* get order object */
     const orderSimulation = await order.getOrder(
       this.selectedLocationRef,
       this.selectedCarRef,
-      this.startRentalDate.format(values.DATE_STRING_FORMAT),
-      this.endRentalDate.format(values.DATE_STRING_FORMAT),
-      startRentalTime,
-      endRentalTime,
+      startRental.utc().format(values.DATE_STRING_FORMAT),
+      endRental.utc().format(values.DATE_STRING_FORMAT),
+      startRental.utc().format(values.TIME_STRING_FORMAT),
+      endRental.utc().format(values.TIME_STRING_FORMAT),
       {
         voucherCode: this.voucherCode,
         useRefferal: this.useRefferalAmount
@@ -583,27 +632,5 @@ export default class BookingStore {
     }
 
     return orderSimulation;
-  };
-
-  /**
-    * @param {string} timeStr
-    * @param {string} timeZoneStr
-    * @returns {string}
-    * @description Convert time from specified timeZome to UTC
-    */
-  convertTimeToUTC = (timeStr, timeZoneStr) => {
-    const m = moment.tz(timeStr, values.TIME_STRING_FORMAT, timeZoneStr);
-    return m.utc().format(values.TIME_STRING_FORMAT);
-  };
-
-  /**
-    * @param {string} timeStr
-    * @param {string} timeZoneStr
-    * @returns {string}
-    * @description Convert time from UTC to specified timeZome
-    */
-  convertTimeFromUTC = (timeStr, timeZoneStr) => {
-    const m = moment.utc(timeStr, values.TIME_STRING_FORMAT);
-    return m.tz(timeZoneStr).format(values.TIME_STRING_FORMAT);
   };
 }
