@@ -75,7 +75,7 @@ export default class BookingStore {
       useRefferalAmount: false,
       bookingConfirmation: null
     };
-  };
+  }
 
   /*
    * @description Reset store to default values
