@@ -5,6 +5,7 @@ import UFOIcon_next from './UFOIcon_next';
 import UFOImage from './UFOImage';
 import UFOVideo from './UFOVideo';
 import UFOModalLoader from './UFOModalLoader';
+import UFOGradientView from './UFOGradientView';
 
 import UFOText from './UFOText_old';
 import UFOTextInput_old from './UFOTextInput_old';
@@ -18,6 +19,7 @@ export {
     UFOImage,
     UFOVideo,
     UFOModalLoader,
+    UFOGradientView,
     // deprecated components, will be replaced with redesigning
     UFOText,
     UFOTextInput_old

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { FlatList, Text, View, Animated, ViewPropTypes } from 'react-native';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 
 import styles, {
   ITEM_HEIGHT,
@@ -30,8 +31,18 @@ export default class UFORollPicker extends Component {
     }
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextProps.selectTo !== this.lastSelectedIndex
+      || nextProps.data !== this.props.data
+      || nextState.page !== this.state.page) {
+      return true;
+    }
+
+    return false;
+  }
+
   componentDidUpdate() {
-    if (this.props.selectTo && this.props.selectTo !== this.lastSelectedIndex) {
+    if (_.isFinite(this.props.selectTo) && this.props.selectTo !== this.lastSelectedIndex) {
       this.selectToItem(this.props.selectTo);
     }
   }
@@ -179,6 +190,7 @@ export default class UFORollPicker extends Component {
       this.listView._component.scrollToIndex({ index: index });
     }
 
+    this.lastSelectedIndex = index;
     this.handleRowChange(index);
   };
 

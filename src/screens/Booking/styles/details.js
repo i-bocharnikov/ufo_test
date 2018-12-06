@@ -12,7 +12,7 @@ export default StyleSheet.create({
 
   slideWrapper: {
     flex: 1,
-    height: 175,
+    height: 170,
     paddingHorizontal: SCREEN_HORIZONTAL_INDENTS,
     alignItems: 'center',
     justifyContent: 'center'
@@ -101,24 +101,7 @@ export default StyleSheet.create({
     marginHorizontal: SCREEN_HORIZONTAL_INDENTS
   },
 
-  selectBtn: {
-    flex: 1,
-    flexDirection: 'row',
-    height: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginHorizontal: SCREEN_HORIZONTAL_INDENTS,
-    marginTop: 28,
-    borderWidth: 1,
-    borderColor: colors.MAIN_COLOR
-  },
-
-  selectBtnLabel: {
-    ...textThemes.SP_REGULAR,
-    fontSize: 15,
-    letterSpacing: 1.25,
-    color: colors.MAIN_COLOR
-  },
+  selectBtn: { marginTop: 28 },
 
   selectbtnIcon: {
     fontSize: 32,

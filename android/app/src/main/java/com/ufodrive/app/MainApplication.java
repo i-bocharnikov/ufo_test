@@ -1,8 +1,5 @@
 package com.ufodrive.app;
 
-
-
-
 import com.facebook.react.ReactApplication;
 import im.shimo.react.prompt.RNPromptPackage;
 import io.codebakery.imagerotate.ImageRotatePackage;
@@ -19,12 +16,14 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.otakeys.sdk.OtaKeysApplication;
+import com.cardio.RNCardIOPackage;
+import com.BV.LinearGradient.LinearGradientPackage;
+import com.gettipsi.stripe.StripeReactPackage;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class MainApplication extends OtaKeysApplication implements ReactApplication {
-
 
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
     @Override
@@ -46,7 +45,10 @@ public class MainApplication extends OtaKeysApplication implements ReactApplicat
             new ReactVideoPackage(),
             new OTAKeyPackage(),
             new ReactNativeI18n(),
-            new RNDeviceInfo()
+            new RNDeviceInfo(),
+            new RNCardIOPackage(),
+            new LinearGradientPackage(),
+            new StripeReactPackage()
       );
     }
 
@@ -66,6 +68,4 @@ public class MainApplication extends OtaKeysApplication implements ReactApplicat
     super.onCreate();
      SoLoader.init(this, /* native exopackage */ false);
   }
-
-
 }

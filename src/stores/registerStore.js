@@ -7,13 +7,16 @@ import uuid from "uuid";
 import configurations from "../utils/configurations";
 import { clearAuthenticationsFromStore, getAuthenticationUUIDFromStore, setAuthenticationUUIDInStore, setAuthenticationPasswordInStore, getAuthenticationPasswordFromStore, setAuthenticationTokenInStore } from "../utils/authentications"
 import {
-    useTokenInApi,
+    useTokenInApi as useTokenInApi_deprecated,
     postToApi,
     putToApi,
     downloadFromApi,
     uploadToApi,
     getFromApi
 } from './../utils/api_deprecated';
+import {
+    setAuthTokenForApi
+} from './../utils/api';
 
 const DEBUG = false
 
@@ -132,7 +135,8 @@ class registerStore {
             await setAuthenticationUUIDInStore(device_uuid);
             await setAuthenticationPasswordInStore(device_pwd);
             await setAuthenticationTokenInStore(response.data.token);
-            await useTokenInApi(response.data.token);
+            await useTokenInApi_deprecated(response.data.token);
+            await setAuthTokenForApi(response.data.token);
             this.user = response.data.user
             return response.data.key_access_device_token
         }

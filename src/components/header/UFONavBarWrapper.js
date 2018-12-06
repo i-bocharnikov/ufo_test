@@ -75,6 +75,7 @@ export default class UFONavBarWrapper extends Component {
           showsVerticalScrollIndicator={false}
           bounces={false}
           overScrollMode="never"
+          keyboardShouldPersistTaps="handled"
         >
           {children}
         </ScrollView>

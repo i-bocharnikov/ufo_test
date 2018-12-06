@@ -21,7 +21,7 @@ import { values } from './../../utils/theme';
 class StepBookScreen extends Component {
   constructor() {
     super();
-    this.minPickedDate = moment().add(1, 'day').format(values.DATE_STRING_FORMAT);
+    this.minPickedDate = moment().format(values.DATE_STRING_FORMAT);
     this.state = {
       showDateTooltip: false,
       showModalCalendar: false
@@ -29,7 +29,9 @@ class StepBookScreen extends Component {
   }
 
   async componentDidMount() {
-    await bookingStore.getInitialData();
+    if (!bookingStore.locations.length || !bookingStore.cars.length) {
+      await bookingStore.getInitialData();
+    }
   }
 
   render() {
@@ -206,7 +208,7 @@ class StepBookScreen extends Component {
 
     return (
       <BottomActionPanel
-        t={this.props.t}
+        t={t}
         action={this.navToNextStep}
         actionTitle={t('booking:stepBookNextTitle')}
         actionSubTitle={t('booking:stepBookNextSubTitle')}
@@ -230,12 +232,12 @@ class StepBookScreen extends Component {
 
   openCarInfo = ref => {
     bookingStore.carInfoRef = ref;
-    this.props.navigation.navigate({ routeName: screenKeys.BookingDetails });
+    this.props.navigation.navigate(screenKeys.BookingDetails);
   };
 
   openLocationInfo = ref => {
     bookingStore.locationInfoRef = ref;
-    this.props.navigation.navigate({ routeName: screenKeys.BookingDetails });
+    this.props.navigation.navigate(screenKeys.BookingDetails);
   };
 
   navBack = () => {
@@ -281,7 +283,7 @@ class StepBookScreen extends Component {
   };
 
   navToNextStep = () => {
-    this.props.navigation.push(screenKeys.BookingStepPay);
+    this.props.navigation.navigate(screenKeys.BookingStepPay);
   };
 }
 

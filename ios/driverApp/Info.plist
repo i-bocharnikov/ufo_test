@@ -64,6 +64,7 @@
 		<string>SofiaProRegular.ttf</string>
 		<string>SofiaProLight.ttf</string>
 		<string>SofiaProBold.ttf</string>
+		<string>SofiaProSemiBold.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>

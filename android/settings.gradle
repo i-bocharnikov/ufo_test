@@ -1,24 +1,45 @@
 rootProject.name = 'driverApp'
+
+include ':app'
+
 include ':react-native-prompt-android'
 project(':react-native-prompt-android').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-prompt-android/android')
+
 include ':react-native-image-rotate'
 project(':react-native-image-rotate').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-image-rotate/android')
+
 include ':react-native-exception-handler'
 project(':react-native-exception-handler').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-exception-handler/android')
+
 include ':react-native-sensitive-info'
 project(':react-native-sensitive-info').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-sensitive-info/android')
+
 include ':react-native-fast-image'
 project(':react-native-fast-image').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-fast-image/android')
+
 include ':react-native-camera'
 project(':react-native-camera').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-camera/android')
+
 include ':rn-fetch-blob'
 project(':rn-fetch-blob').projectDir = new File(rootProject.projectDir, '../node_modules/rn-fetch-blob/android')
+
 include ':react-native-camera'
 project(':react-native-camera').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-camera/android')
+
 include ':react-native-video'
 project(':react-native-video').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-video/android-exoplayer')
+
 include ':react-native-locale-detector'
 project(':react-native-locale-detector').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-locale-detector/android')
+
 include ':react-native-device-info'
 project(':react-native-device-info').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-device-info/android')
-include ':app'
+
+include ':react-native-awesome-card-io'
+project(':react-native-awesome-card-io').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-awesome-card-io/android')
+
+include ':react-native-linear-gradient'
+project(':react-native-linear-gradient').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-linear-gradient/android')
+
+include ':tipsi-stripe'
+project(':tipsi-stripe').projectDir = new File(rootProject.projectDir, '../node_modules/tipsi-stripe/android')

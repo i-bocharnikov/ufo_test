@@ -1,15 +1,17 @@
 import axios from 'axios';
-import i18n from 'i18next';
 
+import i18n from './i18n';
 import configs from './../utils/configurations';
 import { showToastError } from './interaction';
 
 const ufoServerPrivateApi = axios.create({
+  headers: { 'Accept-Language': i18n.language },
   baseURL: `${configs.UFO_SERVER_PRIVATE_API_URL}${configs.UFO_SERVER_API_VERSION}/`,
   timeout: 30000
 });
 
 const ufoServerPublicApi = axios.create({
+  headers: { 'Accept-Language': i18n.language },
   baseURL: `${configs.UFO_SERVER_PUBLIC_API_URL}${configs.UFO_SERVER_API_VERSION}/`,
   timeout: 30000
 });
@@ -21,7 +23,11 @@ const ufoServerPublicApi = axios.create({
 function defaultErrorHandler(error) {
   __DEV__ && console.info(error);
   const message = getErrorMessage(error);
-  showToastError(message);
+  /*
+   * use small timeout to avoid this bug https://github.com/facebook/react-native/issues/10471
+   * because almost all requests are handling with ModalLoader indicator
+  */
+  setTimeout(() => showToastError(message), 300);
 }
 
 function formatResponse(axiosRes, isSuccess = true) {
@@ -49,6 +55,16 @@ export function getErrorMessage(errorObj) {
   }
 
   return errorMsg || errorObj.message || i18n.t('error:unknown');
+}
+
+/*
+ * @param {string} token
+ * @description Save auth token to using it in api headers
+*/
+export async function setAuthTokenForApi(token) {
+  if (token) {
+    ufoServerPrivateApi.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  }
 }
 
 /**

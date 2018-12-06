@@ -16,5 +16,10 @@ export default {
     fontFamily: 'SofiaProBold',
     fontSize: sizes.DEFAULT_FONT_SIZE,
     color: colors.TEXT_DEFAULT_COLOR
+  },
+  SP_SEMIBOLD: {
+    fontFamily: 'SofiaProSemiBold',
+    fontSize: sizes.DEFAULT_FONT_SIZE,
+    color: colors.TEXT_DEFAULT_COLOR
   }
 };
