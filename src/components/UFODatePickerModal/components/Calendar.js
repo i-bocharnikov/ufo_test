@@ -90,7 +90,7 @@ export default class Calendar extends PureComponent {
     let mountedCallback;
     if (isMounting && selectedDateRange) {
       const diff = moment(selectedDateRange[0]).diff(firstRenderDate, 'month');
-      mountedCallback = () => setTimeout(() => this.listComponent.scrollToIndex({index: diff}), 10);
+      mountedCallback = () => setTimeout(() => this.listComponent.scrollToIndex({ index: diff }), 10);
     }
 
     this.setState({ monthsData }, mountedCallback);
