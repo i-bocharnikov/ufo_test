@@ -1,30 +1,7 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { colors, textThemes } from './../../../utils/theme';
 
 const HORIZONTAL_INDENTS = 25;
-const { width: SCREEN_WIDTH } = Dimensions.get('screen');
-export const CALENDAR_WIDTH = SCREEN_WIDTH - HORIZONTAL_INDENTS * 2;
-export const MONTH_HEIGHT = 340;
-
-export const calendarTheme = {
-  textDayFontFamily: textThemes.SP_LIGHT.fontFamily,
-  textDayFontSize: 15,
-  dayTextColor: colors.MAIN_COLOR,
-  todayTextColor: colors.MAIN_COLOR,
-  textDisabledColor: colors.TEXT_LIGHT_COLOR,
-  monthTextColor: colors.TEXT_DEFAULT_COLOR,
-  textMonthFontFamily: textThemes.SP_REGULAR.fontFamily,
-  textMonthFontWeight: '400',
-  textMonthFontSize: 17,
-  textDayHeaderFontSize: 14,
-  textSectionTitleColor: colors.MAIN_LIGHT_COLOR,
-  backgroundColor: 'transparent',
-  calendarBackground: 'transparent',
-  selectedDayTextColor: colors.BG_INVERT
-};
-
-export const markedDaysTheme = { color: colors.MAIN_COLOR };
-export const forbiddenDaysTheme = { textColor: colors.ATTENTION_COLOR };
 
 export default StyleSheet.create({
   wrapper: {
@@ -44,6 +21,7 @@ export default StyleSheet.create({
     shadowOpacity: 0.4,
     elevation: 4
   },
+
   header: {
     flexDirection: 'row',
     height: 60,
@@ -53,12 +31,14 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 22
   },
+
   headerLabel: {
     ...textThemes.SP_BOLD,
     fontSize: 13,
     color: colors.MAIN_COLOR,
     letterSpacing: 4
   },
+
   closeBtn: {
     ...textThemes.SP_BOLD,
     fontSize: 13,
@@ -66,11 +46,92 @@ export default StyleSheet.create({
     textDecorationLine: 'underline',
     letterSpacing: 1.1
   },
+
   saveBtn: {
     ...textThemes.SP_BOLD,
     fontSize: 13,
     color: colors.MAIN_LIGHT_COLOR,
     textDecorationLine: 'underline',
     letterSpacing: 1.1
+  },
+
+  calendarList: {
+    paddingHorizontal: 26,
+    paddingTop: 8,
+    paddingBottom: 16
+  },
+
+  monthTitle: {
+    ...textThemes.SP_SEMIBOLD,
+    fontSize: 17,
+    alignSelf: 'center',
+    marginBottom: 24,
+    marginTop: 20
+  },
+
+  monthContainer: {
+    flexWrap: 'wrap',
+    flexDirection: 'row'
+  },
+
+  dayGap: { width: `${100 / 7}%` },
+
+  dayContainer: {
+    height: 48,
+    width: `${100 / 7}%`,
+    alignItems: 'center',
+    paddingTop: 6
+  },
+
+  dayLabel: {
+    ...textThemes.SP_LIGHT,
+    fontSize: 15,
+    color: colors.MAIN_COLOR
+  },
+
+  dayDisabledText: { color: colors.TEXT_LIGHT_COLOR },
+
+  dayforbiddenText: { color: colors.ATTENTION_COLOR },
+
+  dayPrice: {
+    ...textThemes.SP_LIGHT,
+    fontSize: 11,
+    color: colors.MAIN_COLOR,
+    marginTop: 6
+  },
+
+  weekLabelsContainer: { flexDirection: 'row' },
+
+  weekLabel: {
+    ...textThemes.SP_LIGHT,
+    fontSize: 14,
+    color: colors.MAIN_LIGHT_COLOR,
+    height: 32,
+    width: `${100 / 7}%`,
+    alignItems: 'center'
+  },
+
+  selectedDay: { backgroundColor: colors.MAIN_LIGHT_COLOR },
+
+  selectedFirstDay: {
+    backgroundColor: colors.MAIN_COLOR,
+    borderTopLeftRadius: 4,
+    borderBottomLeftRadius: 4
+  },
+
+  selectedLastDay: {
+    backgroundColor: colors.MAIN_COLOR,
+    borderTopRightRadius: 4,
+    borderBottomRightRadius: 4
+  },
+
+  selectedDayText: { color: colors.TEXT_INVERT_COLOR },
+
+  emptyCalendarLabel: {
+    ...textThemes.SP_SEMIBOLD,
+    fontSize: 18,
+    color: colors.BORDER_COLOR,
+    alignSelf: 'center',
+    marginTop: '50%'
   }
 });

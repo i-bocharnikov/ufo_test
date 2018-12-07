@@ -1,8 +1,9 @@
 import React, { PureComponent } from 'react';
-import { FlatList } from 'react-native';
+import { FlatList, Text } from 'react-native';
 import _ from 'lodash';
 import Moment from 'moment';
 import { extendMoment } from 'moment-range';
+import i18n from 'i18next';
 import PropTypes from 'prop-types';
 
 import Month from './Month';
@@ -18,7 +19,7 @@ export default class Calendar extends PureComponent {
   }
 
   componentDidMount() {
-    this.generateListData();
+    this.generateListData(true);
   }
 
   componentDidUpdate(prevProps) {
@@ -34,20 +35,43 @@ export default class Calendar extends PureComponent {
   render() {
     return (
       <FlatList
+        ref={ref =>(this.listComponent = ref)}
         contentContainerStyle={styles.calendarList}
         keyExtractor={this.keyExtractor}
         renderItem={this.renderMonth}
         data={this.state.monthsData}
+        showsVerticalScrollIndicator={false}
+        bounces={false}
+        ListEmptyComponent={this.renderEmptyCalendar}
+        onEndReached={this.props.onNextPage}
+        getItemLayout={this.getItemLayout}
       />
     );
   }
 
   keyExtractor = item => item.title;
 
+  getItemLayout = (data, index) => {
+    return {
+      /* approximate height of monthly item to have possibility showing initial selected date */
+      length: 340,
+      offset: 340 * index,
+      index
+    };
+  };
+
   renderMonth = ({ item }) => <Month monthData={item} onDayPress={this.props.onDayPress} />;
 
-  generateListData = () => {
-    const { showDateRange } = this.props;
+  renderEmptyCalendar = () => {
+    return (
+      <Text style={styles.emptyCalendarLabel}>
+        {i18n.t('booking:notFoundData')}
+      </Text>
+    );
+  };
+
+  generateListData = isMounting => {
+    const { showDateRange, selectedDateRange } = this.props;
 
     if (!Array.isArray(showDateRange)) {
       return;
@@ -63,7 +87,13 @@ export default class Calendar extends PureComponent {
       monthsData.push(monthData);
     }
 
-    this.setState({ monthsData });
+    let mountedCallback;
+    if (isMounting && selectedDateRange) {
+      const diff = moment(selectedDateRange[0]).diff(firstRenderDate, 'month');
+      mountedCallback = () => setTimeout(() => this.listComponent.scrollToIndex({index: diff}), 10);
+    }
+
+    this.setState({ monthsData }, mountedCallback);
   };
 
   generateMonthData = monthMoment => {
@@ -133,5 +163,6 @@ Calendar.propTypes = {
   showDateRange: PropTypes.array.isRequired,
   selectedDateRange: PropTypes.array,
   datesInfo: PropTypes.array,
-  onDayPress: PropTypes.func
+  onDayPress: PropTypes.func,
+  onNextPage: PropTypes.func
 };

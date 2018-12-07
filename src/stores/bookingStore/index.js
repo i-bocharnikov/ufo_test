@@ -547,7 +547,7 @@ export default class BookingStore {
   @computed
   get maxCarCalendarDate() {
     if (!this.carCalendar || !this.carCalendar.length) {
-      return null;
+      return MAX_RENTAL_DATE.format(values.DATE_STRING_FORMAT);
     }
 
     return this.carCalendar[this.carCalendar.length - 1].calendarDay;
@@ -563,7 +563,7 @@ export default class BookingStore {
     }
 
     const minDate = moment().format(values.DATE_STRING_FORMAT);
-    const maxDate = moment(MAX_RENTAL_DATE).format(values.DATE_STRING_FORMAT);
+    const maxDate = MAX_RENTAL_DATE.format(values.DATE_STRING_FORMAT);
 
     this.carCalendar = await cars.getCarsCalendar(
       this.selectedLocationRef,

@@ -1,11 +1,10 @@
 import i18n from 'i18next';
 import LanguageDetector from 'i18next-react-native-language-detector';
-import { LocaleConfig } from 'react-native-calendars';
+import moment from 'moment';
+import 'moment/locale/fr';
 
 import en from './en';
 import fr from './fr';
-import './en_calendar';
-import './fr_calendar';
 
 i18n.use(LanguageDetector).init({
   resources: { en, fr },
@@ -18,6 +17,7 @@ i18n.use(LanguageDetector).init({
   react: { wait: true }
 });
 
-LocaleConfig.defaultLocale = 'en';
+moment.locale(i18n.language);
+
 
 export default i18n;
