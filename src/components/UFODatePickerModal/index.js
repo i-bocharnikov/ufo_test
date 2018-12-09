@@ -1,38 +1,40 @@
 import React, { PureComponent } from 'react';
 import { Modal, View, TouchableOpacity, Text } from 'react-native';
-import { CalendarList } from 'react-native-calendars';
 import PropTypes from 'prop-types';
 import i18n from 'i18next';
 import moment from 'moment';
+import Calendar from './components/Calendar';
 
-import styles, {
-  calendarTheme,
-  CALENDAR_WIDTH,
-  MONTH_HEIGHT,
-  markedDaysTheme,
-  forbiddenDaysTheme
-} from './styles';
+import styles from './styles';
 import { values } from './../../utils/theme';
 
 export default class UFODatePickerModal extends PureComponent {
   constructor(props) {
     super(props);
+    this.perPage = 3;
     this.state = {
       startPickedDate: null,
-      endPickedDate: null
+      endPickedDate: null,
+      maxRangeDate: moment(props.minPickedDate)
+        .add(this.perPage, 'month')
+        .format(values.DATE_STRING_FORMAT)
     };
   }
 
-  render() {
-    const {
-      isVisible,
-      ...calendarProps
-    } = this.props;
+  componentDidUpdate(prevProps) {
+    if (
+      this.props.startRental !== prevProps.startRental
+      && moment(this.state.maxRangeDate).isBefore(this.props.startRental)
+    ) {
+      this.handleNextPage();
+    }
+  }
 
-    return (
+  render() {
+    return !this.props.isVisible ? null : (
       <Modal
         transparent={true}
-        visible={isVisible}
+        visible={true}
         onRequestClose={() => false}
       >
         <View style={styles.wrapper}>
@@ -58,14 +60,13 @@ export default class UFODatePickerModal extends PureComponent {
                 </Text>
               </TouchableOpacity>
             </View>
-            <CalendarList
-              calendarWidth={CALENDAR_WIDTH}
-              calendarHeight={MONTH_HEIGHT}
-              theme={calendarTheme}
+            <Calendar
+              showDateRange={this.getShowDateRange()}
+              selectedDateRange={this.getSelectedDateRange()}
               onDayPress={this.handleDayPress}
-              markingType="period"
-              markedDates={this.getMarkedDates()}
-              {...calendarProps}
+              datesInfo={this.props.calendarData}
+              onNextPage={this.handleNextPage}
+              onEndReachedThreshold={0.3}
             />
           </View>
         </View>
@@ -74,57 +75,39 @@ export default class UFODatePickerModal extends PureComponent {
   }
 
   /**
-    * @returns {Object}
-    * @description Get dates with customizing styles
+    * @returns {Array}
+    * @description Get array with dates range for rendering
     */
-  getMarkedDates = () => {
+  getShowDateRange = () => {
+    const minDate = this.props.minPickedDate || moment().format(values.DATE_STRING_FORMAT);
+    return [ minDate, this.state.maxRangeDate ];
+  };
+
+  /**
+    * @returns {Array}
+    * @description Get array with selected dates [start, end]
+    */
+  getSelectedDateRange = () => {
     const { startPickedDate, endPickedDate } = this.state;
-    const dates = {};
+    const { startRental, endRental } = this.props;
+    const range = [];
 
-    this.props.forbiddenDays.forEach(day => {
-      dates[day] = { ...forbiddenDaysTheme };
-    });
-
-    if (!startPickedDate) {
-      return dates;
+    if (startPickedDate) {
+      range.push(startPickedDate);
+      endPickedDate && range.push(endPickedDate);
+    } else if (startRental) {
+      range.push(startRental);
+      endRental && range.push(endRental);
     }
 
-    if (!endPickedDate) {
-      dates[startPickedDate] = {
-        startingDay: true,
-        endingDay: true,
-        selected: true,
-        ...markedDaysTheme
-      };
-
-      return dates;
-    }
-
-    const interimDate = moment(startPickedDate);
-
-    while (!interimDate.isAfter(endPickedDate)) {
-      const dateString = interimDate.format(values.DATE_STRING_FORMAT);
-      dates[dateString] = {
-        startingDay: dateString === startPickedDate,
-        endingDay: dateString === endPickedDate,
-        selected: true,
-        ...markedDaysTheme
-      };
-      interimDate.add(1, 'days');
-    }
-
-    return dates;
+    return range;
   };
 
   /**
     * @param {string} dateString
     * @description Handling datepicker event
     */
-  handleDayPress = ({ dateString }) => {
-    if (this.props.forbiddenDays.includes(dateString)) {
-      return;
-    }
-
+  handleDayPress = dateString => {
     const { startPickedDate } = this.state;
 
     if (startPickedDate && dateString === startPickedDate) {
@@ -169,18 +152,45 @@ export default class UFODatePickerModal extends PureComponent {
   handleClose = () => {
     this.setState({
       startPickedDate: null,
-      endPickedDate: null
+      endPickedDate: null,
+      maxRangeDate: moment(this.props.minPickedDate)
+        .add(this.perPage, 'month')
+        .format(values.DATE_STRING_FORMAT)
     });
     this.props.onClose();
   };
-}
 
-UFODatePickerModal.defaultProps = { forbiddenDays: [] };
+  /*
+   * @description Pagination handling
+  */
+  handleNextPage = () => {
+    let maxRangeMoment = moment(this.state.maxRangeDate).add(this.perPage, 'month');
+
+    if (maxRangeMoment.isAfter(this.props.maxPickedDate)) {
+      maxRangeMoment = moment(this.props.maxPickedDate);
+    }
+
+    const maxRangeDate = maxRangeMoment.format(values.DATE_STRING_FORMAT);
+
+    if (maxRangeDate !== this.state.maxRangeDate) {
+      this.setState({ maxRangeDate });
+    }
+  };
+}
 
 UFODatePickerModal.propTypes = {
   isVisible: PropTypes.bool,
   onClose: PropTypes.func.isRequired,
   onSubmit: PropTypes.func,
-  forbiddenDays: PropTypes.array,
-  calendarProps: PropTypes.shape({ ...CalendarList.PropTypes })
+  calendarData: PropTypes.array,
+  minPickedDate: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.object
+  ]),
+  maxPickedDate: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.object
+  ]),
+  startRental: PropTypes.string,
+  endRental: PropTypes.string
 };

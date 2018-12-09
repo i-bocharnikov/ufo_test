@@ -454,26 +454,6 @@ export default class BookingStore {
   }
 
   /**
-    * @description Get array with unavailable dates
-    */
-  @computed
-  get calendarPickerUnavailableMap() {
-    const map = [];
-
-    if (!Array.isArray(this.carCalendar)) {
-      return map;
-    }
-
-    this.carCalendar.forEach(item => {
-      if (!item.available) {
-        map.push(item.calendarDay);
-      }
-    });
-
-    return map;
-  }
-
-  /**
     * @description Get array with times for choosing
     */
   @computed
@@ -562,10 +542,15 @@ export default class BookingStore {
   }
 
   /**
-    * @description Get max period for calender view settings
+    * @description Get max date from carCalendar list
     */
-  get maxRentalPeriodInMonths() {
-    return MAX_RENTAL_PERIOD;
+  @computed
+  get maxCarCalendarDate() {
+    if (!this.carCalendar || !this.carCalendar.length) {
+      return MAX_RENTAL_DATE.format(values.DATE_STRING_FORMAT);
+    }
+
+    return this.carCalendar[this.carCalendar.length - 1].calendarDay;
   }
 
   /**
@@ -578,7 +563,7 @@ export default class BookingStore {
     }
 
     const minDate = moment().format(values.DATE_STRING_FORMAT);
-    const maxDate = moment(MAX_RENTAL_DATE).format(values.DATE_STRING_FORMAT);
+    const maxDate = MAX_RENTAL_DATE.format(values.DATE_STRING_FORMAT);
 
     this.carCalendar = await cars.getCarsCalendar(
       this.selectedLocationRef,

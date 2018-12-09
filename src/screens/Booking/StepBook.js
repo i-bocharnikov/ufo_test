@@ -142,11 +142,12 @@ class StepBookScreen extends Component {
           <UFODatePickerModal
             isVisible={this.state.showModalCalendar}
             onClose={() => this.setState({ showModalCalendar: false })}
-            pastScrollRange={0}
-            futureScrollRange={bookingStore.maxRentalPeriodInMonths}
-            minDate={this.minPickedDate}
             onSubmit={this.onSelectCalendarDates}
-            forbiddenDays={bookingStore.calendarPickerUnavailableMap}
+            calendarData={bookingStore.carCalendar}
+            minPickedDate={this.minPickedDate}
+            maxPickedDate={bookingStore.maxCarCalendarDate}
+            startRental={bookingStore.startRentalDate.format(values.DATE_STRING_FORMAT)}
+            endRental={bookingStore.endRentalDate.format(values.DATE_STRING_FORMAT)}
           />
           <UFOTooltip
             isVisible={this.state.showDateTooltip}
