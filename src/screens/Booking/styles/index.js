@@ -188,6 +188,8 @@ export default StyleSheet.create({
 
   notAvailableCar: { opacity: 0.5 },
 
+  opacityLabel: { opacity: 0.5 },
+
   bottomPanel: {
     position: 'absolute',
     height: BOTTOM_PANEL_HEIGHT,
@@ -203,17 +205,18 @@ export default StyleSheet.create({
     elevation: 4
   },
 
-  bottomPanelSection: {
-    flex: 1,
+  bottomPanelActionBtn: {
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    minWidth: '33%',
+    backgroundColor: colors.MAIN_COLOR
   },
 
-  bottomPanelActionBtn: { backgroundColor: colors.MAIN_COLOR },
-
   bottomPanelInfo: {
+    flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    alignItems: 'center',
+    justifyContent: 'space-around'
   },
 
   bottomPanelActionTitle: {

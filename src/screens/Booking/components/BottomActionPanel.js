@@ -18,7 +18,7 @@ export default class BottomActionPanel extends PureComponent {
 
     return (
       <View style={styles.bottomPanel}>
-        <View style={[styles.bottomPanelSection, styles.bottomPanelInfo]}>
+        <View style={[ styles.bottomPanelInfo ]}>
           <Text style={styles.bottomPanelPriceLabel}>
             {t('booking:totalPrice')}
           </Text>
@@ -27,15 +27,23 @@ export default class BottomActionPanel extends PureComponent {
           </Text>
         </View>
         <TouchableOpacity
-          style={[styles.bottomPanelSection, styles.bottomPanelActionBtn]}
+          style={styles.bottomPanelActionBtn}
           activeOpacity={isAvailable ? values.BTN_OPACITY_DEFAULT : 1}
           onPress={isAvailable ? action : null}
         >
-          <Text style={styles.bottomPanelActionTitle}>
+          <Text style={[
+            styles.bottomPanelActionTitle,
+            !isAvailable && styles.opacityLabel
+          ]}
+          >
             {actionTitle}
           </Text>
           {actionSubTitle && (
-            <Text style={styles.bottomPanelActionSubTitle}>
+            <Text style={[
+              styles.bottomPanelActionSubTitle,
+              !isAvailable && styles.opacityLabel
+            ]}
+            >
               {actionSubTitle}
             </Text>
           )}
@@ -45,9 +53,7 @@ export default class BottomActionPanel extends PureComponent {
   }
 }
 
-BottomActionPanel.defaultProps = {
-  price: '0€'
-};
+BottomActionPanel.defaultProps = { price: '0€' };
 
 BottomActionPanel.propTypes = {
   t: PropTypes.func.isRequired,
