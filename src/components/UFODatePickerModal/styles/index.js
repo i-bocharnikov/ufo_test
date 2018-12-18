@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { colors, textThemes } from './../../../utils/theme';
 
 const HORIZONTAL_INDENTS = 25;
@@ -133,5 +133,49 @@ export default StyleSheet.create({
     color: colors.BORDER_COLOR,
     alignSelf: 'center',
     marginTop: '50%'
+  },
+
+  colorDescriptionBlock: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 50,
+    backgroundColor: colors.BG_INVERT,
+    borderTopWidth: 1,
+    borderColor: colors.BORDER_COLOR,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+
+  colorDescriptionDot: {
+    height: 6,
+    width: 6,
+    borderRadius: 3,
+    marginRight: 4
+  },
+
+  noAvailabilityDot: { backgroundColor: '#f5222d' },
+
+  highDemandDot: {
+    marginLeft: 12,
+    backgroundColor: '#faad14'
+  },
+
+  colorDescriptionLabel: {
+    ...textThemes.SP_LIGHT,
+    fontSize: 12,
+    lineHeight: 12
+  },
+
+  colorDescriptionNotes: {
+    ...textThemes.SP_LIGHT,
+    fontSize: 12,
+    marginTop: Platform.OS === 'ios' ? 6 : 4
   }
 });

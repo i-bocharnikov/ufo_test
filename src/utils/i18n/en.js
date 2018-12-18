@@ -215,7 +215,10 @@ export default {
     'scanCreditCardBtn': 'Scan a new credit card',
     'applyBtn': 'Apply',
     'pickUpAlt': 'Pickup',
-    'returnAlt': 'Return'
+    'returnAlt': 'Return',
+    'noAvailableColor': 'no availability',
+    'highDemandColor': 'high demand',
+    'calendarColorsNotes': 'Select multiple dates to see discounts'
   },
   otaKeyNativeErrors
 };

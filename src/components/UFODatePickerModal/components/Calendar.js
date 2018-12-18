@@ -112,15 +112,15 @@ export default class Calendar extends PureComponent {
       const dateInfo = dateInfoMap[dateStr];
       const isSelected = this.isDateSelected(day);
       const isDisabled = day.isBefore(showDateRange[0])
-        || day.isAfter(showDateRange[1])
-        || (dateInfo && dateInfo.available === false);
+        || day.isAfter(showDateRange[1]);
 
       daysData.push({
         date: dateStr,
         label: day.format('D'),
         disabled: isDisabled,
-        available: dateInfo ? dateInfo.available : true,
-        price: dateInfo ? dateInfo.message : null,
+        available: _.get(dateInfo, 'available', true),
+        price: _.get(dateInfo, 'message'),
+        customColor: _.get(dateInfo, 'color'),
         isSelected: isSelected,
         isSelectedFirst: isSelected && day.isSame(selectedDateRange[0], 'day'),
         isSelectedLast: isSelected && selectedDateRange[1] && day.isSame(selectedDateRange[1], 'day')

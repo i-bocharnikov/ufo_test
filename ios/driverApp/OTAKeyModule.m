@@ -258,7 +258,7 @@ RCT_REMAP_METHOD(switchToKey,
   }
   OTAKeyPublic *currentKey = [[OTAManager instance] localKey];
   [[OTAManager instance] switchToKeyWithID:LAST_ENABLED_KEYID
-                           completionBlock:^(bool success) {
+                           completionBlock:^(BOOL success) {
                              if (success) {
                                resolve([OTAKeyModule convertOTAKeyPublic:currentKey]);
                              } else {
@@ -277,7 +277,7 @@ RCT_REMAP_METHOD(syncVehicleData,
 {
   @try
   {
-    [[OTAManager instance] syncVehicleDataWithSuccess:^(bool success) {
+    [[OTAManager instance] syncVehicleDataWithSuccess:^(BOOL success) {
       if (success) {
         resolve(@YES);
       } else {
