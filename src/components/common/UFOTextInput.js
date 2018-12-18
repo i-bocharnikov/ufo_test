@@ -24,6 +24,16 @@ const ownStyles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 12,
     backgroundColor: colors.BG_INVERT
+  },
+
+  invalidBorder: {
+    borderWidth: 1,
+    borderColor: colors.ATTENTION_COLOR
+  },
+
+  successBorder: {
+    borderWidth: 1,
+    borderColor: colors.SUCCESS_COLOR
   }
 });
 
@@ -35,6 +45,8 @@ export default class UFOTextInput extends Component {
       IconComponent,
       wrapperStyle,
       style,
+      invalidStatus,
+      successStatus,
       ...restInputProps
     } = this.props;
     const isClickable = typeof onPress === 'function';
@@ -42,7 +54,12 @@ export default class UFOTextInput extends Component {
     return (
       <TouchableOpacity
         onPress={isClickable ? onPress : null}
-        style={[ ownStyles.wrapper, wrapperStyle ]}
+        style={[
+          ownStyles.wrapper,
+          wrapperStyle,
+          invalidStatus && ownStyles.invalidBorder,
+          successStatus && ownStyles.successBorder
+        ]}
         activeOpacity={isClickable ? 0.8 : 1}
       >
         <TextInput
@@ -63,5 +80,7 @@ UFOTextInput.propTypes = {
   isCompleted: PropTypes.bool,
   IconComponent: PropTypes.element,
   wrapperStyle: ViewPropTypes.style,
+  invalidStatus: PropTypes.bool,
+  successStatus: PropTypes.bool,
   ...TextInput.propTypes
 };

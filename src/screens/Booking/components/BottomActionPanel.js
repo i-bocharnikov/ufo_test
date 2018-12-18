@@ -13,29 +13,41 @@ export default class BottomActionPanel extends PureComponent {
       actionTitle,
       actionSubTitle,
       isAvailable,
-      price
+      price,
+      isAlternative,
+      overlapMessage
     } = this.props;
+    const isBtnActive = isAvailable || isAlternative;
 
     return (
       <View style={styles.bottomPanel}>
-        <View style={[styles.bottomPanelSection, styles.bottomPanelInfo]}>
+        <View style={[ styles.bottomPanelInfo ]}>
           <Text style={styles.bottomPanelPriceLabel}>
             {t('booking:totalPrice')}
           </Text>
           <Text style={styles.bottomPanelPriceValue}>
             {price}
           </Text>
+          {overlapMessage && this.renderOverlap()}
         </View>
         <TouchableOpacity
-          style={[styles.bottomPanelSection, styles.bottomPanelActionBtn]}
-          activeOpacity={isAvailable ? values.BTN_OPACITY_DEFAULT : 1}
-          onPress={isAvailable ? action : null}
+          style={styles.bottomPanelActionBtn}
+          activeOpacity={isBtnActive ? values.BTN_OPACITY_DEFAULT : 1}
+          onPress={isBtnActive ? action : null}
         >
-          <Text style={styles.bottomPanelActionTitle}>
-            {actionTitle}
+          <Text style={[
+            styles.bottomPanelActionTitle,
+            !isBtnActive && styles.opacityLabel
+          ]}
+          >
+            {!isAlternative ? actionTitle : t('booking:applyBtn').toUpperCase()}
           </Text>
-          {actionSubTitle && (
-            <Text style={styles.bottomPanelActionSubTitle}>
+          {actionSubTitle && !isAlternative && (
+            <Text style={[
+              styles.bottomPanelActionSubTitle,
+              !isBtnActive && styles.opacityLabel
+            ]}
+            >
               {actionSubTitle}
             </Text>
           )}
@@ -43,11 +55,21 @@ export default class BottomActionPanel extends PureComponent {
       </View>
     );
   }
+
+  renderOverlap = () => {
+    const { isAlternative, overlapMessage } = this.props;
+
+    return (
+      <View style={styles.bottomPanelOverlap}>
+        <Text style={isAlternative ? styles.bottomPanelAlternative : styles.bottomPanelNotAvailable}>
+          {overlapMessage}
+        </Text>
+      </View>
+    );
+  };
 }
 
-BottomActionPanel.defaultProps = {
-  price: '0€'
-};
+BottomActionPanel.defaultProps = { price: '0€' };
 
 BottomActionPanel.propTypes = {
   t: PropTypes.func.isRequired,
@@ -55,5 +77,7 @@ BottomActionPanel.propTypes = {
   actionTitle: PropTypes.string.isRequired,
   actionSubTitle: PropTypes.string,
   isAvailable: PropTypes.bool,
-  price: PropTypes.string
+  price: PropTypes.string,
+  isAlternative: PropTypes.bool,
+  overlapMessage: PropTypes.string
 };

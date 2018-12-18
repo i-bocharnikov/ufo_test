@@ -99,7 +99,6 @@ export default class UFORollPicker extends Component {
       <View style={styles.row}>
         <Animated.Text style={[
           styles.rowLabel,
-          item.available === false && styles.disabledRow,
           { transform: [ { scaleX: fontSize }, { scaleY: fontSize } ] }
         ]}
         >
@@ -185,10 +184,16 @@ export default class UFORollPicker extends Component {
     }
 
     let index = y1 / ITEM_HEIGHT;
+    /*
+     * possibility jumping to next item if current unavailable
+     * was commented to save this feature, because not need now
+     * second part of logic is into `selectToItem`
+     *
     if (this.props.data[index] && this.props.data[index].available === false) {
       this.props.data.length - 1 > index ? index++ : index--;
       this.listView._component.scrollToIndex({ index: index });
     }
+    */
 
     this.lastSelectedIndex = index;
     this.handleRowChange(index);
@@ -250,12 +255,18 @@ export default class UFORollPicker extends Component {
     const { data } = this.props;
     this.lastSelectedIndex = i;
 
+    /*
+     * possibility jumping to next item if current unavailable
+     * was commented to save this feature, because not need now
+     * first part of logic is into `onScrollEnd`
+     *
     if (data[this.lastSelectedIndex] && data[this.lastSelectedIndex].available === false) {
       data.length - 1 > this.lastSelectedIndex
         ? this.lastSelectedIndex++
         : this.lastSelectedIndex--;
       this.handleRowChange(this.lastSelectedIndex);
     }
+    */
 
     // setTimeout needed because on android scroll is missing at component mounting
     setTimeout(() => this.listView._component.scrollToIndex({ index: this.lastSelectedIndex }), 10);

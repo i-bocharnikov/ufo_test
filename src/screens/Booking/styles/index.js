@@ -106,8 +106,8 @@ export default StyleSheet.create({
   },
 
   blockShadow: {
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 1 },
+    shadowRadius: 4,
     shadowColor: 'black',
     shadowOpacity: 0.1,
     elevation: 1
@@ -188,6 +188,8 @@ export default StyleSheet.create({
 
   notAvailableCar: { opacity: 0.5 },
 
+  opacityLabel: { opacity: 0.5 },
+
   bottomPanel: {
     position: 'absolute',
     height: BOTTOM_PANEL_HEIGHT,
@@ -203,17 +205,18 @@ export default StyleSheet.create({
     elevation: 4
   },
 
-  bottomPanelSection: {
-    flex: 1,
+  bottomPanelActionBtn: {
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    minWidth: '33%',
+    backgroundColor: colors.MAIN_COLOR
   },
 
-  bottomPanelActionBtn: { backgroundColor: colors.MAIN_COLOR },
-
   bottomPanelInfo: {
+    flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    alignItems: 'center',
+    justifyContent: 'space-around'
   },
 
   bottomPanelActionTitle: {
@@ -242,6 +245,28 @@ export default StyleSheet.create({
     fontSize: 13,
     letterSpacing: 1.3,
     marginRight: 20
+  },
+
+  bottomPanelOverlap: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: colors.BLOCKING_COLOR,
+    justifyContent: 'center',
+    paddingHorizontal: 14
+  },
+
+  bottomPanelNotAvailable: {
+    ...textThemes.SP_BOLD,
+    color: colors.TEXT_INVERT_COLOR,
+    fontSize: 16,
+    alignSelf: 'center'
+  },
+
+  bottomPanelAlternative: {
+    ...textThemes.SP_REGULAR,
+    color: colors.TEXT_INVERT_COLOR,
+    fontSize: 11,
+    lineHeight: 17,
+    letterSpacing: 1.2
   },
 
   rollPickerSection: {
@@ -374,28 +399,35 @@ export default StyleSheet.create({
     height: 55
   },
 
-  loyalityBlock: {
+  actionBtnDark: {
+    flex: 1,
     flexDirection: 'row',
-    height: 55,
+    height: 50,
     alignItems: 'center',
+    justifyContent: 'center',
     marginHorizontal: SCREEN_HORIZONTAL_INDENTS,
-    marginTop: 10,
     paddingHorizontal: 20,
     backgroundColor: colors.MAIN_COLOR
   },
 
-  loyalityLabel: {
+  loyalityBtn: {
+    height: 55,
+    marginTop: 10
+  },
+
+  actionBtnDarkLabel: {
     ...textThemes.SP_BOLD,
     fontSize: 13,
     color: colors.TEXT_INVERT_COLOR,
     letterSpacing: 0.9,
-    flex: 1
+    flex: 1,
+    textAlign: 'center'
   },
 
   loyalityTolltipIcon: {
     color: colors.TEXT_INVERT_COLOR,
     fontSize: 16,
-    marginLeft: 8
+    marginRight: 8
   },
 
   voucherApplyBtn: {
@@ -470,18 +502,9 @@ export default StyleSheet.create({
     borderRadius: 2
   },
 
-  loyalityCheckbox: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 22,
-    height: 22,
-    borderWidth: 1,
-    borderColor: colors.TEXT_INVERT_COLOR,
-    marginRight: 12
-  },
-
   loyalityIcon: {
     color: colors.TEXT_INVERT_COLOR,
-    fontSize: 16
+    fontSize: 28,
+    marginLeft: 8
   }
 });
