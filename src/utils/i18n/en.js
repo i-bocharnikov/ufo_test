@@ -203,16 +203,19 @@ export default {
     'address': 'Address',
     'seclectInfoBtn': 'SELECT THIS',
     'unseclectInfoBtn': 'UNSELECT THIS',
-    'stepPayNextTitle': 'DRIVE',
+    'stepPayNextTitle': 'CONFIRM',
     'stepPayNextSubTitle': 'Go to step 3',
     'creditCardTitle': 'CREDIT CARD INFOS',
     'loyalityProgramtitle': 'VOUCHER & LOYALTY PROGRAM',
     'infoAtPaymentTitle': 'BOOKING INFORMATIONS',
     'totalPricePayment': 'TOTAL ALL INCLUDED',
     'voucherPlaceholder': 'Voucher / referral code',
+    'milesPlaceholder': 'Miles and more number',
     'voucherTooltip': 'Info about loyality program',
-    'scanCreditCardBtn': 'SCAN NEW CREDIT CARD',
-    'applyBtn': 'Apply'
+    'scanCreditCardBtn': 'Scan a new credit card',
+    'applyBtn': 'Apply',
+    'pickUpAlt': 'Pickup',
+    'returnAlt': 'Return'
   },
   otaKeyNativeErrors
 };

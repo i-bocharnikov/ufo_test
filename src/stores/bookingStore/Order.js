@@ -81,4 +81,23 @@ export default class Order {
       return this.fallbackOrderConfirmation;
     }
   }
+
+  /**
+    * @param {string} code
+    * @param {string} locationRef
+    * @param {string} carRef
+    * @param {string} startDate
+    * @returns {boolean}
+    * @description Validate voucher/referral code
+    */
+  static async validateVoucher(code, locationRef, carRef, startDate) {
+    const path = `/reserve/validation/${locationRef}/${carRef}/${startDate}/${code}`;
+    const response = await getFromApi(path);
+
+    if (response.isSuccess) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

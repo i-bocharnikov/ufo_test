@@ -210,11 +210,13 @@ class StepBookScreen extends Component {
     return (
       <BottomActionPanel
         t={t}
-        action={this.navToNextStep}
+        action={this.handleToNextStep}
         actionTitle={t('booking:stepBookNextTitle')}
         actionSubTitle={t('booking:stepBookNextSubTitle')}
         isAvailable={bookingStore.isOrderCarAvailable}
         price={bookingStore.orderPrice}
+        isAlternative={bookingStore.isOrderCarHasAlt}
+        overlapMessage={bookingStore.orderCarUnavailableMessage}
       />
     );
   };
@@ -283,7 +285,12 @@ class StepBookScreen extends Component {
     await bookingStore.selectEndTime(selectedTime, index);
   };
 
-  navToNextStep = () => {
+  handleToNextStep = async () => {
+    if (bookingStore.isOrderCarHasAlt) {
+      await bookingStore.applyAlternativeDates();
+      return;
+    }
+
     this.props.navigation.navigate(screenKeys.BookingStepPay);
   };
 }

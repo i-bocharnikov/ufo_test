@@ -1,6 +1,7 @@
 import { observable, action, computed } from 'mobx';
 import moment from 'moment-timezone';
 import _ from 'lodash';
+import i18n from 'i18next';
 
 import locations from './Locations';
 import cars from './Cars';
@@ -375,6 +376,39 @@ export default class BookingStore {
     this.isLoading = false;
   };
 
+  /**
+    * @description Remove voucher code from exist order
+    */
+  @action
+  resetVoucherCode = async () => {
+    this.isLoading = true;
+    this.voucherCode = '';
+    await this.getOrderSimulation();
+    this.isLoading = false;
+  };
+
+  /**
+    * @param {string} code
+    * @returns {boolean}
+    * @description Voucher code validation (regexp and server validation)
+    */
+  @action
+  validateVoucher = async code => {
+    const isValidFormat = /^[VR][0-9A-Z]{3,11}$/g.test(code);
+
+    if (!isValidFormat) {
+      return false;
+    }
+
+    const isValid = await order.validateVoucher(
+      code,
+      this.selectedLocationRef,
+      this.selectedCarRef,
+      _.get(this.order, 'schedule.startAt')
+    );
+    return isValid;
+  }
+
   /*
    * @description Switch referral program status, refresh order object
   */
@@ -407,6 +441,31 @@ export default class BookingStore {
     this.isLoading = false;
 
     return false;
+  };
+
+  /*
+   * @description Apply dates which proposed as alternative for booking
+  */
+  @action
+  applyAlternativeDates = async () => {
+    const startAlt = _.get(this.order, 'carAvailabilities.alternativeStartAt');
+    const endAlt = _.get(this.order, 'carAvailabilities.alternativeEndAt');
+
+    if (!startAlt || !endAlt) {
+      return;
+    }
+
+    const momentStartAlt = moment.utc(startAlt).tz(this.order.schedule.timezone);
+    const momentEndAlt = moment.utc(endAlt).tz(this.order.schedule.timezone);
+
+    this.startRentalTime = momentStartAlt.format(values.TIME_STRING_FORMAT);
+    this.endRentalTime = momentEndAlt.format(values.TIME_STRING_FORMAT);
+    this.startRentalDate = momentStartAlt.startOf('day');
+    this.endRentalDate = momentEndAlt.startOf('day');
+
+    this.isLoading = true;
+    await this.getOrderSimulation();
+    this.isLoading = false;
   };
 
   /**
@@ -491,6 +550,45 @@ export default class BookingStore {
     }
 
     return this.order.carAvailabilities.status === 'available';
+  }
+
+  /**
+    * @description Show is current car and location have alternative dates for booking
+    */
+  @computed
+  get isOrderCarHasAlt() {
+    if (!_.has(this, 'order.carAvailabilities.status')) {
+      return false;
+    }
+
+    return this.order.carAvailabilities.status === 'alternative';
+  }
+
+  /**
+    * @description Message about alternative dates for booking
+    */
+  @computed
+  get orderCarUnavailableMessage() {
+    if (!_.has(this, 'order.carAvailabilities.message')) {
+      return null;
+    }
+
+    const {
+      alternativeStartAt: startAlt,
+      alternativeEndAt: endAlt
+    } = this.order.carAvailabilities;
+
+    if (!this.isOrderCarHasAlt || !startAlt || !endAlt) {
+      return this.order.carAvailabilities.message;
+    }
+
+    const startAltFormatted = i18n.t('booking:pickUpAlt')
+      + moment.utc(startAlt).tz(this.order.schedule.timezone).format(' ddd DD MMM YYYY HH:mm');
+
+    const endAltFormatted = i18n.t('booking:returnAlt')
+      + moment.utc(endAlt).tz(this.order.schedule.timezone).format(' ddd DD MMM YYYY HH:mm');
+
+    return `${this.order.carAvailabilities.message}\n-${startAltFormatted}\n-${endAltFormatted}`;
   }
 
   /**

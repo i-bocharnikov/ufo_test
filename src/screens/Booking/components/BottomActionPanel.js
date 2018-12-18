@@ -13,8 +13,11 @@ export default class BottomActionPanel extends PureComponent {
       actionTitle,
       actionSubTitle,
       isAvailable,
-      price
+      price,
+      isAlternative,
+      overlapMessage
     } = this.props;
+    const isBtnActive = isAvailable || isAlternative;
 
     return (
       <View style={styles.bottomPanel}>
@@ -25,23 +28,24 @@ export default class BottomActionPanel extends PureComponent {
           <Text style={styles.bottomPanelPriceValue}>
             {price}
           </Text>
+          {overlapMessage && this.renderOverlap()}
         </View>
         <TouchableOpacity
           style={styles.bottomPanelActionBtn}
-          activeOpacity={isAvailable ? values.BTN_OPACITY_DEFAULT : 1}
-          onPress={isAvailable ? action : null}
+          activeOpacity={isBtnActive ? values.BTN_OPACITY_DEFAULT : 1}
+          onPress={isBtnActive ? action : null}
         >
           <Text style={[
             styles.bottomPanelActionTitle,
-            !isAvailable && styles.opacityLabel
+            !isBtnActive && styles.opacityLabel
           ]}
           >
-            {actionTitle}
+            {!isAlternative ? actionTitle : t('booking:applyBtn').toUpperCase()}
           </Text>
-          {actionSubTitle && (
+          {actionSubTitle && !isAlternative && (
             <Text style={[
               styles.bottomPanelActionSubTitle,
-              !isAvailable && styles.opacityLabel
+              !isBtnActive && styles.opacityLabel
             ]}
             >
               {actionSubTitle}
@@ -51,6 +55,18 @@ export default class BottomActionPanel extends PureComponent {
       </View>
     );
   }
+
+  renderOverlap = () => {
+    const { isAlternative, overlapMessage } = this.props;
+
+    return (
+      <View style={styles.bottomPanelOverlap}>
+        <Text style={isAlternative ? styles.bottomPanelAlternative : styles.bottomPanelNotAvailable}>
+          {overlapMessage}
+        </Text>
+      </View>
+    );
+  };
 }
 
 BottomActionPanel.defaultProps = { price: '0€' };
@@ -61,5 +77,7 @@ BottomActionPanel.propTypes = {
   actionTitle: PropTypes.string.isRequired,
   actionSubTitle: PropTypes.string,
   isAvailable: PropTypes.bool,
-  price: PropTypes.string
+  price: PropTypes.string,
+  isAlternative: PropTypes.bool,
+  overlapMessage: PropTypes.string
 };

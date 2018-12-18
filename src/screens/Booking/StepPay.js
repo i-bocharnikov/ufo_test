@@ -4,6 +4,7 @@ import { translate } from 'react-i18next';
 import { observer } from 'mobx-react';
 import { CardIOModule, CardIOUtilities } from 'react-native-awesome-card-io';
 import stripe from 'tipsi-stripe';
+import _ from 'lodash';
 
 import { bookingStore } from './../../stores';
 import { keys as screenKeys } from './../../navigators/helpers';
@@ -30,9 +31,11 @@ class StepPayScreen extends Component {
       guideColor: Platform.OS === 'ios' ? processColor(colors.MAIN_COLOR) : colors.MAIN_COLOR,
       hideCardIOLogo: true
     };
+    this.handleInputVoucher = _.debounce(this.validateAndApplyVoucher, 300);
     this.state = {
       showVoucherTooltip: false,
-      voucherCodeStr: ''
+      isVoucherValid: false,
+      voucherCode: ''
     };
   }
 
@@ -47,6 +50,14 @@ class StepPayScreen extends Component {
     if (!hasOptions) {
       /* timeout needed to avoid conflict between modal views at fast re-render (ios) */
       setTimeout(this.scranCreditCard, 100);
+    }
+
+    if (bookingStore.voucherCode) {
+      const isVoucherValid = await bookingStore.validateVoucher(bookingStore.voucherCode);
+      this.setState({
+        isVoucherValid,
+        voucherCode: bookingStore.voucherCode
+      });
     }
   }
 
@@ -67,38 +78,28 @@ class StepPayScreen extends Component {
           <TouchableOpacity
             onPress={this.scranCreditCard}
             activeOpacity={values.BTN_OPACITY_DEFAULT}
-            style={[ styles.actionBtn, styles.scanCardBtn ]}
+            style={[ styles.actionBtnDark, styles.scanCardBtn ]}
           >
-            <Text style={styles.actionBtnLabel}>
+            <Text style={styles.actionBtnDarkLabel}>
               {t('scanCreditCardBtn')}
             </Text>
           </TouchableOpacity>
           <Text style={[ styles.sectionTitle, styles.sectionTitleIndents ]}>
             {t('loyalityProgramtitle')}
           </Text>
-          <View style={[
-            styles.row,
-            styles.screenHorizIndents,
-            styles.blockShadow,
-            Platform.OS === 'android' && styles.blockShadowAndroidFix
-          ]}
-          >
-            <UFOTextInput
-              wrapperStyle={styles.voucherInput}
-              placeholder={t('voucherPlaceholder')}
-              defaultValue={bookingStore.voucherCode}
-              onChangeText={voucherCodeStr => this.setState({ voucherCodeStr })}
-            />
-            <TouchableOpacity
-              onPress={this.applyVoucher}
-              activeOpacity={values.BTN_OPACITY_DEFAULT}
-              style={styles.voucherApplyBtn}
-            >
-              <Text style={styles.voucherApplyLabel}>
-                {t('applyBtn')}
-              </Text>
-            </TouchableOpacity>
-          </View>
+          <UFOTextInput
+            wrapperStyle={[
+              styles.voucherInput,
+              styles.screenHorizIndents,
+              styles.blockShadow,
+              Platform.OS === 'android' && styles.blockShadowAndroidFix
+            ]}
+            placeholder={t('voucherPlaceholder')}
+            onChangeText={this.onInputVoucher}
+            value={this.state.voucherCode}
+            invalidStatus={!!this.state.voucherCode && !this.state.isVoucherValid}
+            successStatus={this.state.isVoucherValid}
+          />
           {this.renderLoyaltyBlock()}
           {this.renderBookingInfoSection()}
           {this.renderVoucherTooltip()}
@@ -162,24 +163,11 @@ class StepPayScreen extends Component {
 
   renderLoyaltyBlock = () => {
     return !bookingStore.loyaltyProgramInfo ? null : (
-      <View style={styles.loyalityBlock}>
-        <TouchableOpacity
-          style={styles.loyalityCheckbox}
-          onPress={bookingStore.switchReferralUsing}
-        >
-          {bookingStore.useRefferalAmount && (
-            <UFOIcon_next
-              name="md-checkmark"
-              style={styles.loyalityIcon}
-            />
-          )}
-        </TouchableOpacity>
-        <Text
-          style={styles.loyalityLabel}
-          numberOfLines={1}
-        >
-          {bookingStore.loyaltyProgramInfo}
-        </Text>
+      <TouchableOpacity
+        style={[ styles.actionBtnDark, styles.loyalityBtn ]}
+        onPress={bookingStore.switchReferralUsing}
+        activeOpacity={values.BTN_OPACITY_DEFAULT}
+      >
         <TouchableOpacity
           onPress={() => this.setState({ showVoucherTooltip: true })}
           ref={ref => (this.voucherTooltipRef = ref)}
@@ -189,7 +177,19 @@ class StepPayScreen extends Component {
             style={styles.loyalityTolltipIcon}
           />
         </TouchableOpacity>
-      </View>
+        <Text
+          style={styles.actionBtnDarkLabel}
+          numberOfLines={1}
+        >
+          {bookingStore.loyaltyProgramInfo}
+        </Text>
+        {bookingStore.useRefferalAmount && (
+          <UFOIcon_next
+            name="md-checkmark"
+            style={styles.loyalityIcon}
+          />
+        )}
+      </TouchableOpacity>
     );
   };
 
@@ -267,12 +267,25 @@ class StepPayScreen extends Component {
   };
 
   /*
+   * Save input value to show input containing status
+  */
+  onInputVoucher = text => {
+    const voucherCode = text.toUpperCase();
+    this.setState({ voucherCode });
+    this.handleInputVoucher(voucherCode);
+  };
+
+  /*
    * Apply voucher code, receive new order object into bookingStore
   */
-  applyVoucher = () => {
-    const code = this.state.voucherCodeStr;
-    if (code !== bookingStore.voucherCode) {
-      bookingStore.appyVoucherCode(code);
+  validateAndApplyVoucher = async code => {
+    const isValid = await bookingStore.validateVoucher(code);
+    this.setState({ isVoucherValid: isValid });
+
+    if (isValid) {
+      await bookingStore.appyVoucherCode(code);
+    } else if (bookingStore.voucherCode) {
+      await bookingStore.resetVoucherCode();
     }
   };
 

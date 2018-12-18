@@ -31,7 +31,7 @@ export function getTimeItemsForRollPicker() {
       label: timeString,
       id: timeString
     });
-    timeOfDay.add(30, 'minutes');
+    timeOfDay.add(60, 'minutes');
   }
 
   return timeItems;

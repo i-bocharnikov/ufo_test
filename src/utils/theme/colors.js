@@ -9,5 +9,6 @@ export default {
   MAIN_LIGHT_COLOR: '#68a3c2',
   ATTENTION_COLOR: '#ea504c',
   BORDER_COLOR: '#d9d9d9',
-  SUCCESS_COLOR: '#40b844'
+  SUCCESS_COLOR: '#40b844',
+  BLOCKING_COLOR: 'rgba(24,24,24,0.86)'
 };
