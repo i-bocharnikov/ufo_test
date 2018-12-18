@@ -68,11 +68,36 @@ export default class UFODatePickerModal extends PureComponent {
               onNextPage={this.handleNextPage}
               onEndReachedThreshold={0.3}
             />
+            {this.renderColorDescrBlock()}
           </View>
         </View>
       </Modal>
     );
   }
+
+  renderColorDescrBlock = () => {
+    return (
+      <View style={styles.colorDescriptionBlock}>
+        <View style={styles.row}>
+          <View style={styles.row}>
+            <View style={[ styles.colorDescriptionDot, styles.noAvailabilityDot ]} />
+            <Text style={styles.colorDescriptionLabel}>
+              - {i18n.t('booking:noAvailableColor')}
+            </Text>
+          </View>
+          <View style={styles.row}>
+            <View style={[ styles.colorDescriptionDot, styles.highDemandDot ]} />
+            <Text style={styles.colorDescriptionLabel}>
+              - {i18n.t('booking:highDemandColor')}
+            </Text>
+          </View>
+        </View>
+        <Text style={styles.colorDescriptionNotes}>
+          * {i18n.t('booking:calendarColorsNotes')}
+        </Text>
+      </View>
+    );
+  };
 
   /**
     * @returns {Array}

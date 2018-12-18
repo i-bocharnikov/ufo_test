@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { TouchableOpacity, Text } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 
 import styles from './../styles';
@@ -7,37 +7,44 @@ import { values } from './../../../utils/theme';
 
 export default class Day extends PureComponent {
   render() {
-    const { dayData } = this.props;
-    const isActiveOpacity = !dayData.disabled && dayData.available && !dayData.isSelected;
+    const {
+      label,
+      price,
+      disabled,
+      isSelected,
+      isSelectedFirst,
+      isSelectedLast
+    } = this.props.dayData;
 
     return (
       <TouchableOpacity
         style={[
           styles.dayContainer,
-          dayData.isSelected && styles.selectedDay,
-          dayData.isSelectedFirst && styles.selectedFirstDay,
-          dayData.isSelectedLast && styles.selectedLastDay
+          isSelected && styles.selectedDay,
+          isSelectedFirst && styles.selectedFirstDay,
+          isSelectedLast && styles.selectedLastDay
         ]}
         onPress={this.onDayPress}
-        activeOpacity={isActiveOpacity ? values.BTN_OPACITY_DEFAULT : 1}
+        activeOpacity={!disabled && !isSelected ? values.BTN_OPACITY_DEFAULT : 1}
       >
         <Text style={[
           styles.dayLabel,
-          dayData.disabled && styles.dayDisabledText,
-          !dayData.available && styles.dayforbiddenText,
-          dayData.isSelected && styles.selectedDayText
+          disabled && styles.dayDisabledText,
+          isSelected && styles.selectedDayText,
+          this.getCustomColorStyles()
         ]}
         >
-          {dayData.label}
+          {label}
         </Text>
-        {!dayData.disabled && (
+        {!disabled && (
           <Text style={[
             styles.dayPrice,
-            dayData.disabled && styles.dayDisabledText,
-            dayData.isSelected && styles.selectedDayText
+            disabled && styles.dayDisabledText,
+            isSelected && styles.selectedDayText,
+            this.getCustomColorStyles()
           ]}
           >
-            {dayData.price || '-'}
+            {price || '-'}
           </Text>
         )}
       </TouchableOpacity>
@@ -50,8 +57,21 @@ export default class Day extends PureComponent {
     if (!dayData.disabled && typeof onDayPress === 'function') {
       onDayPress(dayData.date);
     }
-  }
+  };
+
+  getCustomColorStyles = () => {
+    const { customColor, isSelected } = this.props.dayData;
+
+    if (customColor && !isSelected) {
+      const style = StyleSheet.create({ customColor: { color: customColor } });
+      return style.customColor;
+    }
+
+    return null;
+  };
 }
+
+Day.defaultProps = { dayData: {} };
 
 Day.propTypes = {
   onDayPress: PropTypes.func,
@@ -61,6 +81,7 @@ Day.propTypes = {
     disabled: PropTypes.bool,
     available: PropTypes.bool,
     price: PropTypes.string,
+    customColor: PropTypes.string,
     isSelected: PropTypes.bool,
     isSelectedFirst: PropTypes.bool,
     isSelectedLast: PropTypes.bool
