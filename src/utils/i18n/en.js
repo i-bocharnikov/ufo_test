@@ -218,7 +218,9 @@ export default {
     'returnAlt': 'Return',
     'noAvailableColor': 'no availability',
     'highDemandColor': 'high demand',
-    'calendarColorsNotes': 'Select multiple dates to see discounts'
+    'calendarColorsNotes': 'Select multiple dates to see discounts',
+    'driveTitle': 'Booking completed!',
+    'driveSubTitle': 'Enjoy your trip…'
   },
   otaKeyNativeErrors
 };
