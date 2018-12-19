@@ -58,6 +58,19 @@ class StepBookScreen extends Component {
             extraData={bookingStore.selectedLocationRef}
             pagingEnabled={true}
           />
+          <Text style={[ styles.sectionTitle, styles.sectionTitleIndents ]}>
+            {t('booking:carsSectionTitle')}
+          </Text>
+          <FlatList
+            data={bookingStore.cars}
+            renderItem={this.renderCarSlide}
+            keyExtractor={this.getKeyItem}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            ListEmptyComponent={this.renderEmptyList}
+            contentContainerStyle={styles.carSlider}
+            extraData={bookingStore.selectedCarRef}
+          />
           <View style={[ styles.row, styles.sectionTitleIndents ]}>
             <Text style={[ styles.sectionTitle, styles.datePickTitle ]}>
               {t('booking:dareSectionTitle')}
@@ -126,19 +139,6 @@ class StepBookScreen extends Component {
               wrapperStyles={styles.rollPicker}
             />
           </View>
-          <Text style={[ styles.sectionTitle, styles.sectionTitleIndents ]}>
-            {t('booking:carsSectionTitle')}
-          </Text>
-          <FlatList
-            data={bookingStore.cars}
-            renderItem={this.renderCarSlide}
-            keyExtractor={this.getKeyItem}
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            ListEmptyComponent={this.renderEmptyList}
-            contentContainerStyle={styles.carSlider}
-            extraData={bookingStore.selectedCarRef}
-          />
           <UFODatePickerModal
             isVisible={this.state.showModalCalendar}
             onClose={() => this.setState({ showModalCalendar: false })}
