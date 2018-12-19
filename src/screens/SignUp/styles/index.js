@@ -117,5 +117,9 @@ export default StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     fontFamily: fonts.LIGHT
+  },
+
+  inputMiles: {
+    marginTop: GAP_BETWEEN
   }
 });

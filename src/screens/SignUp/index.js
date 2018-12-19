@@ -104,6 +104,7 @@ class SignUpScreen extends Component {
     const hasPhone = Boolean(registerStore.user.phone_number);
     const hasEmail = Boolean(registerStore.user.email);
     const hasAddress = Boolean(registerStore.user.address);
+    const hasMiles = Boolean(registerStore.user.miles_and_more);
 
     return (
       <UFOContainer image={screens.REGISTER_OVERVIEW.backgroundImage}>
@@ -187,6 +188,15 @@ class SignUpScreen extends Component {
               {registerStore.user.registration_message}
             </Text>
           )}
+          {registerStore.isUserRegistered && (
+            <UFOTextInput
+              placeholder={t('booking:milesPlaceholder')}
+              defaultValue={registerStore.user.miles_and_more}
+              wrapperStyle={styles.inputMiles}
+              onPress={this.navToMilesScreen}
+              IconComponent={hasMiles ? this.renderIcon() : null}
+            />
+          )}
         </ScrollView>
         <UFOActionBar actions={this.compileActions()} />
       </UFOContainer>
@@ -257,6 +267,10 @@ class SignUpScreen extends Component {
         backImageUrl: registerStore.driverLicenceBackDocument
       }
     );
+  };
+
+  navToMilesScreen = () => {
+    this.props.navigation.navigate(screens.REGISTER_MILES.name);
   };
 
   shareRefCode = () => {

@@ -48,6 +48,7 @@ class User {
     @persist @observable identification_back_side_reference = null
     @persist @observable driver_licence_front_side_reference = null
     @persist @observable driver_licence_back_side_reference = null
+    @persist @observable miles_and_more = null
 }
 
 

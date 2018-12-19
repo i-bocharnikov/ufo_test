@@ -41,7 +41,6 @@ export default class UFOTextInput extends Component {
   render() {
     const {
       onPress,
-      isCompleted,
       IconComponent,
       wrapperStyle,
       style,
