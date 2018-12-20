@@ -26,7 +26,8 @@ export default StyleSheet.create({
 
   screenContainer: {
     backgroundColor: colors.BG_INVERT_TINT,
-    paddingTop: 2
+    paddingTop: 2,
+    paddingBottom: 26
   },
 
   sectionTitle: {
@@ -132,10 +133,7 @@ export default StyleSheet.create({
     letterSpacing: 1
   },
 
-  carSlider: {
-    paddingHorizontal: SCREEN_HORIZONTAL_INDENTS,
-    marginBottom: 26
-  },
+  carSlider: { paddingHorizontal: SCREEN_HORIZONTAL_INDENTS },
 
   carSlide: {
     width: 268,

@@ -193,7 +193,7 @@ export default {
     'tooltipLink': 'Contact us',
     'dareSectionTitle': 'PICK-UP & RETURN DATE',
     'totalPrice': 'TOTAL',
-    'stepBookNextTitle': 'PAY',
+    'stepBookNextTitle': 'BOOK',
     'stepBookNextSubTitle': 'Go to step 2',
     'calendarViewBtn': 'open calendar view',
     'locationInfoTitle': 'LOCATION',

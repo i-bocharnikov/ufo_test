@@ -122,6 +122,7 @@ export const screens = {
     REGISTER_ADDRESS: new Screen('Address', 'REGISTER', backgrounds.REGISTER001),
     REGISTER_IDENTIFICATION: new Screen('Identification', 'REGISTER', backgrounds.REGISTER001),
     REGISTER_DRIVER_LICENCE: new Screen('DriverLicence', 'REGISTER', backgrounds.REGISTER001),
+    REGISTER_MILES: new Screen('Miles', 'REGISTER', backgrounds.REGISTER001),
     DRIVE: new Screen('Drive', 'CAR', backgrounds.DRIVE001),
     FIND: new Screen('Find', 'FIND', backgrounds.FIND001),
     RETURN: new Screen('Return', 'RETURN', backgrounds.RETURN001),

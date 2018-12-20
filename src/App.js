@@ -36,6 +36,7 @@ import RegisterEmailScreen from './screens/SignUp/EmailEditor';
 import RegisterAddressScreen from './screens/SignUp/AddressEditor';
 import RegisterIdentificationScreen from './screens/SignUp/CardIdEditor';
 import RegisterDriverLicenceScreen from './screens/SignUp/DriverCardEditor';
+import RegisterMilesScreen from './screens/SignUp/MilesEditor';
 import BookingStackNavigator from './navigators/BookingStackNavigator';
 import appStore from './stores/appStore';
 import registerStore from './stores/registerStore';
@@ -126,7 +127,8 @@ const RegisterStack = createStackNavigator(
     Email: { screen: RegisterEmailScreen },
     Address: { screen: RegisterAddressScreen },
     Identification: { screen: RegisterIdentificationScreen },
-    DriverLicence: { screen: RegisterDriverLicenceScreen }
+    DriverLicence: { screen: RegisterDriverLicenceScreen },
+    Miles: { screen: RegisterMilesScreen }
   },
   {
     initialRouteName: screens.REGISTER_OVERVIEW.name,
