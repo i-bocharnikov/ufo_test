@@ -179,7 +179,6 @@ dependencies {
         }
     }
     implementation project(':react-native-device-info')
-    implementation project(':react-native-locale-detector')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation project(':react-native-video')
     implementation project(':react-native-image-rotate')

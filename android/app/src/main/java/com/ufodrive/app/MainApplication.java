@@ -9,7 +9,6 @@ import com.dylanvann.fastimage.FastImageViewPackage;
 import org.reactnative.camera.RNCameraPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.brentvatne.react.ReactVideoPackage;
-import com.i18n.reactnativei18n.ReactNativeI18n;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -44,7 +43,6 @@ public class MainApplication extends OtaKeysApplication implements ReactApplicat
             new RNFetchBlobPackage(),
             new ReactVideoPackage(),
             new OTAKeyPackage(),
-            new ReactNativeI18n(),
             new RNDeviceInfo(),
             new RNCardIOPackage(),
             new LinearGradientPackage(),

@@ -68,7 +68,6 @@
 		FB92B94A214E63110075943D /* libRNFetchBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FB92B949214E62F80075943D /* libRNFetchBlob.a */; };
 		FBA35D7F214E465100AD6D41 /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FB941B66214044A4003DBD7E /* libRNDeviceInfo.a */; };
 		FBA35D80214E469E00AD6D41 /* libRCTVideo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FB2468B6213EE7B40061F009 /* libRCTVideo.a */; };
-		FBA35D81214E46A700AD6D41 /* libRNI18n.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FB941B6C214044A4003DBD7E /* libRNI18n.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -436,20 +435,6 @@
 			remoteGlobalIDString = E72EC1401F7ABB5A0001BC90;
 			remoteInfo = "RNDeviceInfo-tvOS";
 		};
-		FB941B6B214044A4003DBD7E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3CEF4D3A140F4805B83F8B14 /* RNI18n.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CDD7BF781B2D5125006FDA75;
-			remoteInfo = RNI18n;
-		};
-		FB941B6D214044A4003DBD7E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3CEF4D3A140F4805B83F8B14 /* RNI18n.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CDD7BF831B2D5126006FDA75;
-			remoteInfo = RNI18nTests;
-		};
 		FBEED24C2144836E000F2874 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D7645941869E41EDB5F27410 /* RNCamera.xcodeproj */;
@@ -484,7 +469,6 @@
 		2D02E4901E0B4A5D006451C7 /* driverApp-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "driverApp-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2DE9876270B949B198D5B141 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/native-base/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
-		3CEF4D3A140F4805B83F8B14 /* RNI18n.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNI18n.xcodeproj; path = "../node_modules/react-native-locale-detector/RNI18n.xcodeproj"; sourceTree = "<group>"; };
 		4347069925A00225412754BE /* Pods-driverApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-driverApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-driverApp/Pods-driverApp.debug.xcconfig"; sourceTree = "<group>"; };
 		44849D7D3D67476EBDC5BE15 /* libReactNativeExceptionHandler.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libReactNativeExceptionHandler.a; sourceTree = "<group>"; };
 		56313FFC2225499F8F00720B /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/native-base/Fonts/Feather.ttf"; sourceTree = "<group>"; };
@@ -543,7 +527,6 @@
 				F5D483882189B1B700943D6B /* libFastImage.a in Frameworks */,
 				F5D4833E2189AFAD00943D6B /* libRNImageRotate.a in Frameworks */,
 				FB92B94A214E63110075943D /* libRNFetchBlob.a in Frameworks */,
-				FBA35D81214E46A700AD6D41 /* libRNI18n.a in Frameworks */,
 				FBA35D80214E469E00AD6D41 /* libRCTVideo.a in Frameworks */,
 				FBA35D7F214E465100AD6D41 /* libRNDeviceInfo.a in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
@@ -791,7 +774,6 @@
 				00C302DF1ABCB9EE00DB3ED1 /* RCTVibration.xcodeproj */,
 				139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */,
 				6CDC3890F782411F8BBE1D50 /* RCTVideo.xcodeproj */,
-				3CEF4D3A140F4805B83F8B14 /* RNI18n.xcodeproj */,
 				DEC0CF07DE9F4D32AA578AB0 /* RNDeviceInfo.xcodeproj */,
 				D7645941869E41EDB5F27410 /* RNCamera.xcodeproj */,
 				1E24D8E0907740728C8DF729 /* ReactNativeExceptionHandler.xcodeproj */,
@@ -923,15 +905,6 @@
 			isa = PBXGroup;
 			children = (
 				FB92B949214E62F80075943D /* libRNFetchBlob.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		FB941B36214044A4003DBD7E /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				FB941B6C214044A4003DBD7E /* libRNI18n.a */,
-				FB941B6E214044A4003DBD7E /* RNI18nTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1162,10 +1135,6 @@
 				{
 					ProductGroup = FB92B945214E62F80075943D /* Products */;
 					ProjectRef = FB92B944214E62F80075943D /* RNFetchBlob.xcodeproj */;
-				},
-				{
-					ProductGroup = FB941B36214044A4003DBD7E /* Products */;
-					ProjectRef = 3CEF4D3A140F4805B83F8B14 /* RNI18n.xcodeproj */;
 				},
 				{
 					ProductGroup = F5D4830B2189AE7800943D6B /* Products */;
@@ -1537,20 +1506,6 @@
 			remoteRef = FB941B67214044A4003DBD7E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		FB941B6C214044A4003DBD7E /* libRNI18n.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRNI18n.a;
-			remoteRef = FB941B6B214044A4003DBD7E /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		FB941B6E214044A4003DBD7E /* RNI18nTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = RNI18nTests.xctest;
-			remoteRef = FB941B6D214044A4003DBD7E /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		FBEED24D2144836E000F2874 /* libRNCamera.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1668,12 +1623,10 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-driverApp/Pods-driverApp-resources.sh",
-				"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseFirestore/gRPCCertificates.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/Stripe/Stripe.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/gRPCCertificates.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Stripe.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1856,6 +1809,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ufodrive.CustomerRental;
 				PRODUCT_NAME = driverApp;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1890,6 +1844,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ufodrive.CustomerRental;
 				PRODUCT_NAME = driverApp;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";

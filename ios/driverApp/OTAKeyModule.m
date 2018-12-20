@@ -118,7 +118,7 @@ RCT_REMAP_METHOD(openSession,
   @try
   {
     [[OTAManager instance] openSessionWithToken:token
-                                        success:^(bool success) {
+                                        success:^(BOOL success) {
                                           if (success) {
                                             resolve(@YES);
                                           } else {
