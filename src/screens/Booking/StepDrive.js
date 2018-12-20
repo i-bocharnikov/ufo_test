@@ -1,15 +1,14 @@
-import React, { Component } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import React, { Component, Fragment } from 'react';
+import { View, Text, TouchableHighlight } from 'react-native';
 import { translate } from 'react-i18next';
 import { observer } from 'mobx-react';
 import _ from 'lodash';
 
-import { bookingStore } from './../../stores';
-import { feedbackStore } from './../../stores';
+import { bookingStore, feedbackStore, registerStore } from './../../stores';
 import { keys as screenKeys } from './../../navigators/helpers';
-import { UFOContainer, UFOImage } from './../../components/common';
+import { UFOContainer, UFOImage, UFOModalLoader } from './../../components/common';
 import styles from './styles/drive';
-import { images } from './../../utils/theme';
+import { images, colors } from './../../utils/theme';
 
 // temp
 const TEMP_BG = 'https://resources.ufodrive.com/images/backgrounds/BACKGROUND_WEB_4.jpg';
@@ -20,6 +19,10 @@ class StepDriveScreen extends Component {
     await feedbackStore.getReserveFeedbackData();
   }
 
+  async componentWillUnmount() {
+    await bookingStore.resetStore();
+  }
+
   render() {
     const feedback = feedbackStore.reserveFeedBack;
     const { t } = this.props;
@@ -28,19 +31,15 @@ class StepDriveScreen extends Component {
       <UFOContainer
         // temp
         image={this.backgroundImage || { uri: TEMP_BG }}
-        style={styles.screenContainer}
+        style={styles.container}
       >
         <UFOImage
           style={styles.moonImg}
           source={images.moonLand}
           resizeMode="contain"
         />
-        <Text style={styles.headerTitle}>
-          {t('driveTitle')}
-        </Text>
-        <Text style={styles.headerSubTitle}>
-          {t('driveSubTitle')}
-        </Text>
+        {this.renderMainContent()}
+        <UFOModalLoader isVisible={feedbackStore.isLoading} />
       </UFOContainer>
     );
   }
@@ -50,8 +49,53 @@ class StepDriveScreen extends Component {
     return /^(https?:\/\/)/.test(uri) ? { uri } : null;
   }
 
+  renderMainContent = () => {
+    const isRegistered = registerStore.isUserRegistered;
+    const t = this.props.t;
+
+    return (
+      <Fragment>
+        <Text style={[ styles.headerTitle, styles.textShadow ]}>
+          {t('driveTitle')}
+        </Text>
+        <Text style={[ styles.headerSubTitle, styles.textShadow ]}>
+          {t('driveSubTitle')}
+        </Text>
+        <Text style={[ styles.descriptionText, styles.textShadow ]}>
+          {t(isRegistered ? 'dreveDescrDriveP1' : 'dreveDescrRegisterP1')}
+          <Text style={styles.linkedText} onPress={this.navToGuide}>
+            {t('dreveDescrGuideLink')}
+          </Text>
+        </Text>
+        <TouchableHighlight
+          onPress={this.navNext}
+          underlayColor={colors.BG_DEFAULT}
+          style={styles.nextBtn}
+        >
+          <Text style={styles.nextBtnLabel}>
+            {t(isRegistered ? 'driveNextDrive' : 'driveNextRegister')}
+          </Text>
+        </TouchableHighlight>
+      </Fragment>
+    );
+  };
+
   navBack = () => {
     this.props.navigation.goBack();
+  };
+
+  navNext = () => {
+    const { navigation } = this.props;
+    navigation.popToTop();
+
+    registerStore.isUserRegistered
+      ? navigation.navigate(screenKeys.Drive)
+      : navigation.navigate(screenKeys.SignUp);
+  };
+
+  navToGuide = () => {
+    this.props.navigation.popToTop();
+    this.props.navigation.navigate(screenKeys.SupportFaqs);
   };
 }
 

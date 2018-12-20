@@ -18,6 +18,7 @@ class BookingNavWrapper extends Component {
           title={t('booking:screenTitle')}
           SubtitleComponent={this.getSubTitleComponent()}
           backBtnAction={navBack}
+          ref={ref => (this.navBarWrapper = ref)}
         >
           {this.props.children}
         </UFONavBarWrapper>
@@ -77,6 +78,12 @@ class BookingNavWrapper extends Component {
       </Fragment>
     );
   };
+
+  scrollToTop = () => {
+    if (this.navBarWrapper) {
+      this.navBarWrapper.scrollToTop();
+    }
+  };
 }
 
 BookingNavWrapper.propTypes = {
@@ -85,4 +92,4 @@ BookingNavWrapper.propTypes = {
   BottomActionPanel: PropTypes.node
 };
 
-export default translate()(BookingNavWrapper);
+export default translate('', { withRef: true })(BookingNavWrapper);
