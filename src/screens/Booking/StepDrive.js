@@ -105,7 +105,7 @@ class StepDriveScreen extends Component {
       return null;
     }
 
-    const showConfirmBtn = feedback.multiSelectionAllowed && _.find(feedback.choices, ['value', true]);
+    const showConfirmBtn = feedback.multiSelectionAllowed && _.find(feedback.choices, [ 'value', true ]);
 
     return (
       <Modal
@@ -160,7 +160,7 @@ class StepDriveScreen extends Component {
   };
 
   handleSendFeedBack = () => {
-    this.setState({showFeedBackDialog: false}, feedbackStore.sendReserveFeedback);
+    this.setState({ showFeedBackDialog: false }, feedbackStore.sendReserveFeedback);
   };
 
   navBack = () => {

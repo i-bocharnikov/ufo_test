@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     width: 5,
     height: 5,
     borderRadius: 2.5,
-    backgroundColor: colors.TEXT_DEFAULT_COLOR,
+    backgroundColor: colors.TEXT_DEFAULT_COLOR
   },
   label: {
     ...textThemes.SP_SEMIBOLD,
@@ -39,7 +39,7 @@ export default class UFOCheckBoxItem extends PureComponent {
     return (
       <TouchableOpacity
         onPress={onCheck}
-        style={[styles.item, wrapperStyle]}
+        style={[ styles.item, wrapperStyle ]}
         activeOpacity={values.BTN_OPACITY_DEFAULT}
       >
         <View style={styles.circle}>

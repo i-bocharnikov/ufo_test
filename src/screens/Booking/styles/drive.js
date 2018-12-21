@@ -78,16 +78,14 @@ export default StyleSheet.create({
     paddingVertical: 24
   },
 
-  dialogScrollWrapper: {
-    flex: 1
-  },
+  dialogScrollWrapper: { flex: 1 },
 
   dialogContainer: {
     width: '90%',
     backgroundColor: 'rgba(255,255,255,0.88)',
     paddingVertical: 24,
     paddingHorizontal: 32,
-    borderRadius: 10,
+    borderRadius: 10
   },
 
   dialogTitle: {
