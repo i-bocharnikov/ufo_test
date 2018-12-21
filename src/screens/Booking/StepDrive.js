@@ -10,6 +10,7 @@ import {
 import { translate } from 'react-i18next';
 import { observer } from 'mobx-react';
 import _ from 'lodash';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import { bookingStore, feedbackStore, registerStore } from './../../stores';
 import { keys as screenKeys } from './../../navigators/helpers';
@@ -17,19 +18,20 @@ import {
   UFOContainer,
   UFOImage,
   UFOModalLoader,
-  UFOCheckBoxItem
+  UFOCheckBoxItem,
+  UFOTextInput
 } from './../../components/common';
 import styles from './styles/drive';
 import { images, colors } from './../../utils/theme';
-
-// temp
-const TEMP_BG = 'https://resources.ufodrive.com/images/backgrounds/BACKGROUND_WEB_4.jpg';
 
 @observer
 class StepDriveScreen extends Component {
   constructor() {
     super();
-    this.state = { showFeedBackDialog: true };
+    this.state = {
+      showFeedBackDialog: true,
+      additionalInputRef: null
+    };
   }
 
   async componentDidMount() {
@@ -45,8 +47,7 @@ class StepDriveScreen extends Component {
 
     return (
       <UFOContainer
-        // temp
-        image={this.backgroundImage || { uri: TEMP_BG }}
+        image={this.backgroundImage}
         style={styles.container}
       >
         <UFOImage
@@ -105,7 +106,9 @@ class StepDriveScreen extends Component {
       return null;
     }
 
-    const showConfirmBtn = feedback.multiSelectionAllowed && _.find(feedback.choices, [ 'value', true ]);
+    const additionalInputRef = this.state.additionalInputRef;
+    const showConfirmBtn = additionalInputRef
+      || feedback.multiSelectionAllowed && _.find(feedback.choices, [ 'value', true ]);
 
     return (
       <Modal
@@ -113,10 +116,11 @@ class StepDriveScreen extends Component {
         visible={true}
         onRequestClose={() => null}
       >
-        <ScrollView
+        <KeyboardAwareScrollView
           style={styles.dialogScrollWrapper}
           contentContainerStyle={styles.dialogWrapper}
           bounces={false}
+          keyboardShouldPersistTaps="handled"
         >
           <View style={styles.dialogContainer}>
             <Text style={styles.dialogTitle}>
@@ -125,11 +129,13 @@ class StepDriveScreen extends Component {
             <Text style={styles.dialogQuestion}>
               {feedback.question}
             </Text>
-            {feedback.choices.map(item => (
+            {feedback.choices.map(item => item.reference === additionalInputRef
+              ? this.renderAdditionalInput()
+              : (
               <UFOCheckBoxItem
                 key={item.reference}
-                label={item.text}
-                isChecked={item.value}
+                label={_.isString(item.value) ? item.value : item.text}
+                isChecked={!!item.value}
                 onCheck={() => this.handleCooseAnswer(item.reference)}
                 wrapperStyle={styles.dialogItem}
               />
@@ -146,27 +152,74 @@ class StepDriveScreen extends Component {
               </Text>
             </TouchableHighlight>
           )}
-        </ScrollView>
+        </KeyboardAwareScrollView>
       </Modal>
     );
   };
 
-  handleCooseAnswer = choiceRef => {
-    feedbackStore.chooseOption(choiceRef);
-
-    if (!feedbackStore.reserveFeedBack.multiSelectionAllowed) {
-      this.handleSendFeedBack();
-    }
+  renderAdditionalInput = () => {
+    return (
+      <UFOTextInput
+        key="feedbackInput"
+        placeholder={this.props.t('feedBackInputPlaceholder')}
+        onChangeText={this.handleInputAnswer}
+        autoFocus={true}
+      />
+    );
   };
 
+  /*
+   * Handler for pressing on any options
+  */
+  handleCooseAnswer = choiceRef => {
+    const choice = _.find(feedbackStore.reserveFeedBack.choices, [ 'reference', choiceRef ]);
+    const sendCallback = () => {
+      if (!feedbackStore.reserveFeedBack.multiSelectionAllowed) {
+        this.handleSendFeedBack();
+      }
+    };
+
+    if (choice && choice.type === 'INPUTTEXT') {
+      this.setState({ additionalInputRef: choiceRef });
+      return;
+    }
+
+    feedbackStore.chooseReserveOption(choiceRef);
+
+    if (this.state.additionalInputRef) {
+      this.setState({ additionalInputRef: null }, sendCallback);
+      return;
+    }
+
+    sendCallback();
+  };
+
+  /*
+   * Handler for input custom option
+  */
+  handleInputAnswer = value => {
+    feedbackStore.inputReserveOption(this.state.additionalInputRef, value);
+  };
+
+  /*
+   * Send feedback and close modal dialog
+  */
   handleSendFeedBack = () => {
+    if (this.state.additionalInputRef) {
+      /* valifate input value (now only non empty) */
+      const choice = _.find(feedbackStore.reserveFeedBack.choices, [ 'reference', this.state.additionalInputRef ]);
+
+      if (!_.isString(choice.value) || !choice.value.length) {
+        return;
+      }
+    }
+
     this.setState({ showFeedBackDialog: false }, feedbackStore.sendReserveFeedback);
   };
 
-  navBack = () => {
-    this.props.navigation.goBack();
-  };
-
+  /*
+   * Finish this screen actions and go next
+  */
   navNext = () => {
     const { navigation } = this.props;
     navigation.popToTop();
@@ -176,6 +229,9 @@ class StepDriveScreen extends Component {
       : navigation.navigate(screenKeys.SignUp);
   };
 
+  /*
+   * Navigation to FAQ screen
+  */
   navToGuide = () => {
     this.props.navigation.popToTop();
     this.props.navigation.navigate(screenKeys.SupportFaqs);

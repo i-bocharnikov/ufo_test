@@ -227,7 +227,8 @@ export default {
     'dreveDescrDriveP1': 'Find your bookings in the drive section of the app. If you want to know more about how it works, ',
     'dreveDescrGuideLink': 'read the guide.',
     'feedBackTitle': 'Just one question',
-    'confirmDialog': 'DONE'
+    'confirmDialog': 'DONE',
+    'feedBackInputPlaceholder': 'Your variant'
   },
   otaKeyNativeErrors
 };

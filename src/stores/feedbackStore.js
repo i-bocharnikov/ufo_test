@@ -28,7 +28,7 @@ export default class FeedbackStore {
    * Choose option handler
   */
   @action
-  chooseOption = choiceRef => {
+  chooseReserveOption = choiceRef => {
     if (!this.reserveFeedBack) {
       return;
     }
@@ -39,6 +39,23 @@ export default class FeedbackStore {
         item.value = item.reference === choiceRef ? !item.value : item.value;
       } else {
         item.value = item.reference === choiceRef ? true : false;
+      }
+    });
+  };
+
+  /*
+   * Input custom answer
+  */
+  @action
+  inputReserveOption = (choiceRef, value) => {
+    if (!this.reserveFeedBack) {
+      return;
+    }
+
+    this.reserveFeedBack.choices.some(item => {
+      if (item.reference == choiceRef) {
+        item.value = value;
+        return true;
       }
     });
   };
