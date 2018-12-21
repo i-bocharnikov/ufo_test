@@ -66,6 +66,7 @@ export default class UFOTextInput extends Component {
           placeholderColor={colors.TEXT_LIGHT_COLOR}
           underlineColorAndroid="transparent"
           editable={!isClickable}
+          pointerEvents={isClickable ? 'none' : 'auto'}
           {...restInputProps}
         />
         {IconComponent}
@@ -76,7 +77,6 @@ export default class UFOTextInput extends Component {
 
 UFOTextInput.propTypes = {
   onPress: PropTypes.func,
-  isCompleted: PropTypes.bool,
   IconComponent: PropTypes.element,
   wrapperStyle: ViewPropTypes.style,
   invalidStatus: PropTypes.bool,
