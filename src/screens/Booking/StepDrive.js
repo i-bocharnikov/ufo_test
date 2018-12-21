@@ -1,12 +1,24 @@
 import React, { Component, Fragment } from 'react';
-import { View, Text, TouchableHighlight } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableHighlight,
+  Modal,
+  TouchableOpacity,
+  ScrollView
+} from 'react-native';
 import { translate } from 'react-i18next';
 import { observer } from 'mobx-react';
 import _ from 'lodash';
 
 import { bookingStore, feedbackStore, registerStore } from './../../stores';
 import { keys as screenKeys } from './../../navigators/helpers';
-import { UFOContainer, UFOImage, UFOModalLoader } from './../../components/common';
+import {
+  UFOContainer,
+  UFOImage,
+  UFOModalLoader,
+  UFOCheckBoxItem
+} from './../../components/common';
 import styles from './styles/drive';
 import { images, colors } from './../../utils/theme';
 
@@ -15,6 +27,11 @@ const TEMP_BG = 'https://resources.ufodrive.com/images/backgrounds/BACKGROUND_WE
 
 @observer
 class StepDriveScreen extends Component {
+  constructor() {
+    super();
+    this.state = { showFeedBackDialog: true };
+  }
+
   async componentDidMount() {
     await feedbackStore.getReserveFeedbackData();
   }
@@ -24,7 +41,6 @@ class StepDriveScreen extends Component {
   }
 
   render() {
-    const feedback = feedbackStore.reserveFeedBack;
     const { t } = this.props;
 
     return (
@@ -39,7 +55,8 @@ class StepDriveScreen extends Component {
           resizeMode="contain"
         />
         {this.renderMainContent()}
-        <UFOModalLoader isVisible={feedbackStore.isLoading} />
+        {this.renderFeedBackDialog()}
+        {<UFOModalLoader isVisible={feedbackStore.isLoading} />}
       </UFOContainer>
     );
   }
@@ -78,6 +95,72 @@ class StepDriveScreen extends Component {
         </TouchableHighlight>
       </Fragment>
     );
+  };
+
+  renderFeedBackDialog = () => {
+    const showDialog = this.state.showFeedBackDialog && !feedbackStore.isLoading;
+    const feedback = feedbackStore.reserveFeedBack;
+
+    if (!showDialog || !feedback) {
+      return null;
+    }
+
+    const showConfirmBtn = feedback.multiSelectionAllowed && _.find(feedback.choices, ['value', true]);
+
+    return (
+      <Modal
+        transparent={true}
+        visible={true}
+        onRequestClose={() => null}
+      >
+        <ScrollView
+          style={styles.dialogScrollWrapper}
+          contentContainerStyle={styles.dialogWrapper}
+          bounces={false}
+        >
+          <View style={styles.dialogContainer}>
+            <Text style={styles.dialogTitle}>
+              {this.props.t('feedBackTitle')}
+            </Text>
+            <Text style={styles.dialogQuestion}>
+              {feedback.question}
+            </Text>
+            {feedback.choices.map(item => (
+              <UFOCheckBoxItem
+                key={item.reference}
+                label={item.text}
+                isChecked={item.value}
+                onCheck={() => this.handleCooseAnswer(item.reference)}
+                wrapperStyle={styles.dialogItem}
+              />
+            ))}
+          </View>
+          {showConfirmBtn && (
+            <TouchableHighlight
+              onPress={this.handleSendFeedBack}
+              underlayColor={colors.BG_DEFAULT}
+              style={styles.dialogBtn}
+            >
+              <Text style={styles.dialogBtnLabel}>
+                {this.props.t('confirmDialog')}
+              </Text>
+            </TouchableHighlight>
+          )}
+        </ScrollView>
+      </Modal>
+    );
+  };
+
+  handleCooseAnswer = choiceRef => {
+    feedbackStore.chooseOption(choiceRef);
+
+    if (!feedbackStore.reserveFeedBack.multiSelectionAllowed) {
+      this.handleSendFeedBack();
+    }
+  };
+
+  handleSendFeedBack = () => {
+    this.setState({showFeedBackDialog: false}, feedbackStore.sendReserveFeedback);
   };
 
   navBack = () => {

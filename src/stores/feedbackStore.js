@@ -21,15 +21,26 @@ export default class FeedbackStore {
       return;
     }
 
-    const data = response.data.feedback;
-    // set default choice if not exist
-    if (!_.find(data.choices, [ 'value', true ])) {
-      data.choices.forEach((item, i) => {
-        item.value = i === 0 ? true : false;
-      });
+    this.reserveFeedBack = response.data.feedback;
+  };
+
+  /*
+   * Choose option handler
+  */
+  @action
+  chooseOption = choiceRef => {
+    if (!this.reserveFeedBack) {
+      return;
     }
 
-    this.reserveFeedBack = data;
+    const isMultiSelect = this.reserveFeedBack.multiSelectionAllowed;
+    this.reserveFeedBack.choices.forEach(item => {
+      if (isMultiSelect) {
+        item.value = item.reference === choiceRef ? !item.value : item.value;
+      } else {
+        item.value = item.reference === choiceRef ? true : false;
+      }
+    });
   };
 
   /*
