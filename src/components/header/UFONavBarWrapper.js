@@ -76,6 +76,7 @@ export default class UFONavBarWrapper extends Component {
           bounces={false}
           overScrollMode="never"
           keyboardShouldPersistTaps="handled"
+          ref={ref => (this.scrollView = ref)}
         >
           {children}
         </ScrollView>
@@ -100,6 +101,12 @@ export default class UFONavBarWrapper extends Component {
     outputRange: [ BACK_ICON_SIZE, 0 ],
     extrapolate: 'clamp'
   });
+
+  scrollToTop = () => {
+    if (this.scrollView) {
+      this.scrollView.scrollTo({ x: 0, animated: false });
+    }
+  }
 }
 
 UFONavBarWrapper.defaultProps = { isCollapsible: true };

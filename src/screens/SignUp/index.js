@@ -12,7 +12,6 @@ import {
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { translate } from 'react-i18next';
-import _ from 'lodash';
 
 import registerStore from './../../stores/registerStore';
 import appStore from './../../stores/appStore';
@@ -45,7 +44,7 @@ class SignUpScreen extends Component {
     return (
       <UFOIcon
         icon={icons.VALIDATE}
-        style={[styles.inputIcon, extraStyles]}
+        style={[ styles.inputIcon, extraStyles ]}
       />
     );
   }
@@ -56,11 +55,11 @@ class SignUpScreen extends Component {
     return isFilled ? (
       <Fragment>
         <UFOImage
-          source={{uri: registerStore.identificationFrontDocument}}
+          source={{ uri: registerStore.identificationFrontDocument }}
           style={styles.cardThumb}
         />
         <UFOImage
-          source={{uri: registerStore.identificationBackDocument}}
+          source={{ uri: registerStore.identificationBackDocument }}
           style={styles.cardThumb}
         />
         {this.renderIcon(styles.cardIcon)}
@@ -80,11 +79,11 @@ class SignUpScreen extends Component {
     return isFilled ? (
       <Fragment>
         <UFOImage
-          source={{uri: registerStore.driverLicenceFrontDocument}}
+          source={{ uri: registerStore.driverLicenceFrontDocument }}
           style={styles.cardThumb}
         />
         <UFOImage
-          source={{uri: registerStore.driverLicenceBackDocument}}
+          source={{ uri: registerStore.driverLicenceBackDocument }}
           style={styles.cardThumb}
         />
         {this.renderIcon(styles.cardIcon)}
@@ -111,7 +110,7 @@ class SignUpScreen extends Component {
         <UFOHeader
           t={t}
           navigation={navigation}
-          title={t('register:overviewTitle', {user: registerStore.user})}
+          title={t('register:overviewTitle', { user: registerStore.user })}
           currentScreen={screens.REGISTER_OVERVIEW}
         />
         <ScrollView
@@ -128,7 +127,6 @@ class SignUpScreen extends Component {
             defaultValue={registerStore.user.phone_number}
             wrapperStyle={styles.inputBlock}
             onPress={this.navToPhoneScreen}
-            isCompleted={hasPhone}
             IconComponent={hasPhone ? this.renderIcon() : null}
           />
           <UFOTextInput
@@ -136,7 +134,6 @@ class SignUpScreen extends Component {
             defaultValue={registerStore.user.email}
             wrapperStyle={styles.inputBlock}
             onPress={this.navToEmailScreen}
-            isCompleted={hasEmail}
             IconComponent={hasEmail ? this.renderIcon() : null}
           />
           <UFOTextInput
@@ -144,7 +141,6 @@ class SignUpScreen extends Component {
             defaultValue={registerStore.user.address}
             wrapperStyle={styles.inputBlock}
             onPress={this.navToAddressScreen}
-            isCompleted={hasAddress}
             IconComponent={hasAddress ? this.renderIcon() : null}
           />
           <View style={styles.cardsBlock}>
@@ -159,7 +155,7 @@ class SignUpScreen extends Component {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.cardWrapper, styles.leftGap]}
+              style={[ styles.cardWrapper, styles.leftGap ]}
               onPress={this.navToDriverCardScreen}
               activeOpacity={0.8}
             >
@@ -171,12 +167,12 @@ class SignUpScreen extends Component {
           </View>
           {hasReferalCode ? (
             <TouchableOpacity
-              style={[styles.referalBlock, styles.topGap]}
+              style={[ styles.referalBlock, styles.topGap ]}
               onPress={this.shareRefCode}
               activeOpacity={0.8}
             >
               <Text style={styles.referalLabel}>
-                {t('register:referalBlock', {code: refCode})}
+                {t('register:referalBlock', { code: refCode })}
               </Text>
               <Image
                 source={images.shareRef}
@@ -184,7 +180,7 @@ class SignUpScreen extends Component {
               />
             </TouchableOpacity>
           ) : (
-            <Text style={[styles.registrationStatus, styles.topGap]}>
+            <Text style={[ styles.registrationStatus, styles.topGap ]}>
               {registerStore.user.registration_message}
             </Text>
           )}

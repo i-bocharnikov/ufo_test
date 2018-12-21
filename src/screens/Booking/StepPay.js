@@ -64,6 +64,7 @@ class StepPayScreen extends Component {
     return (
       <BookingNavWrapper
         navBack={this.navBack}
+        navToFirstStep={this.navBack}
         currentStep={2}
         BottomActionPanel={this.renderBottomPanel()}
       >
@@ -298,7 +299,7 @@ class StepPayScreen extends Component {
     await bookingStore.confirmBooking();
 
     if (bookingStore.bookingConfirmation) {
-      this.props.navigation.navigate(screenKeys.BookingStepDrive);
+      this.props.navigation.replace(screenKeys.BookingStepDrive);
     }
   };
 }

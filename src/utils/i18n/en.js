@@ -218,7 +218,17 @@ export default {
     'returnAlt': 'Return',
     'noAvailableColor': 'no availability',
     'highDemandColor': 'high demand',
-    'calendarColorsNotes': 'Select multiple dates to see discounts'
+    'calendarColorsNotes': 'Select multiple dates to see discounts',
+    'driveTitle': 'Booking completed!',
+    'driveSubTitle': 'Enjoy your trip…',
+    'driveNextRegister': 'REGISTER',
+    'driveNextDrive': 'DRIVE YOUR CAR',
+    'dreveDescrRegisterP1': 'Before the rental,please register youself by scanning your ID and driver licence. If you want to know more about how it works, ',
+    'dreveDescrDriveP1': 'Find your bookings in the drive section of the app. If you want to know more about how it works, ',
+    'dreveDescrGuideLink': 'read the guide.',
+    'feedBackTitle': 'Just one question',
+    'confirmDialog': 'DONE',
+    'feedBackInputPlaceholder': 'Your variant'
   },
   otaKeyNativeErrors
 };
