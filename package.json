@@ -52,6 +52,7 @@
     "react-native-image-rotate": "^2.1.0",
     "react-native-keyboard-aware-scroll-view": "^0.7.2",
     "react-native-linear-gradient": "^2.5.2",
+    "react-native-markdown-view": "^1.1.4",
     "react-native-permissions": "^1.1.1",
     "react-native-phone-call": "^1.0.9",
     "react-native-phone-input": "^0.2.1",

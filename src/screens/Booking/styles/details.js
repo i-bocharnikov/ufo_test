@@ -3,6 +3,24 @@ import { StyleSheet } from 'react-native';
 import { colors, textThemes } from './../../../utils/theme';
 import { SCREEN_HORIZONTAL_INDENTS } from './index';
 
+/*
+ * supported styles look there:
+ * https://github.com/Benjamin-Dobell/react-native-markdown-view/blob/master/styles.js
+*/
+export const markdownStyles = StyleSheet.create({
+  paragraph: {
+    ...textThemes.SP_LIGHT,
+    fontSize: 13,
+    lineHeight: 19,
+    textAlign: 'justify'
+  },
+
+  link: {
+    color: colors.MAIN_LIGHT_COLOR,
+    textDecorationLine: 'underline'
+  }
+});
+
 export default StyleSheet.create({
   container: {
     backgroundColor: colors.BG_INVERT,
@@ -69,11 +87,9 @@ export default StyleSheet.create({
     marginHorizontal: SCREEN_HORIZONTAL_INDENTS
   },
 
-  descriptionText: {
-    lineHeight: 19,
-    marginVertical: 26,
-    marginHorizontal: SCREEN_HORIZONTAL_INDENTS,
-    textAlign: 'justify'
+  descriptionBody: {
+    marginVertical: 16,
+    marginHorizontal: SCREEN_HORIZONTAL_INDENTS
   },
 
   descriptionFeatures: {

@@ -1,13 +1,14 @@
 import React, { Component, Fragment } from 'react';
-import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, Dimensions, Linking } from 'react-native';
 import { translate } from 'react-i18next';
 import { observer } from 'mobx-react';
+import { MarkdownView } from 'react-native-markdown-view';
 
 import { bookingStore } from './../../stores';
 import UFONavBarWrapper from './../../components/header/UFONavBarWrapper';
 import UFOSlider from './../../components/UFOSlider';
 import { UFOContainer, UFOModalLoader, UFOImage, UFOIcon_next } from './../../components/common';
-import styles from './styles/details';
+import styles, { markdownStyles } from './styles/details';
 import commonStyles from './styles';
 import { values, colors } from './../../utils/theme';
 
@@ -64,9 +65,14 @@ class BookingDetailsScreen extends Component {
           <Text style={[ styles.commonBoldText, styles.descriptionSubTitle ]}>
             {data.descriptionSubHeader}
           </Text>
-          <Text style={[ styles.commonText, styles.descriptionText ]}>
-            {data.descriptionBody}
-          </Text>
+          <View style={styles.descriptionBody}>
+            <MarkdownView
+              styles={markdownStyles}
+              onLinkPress={this.onLinkPress}
+            >
+              {data.descriptionBody}
+            </MarkdownView>
+          </View>
           {this.getFuturesBlock()}
           {data.message && (
             <Text style={styles.priceMessage}>
@@ -123,6 +129,10 @@ class BookingDetailsScreen extends Component {
         />
       </View>
     );
+  };
+
+  onLinkPress = url => {
+    Linking.openURL(url);
   };
 
   onSnapToItem = i => this.setState({ activeSlide: i });
