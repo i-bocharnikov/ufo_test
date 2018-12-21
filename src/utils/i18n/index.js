@@ -1,13 +1,13 @@
-import i18n from "i18next";
-import moment from "moment";
-import "moment/locale/fr";
-import DeviceInfo from "react-native-device-info";
+import i18n from 'i18next';
+import moment from 'moment';
+import 'moment/locale/fr';
+import DeviceInfo from 'react-native-device-info';
 
-import en from "./en";
-import fr from "./fr";
+import en from './en';
+import fr from './fr';
 
 const languageDetector = {
-  type: "languageDetector",
+  type: 'languageDetector',
   detect: () => DeviceInfo.getDeviceLocale(),
   init: () => {},
   cacheUserLanguage: () => {}
@@ -15,10 +15,10 @@ const languageDetector = {
 
 i18n.use(languageDetector).init({
   resources: { en, fr },
-  fallbackLng: "en",
+  fallbackLng: 'en',
   debug: false,
-  ns: ["translations"],
-  defaultNS: "translations",
+  ns: ['translations'],
+  defaultNS: 'translations',
   keySeparator: false,
   interpolation: { escapeValue: false },
   react: { wait: true }

@@ -60,6 +60,7 @@
 		F54D9AC82194816900FE4741 /* libLRDRCTSimpleToast.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F54D9A982194815500FE4741 /* libLRDRCTSimpleToast.a */; };
 		F576CEE321AEEA0700D02887 /* SofiaProSemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F576CEB021AEEA0700D02887 /* SofiaProSemiBold.ttf */; };
 		F57C17FF21B0318700C77524 /* libTPSStripe.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F57C17FE21B0316F00C77524 /* libTPSStripe.a */; };
+		F5BBF0A021CD1A2B00D65B29 /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = F5BBF09F21CD1A2B00D65B29 /* main.jsbundle */; };
 		F5CD80AC21AEAD84005F86F6 /* libRNCardIO.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5CD80A521AEAD65005F86F6 /* libRNCardIO.a */; };
 		F5D4833E2189AFAD00943D6B /* libRNImageRotate.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5D4833D2189AE7800943D6B /* libRNImageRotate.a */; };
 		F5D483882189B1B700943D6B /* libFastImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5D483582189B1A600943D6B /* libFastImage.a */; };
@@ -495,6 +496,7 @@
 		F54D9A922194815400FE4741 /* LRDRCTSimpleToast.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LRDRCTSimpleToast.xcodeproj; path = "../node_modules/react-native-simple-toast/ios/LRDRCTSimpleToast.xcodeproj"; sourceTree = "<group>"; };
 		F576CEB021AEEA0700D02887 /* SofiaProSemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = SofiaProSemiBold.ttf; path = ../src/assets/fonts/SofiaProSemiBold.ttf; sourceTree = "<group>"; };
 		F57C17C521B0316F00C77524 /* TPSStripe.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TPSStripe.xcodeproj; path = "../node_modules/tipsi-stripe/ios/TPSStripe.xcodeproj"; sourceTree = "<group>"; };
+		F5BBF09F21CD1A2B00D65B29 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
 		F5CD807521AEAD65005F86F6 /* RNCardIO.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNCardIO.xcodeproj; path = "../node_modules/react-native-awesome-card-io/ios/RNCardIO.xcodeproj"; sourceTree = "<group>"; };
 		F5D4830A2189AE7800943D6B /* RNImageRotate.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNImageRotate.xcodeproj; path = "../node_modules/react-native-image-rotate/RNImageRotate.xcodeproj"; sourceTree = "<group>"; };
 		F5D483522189B1A600943D6B /* FastImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FastImage.xcodeproj; path = "../node_modules/react-native-fast-image/ios/FastImage.xcodeproj"; sourceTree = "<group>"; };
@@ -664,6 +666,7 @@
 		13B07FAE1A68108700A75B9A /* driverApp */ = {
 			isa = PBXGroup;
 			children = (
+				F5BBF09F21CD1A2B00D65B29 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -1539,6 +1542,7 @@
 				A19F4431E78541778FE1C74C /* Foundation.ttf in Resources */,
 				E891AD1F7EA04052A232EE6C /* Ionicons.ttf in Resources */,
 				6399501CBF384C5895FCDADA /* MaterialCommunityIcons.ttf in Resources */,
+				F5BBF0A021CD1A2B00D65B29 /* main.jsbundle in Resources */,
 				F540751321984D5000BB787A /* SofiaProRegular.ttf in Resources */,
 				215599F6038B4BDE9782787C /* MaterialIcons.ttf in Resources */,
 				99600D69E89C42F09292A9E0 /* Octicons.ttf in Resources */,
