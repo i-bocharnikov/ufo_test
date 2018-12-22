@@ -87,7 +87,8 @@ class DriveScreen extends Component {
             <View style={{
               paddingTop: dims.CONTENT_PADDING_TOP,
               paddingHorizontal: dims.CONTENT_PADDING_HORIZONTAL
-            }}>
+            }}
+            >
               <View style={{
                 flexDirection: 'column',
                 justifyContent: 'flex-start',
@@ -95,21 +96,22 @@ class DriveScreen extends Component {
                 backgroundColor: colors.CARD_BACKGROUND.string(),
                 borderRadius: 8,
                 padding: 20
-              }}>
-                <UFOText h1 bold center style={{paddingTop: 10}}>
-                  {t('home:reserve', {user: registerStore.user})}
+              }}
+              >
+                <UFOText h1 bold center style={{ paddingTop: 10 }}>
+                  {t('home:reserve', { user: registerStore.user })}
                 </UFOText>
-                <UFOText h1 bold center style={{paddingTop: 5}}>
-                  {t('home:register', {user: registerStore.user})}
+                <UFOText h1 bold center style={{ paddingTop: 5 }}>
+                  {t('home:register', { user: registerStore.user })}
                 </UFOText>
-                <UFOText h1 bold center style={{paddingTop: 5}}>
-                  {t('home:drive', {user: registerStore.user})}
+                <UFOText h1 bold center style={{ paddingTop: 5 }}>
+                  {t('home:drive', { user: registerStore.user })}
                 </UFOText>
               </View>
             </View>
           )}
           {driveStore.hasRentals && driveStore.rental && (
-            <View style={{paddingTop: dims.CONTENT_PADDING_TOP}}>
+            <View style={{ paddingTop: dims.CONTENT_PADDING_TOP }}>
               <UFOSlider
                 data={driveStore.rentals}
                 renderItem={this.renderRental}
@@ -126,7 +128,8 @@ class DriveScreen extends Component {
               flexDirection: 'column',
               justifyContent: 'center',
               alignContent: 'center'
-            }}>
+            }}
+            >
               <UFOCard
                 title={t('drive:noRentalsTitle')}
                 text={t('drive:noRentalsDescription')}
@@ -151,7 +154,7 @@ class DriveScreen extends Component {
       actions.push({
         style: driveStore.hasRentalConfirmedOrOngoing ? actionStyles.DONE : actionStyles.TODO,
         icon: icons.RESERVE,
-        onPress: () => navigation.navigate(screenKeys.BookingStepBook)
+        onPress: () => navigation.navigate(screenKeys.Booking)
       });
       actions.push({
         style: registerStore.isUserRegistered ? actionStyles.DONE : actionStyles.TODO,
@@ -361,7 +364,6 @@ class DriveScreen extends Component {
     await otaKeyStore.getVehicleData();
     this.activityPending = false;
   };
-
 
   confirmCloseRental = async t => {
     const keyMessage = driveStore.rental

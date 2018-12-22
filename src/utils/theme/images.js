@@ -5,5 +5,9 @@ export default {
   captureCardIdBack: require('./../../assets/images/scan/id-back.jpg'),
   driverCardFront: require('./../../assets/images/scan/dl-front.jpg'),
   driverCardBack: require('./../../assets/images/scan/dl-back.jpg'),
-  moonLand: require('./../../assets/images/moon_land.png')
+  moonLand: require('./../../assets/images/moon_land.png'),
+  ufoLogoBig: require('./../../assets/images/logos/ufodrive_logo.png'),
+  ufoLogoTiny: require('./../../assets/images/logos/ufodrive_logo_tiny.png'),
+  /* screen backgrounds */
+  BG_HOME002: require('./../../assets/images/background/UFOBGHOME002.png')
 };

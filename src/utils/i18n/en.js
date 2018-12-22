@@ -230,5 +230,19 @@ export default {
     'confirmDialog': 'DONE',
     'feedBackInputPlaceholder': 'Your variant'
   },
+  launch: {
+    'launchTitle': 'Fast track\ncar infos',
+    'slideOneTitle': 'Fully automated',
+    'slideTwoTitle': 'No hidden charges',
+    'slideThreeTitle': 'Stylish electric cars',
+    'slideOneSubTitle': 'and app based',
+    'slideTwoSubTitle': 'and no refuelling cost',
+    'slideThreeSubTitle': 'price all included',
+    'slideOneDescription': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus id tellus id orci gravida pellentesque. Quisque fermentu.',
+    'slideTwoDescription': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus id tellus id orci gravida pellentesque. Quisque fermentu.',
+    'slideThreeDescription': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus id tellus id.',
+    'nextBtn': 'DISCOVER ALL CARS',
+    'skipBtn': 'skip'
+  },
   otaKeyNativeErrors
 };

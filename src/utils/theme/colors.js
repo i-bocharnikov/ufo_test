@@ -1,4 +1,5 @@
 export default {
+  BG_TRANSITION_COLOR: '#000',
   TEXT_DEFAULT_COLOR: '#2f2f2f',
   TEXT_INVERT_COLOR: '#fff',
   TEXT_LIGHT_COLOR: '#979797',

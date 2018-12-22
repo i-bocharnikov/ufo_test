@@ -1,27 +1,24 @@
-import Color from 'color'
+import Color from 'color';
 import configurations from './configurations';
-import { Dimensions, Platform } from 'react-native'
+import { Dimensions, Platform } from 'react-native';
 
-const THEME_UFO = 'UFO'
-const THEME_ACL = 'ACL'
-const THEME = configurations.theme
+const THEME_UFO = 'UFO';
+const THEME_ACL = 'ACL';
+const THEME = configurations.theme;
 
 export const backgrounds = {
-    HOME001: THEME === THEME_UFO ? require("../assets/images/background/UFOBGHOME001.png") : require("../assets/images/background/ACLBGHOME001.png"),
-    HOME002: THEME === THEME_UFO ? require("../assets/images/background/UFOBGHOME002.png") : require("../assets/images/background/ACLBGHOME002.png"),
-    DRIVE001: THEME === THEME_UFO ? require("../assets/images/background/UFOBGDRIVE001.png") : require("../assets/images/background/ACLBGDRIVE001.png"),
-    FIND001: THEME === THEME_UFO ? require("../assets/images/background/UFOBGFIND001.png") : require("../assets/images/background/ACLBGFIND001.png"),
-    INSPECT001: THEME === THEME_UFO ? require("../assets/images/background/UFOBGINSPECT001.png") : require("../assets/images/background/ACLBGINSPECT001.png"),
-    RETURN001: THEME === THEME_UFO ? require("../assets/images/background/UFOBGRETURN001.png") : require("../assets/images/background/ACLBGRETURN001.png"),
-    SUPPORT001: THEME === THEME_UFO ? require("../assets/images/background/UFOBGSUPPORT001.png") : require("../assets/images/background/ACLBGSUPPORT001.png"),
-    REGISTER001: THEME === THEME_UFO ? require("../assets/images/background/UFOBGREGISTER001.png") : require("../assets/images/background/ACLBGREGISTER001.png"),
-    RESERVE001: THEME === THEME_UFO ? require("../assets/images/background/UFOBGRESERVE001.png") : require("../assets/images/background/ACLBGRESERVE001.png")
-}
+    HOME001: THEME === THEME_UFO ? require('../assets/images/background/UFOBGHOME001.png') : require('../assets/images/background/ACLBGHOME001.png'),
+    HOME002: THEME === THEME_UFO ? require('../assets/images/background/UFOBGHOME002.png') : require('../assets/images/background/ACLBGHOME002.png'),
+    DRIVE001: THEME === THEME_UFO ? require('../assets/images/background/UFOBGDRIVE001.png') : require('../assets/images/background/ACLBGDRIVE001.png'),
+    FIND001: THEME === THEME_UFO ? require('../assets/images/background/UFOBGFIND001.png') : require('../assets/images/background/ACLBGFIND001.png'),
+    INSPECT001: THEME === THEME_UFO ? require('../assets/images/background/UFOBGINSPECT001.png') : require('../assets/images/background/ACLBGINSPECT001.png'),
+    RETURN001: THEME === THEME_UFO ? require('../assets/images/background/UFOBGRETURN001.png') : require('../assets/images/background/ACLBGRETURN001.png'),
+    SUPPORT001: THEME === THEME_UFO ? require('../assets/images/background/UFOBGSUPPORT001.png') : require('../assets/images/background/ACLBGSUPPORT001.png'),
+    REGISTER001: THEME === THEME_UFO ? require('../assets/images/background/UFOBGREGISTER001.png') : require('../assets/images/background/ACLBGREGISTER001.png'),
+    RESERVE001: THEME === THEME_UFO ? require('../assets/images/background/UFOBGRESERVE001.png') : require('../assets/images/background/ACLBGRESERVE001.png')
+};
 
-
-export const logos = {
-    horizontal: THEME === THEME_UFO ? require("../assets/images/logos/UFOLOGO_H.png") : require("../assets/images/logos/ACLLOGO_H.png"),
-}
+export const logos = { horizontal: THEME === THEME_UFO ? require('../assets/images/logos/UFOLOGO_H.png') : require('../assets/images/logos/ACLLOGO_H.png') };
 
 export const images = {
     photoPicker: require('./../assets/images/photo_picker.png'),
@@ -36,7 +33,7 @@ export const images = {
 
 //https://github.com/jondot/awesome-react-native#geolocation
 //https://github.com/zhangtaii/react-native-google-place-picker
-//TODO 
+//TODO
 //https://reactnativeexample.com/react-native-range-datepicker-inspired-by-airbnb/
 //https://github.com/monterosalondon/react-native-parallax-scroll
 //https://github.com/Tinysymphony/react-native-calendar-select
@@ -47,29 +44,25 @@ export const images = {
 //https://github.com/naoufal/react-native-touch-id
 //https://github.com/oblador/react-native-keychain
 
-
-
 //TODO
 //https://github.com/react-community/react-native-platform-touchable
 
 export const dateFormats = {
     FULL: 'LLLL',
     DRIVE: 'dddd, MMM D - YYYY - hA'
-}
-
-
+};
 
 export const colors = {
-    TRANSITION_BACKGROUND: new Color.rgb(0, 0, 0),//new Color('#0081B5'),
-    HEADER_BACKGROUND: new Color.rgb(39, 61, 76).alpha(0.85),//new Color('#0081B5'),
-    BACKGROUND: new Color.rgb(244, 245, 245),//new Color('#172c32'),
-    HEADER_TEXT: new Color.rgb(255, 255, 255),//new Color('#fff'),
-    INVERTED_TEXT: new Color.rgb(255, 255, 255),//new Color('#fff'),
-    TEXT: new Color.rgb(64, 101, 125),//new Color('#fff'),
-    ICON: new Color.rgb(255, 255, 255),//new Color('#fff'),
-    CARD_BACKGROUND: new Color.rgb(255, 255, 255).alpha(0.70),//new Color('#fff'),
-    TODO: new Color.rgb(234, 80, 76),//new Color('#C8102E'),
-    DONE: new Color.rgb(64, 101, 125),//new Color('#03DAC6'),//new Color.rgb(64, 101, 125), //
+    TRANSITION_BACKGROUND: new Color.rgb(0, 0, 0), //new Color('#0081B5'),
+    HEADER_BACKGROUND: new Color.rgb(39, 61, 76).alpha(0.85), //new Color('#0081B5'),
+    BACKGROUND: new Color.rgb(244, 245, 245), //new Color('#172c32'),
+    HEADER_TEXT: new Color.rgb(255, 255, 255), //new Color('#fff'),
+    INVERTED_TEXT: new Color.rgb(255, 255, 255), //new Color('#fff'),
+    TEXT: new Color.rgb(64, 101, 125), //new Color('#fff'),
+    ICON: new Color.rgb(255, 255, 255), //new Color('#fff'),
+    CARD_BACKGROUND: new Color.rgb(255, 255, 255).alpha(0.70), //new Color('#fff'),
+    TODO: new Color.rgb(234, 80, 76), //new Color('#C8102E'),
+    DONE: new Color.rgb(64, 101, 125), //new Color('#03DAC6'),//new Color.rgb(64, 101, 125), //
     ACTIVE: new Color.rgb(64, 101, 125), //new Color('#0081B5'),
     PRIMARY: new Color.rgb(64, 101, 125),
     DISABLE: new Color.rgb(151, 151, 151),
@@ -78,17 +71,16 @@ export const colors = {
     WARNING: new Color.rgb(255, 87, 34),
     WRONG: new Color('yellow'),
 
-    INPUT_BG: new Color.rgb(255, 255, 255),     // #FFF
-    TEXT_DARK: new Color.rgb(47, 47, 47),       // #2F2F2F
-    SUCCESS: new Color.rgb(64, 184, 68)         // #40B844
-}
-
+    INPUT_BG: new Color.rgb(255, 255, 255), // #FFF
+    TEXT_DARK: new Color.rgb(47, 47, 47), // #2F2F2F
+    SUCCESS: new Color.rgb(64, 184, 68) // #40B844
+};
 
 export const navigationParams = {
     PREVIOUS_SCREEN: 'PREVIOUS_SCREEN',
     SUPPORT_FAQ_CATEGORY: 'SUPPORT_FAQ_CATEGORY',
-    SUPPORT_FAQ: 'SUPPORT_FAQ',
-}
+    SUPPORT_FAQ: 'SUPPORT_FAQ'
+};
 
 class Screen {
 
@@ -97,13 +89,13 @@ class Screen {
         this.supportFaqCategory = supportFaqCategory;
         this.backgroundImage = backgroundImage;
     }
-    name = "missing"
-    supportFaqCategory = "missing"
+    name = 'missing'
+    supportFaqCategory = 'missing'
     backgroundImage = null
 }
 
-const DEVICE_WIDTH = Dimensions.get('window').width
-const DEVICE_HEIGHT = Dimensions.get('window').height
+const DEVICE_WIDTH = Dimensions.get('window').width;
+const DEVICE_HEIGHT = Dimensions.get('window').height;
 
 export const dims = {
     DEVICE_WIDTH: DEVICE_WIDTH,
@@ -111,7 +103,7 @@ export const dims = {
     CONTENT_WIDTH: DEVICE_WIDTH * 90 / 100,
     CONTENT_PADDING_HORIZONTAL: (DEVICE_WIDTH * 10 / 100) / 2,
     CONTENT_PADDING_TOP: DEVICE_HEIGHT / 8
-}
+};
 
 export const screens = {
     HOME: new Screen('Drive', '', backgrounds.HOME002),
@@ -131,11 +123,10 @@ export const screens = {
     INSPECT_LOCATE: new Screen('InspectLocateDamage', 'INSPECT', backgrounds.INSPECT001),
     INSPECT_CAPTURE: new Screen('InspectCaptureDamage', 'INSPECT', backgrounds.INSPECT001),
     INSPECT_COMMENT: new Screen('InspectCommentDamage', 'INSPECT', backgrounds.INSPECT001),
-    SUPPORT: new Screen('Support', null, backgrounds.SUPPORT001),
     SUPPORT_FAQS: new Screen('SupportFaqs', null, backgrounds.SUPPORT001),
     SUPPORT_FAQ: new Screen('SupportFaq', null, backgrounds.SUPPORT001),
-    SUPPORT_CHAT: new Screen('SupportChat', null, backgrounds.SUPPORT001),
-}
+    SUPPORT_CHAT: new Screen('SupportChat', null, backgrounds.SUPPORT001)
+};
 
 class Size {
 
@@ -143,7 +134,7 @@ class Size {
         this.name = name;
         this.fontSize = fontSize;
     }
-    name = "massive"
+    name = 'massive'
     fontSize = 256
 }
 
@@ -154,17 +145,17 @@ export const sizes = {
     LARGE: new Size('large', 32),
     BIG: new Size('big', 64),
     HUGE: new Size('huge', 128),
-    MASSIVE: new Size('massive', 256),
-}
+    MASSIVE: new Size('massive', 256)
+};
 
 class ActionStyle {
 
     constructor(name, color, elevation) {
         this.name = name;
         this.color = color;
-        this.elevation = elevation
+        this.elevation = elevation;
     }
-    name = "wrong"
+    name = 'wrong'
     color = colors.WRONG
     elevation = 0
 }
@@ -177,8 +168,8 @@ export const actionStyles = {
     SUCCESS: new ActionStyle('success', colors.SUCCESS, 2),
     ERROR: new ActionStyle('error', colors.ERROR, 3),
     PENDIBNG: new ActionStyle('pending', colors.PENDING, 0),
-    WRONG: new ActionStyle('wrong', colors.WRONG, 0),
-}
+    WRONG: new ActionStyle('wrong', colors.WRONG, 0)
+};
 
 class Icon {
 
@@ -186,8 +177,8 @@ class Icon {
         this.name = name;
         this.i18nKey = i18nKey;
     }
-    name = "bonfire"
-    i18nKey = "missing"
+    name = 'bonfire'
+    i18nKey = 'missing'
 }
 
 export const icons = {
@@ -245,20 +236,18 @@ export const icons = {
     KEY: new Icon('key', 'icon:key'),
     CONNECT: new Icon('bluetooth', 'icon:connect'),
 
-
-
     EMERGENCY_CALL: new Icon('call', 'icon:emergencyCall'),
     WRONG: new Icon('bonfire', 'icon:wrong')
-}
+};
 
 export class UFOError extends Error {
 
     constructor(i18nKey) {
-        super(i18nKey)
+        super(i18nKey);
         i18nKey = i18nKey;
-        i18nValue = {}
+        i18nValue = {};
     }
-    i18nKey = "error:missing"
+    i18nKey = 'error:missing'
     i18nValue = {}
 }
 
@@ -266,7 +255,7 @@ export const errors = {
     INTERNET_CONNECTION_REQUIRED: new UFOError('error:internetConnectionRequired'),
     BLUETOOTH_CONNECTION_REQUIRED: new UFOError('error:bluetoothConnectionRequired'),
     UNEXPECTED_SERVER_REPONSE: new UFOError('error:unexpectedServerResponse')
-}
+};
 
 export const fonts = {
     // add fontWeight for ios
