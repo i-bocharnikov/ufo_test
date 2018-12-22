@@ -47,7 +47,7 @@ class LaunchScreen extends Component {
   async componentDidMount() {
     SplashController.hide();
     await appStore.initialise(this.props.t);
-    console.log('USER', registerStore.user);
+
     if (registerStore.isUserRegistered) {
       this.navToApp();
     }
