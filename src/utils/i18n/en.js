@@ -218,7 +218,31 @@ export default {
     'returnAlt': 'Return',
     'noAvailableColor': 'no availability',
     'highDemandColor': 'high demand',
-    'calendarColorsNotes': 'Select multiple dates to see discounts'
+    'calendarColorsNotes': 'Select multiple dates to see discounts',
+    'driveTitle': 'Booking completed!',
+    'driveSubTitle': 'Enjoy your trip…',
+    'driveNextRegister': 'REGISTER',
+    'driveNextDrive': 'DRIVE YOUR CAR',
+    'dreveDescrRegisterP1': 'Before the rental,please register youself by scanning your ID and driver licence. If you want to know more about how it works, ',
+    'dreveDescrDriveP1': 'Find your bookings in the drive section of the app. If you want to know more about how it works, ',
+    'dreveDescrGuideLink': 'read the guide.',
+    'feedBackTitle': 'Just one question',
+    'confirmDialog': 'DONE',
+    'feedBackInputPlaceholder': 'Your variant'
+  },
+  launch: {
+    'launchTitle': 'Fast track\ncar infos',
+    'slideOneTitle': 'Fully automated',
+    'slideTwoTitle': 'No hidden charges',
+    'slideThreeTitle': 'Stylish electric cars',
+    'slideOneSubTitle': 'and app based',
+    'slideTwoSubTitle': 'and no refuelling cost',
+    'slideThreeSubTitle': 'price all included',
+    'slideOneDescription': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus id tellus id orci gravida pellentesque. Quisque fermentu.',
+    'slideTwoDescription': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus id tellus id orci gravida pellentesque. Quisque fermentu.',
+    'slideThreeDescription': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus id tellus id.',
+    'nextBtn': 'DISCOVER ALL CARS',
+    'skipBtn': 'skip'
   },
   otaKeyNativeErrors
 };

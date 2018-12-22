@@ -6,6 +6,7 @@ import UFOImage from './UFOImage';
 import UFOVideo from './UFOVideo';
 import UFOModalLoader from './UFOModalLoader';
 import UFOGradientView from './UFOGradientView';
+import UFOCheckBoxItem from './UFOCheckBoxItem';
 
 import UFOText from './UFOText_old';
 import UFOTextInput_old from './UFOTextInput_old';
@@ -20,6 +21,7 @@ export {
     UFOVideo,
     UFOModalLoader,
     UFOGradientView,
+    UFOCheckBoxItem,
     // deprecated components, will be replaced with redesigning
     UFOText,
     UFOTextInput_old

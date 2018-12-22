@@ -29,9 +29,8 @@ class StepBookScreen extends Component {
   }
 
   async componentDidMount() {
-    if (!bookingStore.locations.length || !bookingStore.cars.length) {
-      await bookingStore.getInitialData();
-    }
+    await this.fetchInitialData();
+    this.props.navigation.addListener('didFocus', this.fetchInitialData);
   }
 
   render() {
@@ -42,6 +41,7 @@ class StepBookScreen extends Component {
         navBack={this.navBack}
         currentStep={1}
         BottomActionPanel={this.renderBottomPanel()}
+        ref={ref => (this.screenWrapper = ref)}
       >
         <UFOContainer style={styles.screenContainer}>
           <Text style={[ styles.sectionTitle, styles.sectionTitleIndents ]}>
@@ -221,6 +221,14 @@ class StepBookScreen extends Component {
     );
   };
 
+  fetchInitialData = async () => {
+    if (!bookingStore.locations.length || !bookingStore.cars.length) {
+      const screenWrapper = this.screenWrapper.getWrappedInstance();
+      screenWrapper && screenWrapper.scrollToTop();
+      await bookingStore.getInitialData();
+    }
+  };
+
   onSelectLocation = ref => {
     if (ref) {
       bookingStore.selectLocation(ref);
@@ -295,4 +303,4 @@ class StepBookScreen extends Component {
   };
 }
 
-export default translate()(StepBookScreen);
+export default translate('', { withRef: true })(StepBookScreen);

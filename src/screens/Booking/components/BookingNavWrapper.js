@@ -18,6 +18,7 @@ class BookingNavWrapper extends Component {
           title={t('booking:screenTitle')}
           SubtitleComponent={this.getSubTitleComponent()}
           backBtnAction={navBack}
+          ref={ref => (this.navBarWrapper = ref)}
         >
           {this.props.children}
         </UFONavBarWrapper>
@@ -27,15 +28,17 @@ class BookingNavWrapper extends Component {
   }
 
   getSubTitleComponent = () => {
-    const { t, currentStep } = this.props;
+    const { t, currentStep, navToFirstStep } = this.props;
 
     return (
       <Fragment>
-        <Text style={[
-          navBarStyles.subTitle,
-          styles.headerSubtitleLabel,
-          currentStep > 1 && styles.headerPastStep
-        ]}
+        <Text
+          onPress={navToFirstStep}
+          style={[
+            navBarStyles.subTitle,
+            styles.headerSubtitleLabel,
+            currentStep > 1 && styles.headerPastStep
+          ]}
         >
           1. {t('booking:subTitleStep1')}
         </Text>
@@ -77,12 +80,19 @@ class BookingNavWrapper extends Component {
       </Fragment>
     );
   };
+
+  scrollToTop = () => {
+    if (this.navBarWrapper) {
+      this.navBarWrapper.scrollToTop();
+    }
+  };
 }
 
 BookingNavWrapper.propTypes = {
   navBack: PropTypes.func,
+  navToFirstStep: PropTypes.func,
   currentStep: PropTypes.number,
   BottomActionPanel: PropTypes.node
 };
 
-export default translate()(BookingNavWrapper);
+export default translate('', { withRef: true })(BookingNavWrapper);
