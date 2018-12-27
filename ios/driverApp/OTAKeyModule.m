@@ -118,7 +118,7 @@ RCT_REMAP_METHOD(openSession,
   @try
   {
     [[OTAManager instance] openSessionWithToken:token
-                                        success:^(BOOL success) {
+                                        success:^(bool success) {
                                           if (success) {
                                             resolve(@YES);
                                           } else {
@@ -143,7 +143,7 @@ RCT_REMAP_METHOD(register,
 {
   @try
   {
-    [[OTAManager instance] configureEnvironment:OTAEnvironmentSandbox];
+    [[OTAManager instance] configureEnvironment:OTAEnvironmentProduction];
     [OTAManager instance].delegate = self;
     resolve(@YES);
   }

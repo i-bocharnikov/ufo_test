@@ -23,7 +23,6 @@ import {
   screens,
   actionStyles,
   icons,
-  colors,
   images
 } from './../../utils/global';
 import { showWarning } from './../../utils/interaction';
@@ -45,7 +44,7 @@ const captureStates = {
 };
 
 const bgImageStyles = StyleSheet.create({
-  bg: {
+  bgArea: {
     position: 'absolute',
     top: PADDING_HEIGHT,
     left: PADDING_WIDTH,
@@ -54,8 +53,7 @@ const bgImageStyles = StyleSheet.create({
     width: CARD_WIDTH,
     height: CARD_HEIGHT,
     justifyContent: 'center',
-    alignContent: 'center',
-    opacity: 0.4
+    alignContent: 'center'
   }
 });
 
@@ -106,7 +104,7 @@ class DriverLicenceScreen extends Component {
           currentScreen={screens.REGISTER_DRIVER_LICENCE}
           title={showCamera
             ? null
-            : t('register:driverLicenceTitle', {user: registerStore.user})
+            : t('register:driverLicenceTitle', { user: registerStore.user })
           }
           logo={showCamera}
           transparent={showCamera}
@@ -117,12 +115,14 @@ class DriverLicenceScreen extends Component {
               <UFOCard title={t('register:driverLicenceCheckLabel')}>
                   <View style={styles.cardsContainer}>
                     <UFOImage
-                      source={{uri: this.frontImageUrl}}
-                      style={{width: CARD_WIDTH, height: CARD_HEIGHT}}
+                      source={{ uri: this.frontImageUrl }}
+                      style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
+                      fallbackToImage={true}
                     />
                     <UFOImage
-                      source={{uri: this.backImageUrl}}
-                      style={{width: CARD_WIDTH, height: CARD_HEIGHT}}
+                      source={{ uri: this.backImageUrl }}
+                      style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
+                      fallbackToImage={true}
                     />
                   </View>
               </UFOCard>
@@ -138,15 +138,17 @@ class DriverLicenceScreen extends Component {
             />
             <ImageBackground
               source={sample}
-              style={bgImageStyles.bg}
-            >
+              style={[ bgImageStyles.bgArea, styles.cardCameraBackground ]}
+            />
+            <View style={bgImageStyles.bgArea}>
               <Text style={[
                 styles.cardCameraLabel,
-                {color: this.activityPending ? colors.DISABLE : colors.INVERTED_TEXT}
-              ]}>
+                this.activityPending && styles.cardCameraBackground
+              ]}
+              >
                 {t(inputLabel).toUpperCase()}
               </Text>
-            </ImageBackground>
+            </View>
           </Fragment>
         )}
         <UFOActionBar
@@ -211,7 +213,7 @@ class DriverLicenceScreen extends Component {
       }
     }, error => {
       this.activityPending = false;
-      showWarning(t('Registration:CameraProcessingError', {message: error.message}));
+      showWarning(t('Registration:CameraProcessingError', { message: error.message }));
     });
   };
 

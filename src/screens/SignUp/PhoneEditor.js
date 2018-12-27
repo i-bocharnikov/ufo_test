@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { View } from 'react-native';
 import { observer } from 'mobx-react';
-import { observable, action } from 'mobx';
+import { observable } from 'mobx';
 import { translate } from 'react-i18next';
 import PhoneInput from 'react-native-phone-input';
 import CountryPicker from 'react-native-country-picker-modal';
@@ -14,10 +14,10 @@ import {
   UFOContainer,
   UFOTextInput,
   ufoInputStyles
-} from '../../components/common';
+} from './../../components/common';
 import { screens, actionStyles, icons } from './../../utils/global';
-import appStore from '../../stores/appStore';
-import registerStore from '../../stores/registerStore';
+import appStore from './../../stores/appStore';
+import registerStore from './../../stores/registerStore';
 import styles from './styles';
 
 const REGEX_CODE_VALIDATION = /^([0-9]{3}-?[0-9]{3})$/;
@@ -26,9 +26,9 @@ const REGEX_CODE_VALIDATION = /^([0-9]{3}-?[0-9]{3})$/;
 class PhoneScreen extends Component {
 
   @observable countryCode = DeviceInfo.getDeviceCountry().toLowerCase();
+  @observable activityPending = false;
   @observable isCodeRequested = false;
   @observable code = null;
-  @observable activityPending = false;
 
   render() {
     const { t, i18n, navigation } = this.props;
@@ -38,14 +38,18 @@ class PhoneScreen extends Component {
         <UFOHeader
           t={t}
           navigation={navigation}
-          title={t('register:phoneTitle', {user: registerStore.user})}
+          title={t('register:phoneTitle', { user: registerStore.user })}
           currentScreen={screens.REGISTER_PHONE}
         />
         <View style={styles.bodyWrapper}>
         {!this.activityPending && registerStore.isConnected && (
-          <UFOTextInput
-            defaultValue={registerStore.user.phone_number}
-            editable={false}
+          <PhoneInput
+            disabled={true}
+            value={registerStore.user.phone_number}
+            style={{
+              ...ufoInputStyles,
+              paddingHorizontal: 20
+            }}
           />
         )}
         {!this.activityPending && !registerStore.isConnected && this.isCodeRequested && (
@@ -61,16 +65,15 @@ class PhoneScreen extends Component {
           <Fragment>
             <PhoneInput
               ref={ref => (this.phoneInput = ref)}
-              onPressFlag={this.onPressFlag}
-              initialCountry={_.isEmpty(this.countryCode) ? 'lu' : this.countryCode}
+              value={registerStore.user.phone_number}
+              onChangePhoneNumber={this.onChangePhoneNumber}
+              textProps={{ autoFocus: true }}
               style={{
                 ...ufoInputStyles,
                 paddingHorizontal: 20
               }}
-              onChangePhoneNumber={this.onChangePhoneNumber}
-              textProps={{
-                autoFocus: true
-              }}
+              onPressFlag={this.onPressFlag}
+              initialCountry={_.isEmpty(this.countryCode) ? 'lu' : this.countryCode}
             />
             <CountryPicker
               ref={ref => (this.countryPicker = ref)}
@@ -83,35 +86,79 @@ class PhoneScreen extends Component {
           </Fragment>
         )}
         </View>
-        <UFOActionBar actions={this.compileActions()} />
+        <UFOActionBar actions={this.compileActions} />
       </UFOContainer>
     );
   }
 
-  @action
-  doCancel = async isInWizzard => {
+  get compileActions() {
+    const actions = [];
+
+    /* cancel btn */
+    actions.push({
+      style: actionStyles.ACTIVE,
+      icon: !registerStore.isConnected ? icons.CONTINUE_LATER : icons.CANCEL,
+      onPress: this.doCancel
+    });
+
+    /* code request or resend btn */
+    if (!registerStore.isConnected) {
+      actions.push({
+        style: this.isCodeRequested
+          ? actionStyles.ACTIVE
+          : registerStore.isCurrentPhoneValid
+            ? actionStyles.TODO
+            : actionStyles.DISABLE,
+        icon: this.isCodeRequested ? icons.RESEND_CODE : icons.VALIDATE,
+        onPress: this.doRequestCode
+      });
+    }
+
+    /* connect btn */
+    if (!registerStore.isConnected && this.isCodeRequested) {
+      actions.push({
+        style: !registerStore.isConnected && this.code && REGEX_CODE_VALIDATION.test(this.code)
+          ? actionStyles.TODO
+          : actionStyles.DISABLE,
+        icon: icons.LOGIN,
+        onPress: this.doConnect
+      });
+    }
+
+    /* disconnect btn */
+    if (registerStore.isConnected) {
+      actions.push({
+        style: actionStyles.ACTIVE,
+        icon: icons.LOGOUT,
+        onPress: this.doDisconnect
+      });
+    }
+
+    return actions;
+  }
+
+  doCancel = () => {
     this.isCodeRequested = false;
-    isInWizzard || !registerStore.isConnected
+    !registerStore.isConnected
       ? this.props.navigation.navigate(screens.HOME.name)
       : this.props.navigation.popToTop();
   };
 
-  @action
-  doDisconnect = async (t, isInWizzard) => {
+  doDisconnect = async () => {
     this.activityPending = true;
     this.isCodeRequested = false;
-    await appStore.disconnect(t);
+    await appStore.disconnect(this.props.t);
     this.activityPending = false;
   };
 
-  @action
-  doConnect = async isInWizzard => {
+  doConnect = async () => {
+    const isInWizzard = this.props.navigation.getParam('isInWizzard', false);
     this.activityPending = true;
 
     if (await appStore.connect(this.code)) {
       this.code = null;
       if (isInWizzard && _.isEmpty(registerStore.user.email)) {
-        this.props.navigation.navigate(screens.REGISTER_EMAIL.name, {'isInWizzard': isInWizzard});
+        this.props.navigation.navigate(screens.REGISTER_EMAIL.name, { isInWizzard });
         this.activityPending = false;
         return;
       } else {
@@ -124,64 +171,20 @@ class PhoneScreen extends Component {
     this.activityPending = false;
   };
 
-  @action
-  doRequestCode = async isInWizzard => {
+  doRequestCode = async () => {
     if (await registerStore.requestCode()) {
       this.isCodeRequested = true;
     }
   };
-
-  compileActions = () => {
-    const isInWizzard = this.props.navigation.getParam('isInWizzard', false);
-
-    const actions = [];
-    actions.push({
-      style: actionStyles.ACTIVE,
-      icon: isInWizzard || !registerStore.isConnected ? icons.CONTINUE_LATER : icons.CANCEL,
-      onPress: async () => await this.doCancel(isInWizzard)
-    });
-
-    if (!registerStore.isConnected) {
-      actions.push({
-        style: !registerStore.isConnected
-          ? this.isCodeRequested
-            ? actionStyles.ACTIVE
-            : this.phoneInput && this.phoneInput.isValidNumber()
-              ? actionStyles.TODO
-              : actionStyles.ACTIVE
-          : actionStyles.DISABLE,
-        icon: this.isCodeRequested ? icons.RESEND_CODE : icons.VALIDATE,
-        onPress: async () => await this.doRequestCode(isInWizzard)
-      });
-    }
-
-    if (!registerStore.isConnected && this.isCodeRequested) {
-      actions.push({
-        style: !registerStore.isConnected && this.code && REGEX_CODE_VALIDATION.test(this.code)
-          ? actionStyles.TODO
-          : actionStyles.DISABLE,
-        icon: icons.LOGIN,
-        onPress: async () => await this.doConnect(isInWizzard)
-      });
-    }
-
-    if (registerStore.isConnected) {
-      actions.push({
-        style: registerStore.isConnected ? actionStyles.ACTIVE : actionStyles.DISABLE,
-        icon: icons.LOGOUT,
-        onPress: async () => await this.doDisconnect(this.props.t, isInWizzard)
-      });
-    }
-
-    return actions;
-  }
 
   onPressFlag = () => {
     this.countryPicker.openModal();
   };
 
   selectCountry = country => {
+    registerStore.user.phone_number = null;
     this.phoneInput.selectCountry(country.cca2.toLowerCase());
+    this.phoneInput.focus();
     this.countryCode = country.cca2;
   };
 
@@ -194,4 +197,4 @@ class PhoneScreen extends Component {
   };
 }
 
-export default translate('translations')(PhoneScreen);
+export default translate()(PhoneScreen);
