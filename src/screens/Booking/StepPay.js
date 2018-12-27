@@ -40,7 +40,7 @@ class StepPayScreen extends Component {
   }
 
   async componentDidMount() {
-    const hasOptions = await bookingStore.getUserPaymentOptions();
+    await bookingStore.getUserPaymentOptions();
     stripe.setOptions({ publishableKey: bookingStore.stripeApiKey });
 
     if (Platform.OS === 'ios') {
