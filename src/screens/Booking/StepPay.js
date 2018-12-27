@@ -29,7 +29,8 @@ class StepPayScreen extends Component {
     this.CARDIO_SCAN_OPTIONS = {
       languageOrLocale: props.i18n.language,
       guideColor: Platform.OS === 'ios' ? processColor(colors.MAIN_COLOR) : colors.MAIN_COLOR,
-      hideCardIOLogo: true
+      hideCardIOLogo: true,
+      usePaypalActionbarIcon: false
     };
     this.handleInputVoucher = _.debounce(this.validateAndApplyVoucher, 300);
     this.state = {
@@ -44,11 +45,6 @@ class StepPayScreen extends Component {
 
     if (Platform.OS === 'ios') {
       await CardIOUtilities.preload();
-    }
-
-    if (!hasOptions) {
-      /* timeout needed to avoid conflict between modal views at fast re-render (ios) */
-      setTimeout(this.scranCreditCard, 100);
     }
 
     if (bookingStore.voucherCode) {
