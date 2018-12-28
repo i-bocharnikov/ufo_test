@@ -105,16 +105,12 @@ class StepPayScreen extends Component {
   }
 
   renderBottomPanel = () => {
-    const { t } = this.props;
-
     return (
       <BottomActionPanel
-        t={t}
         action={this.handleToNextStep}
-        actionTitle={t('stepPayNextTitle')}
-        actionSubTitle={t('stepPayNextSubTitle')}
+        actionTitle={this.props.t('stepPayNextTitle')}
+        actionSubTitle={this.props.t('stepPayNextSubTitle')}
         isAvailable={!!bookingStore.currentCreditCardRef}
-        price={bookingStore.orderPrice}
       />
     );
   };

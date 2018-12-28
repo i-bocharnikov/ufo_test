@@ -94,10 +94,16 @@ class StepBookScreen extends Component {
             />
             <View style={styles.rollPickerSeparatorWrapper}>
               <View style={styles.rollPickerSeparator} />
-              <UFOIcon_next
-                name="ios-calendar-outline"
-                style={styles.rollPickerSeparatorIcon}
-              />
+              <TouchableOpacity
+                onPress={() => this.setState({ showModalCalendar: true })}
+                activeOpacity={1}
+                style={styles.rollPickerSeparatorBtn}
+              >
+                <UFOIcon_next
+                  name="ios-calendar-outline"
+                  style={styles.rollPickerSeparatorIcon}
+                />
+              </TouchableOpacity>
             </View>
             <UFORollPicker
               data={bookingStore.rollPickersData}
@@ -129,7 +135,7 @@ class StepBookScreen extends Component {
               <View style={styles.rollPickerSeparator} />
               <UFOIcon_next
                 name="ios-clock-outline"
-                style={styles.rollPickerSeparatorIcon}
+                style={[ styles.rollPickerSeparatorBtn, styles.rollPickerSeparatorIcon ]}
               />
             </View>
             <UFORollPicker
@@ -205,18 +211,12 @@ class StepBookScreen extends Component {
   };
 
   renderBottomPanel = () => {
-    const { t } = this.props;
-
     return (
       <BottomActionPanel
-        t={t}
         action={this.handleToNextStep}
-        actionTitle={t('booking:stepBookNextTitle')}
-        actionSubTitle={t('booking:stepBookNextSubTitle')}
+        actionTitle={this.props.t('booking:stepBookNextTitle')}
+        actionSubTitle={this.props.t('booking:stepBookNextSubTitle')}
         isAvailable={bookingStore.isOrderCarAvailable}
-        price={bookingStore.orderPrice}
-        isAlternative={bookingStore.isOrderCarHasAlt}
-        overlapMessage={bookingStore.orderCarUnavailableMessage}
       />
     );
   };
