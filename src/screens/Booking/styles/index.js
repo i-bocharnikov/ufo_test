@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 
 import { colors, textThemes } from './../../../utils/theme';
 
@@ -221,7 +221,8 @@ export default StyleSheet.create({
     ...textThemes.SP_BOLD,
     color: colors.TEXT_INVERT_COLOR,
     fontSize: 14,
-    lineHeight: 20,
+    /* strange behaviour with lineheight at android */
+    lineHeight: Platform.OS === 'ios' ? 20 : 20.05,
     textAlign: 'center',
     letterSpacing: 0.6
   },
@@ -230,7 +231,7 @@ export default StyleSheet.create({
     ...textThemes.SP_LIGHT,
     color: colors.TEXT_INVERT_COLOR,
     fontSize: 12,
-    lineHeight: 13,
+    lineHeight: Platform.OS === 'ios' ? 13 : 16,
     letterSpacing: 0.3
   },
 
@@ -285,6 +286,12 @@ export default StyleSheet.create({
     fontSize: 11,
     lineHeight: 17,
     letterSpacing: 1.2
+  },
+
+  bottomPanelActionOverlap: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
 
   rollPickerSection: {

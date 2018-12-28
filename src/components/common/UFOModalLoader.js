@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
 
 export default class UFOModalLoader extends PureComponent {
   render() {
-    const { isVisible } = this.props;
+    const { isVisible, stealthMode } = this.props;
 
     return (
       <Modal
@@ -20,14 +20,18 @@ export default class UFOModalLoader extends PureComponent {
         visible={isVisible}
         onRequestClose={() => false}
       >
-        <View style={styles.wrapper}>
-          <ActivityIndicator size="large" />
-        </View>
+        {!stealthMode && (
+          <View style={styles.wrapper}>
+            <ActivityIndicator size="large" />
+          </View>
+        )}
       </Modal>
     );
   }
 }
 
 UFOModalLoader.propTypes = {
-  isVisible : PropTypes.bool.isRequired
+  isVisible: PropTypes.bool.isRequired,
+  /* use this for locking screen without visible actions */
+  stealthMode: PropTypes.bool
 };

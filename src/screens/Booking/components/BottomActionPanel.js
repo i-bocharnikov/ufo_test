@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { translate } from 'react-i18next';
 import { observer } from 'mobx-react';
 import PropTypes from 'prop-types';
@@ -11,9 +11,9 @@ import { values } from './../../../utils/theme';
 @observer
 class BottomActionPanel extends Component {
   render() {
-    const { t, action, actionTitle, actionSubTitle, isAvailable } = this.props;
+    const { t, action, actionTitle, actionSubTitle, isAvailable, isWaiting } = this.props;
     const isAlternative = bookingStore.isOrderCarHasAlt;
-    const isBtnActive = isAvailable || isAlternative;
+    const isBtnActive = (isAvailable || isAlternative) && !isWaiting;
 
     return (
       <View style={styles.bottomPanel}>
@@ -27,7 +27,7 @@ class BottomActionPanel extends Component {
             </Text>
             {this.renderMarketingLabel()}
           </View>
-          {this.renderOverlap()}
+          {this.renderBarredOverlap()}
         </View>
         <TouchableOpacity
           style={styles.bottomPanelActionBtn}
@@ -50,12 +50,13 @@ class BottomActionPanel extends Component {
               {actionSubTitle}
             </Text>
           )}
+          {isWaiting && this.renderActionOverlap()}
         </TouchableOpacity>
       </View>
     );
   }
 
-  renderOverlap = () => {
+  renderBarredOverlap = () => {
     if (!bookingStore.orderCarUnavailableMessage) {
       return null;
     }
@@ -85,6 +86,14 @@ class BottomActionPanel extends Component {
     );
   };
 
+  renderActionOverlap = () => {
+    return (
+      <View style={styles.bottomPanelActionOverlap}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  };
+
   get priceLabel() {
     if (bookingStore.orderOriginPrice && bookingStore.orderOriginPrice !== bookingStore.orderPrice) {
       return (
@@ -107,7 +116,8 @@ BottomActionPanel.propTypes = {
   action: PropTypes.func.isRequired,
   actionTitle: PropTypes.string.isRequired,
   actionSubTitle: PropTypes.string,
-  isAvailable: PropTypes.bool
+  isAvailable: PropTypes.bool,
+  isWaiting: PropTypes.bool
 };
 
 export default translate('booking')(BottomActionPanel);

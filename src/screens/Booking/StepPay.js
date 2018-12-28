@@ -98,7 +98,10 @@ class StepPayScreen extends Component {
           {this.renderLoyaltyBlock()}
           {this.renderBookingInfoSection()}
           {this.renderVoucherTooltip()}
-          <UFOModalLoader isVisible={bookingStore.isLoading} />
+          <UFOModalLoader
+            isVisible={bookingStore.isLoading}
+            stealthMode={true}
+          />
         </UFOContainer>
       </BookingNavWrapper>
     );
@@ -111,6 +114,7 @@ class StepPayScreen extends Component {
         actionTitle={this.props.t('stepPayNextTitle')}
         actionSubTitle={this.props.t('stepPayNextSubTitle')}
         isAvailable={!!bookingStore.currentCreditCardRef}
+        isWaiting={bookingStore.isLoading}
       />
     );
   };
