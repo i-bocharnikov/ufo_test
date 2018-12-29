@@ -119,7 +119,7 @@ class BookingDetailsScreen extends Component {
     return '';
   };
 
-  renderSlide = ({ item, index }) => {
+  renderSlide = ({ item }) => {
     return (
       <View style={styles.slideWrapper}>
         <UFOImage

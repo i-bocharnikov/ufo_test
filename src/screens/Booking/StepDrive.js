@@ -43,8 +43,6 @@ class StepDriveScreen extends Component {
   }
 
   render() {
-    const { t } = this.props;
-
     return (
       <UFOContainer
         image={this.backgroundImage}

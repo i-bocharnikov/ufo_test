@@ -6,6 +6,42 @@ import Touchable from 'react-native-platform-touchable';
 import otaKeyStore from '../stores/otaKeyStore';
 import { UFOText } from './common';
 
+const styles = StyleSheet.create({
+  circle: {
+    position: 'absolute',
+    top: 5,
+    left: 5,
+    width: 14,
+    height: 14,
+    borderRadius: 7,
+    backgroundColor: 'black'
+  },
+  container: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignContent: 'flex-start',
+    backgroundColor: 'black'
+  },
+  menu: { flexDirection: 'row', justifyContent: 'space-evenly', alignContent: 'center' },
+  menuItem: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderTopWidth: 1,
+    borderTopColor: 'white',
+    padding: 10,
+    height: 60
+  },
+  menuItemText: {
+    fontSize: 20,
+    color: 'white'
+  }
+});
+
 @observer
 class UFOAdminMenu extends Component {
   static displayName = 'UFOAdminMenu';
@@ -81,41 +117,5 @@ class UFOAdminMenu extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  circle: {
-    position: 'absolute',
-    top: 5,
-    left: 5,
-    width: 14,
-    height: 14,
-    borderRadius: 7,
-    backgroundColor: 'black'
-  },
-  container: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    alignContent: 'flex-start',
-    backgroundColor: 'black'
-  },
-  menu: { flexDirection: 'row', justifyContent: 'space-evenly', alignContent: 'center' },
-  menuItem: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderTopWidth: 1,
-    borderTopColor: 'white',
-    padding: 10,
-    height: 60
-  },
-  menuItemText: {
-    fontSize: 20,
-    color: 'white'
-  }
-});
 
 export default UFOAdminMenu;

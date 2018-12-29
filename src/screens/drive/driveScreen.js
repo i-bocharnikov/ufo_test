@@ -9,14 +9,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import UFOHeader from './../../components/header/UFOHeader';
 import UFOActionBar from './../../components/UFOActionBar';
 import { UFOContainer, UFOText } from './../../components/common';
-import {
-  screens,
-  actionStyles,
-  icons,
-  colors,
-  dims,
-  backgrounds
-} from './../../utils/global';
+import { screens, actionStyles, icons, colors, dims, backgrounds } from './../../utils/global';
 import appStore from './../../stores/appStore';
 import { driveStore } from './../../stores';
 import otaKeyStore from './../../stores/otaKeyStore';
@@ -30,7 +23,6 @@ import { keys as screenKeys } from './../../navigators/helpers';
 
 @observer
 class DriveScreen extends Component {
-
   @observable driveSelected = false;
   @observable returnSelected = false;
   @observable refreshing = false;
@@ -84,27 +76,44 @@ class DriveScreen extends Component {
         />
         <KeyboardAwareScrollView refreshControl={_RefreshControl}>
           {!this.driveSelected && !driveStore.hasRentals && (
-            <View style={{
-              paddingTop: dims.CONTENT_PADDING_TOP,
-              paddingHorizontal: dims.CONTENT_PADDING_HORIZONTAL
-            }}
-            >
-              <View style={{
-                flexDirection: 'column',
-                justifyContent: 'flex-start',
-                alignContent: 'center',
-                backgroundColor: colors.CARD_BACKGROUND.string(),
-                borderRadius: 8,
-                padding: 20
+            <View
+              style={{
+                paddingTop: dims.CONTENT_PADDING_TOP,
+                paddingHorizontal: dims.CONTENT_PADDING_HORIZONTAL
               }}
+            >
+              <View
+                style={{
+                  flexDirection: 'column',
+                  justifyContent: 'flex-start',
+                  alignContent: 'center',
+                  backgroundColor: colors.CARD_BACKGROUND.string(),
+                  borderRadius: 8,
+                  padding: 20
+                }}
               >
-                <UFOText h1 bold center style={{ paddingTop: 10 }}>
+                <UFOText
+                  h1
+                  bold
+                  center
+                  style={{ paddingTop: 10 }}
+                >
                   {t('home:reserve', { user: registerStore.user })}
                 </UFOText>
-                <UFOText h1 bold center style={{ paddingTop: 5 }}>
+                <UFOText
+                  h1
+                  bold
+                  center
+                  style={{ paddingTop: 5 }}
+                >
                   {t('home:register', { user: registerStore.user })}
                 </UFOText>
-                <UFOText h1 bold center style={{ paddingTop: 5 }}>
+                <UFOText
+                  h1
+                  bold
+                  center
+                  style={{ paddingTop: 5 }}
+                >
                   {t('home:drive', { user: registerStore.user })}
                 </UFOText>
               </View>
@@ -121,14 +130,15 @@ class DriveScreen extends Component {
             </View>
           )}
           {this.driveSelected && !driveStore.rental && (
-            <View style={{
-              paddingTop: dims.CONTENT_PADDING_TOP,
-              paddingHorizontal: dims.CONTENT_PADDING_HORIZONTAL,
-              flex: 1,
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignContent: 'center'
-            }}
+            <View
+              style={{
+                paddingTop: dims.CONTENT_PADDING_TOP,
+                paddingHorizontal: dims.CONTENT_PADDING_HORIZONTAL,
+                flex: 1,
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignContent: 'center'
+              }}
             >
               <UFOCard
                 title={t('drive:noRentalsTitle')}
@@ -164,15 +174,14 @@ class DriveScreen extends Component {
       actions.push({
         style: driveStore.hasRentalOngoing ? actionStyles.TODO : actionStyles.ACTIVE,
         icon: icons.DRIVE,
-        onPress: () => this.driveSelected = true
+        onPress: () => (this.driveSelected = true)
       });
-
     } else if (this.driveSelected && !this.returnSelected) {
       /* back btn on drive screen */
       actions.push({
         style: actionStyles.ACTIVE,
         icon: icons.BACK,
-        onPress: () => this.driveSelected = false
+        onPress: () => (this.driveSelected = false)
       });
 
       if (!driveStore.hasRentals) {
@@ -192,36 +201,33 @@ class DriveScreen extends Component {
           icon: icons.RENTAL_AGREEMENT,
           onPress: () => null
         });
-
       } else {
         /* we add mixins to actions into stores */
         /* it's really a bad approach and it block should be rewritten */
-        driveStore.computeActionFind(
-          actions,
-          () => this.props.navigation.navigate(screens.FIND.name)
+        driveStore.computeActionFind(actions, () =>
+          this.props.navigation.navigate(screens.FIND.name)
         );
-        driveStore.computeActionInitialInspect(
-          actions,
-          () => this.props.navigation.navigate(screens.INSPECT.name)
+        driveStore.computeActionInitialInspect(actions, () =>
+          this.props.navigation.navigate(screens.INSPECT.name)
         );
-        driveStore.computeActionStartContract(
-          actions,
-          () => this.props.navigation.navigate(screens.RENTAL_AGREEMENT.name)
+        driveStore.computeActionStartContract(actions, () =>
+          this.props.navigation.navigate(screens.RENTAL_AGREEMENT.name)
         );
 
         otaKeyStore.computeActionEnableKey(actions, this.doEnableKey);
         otaKeyStore.computeActionUnlock(actions, this.doUnlockCar);
         otaKeyStore.computeActionLock(actions, this.doLockCar);
 
-        if (driveStore.rental
-          && driveStore.rental.contract_signed
-          && !driveStore.rental.contract_ended) {
-
+        if (
+          driveStore.rental &&
+          driveStore.rental.contract_signed &&
+          !driveStore.rental.contract_ended
+        ) {
           /* return btn */
           actions.push({
             style: actionStyles.ACTIVE,
             icon: icons.RETURN,
-            onPress: () => this.returnSelected = true
+            onPress: () => (this.returnSelected = true)
           });
         }
       }
@@ -230,20 +236,15 @@ class DriveScreen extends Component {
       actions.push({
         style: actionStyles.ACTIVE,
         icon: icons.BACK,
-        onPress: () => this.returnSelected = false
+        onPress: () => (this.returnSelected = false)
       });
-      driveStore.computeActionReturn(
-        actions,
-        () => this.props.navigation.navigate(screens.RETURN.name)
+      driveStore.computeActionReturn(actions, () =>
+        this.props.navigation.navigate(screens.RETURN.name)
       );
-      driveStore.computeActionFinalInspect(
-        actions,
-        () => this.props.navigation.navigate(screens.INSPECT.name)
+      driveStore.computeActionFinalInspect(actions, () =>
+        this.props.navigation.navigate(screens.INSPECT.name)
       );
-      driveStore.computeActionCloseRental(
-        actions,
-        () => this.confirmCloseRental(t)
-      );
+      driveStore.computeActionCloseRental(actions, () => this.confirmCloseRental(t));
     }
 
     return actions;
@@ -256,7 +257,6 @@ class DriveScreen extends Component {
 
   loadKeyForSelectedRental = async () => {
     if (driveStore.inUse && driveStore.rental.key_id) {
-
       await otaKeyStore.getKey(driveStore.rental.key_id, false);
 
       if (!otaKeyStore.isKeyEnabled) {
@@ -273,8 +273,10 @@ class DriveScreen extends Component {
       await otaKeyStore.isConnectedToVehicle(false);
 
       if (!DeviceInfo.isEmulator() && !otaKeyStore.isConnected) {
-
-        await otaKeyStore.connect(false, false);
+        await otaKeyStore.connect(
+          false,
+          false
+        );
         await otaKeyStore.getVehicleData(false);
       }
     }
@@ -298,7 +300,6 @@ class DriveScreen extends Component {
     driveStore.refreshRental();
 
     if (driveStore.inUse && driveStore.rental.key_id) {
-
       if (!otaKeyStore.isKeyEnabled) {
         await otaKeyStore.enableKey(driveStore.rental.key_id, true);
       }
@@ -313,8 +314,10 @@ class DriveScreen extends Component {
       await otaKeyStore.isConnectedToVehicle(true);
 
       if (!DeviceInfo.isEmulator() && !otaKeyStore.isConnected) {
-
-        await otaKeyStore.connect(false, true);
+        await otaKeyStore.connect(
+          false,
+          true
+        );
         await otaKeyStore.getVehicleData(true);
       }
     }
@@ -366,16 +369,17 @@ class DriveScreen extends Component {
   };
 
   confirmCloseRental = async t => {
-    const keyMessage = driveStore.rental
-      && driveStore.rental.car
-      && driveStore.rental.car.has_key === true
+    const keyMessage =
+      driveStore.rental && driveStore.rental.car && driveStore.rental.car.has_key === true
         ? t('drive:confirmCloseRentalKeyMessageConfirmationMessage')
         : '';
 
     await confirm(
       t('global:confirmationTitle'),
       t('drive:confirmCloseRentalConfirmationMessage', { keyMessage }),
-      async () => {this.doCloseRental();}
+      async () => {
+        this.doCloseRental();
+      }
     );
   };
 }
