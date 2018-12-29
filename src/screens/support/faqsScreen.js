@@ -31,7 +31,6 @@ class SupportFaqsScreen extends Component {
       return;
     }
     await this.doRefresh();
-    //this.section = this.props.navigation.getParam(navigationParams.SUPPORT_FAQ_CATEGORY, this.section);
   };
 
   onPressSection = reference => {
@@ -59,14 +58,14 @@ class SupportFaqsScreen extends Component {
     );
   };
 
-  doOpenChat = async navigation => {
+  doOpenChat = async () => {
     this.props.navigation.navigate(screens.SUPPORT_CHAT.name);
   };
 
   doCall = async number => {
     call({
-      number: number, // String value with the number to call
-      prompt: false // Optional boolean property. Determines if the user should be prompt prior to the call
+      number: number,
+      prompt: false
     });
   };
 
@@ -162,7 +161,7 @@ class SupportFaqsScreen extends Component {
       onPress: () => this.doOpenChat(navigation)
     });
 
-    let sections = supportStore.faqCategories.map(faqCategory => {
+    const sections = supportStore.faqCategories.map(faqCategory => {
       let data = [];
       if (this.section === faqCategory.reference) {
         data = faqCategory.faqs.map(faq => {
@@ -191,7 +190,7 @@ class SupportFaqsScreen extends Component {
           renderItem={this.renderItem}
           renderSectionHeader={this.renderSection}
           sections={sections}
-          keyExtractor={(item, index) => item.reference}
+          keyExtractor={item => item.reference}
         />
         <UFOActionBar actions={actions} />
       </UFOContainer>

@@ -37,7 +37,7 @@ export default class GuideStore {
     if (this.guidePacks === null || !driveStore.rental) {
       return [];
     }
-    let guidePack = this.guidePacks.find(guidePack => {
+    const guidePack = this.guidePacks.find(guidePack => {
       return (
         guidePack.type === GUIDE_TYPE.FIND &&
         guidePack.locationReference === driveStore.rental.location.reference
@@ -97,9 +97,9 @@ export default class GuideStore {
     const response = await getFromApi('/guides/' + guideType + '/' + locationReference);
     if (response && response.status === 'success') {
       if (DEBUG) {console.info('guideStore.listGuides:', response.data);}
-      const guidePackIndex = this.guidePacks.findIndex(guidePack => {
-        return guidePack.type === guideType && guidePack.locationReference === locationReference;
-      });
+      const guidePackIndex = this.guidePacks.findIndex(guidePack =>
+        guidePack.type === guideType && guidePack.locationReference === locationReference
+      );
       if (guidePackIndex >= 0) {
         this.guidePacks.slice(guidePackIndex, guidePackIndex + 1);
       }

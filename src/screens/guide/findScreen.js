@@ -43,7 +43,7 @@ class FindScreen extends Component {
     this.guideIndex = index;
   };
 
-  doCarFound = async index => {
+  doCarFound = async () => {
     if (driveStore.carFound()) {
       this.props.navigation.navigate(screens.DRIVE.name);
     }

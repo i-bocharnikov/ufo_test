@@ -29,45 +29,36 @@ class LocateDamageScreen extends Component {
     this.relativePositionX = 0.5;
     this._panResponder = PanResponder.create({
       // Ask to be the responder:
-      onStartShouldSetPanResponder: (evt, gestureState) => true,
-      onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
-      onMoveShouldSetPanResponder: (evt, gestureState) => false,
-      onMoveShouldSetPanResponderCapture: (evt, gestureState) => false,
+      onStartShouldSetPanResponder: () => true,
+      onStartShouldSetPanResponderCapture: () => true,
+      onMoveShouldSetPanResponder: () => false,
+      onMoveShouldSetPanResponderCapture: () => false,
 
-      onPanResponderGrant: (evt, gestureState) => {
+      onPanResponderGrant: () => {
         // The gesture has started. Show visual feedback so the user knows
         // what is happening!
         // gestureState.d{x,y} will be set to zero now
         //console.log("******************onPanResponderGrant", gestureState)
       },
-      onPanResponderMove: (evt, gestureState) => {
+      onPanResponderMove: () => {
         // The most recent move distance is gestureState.move{X,Y}
         // The accumulated gesture distance since becoming responder is
         // gestureState.d{x,y}
         //console.log("******************onPanResponderMove", gestureState)
       },
-      onPanResponderTerminationRequest: (evt, gestureState) => true,
-      onPanResponderRelease: (evt, gestureState) => {
+      onPanResponderTerminationRequest: () => true,
+      onPanResponderRelease: (evt) => {
         // The user has released all touches while this view is the
         // responder. This typically means a gesture has succeeded
         this.relativePositionY = evt.nativeEvent.locationY / BODY_HEIGHT;
         this.relativePositionX = evt.nativeEvent.locationX / BODY_WIDTH;
       },
-      onPanResponderTerminate: (evt, gestureState) => {
-        // Another component has become the responder, so this gesture
-        // should be cancelled
-        //console.log("******************onPanResponderTerminate", gestureState)
-      },
-      onShouldBlockNativeResponder: (evt, gestureState) => {
-        // Returns whether this component should block native components from becoming the JS
-        // responder. Returns true by default. Is currently only supported on android.
-        return true;
-      }
+      onShouldBlockNativeResponder: () => true
     });
   }
 
   @action
-  doNext = async t => {
+  doNext = async () => {
     inspectStore.relativePositionX = 1 - this.relativePositionY;
     inspectStore.relativePositionY = this.relativePositionX;
     this.props.navigation.navigate(screens.INSPECT_CAPTURE.name);
@@ -85,7 +76,7 @@ class LocateDamageScreen extends Component {
       {
         style: actionStyles.ACTIVE,
         icon: icons.NEXT,
-        onPress: () => this.doNext(t)
+        onPress: () => this.doNext()
       }
     ];
 

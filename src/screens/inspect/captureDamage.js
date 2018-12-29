@@ -55,7 +55,7 @@ class CaptureDamageScreen extends Component {
   };
 
   @action
-  doSave = async t => {
+  doSave = async () => {
     this.activityPending = true;
     if (this.documentUri) {
       inspectStore.documentUri = this.documentUri;
@@ -159,7 +159,7 @@ class CaptureDamageScreen extends Component {
       actions.push({
         style: this.documentUri ? actionStyles.TODO : actionStyles.DISABLE,
         icon: icons.NEXT,
-        onPress: () => this.doSave(t)
+        onPress: () => this.doSave()
       });
     }
 

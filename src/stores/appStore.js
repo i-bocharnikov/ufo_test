@@ -13,7 +13,7 @@ class AppStore {
   @observable isAppReady: boolean = false;
 
   @action
-  async register(t): Promise<boolean> {
+  async register(): Promise<boolean> {
     try {
       console.log('==> REGISTER START ');
       console.log('- GET OTA DEVICE IDENTIFICATION ');
@@ -41,7 +41,7 @@ class AppStore {
   }
 
   @action
-  async loadRemoteData(t): Promise<boolean> {
+  async loadRemoteData(): Promise<boolean> {
     try {
       console.log('==>  LOAD REMOTE DATA START ');
       await driveStore.reset();
@@ -55,7 +55,7 @@ class AppStore {
   }
 
   @action
-  async loadLocalData(t) {
+  async loadLocalData() {
     console.log('==>  LOAD LOCAL DATA START ');
 
     try {
@@ -72,8 +72,7 @@ class AppStore {
   async initialise(t) {
     console.log('==>  INITIALISE APPLICATION ');
     this.isAppReady = false;
-    let result =
-      (await checkConnectivity()) && (await this.register(t)) && (await this.loadRemoteData(t));
+    const result = (await checkConnectivity()) && (await this.register(t)) && (await this.loadRemoteData(t));
     if (!result) {
       console.log('<== FALLBACK ');
       await this.loadLocalData(t);
@@ -114,4 +113,5 @@ class AppStore {
   }
 }
 
-export default (appStore = new AppStore());
+const appStore = new AppStore();
+export default appStore;

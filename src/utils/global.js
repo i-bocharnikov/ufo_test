@@ -68,27 +68,34 @@ export const dateFormats = {
 };
 
 export const colors = {
-  TRANSITION_BACKGROUND: new Color.rgb(0, 0, 0),              // #0081B5
-  HEADER_BACKGROUND: new Color.rgb(39, 61, 76).alpha(0.85),   // #0081B5
-  BACKGROUND: new Color.rgb(244, 245, 245),                   // #172C32
-  HEADER_TEXT: new Color.rgb(255, 255, 255),                  // #FFF
-  INVERTED_TEXT: new Color.rgb(255, 255, 255),                // #FFF
-  TEXT: new Color.rgb(64, 101, 125),                          // #FFF
-  ICON: new Color.rgb(255, 255, 255),                         // #FFF
-  CARD_BACKGROUND: new Color.rgb(255, 255, 255).alpha(0.7),   // #FFF
-  TODO: new Color.rgb(234, 80, 76),                           // #C8102E
+  // #0081B5
+  TRANSITION_BACKGROUND: new Color.rgb(0, 0, 0),
+  // #0081B5
+  HEADER_BACKGROUND: new Color.rgb(39, 61, 76).alpha(0.85),
+  // #172C32
+  BACKGROUND: new Color.rgb(244, 245, 245),
+  HEADER_TEXT: new Color.rgb(255, 255, 255),
+  INVERTED_TEXT: new Color.rgb(255, 255, 255),
+  TEXT: new Color.rgb(64, 101, 125),
+  ICON: new Color.rgb(255, 255, 255),
+  CARD_BACKGROUND: new Color.rgb(255, 255, 255).alpha(0.7),
+  // #C8102E
+  TODO: new Color.rgb(234, 80, 76),
   DONE: new Color.rgb(64, 101, 125),
-  ACTIVE: new Color.rgb(64, 101, 125),                        // #0081B5
+  // #0081B5
+  ACTIVE: new Color.rgb(64, 101, 125),
   PRIMARY: new Color.rgb(64, 101, 125),
   DISABLE: new Color.rgb(151, 151, 151),
   PENDING: new Color.rgb(151, 151, 151),
-  ERROR: new Color.rgb(234, 80, 76),                          // #C8102E
+  ERROR: new Color.rgb(234, 80, 76),
+  // #C8102E
   WARNING: new Color.rgb(255, 87, 34),
   WRONG: new Color('yellow'),
-
-  INPUT_BG: new Color.rgb(255, 255, 255),                     // #FFF
-  TEXT_DARK: new Color.rgb(47, 47, 47),                       // #2F2F2F
-  SUCCESS: new Color.rgb(64, 184, 68)                         // #40B844
+  INPUT_BG: new Color.rgb(255, 255, 255),
+  // #2F2F2F
+  TEXT_DARK: new Color.rgb(47, 47, 47),
+  // #40B844
+  SUCCESS: new Color.rgb(64, 184, 68)
 };
 
 export const navigationParams = {
@@ -255,7 +262,7 @@ export class UFOError extends Error {
   constructor(key) {
     super(key);
     this.i18nKey = key || 'error:missing';
-    i18nValue = {};
+    this.i18nValue = {};
   }
 }
 

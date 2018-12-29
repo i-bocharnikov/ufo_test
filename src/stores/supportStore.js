@@ -23,7 +23,7 @@ class Faq {
   @persist @observable priority = null;
 }
 
-class supportStore {
+class SupportStore {
   @persist('list', FaqCategory) @observable faqCategories = [];
 
   getFaq(faqCategoryReference, faqReference) {
@@ -67,4 +67,5 @@ class supportStore {
   }
 }
 
-export default (supportStore = new supportStore());
+const supportStore = new SupportStore();
+export default supportStore;

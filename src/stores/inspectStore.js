@@ -84,7 +84,7 @@ export default class InspectStore {
   }
 
   @action
-  async confirmInitialInspection(t) {
+  async confirmInitialInspection() {
     if (!driveStore.rental) {return false;}
 
     const response = await putToApi('/rentals/' + driveStore.rental.reference, { action: 'initial_inspection_done' });
@@ -98,7 +98,7 @@ export default class InspectStore {
   }
 
   @action
-  async confirmFinalInspection(t) {
+  async confirmFinalInspection() {
     if (!driveStore.rental) {return false;}
 
     const response = await putToApi('/rentals/' + driveStore.rental.reference, { action: 'final_inspection_done' });

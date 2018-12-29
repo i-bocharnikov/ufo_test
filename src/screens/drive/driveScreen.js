@@ -41,7 +41,7 @@ class DriveScreen extends Component {
     this.loadKeyForSelectedRental();
   }
 
-  renderRental({ item, index }) {
+  renderRental({ item }) {
     if (item) {
       return <DriveCard rental={item} />;
     } else {

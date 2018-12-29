@@ -22,10 +22,6 @@ class CommentDamageScreen extends Component {
 
   @observable comment = null;
 
-  componentDidMount() {
-    comment = null;
-  }
-
   renderBody(t) {
     const carModel = driveStore.rental
       ? driveStore.rental.car
@@ -97,7 +93,7 @@ class CommentDamageScreen extends Component {
   }
 
   @action
-  doSave = async t => {
+  doSave = async () => {
     inspectStore.comment = this.comment;
     if (inspectStore.addCarDamage()) {
       this.props.navigation.popToTop();
@@ -121,7 +117,7 @@ class CommentDamageScreen extends Component {
       {
         style: this.comment ? actionStyles.TODO : actionStyles.DISABLE,
         icon: icons.SAVE,
-        onPress: () => this.doSave(t)
+        onPress: () => this.doSave()
       }
     ];
 

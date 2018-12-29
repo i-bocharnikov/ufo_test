@@ -150,17 +150,6 @@ class InspectScreen extends Component {
 
   render() {
     const { t, navigation } = this.props;
-
-    /*
-    if (!this.isReady) {
-      return (
-        <View style={{ flex: 1, backgroundColor: colors.BACKGROUND.string() }}>
-          <ActivityIndicator style={styles.centered} size="large" color={colors.ACTIVE} />
-        </View>
-      );
-    }
-    */
-
     const actions = [
       {
         style: actionStyles.ACTIVE,

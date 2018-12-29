@@ -155,21 +155,20 @@ class IdentificationScreen extends Component {
   }
 
   @action
-  doCancel = async isInWizzard => {
-    isInWizzard
-      ? this.props.navigation.navigate(screens.HOME.name)
-      : this.props.navigation.popToTop();
+  doCancel = async () => {
+    this.props.navigation.popToTop();
   };
 
   @action
-  doReset = async isInWizzard => {
+  doReset = async () => {
     this.frontImageUrl = null;
     this.backImageUrl = null;
     this.captureState = captureStates.CAPTURE_FRONT;
   };
 
   @action
-  doCapture = async (t, isInWizzard) => {
+  doCapture = async () => {
+    const t = this.props.t;
     this.activityPending = true;
     const imageData = await this.cameraRef.takePicture();
     if (!imageData) {
@@ -218,13 +217,13 @@ class IdentificationScreen extends Component {
   };
 
   @action
-  doskip = async isInWizzard => {
+  doskip = async () => {
     this.backImageUrl = null;
     this.captureState = captureStates.VALIDATE;
   };
 
   @action
-  doSave = async (t, isInWizzard) => {
+  doSave = async () => {
     this.activityPending = true;
     const type = this.frontImageUrl && this.backImageUrl ? 'two_side' : 'one_side';
 
@@ -265,29 +264,21 @@ class IdentificationScreen extends Component {
     }
 
     if (await registerStore.save()) {
-      if (isInWizzard) {
-        this.props.navigation.navigate(screens.REGISTER_DRIVER_LICENCE.name, { isInWizzard });
-        this.activityPending = false;
+      this.props.navigation.popToTop();
+      this.activityPending = false;
 
-        return;
-      } else {
-        this.props.navigation.popToTop();
-        this.activityPending = false;
-
-        return;
-      }
+      return;
     }
   };
 
   compileActions = () => {
     const { t, navigation } = this.props;
-    const isInWizzard = navigation.getParam('isInWizzard', false);
     const actions = [];
 
     actions.push({
       style: actionStyles.ACTIVE,
-      icon: isInWizzard ? icons.CONTINUE_LATER : icons.CANCEL,
-      onPress: async () => await this.doCancel(isInWizzard)
+      icon: icons.CANCEL,
+      onPress: this.doCancel
     });
 
     if (
@@ -297,7 +288,7 @@ class IdentificationScreen extends Component {
       actions.push({
         style: actionStyles.ACTIVE,
         icon: icons.NEW_CAPTURE,
-        onPress: async () => await this.doReset(isInWizzard)
+        onPress: this.doReset
       });
     }
 
@@ -306,7 +297,7 @@ class IdentificationScreen extends Component {
       actions.push({
         style: isNewCapture ? actionStyles.TODO : actionStyles.DISABLE,
         icon: icons.SAVE,
-        onPress: async () => this.doSave(t, isInWizzard)
+        onPress: this.doSave
       });
     }
 
@@ -317,7 +308,7 @@ class IdentificationScreen extends Component {
       actions.push({
         style: this.isCameraAllowed ? actionStyles.TODO : actionStyles.DISABLE,
         icon: icons.CAPTURE,
-        onPress: () => this.doCapture(t, isInWizzard)
+        onPress: this.doCapture
       });
     }
 

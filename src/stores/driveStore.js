@@ -119,9 +119,9 @@ export default class DriveStore {
   }
 
   @computed get hasRentalConfirmedOrOngoing() {
-    return this.rentals.find(rental => {
-      return rental.status === RENTAL_STATUS.CONFIRMED || rental.status === RENTAL_STATUS.ONGOING;
-    });
+    return this.rentals.find(rental =>
+      rental.status === RENTAL_STATUS.CONFIRMED || rental.status === RENTAL_STATUS.ONGOING
+    );
   }
 
   @computed get hasRentalConfirmed() {
@@ -302,7 +302,9 @@ export default class DriveStore {
 
   @action
   async refreshRental() {
-    if (!this.rental) return false;
+    if (!this.rental) {
+      return false;
+    }
 
     const response = await getFromApi('/rentals/' + this.rental.reference);
     if (response && response.status === 'success') {
@@ -315,7 +317,9 @@ export default class DriveStore {
 
   @action
   async carFound() {
-    if (!this.rental) return false;
+    if (!this.rental) {
+      return false;
+    }
 
     const response = await putToApi('/rentals/' + this.rental.reference, { action: 'car_found' });
     if (response && response.status === 'success') {
@@ -328,7 +332,9 @@ export default class DriveStore {
 
   @action
   async closeRental() {
-    if (!this.rental) return false;
+    if (!this.rental) {
+      return false;
+    }
 
     const response = await putToApi('/rentals/' + this.rental.reference, { action: 'contract_ended' });
     if (response && response.status === 'success') {

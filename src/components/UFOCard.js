@@ -106,10 +106,7 @@ export default class UFOCard extends Component {
                   h5
                   upper
                 >{title}</UFOText>
-                {texts.map((text, index) => <UFOText
-                  key={index}
-                  note
-                >{text}</UFOText>)}
+                {texts.map((item, index) => <UFOText key={index} note>{item}</UFOText>)}
               </Body>
             </Left>
           </CardItem>

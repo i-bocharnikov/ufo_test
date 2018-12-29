@@ -50,4 +50,5 @@ class ActivitiesStore {
   @observable activities = new Activities();
 }
 
-export default (activitiesStore = new ActivitiesStore());
+const activitiesStore = new ActivitiesStore();
+export default activitiesStore;
