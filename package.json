@@ -22,7 +22,6 @@
     "lint-fix-changes": "LIST=`git diff-index --name-only HEAD | grep .*\\.js | grep -v json`; if [ \"$LIST\" ]; then npm run lint-fix-path $LIST; fi"
   },
   "dependencies": {
-    "@babel/runtime": "^7.0.0",
     "axios": "^0.18.0",
     "color": "^3.0.0",
     "global": "^4.3.2",
@@ -72,11 +71,18 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.1.2",
+    "@babel/runtime": "^7.0.0",
+    "babel-eslint": "^10.0.1",
+    "eslint-plugin-react": "^7.12.0",
+    "eslint-plugin-react-native": "^3.5.0",
     "jest": "^23.6.0",
     "jest-react-native": "^18.0.0",
     "jsc-android": "224109.x.x",
     "metro-react-native-babel-preset": "^0.45.6",
     "pre-commit": "^1.2.2",
+    "prettier": "^1.15.3",
+    "prettier-eslint": "^8.8.2",
+    "prettier-eslint-cli": "^4.7.1",
     "react-devtools": "^3.4.0",
     "react-test-renderer": "16.5.1"
   },
