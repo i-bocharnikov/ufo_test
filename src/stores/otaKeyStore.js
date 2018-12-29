@@ -303,11 +303,7 @@ class OTAKeyStore {
 
   @action
   async openSession(keyAccessDeviceToken: string, showError = true): Promise<boolean> {
-    if (
-      !keyAccessDeviceToken ||
-      !keyAccessDeviceToken instanceof String ||
-      keyAccessDeviceToken === ''
-    ) {
+    if (typeof keyAccessDeviceToken !== 'string' || keyAccessDeviceToken === '') {
       return false;
     }
 
@@ -386,7 +382,7 @@ class OTAKeyStore {
 
   @action
   async getKey(keyId: string, showError = true): Promise<boolean> {
-    if (!keyId || !keyId instanceof String || keyId === '') {
+    if (typeof keyId !== 'string' || keyId === '') {
       return false;
     }
 
@@ -463,7 +459,7 @@ class OTAKeyStore {
 
   @action
   async enableKey(keyId: string, showError = true): Promise<boolean> {
-    if (!keyId || !keyId instanceof String || keyId === '') {
+    if (typeof keyId !== 'string' || keyId === '') {
       return false;
     }
 

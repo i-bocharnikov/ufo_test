@@ -19,12 +19,7 @@ import UFOActionBar from './../../components/UFOActionBar';
 import UFOCard from './../../components/UFOCard';
 import { UFOImage, UFOContainer } from './../../components/common';
 import registerStore from './../../stores/registerStore';
-import {
-  screens,
-  actionStyles,
-  icons,
-  images
-} from './../../utils/global';
+import { screens, actionStyles, icons, images } from './../../utils/global';
 import { showWarning } from './../../utils/interaction';
 import styles from './styles';
 
@@ -59,7 +54,6 @@ const bgImageStyles = StyleSheet.create({
 
 @observer
 class DriverLicenceScreen extends Component {
-
   @observable captureState = null;
   @observable frontImageUrl = null;
   @observable backImageUrl = null;
@@ -71,13 +65,13 @@ class DriverLicenceScreen extends Component {
 
     //Check if we have to retrieve imageUrl from overview screen
     if (this.captureState === null) {
-
       this.frontImageUrl = navigation.getParam('frontImageUrl');
       this.backImageUrl = navigation.getParam('backImageUrl');
 
-      if (this.frontImageUrl === undefined
-        || this.frontImageUrl === null
-        || this.frontImageUrl === 'loading'
+      if (
+        this.frontImageUrl === undefined ||
+        this.frontImageUrl === null ||
+        this.frontImageUrl === 'loading'
       ) {
         this.captureState = captureStates.CAPTURE_FRONT;
       } else {
@@ -85,16 +79,18 @@ class DriverLicenceScreen extends Component {
       }
     }
 
-    const inputLabel = this.captureState === captureStates.CAPTURE_FRONT
-      ? 'register:driverLicenceFrontInputLabel'
-      : 'register:driverLicenceBackInputLabel';
+    const inputLabel =
+      this.captureState === captureStates.CAPTURE_FRONT
+        ? 'register:driverLicenceFrontInputLabel'
+        : 'register:driverLicenceBackInputLabel';
 
-    const showCamera = this.captureState !== captureStates.VALIDATE
-      && this.captureState !== captureStates.PREVIEW;
+    const showCamera =
+      this.captureState !== captureStates.VALIDATE && this.captureState !== captureStates.PREVIEW;
 
-    const sample = this.captureState === captureStates.CAPTURE_FRONT
-      ? images.driverCardFront
-      : images.driverCardBack;
+    const sample =
+      this.captureState === captureStates.CAPTURE_FRONT
+        ? images.driverCardFront
+        : images.driverCardBack;
 
     return (
       <UFOContainer image={screens.REGISTER_OVERVIEW.backgroundImage}>
@@ -102,10 +98,7 @@ class DriverLicenceScreen extends Component {
           t={t}
           navigation={navigation}
           currentScreen={screens.REGISTER_DRIVER_LICENCE}
-          title={showCamera
-            ? null
-            : t('register:driverLicenceTitle', { user: registerStore.user })
-          }
+          title={showCamera ? null : t('register:driverLicenceTitle', { user: registerStore.user })}
           logo={showCamera}
           transparent={showCamera}
         />
@@ -113,18 +106,18 @@ class DriverLicenceScreen extends Component {
           <ScrollView>
             <View style={styles.cardsWrapper}>
               <UFOCard title={t('register:driverLicenceCheckLabel')}>
-                  <View style={styles.cardsContainer}>
-                    <UFOImage
-                      source={{ uri: this.frontImageUrl }}
-                      style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
-                      fallbackToImage={true}
-                    />
-                    <UFOImage
-                      source={{ uri: this.backImageUrl }}
-                      style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
-                      fallbackToImage={true}
-                    />
-                  </View>
+                <View style={styles.cardsContainer}>
+                  <UFOImage
+                    source={{ uri: this.frontImageUrl }}
+                    style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
+                    fallbackToImage={true}
+                  />
+                  <UFOImage
+                    source={{ uri: this.backImageUrl }}
+                    style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
+                    fallbackToImage={true}
+                  />
+                </View>
               </UFOCard>
             </View>
           </ScrollView>
@@ -141,10 +134,11 @@ class DriverLicenceScreen extends Component {
               style={[ bgImageStyles.bgArea, styles.cardCameraBackground ]}
             />
             <View style={bgImageStyles.bgArea}>
-              <Text style={[
-                styles.cardCameraLabel,
-                this.activityPending && styles.cardCameraBackground
-              ]}
+              <Text
+                style={[
+                  styles.cardCameraLabel,
+                  this.activityPending && styles.cardCameraBackground
+                ]}
               >
                 {t(inputLabel).toUpperCase()}
               </Text>
@@ -159,7 +153,7 @@ class DriverLicenceScreen extends Component {
     );
   }
 
-    @action
+  @action
   doCancel = async isInWizzard => {
     isInWizzard
       ? this.props.navigation.navigate(screens.HOME.name)
@@ -196,25 +190,30 @@ class DriverLicenceScreen extends Component {
         height: CARD_HEIGHT * ratioy
       }
     };
-    ImageEditor.cropImage(uri, cropData, url => {
-      if (this.captureState === captureStates.CAPTURE_FRONT) {
-        this.frontImageUrl = url;
-        this.captureState = captureStates.CAPTURE_BACK;
-        this.activityPending = false;
+    ImageEditor.cropImage(
+      uri,
+      cropData,
+      url => {
+        if (this.captureState === captureStates.CAPTURE_FRONT) {
+          this.frontImageUrl = url;
+          this.captureState = captureStates.CAPTURE_BACK;
+          this.activityPending = false;
 
-        return;
-      }
-      if (this.captureState === captureStates.CAPTURE_BACK) {
-        this.backImageUrl = url;
-        this.captureState = captureStates.VALIDATE;
-        this.activityPending = false;
+          return;
+        }
+        if (this.captureState === captureStates.CAPTURE_BACK) {
+          this.backImageUrl = url;
+          this.captureState = captureStates.VALIDATE;
+          this.activityPending = false;
 
-        return;
+          return;
+        }
+      },
+      error => {
+        this.activityPending = false;
+        showWarning(t('Registration:CameraProcessingError', { message: error.message }));
       }
-    }, error => {
-      this.activityPending = false;
-      showWarning(t('Registration:CameraProcessingError', { message: error.message }));
-    });
+    );
   };
 
   @action
@@ -240,7 +239,9 @@ class DriverLicenceScreen extends Component {
       if (document && document.reference) {
         registerStore.user.driver_licence_front_side_reference = document.reference;
         const imgData = await registerStore.downloadDocument(document.reference);
-        registerStore.driverLicenceFrontDocument = imgData ? `data:image/png;base64,${imgData}` : null;
+        registerStore.driverLicenceFrontDocument = imgData
+          ? `data:image/png;base64,${imgData}`
+          : null;
       }
     }
 
@@ -256,12 +257,13 @@ class DriverLicenceScreen extends Component {
       if (document && document.reference) {
         registerStore.user.driver_licence_back_side_reference = document.reference;
         const imgData = await registerStore.downloadDocument(document.reference);
-        registerStore.driverLicenceBackDocument = imgData ? `data:image/png;base64,${imgData}` : null;
+        registerStore.driverLicenceBackDocument = imgData
+          ? `data:image/png;base64,${imgData}`
+          : null;
       }
     }
 
     if (await registerStore.save()) {
-
       this.props.navigation.popToTop();
       this.activityPending = false;
 
@@ -282,8 +284,10 @@ class DriverLicenceScreen extends Component {
       onPress: async () => await this.doCancel(isInWizzard)
     });
 
-    if (this.captureState === captureStates.VALIDATE || this.captureState === captureStates.PREVIEW) {
-
+    if (
+      this.captureState === captureStates.VALIDATE ||
+      this.captureState === captureStates.PREVIEW
+    ) {
       actions.push({
         style: actionStyles.ACTIVE,
         icon: icons.NEW_CAPTURE,
@@ -292,7 +296,6 @@ class DriverLicenceScreen extends Component {
     }
 
     if (this.captureState === captureStates.VALIDATE) {
-
       const isNewCapture = _.isEmpty(registerStore.user.driver_licence_front_side_reference);
       actions.push({
         style: isNewCapture ? actionStyles.TODO : actionStyles.DISABLE,
@@ -301,9 +304,10 @@ class DriverLicenceScreen extends Component {
       });
     }
 
-    if (this.captureState === captureStates.CAPTURE_FRONT
-      || this.captureState === captureStates.CAPTURE_BACK) {
-
+    if (
+      this.captureState === captureStates.CAPTURE_FRONT ||
+      this.captureState === captureStates.CAPTURE_BACK
+    ) {
       actions.push({
         style: this.isCameraAllowed ? actionStyles.TODO : actionStyles.DISABLE,
         icon: icons.CAPTURE,
