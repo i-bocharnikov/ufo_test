@@ -89,6 +89,6 @@
     "preset": "react-native"
   },
   "pre-commit": [
-    
+    "lint-changes"
   ]
 }
