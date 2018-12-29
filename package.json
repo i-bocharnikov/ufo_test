@@ -19,7 +19,9 @@
     "lint-path": "eslint",
     "lint-fix-path": "eslint --fix",
     "lint-changes": "LIST=`git diff-index --name-only HEAD | grep .*\\.js | grep -v json`; if [ \"$LIST\" ]; then npm run lint-path $LIST; fi",
-    "lint-fix-changes": "LIST=`git diff-index --name-only HEAD | grep .*\\.js | grep -v json`; if [ \"$LIST\" ]; then npm run lint-fix-path $LIST; fi"
+    "lint-fix-changes": "LIST=`git diff-index --name-only HEAD | grep .*\\.js | grep -v json`; if [ \"$LIST\" ]; then npm run lint-fix-path $LIST; fi",
+    "prettify-all": "prettier-eslint --eslint-config-path .eslintrc --write 'src/**/*.{js,jsx}'",
+    "prettify-changes": "LIST=`git diff-index --name-only HEAD | grep .*\\.js | grep -v json`; if [ \"$LIST\" ]; then npm run prettier-eslint --eslint-config-path .eslintrc --write $LIST; fi"
   },
   "dependencies": {
     "axios": "^0.18.0",

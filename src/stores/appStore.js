@@ -72,10 +72,10 @@ class AppStore {
   async initialise(t) {
     console.log('==>  INITIALISE APPLICATION ');
     this.isAppReady = false;
-    const result = (await checkConnectivity()) && (await this.register(t)) && (await this.loadRemoteData(t));
+    const result = (await checkConnectivity()) && (await this.register()) && (await this.loadRemoteData());
     if (!result) {
       console.log('<== FALLBACK ');
-      await this.loadLocalData(t);
+      await this.loadLocalData();
     }
     this.isAppReady = true;
     console.log('<== INITIALISE DONE ');
@@ -92,7 +92,7 @@ class AppStore {
       ) {
         return false;
       }
-      (await this.register(t)) && (await this.loadRemoteData(t));
+      (await this.register()) && (await this.loadRemoteData());
       return true;
     }
     return false;
