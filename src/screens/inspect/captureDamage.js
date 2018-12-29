@@ -3,56 +3,74 @@ import { translate } from 'react-i18next';
 import { Dimensions, View, StyleSheet } from 'react-native';
 import { observer } from 'mobx-react';
 import { observable, action } from 'mobx';
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import UFOCamera from './../../components/UFOCamera';
-import UFOHeader from "../../components/header/UFOHeader";
-import UFOActionBar from "../../components/UFOActionBar";
-import { UFOContainer, UFOImage } from '../../components/common'
-import { screens, actionStyles, icons, dims } from '../../utils/global'
-import { inspectStore } from "../../stores";
-import UFOCard from "../../components/UFOCard";
-import { Body } from "native-base";
-import { checkAndRequestCameraPermission } from "../../utils/permissions";
+import UFOHeader from '../../components/header/UFOHeader';
+import UFOActionBar from '../../components/UFOActionBar';
+import { UFOContainer, UFOImage } from '../../components/common';
+import { screens, actionStyles, icons, dims } from '../../utils/global';
+import { inspectStore } from '../../stores';
+import UFOCard from '../../components/UFOCard';
+import { Body } from 'native-base';
+import { checkAndRequestCameraPermission } from '../../utils/permissions';
 
-const window = Dimensions.get('window');
-const DEVICE_WIDTH = window.width
-const DEVICE_HEIGHT = window.height
+const DEVICE_WIDTH = Dimensions.get('window').width;
+const DEVICE_HEIGHT = Dimensions.get('window').height;
+
+const styles = StyleSheet.create({
+  container: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0
+  },
+  preview: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0
+  }
+});
+
 @observer
 class CaptureDamageScreen extends Component {
-
-  @observable documentUri = null
-  @observable activityPending = false
-  @observable isCameraAllowed = false
+  @observable documentUri = null;
+  @observable activityPending = false;
+  @observable isCameraAllowed = false;
 
   async componentDidMount() {
-    this.documentUri = null
+    this.documentUri = null;
     //this.isCameraAllowed = await checkAndRequestCameraPermission()
   }
 
   @action
   doCapture = async () => {
-    this.activityPending = true
+    this.activityPending = true;
     const imageData = await this.cameraRef.takePicture();
     this.documentUri = imageData.uri;
     this.activityPending = false;
-  }
+  };
 
   @action
-  doSave = async (t) => {
-    this.activityPending = true
+  doSave = async t => {
+    this.activityPending = true;
     if (this.documentUri) {
-      inspectStore.documentUri = this.documentUri
+      inspectStore.documentUri = this.documentUri;
       if (await inspectStore.uploadDamageDocument()) {
-        this.props.navigation.navigate(screens.INSPECT_COMMENT.name)
+        this.props.navigation.navigate(screens.INSPECT_COMMENT.name);
       }
     }
-    this.activityPending = false
-  }
+    this.activityPending = false;
+  };
 
   renderBody = (t, navigation) => {
-    return this.documentUri ? this.renderBodyCheck(t, navigation) : this.renderBodyCapture(t, navigation)
-  }
+    return this.documentUri
+      ? this.renderBodyCheck(t, navigation)
+      : this.renderBodyCapture(t, navigation);
+  };
 
   renderBodyCapture = (t, navigation) => {
     return (
@@ -71,27 +89,49 @@ class CaptureDamageScreen extends Component {
         />
       </View>
     );
-  }
+  };
 
   renderBodyCheck = (t, navigation) => {
     return (
       <KeyboardAwareScrollView>
-        <UFOHeader transparent t={t} navigation={navigation} currentScreen={screens.INSPECT_CAPTURE} logo />
-        <View style={{ paddingTop: 10, paddingHorizontal: dims.CONTENT_PADDING_HORIZONTAL, flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
-          <UFOCard title={t('inspect:captureCheckGuidance')} >
+        <UFOHeader
+          transparent
+          t={t}
+          navigation={navigation}
+          currentScreen={screens.INSPECT_CAPTURE}
+          logo
+        />
+        <View
+          style={{
+            paddingTop: 10,
+            paddingHorizontal: dims.CONTENT_PADDING_HORIZONTAL,
+            flex: 1,
+            flexDirection: 'column',
+            justifyContent: 'flex-start',
+            alignContent: 'center'
+          }}
+        >
+          <UFOCard title={t('inspect:captureCheckGuidance')}>
             <Body>
-              <UFOImage source={{ uri: this.documentUri }} style={{ width: dims.DEVICE_WIDTH * 0.7, height: dims.DEVICE_HEIGHT * 0.5, alignSelf: 'center' }} />
+              <UFOImage
+                source={{ uri: this.documentUri }}
+                style={{
+                  width: dims.DEVICE_WIDTH * 0.7,
+                  height: dims.DEVICE_HEIGHT * 0.5,
+                  alignSelf: 'center'
+                }}
+              />
             </Body>
           </UFOCard>
         </View>
       </KeyboardAwareScrollView>
-    )
-  }
+    );
+  };
 
   render() {
     const { t, navigation } = this.props;
 
-    let actions = [
+    const actions = [
       {
         style: actionStyles.ACTIVE,
         icon: icons.CANCEL,
@@ -103,50 +143,36 @@ class CaptureDamageScreen extends Component {
         onPress: () => this.props.navigation.pop()
       },
       {
-        style: this.isCameraAllowed ? this.documentUri ? actionStyles.ACTIVE : actionStyles.TODO : actionStyles.DISABLE,
+        style: this.isCameraAllowed
+          ? this.documentUri
+            ? actionStyles.ACTIVE
+            : actionStyles.TODO
+          : actionStyles.DISABLE,
         icon: this.documentUri ? icons.NEW_CAPTURE : icons.CAPTURE,
         onPress: async () => {
-          this.documentUri ? this.documentUri = null : this.doCapture(t)
+          this.documentUri ? (this.documentUri = null) : this.doCapture(t);
         }
       }
-    ]
+    ];
 
     if (this.documentUri) {
       actions.push({
         style: this.documentUri ? actionStyles.TODO : actionStyles.DISABLE,
         icon: icons.NEXT,
         onPress: () => this.doSave(t)
-      })
+      });
     }
-
-
 
     return (
       <UFOContainer image={screens.INSPECT_CAPTURE.backgroundImage}>
         {this.renderBody(t, navigation)}
-        <UFOActionBar actions={actions} activityPending={this.activityPending} />
-      </UFOContainer >
+        <UFOActionBar
+          actions={actions}
+          activityPending={this.activityPending}
+        />
+      </UFOContainer>
     );
   }
 }
 
-
-const styles = StyleSheet.create({
-  container: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    bottom: 0,
-    right: 0,
-  },
-  preview: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    bottom: 0,
-    right: 0,
-  },
-});
-
-export default translate("translations")(CaptureDamageScreen);
-
+export default translate('translations')(CaptureDamageScreen);
