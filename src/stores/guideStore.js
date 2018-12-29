@@ -1,113 +1,115 @@
 import { observable, action, computed } from 'mobx';
-import { persist } from 'mobx-persist'
-import _ from 'lodash'
-import { driveStore } from './'
+import { persist } from 'mobx-persist';
+import _ from 'lodash';
 
-import { getFromApi } from '../utils/api_deprecated'
+import { driveStore } from './';
+import { getFromApi } from '../utils/api_deprecated';
 
-const DEBUG = false
+const DEBUG = false;
 
 const GUIDE_TYPE = {
-    FIND: 'location_find',
-    RETURN: 'location_return',
-}
-
+  FIND: 'location_find',
+  RETURN: 'location_return'
+};
 
 class Guide {
-    @persist @observable reference = null
-    @persist @observable type = null
-    @persist @observable priority = null
-    @persist @observable title = null
-    @persist @observable description = null
-    @persist @observable media_type = null
-    @persist @observable media_url = null
+  @persist @observable reference = null;
+  @persist @observable type = null;
+  @persist @observable priority = null;
+  @persist @observable title = null;
+  @persist @observable description = null;
+  @persist @observable media_type = null;
+  @persist @observable media_url = null;
 }
 
 class GuidePack {
-    @persist @observable type = null
-    @persist @observable locationReference = null
-    @persist('list', Guide) @observable guides = []
+  @persist @observable type = null;
+  @persist @observable locationReference = null;
+  @persist('list', Guide) @observable guides = [];
 }
-
 
 export default class GuideStore {
+  constructor() {}
 
-    constructor() { }
+  @persist('list', Guide) @observable guidePacks = [];
 
-    @persist('list', Guide) @observable guidePacks = []
+  @computed get findGuides() {
+    if (this.guidePacks === null || !driveStore.rental) {
+      return [];
+    }
+    let guidePack = this.guidePacks.find(guidePack => {
+      return (
+        guidePack.type === GUIDE_TYPE.FIND &&
+        guidePack.locationReference === driveStore.rental.location.reference
+      );
+    });
 
-    @computed get findGuides() {
-        if (this.guidePacks === null || !driveStore.rental) {
-            return []
-        }
-        let guidePack = this.guidePacks.find(guidePack => { return guidePack.type === GUIDE_TYPE.FIND && guidePack.locationReference === driveStore.rental.location.reference })
-
-        if (!guidePack) {
-            return []
-        }
-
-        return guidePack.guides
+    if (!guidePack) {
+      return [];
     }
 
-    @computed get returnGuides() {
-        if (this.guidePacks === null || !driveStore.rental) {
-            return []
-        }
-        let guidePack = this.guidePacks.find(guidePack => { return guidePack.type === GUIDE_TYPE.RETURN && guidePack.locationReference === driveStore.rental.location.reference })
-        if (!guidePack) {
-            return []
-        }
-        return guidePack.guides
+    return guidePack.guides;
+  }
+
+  @computed get returnGuides() {
+    if (this.guidePacks === null || !driveStore.rental) {
+      return [];
+    }
+    const guidePack = this.guidePacks.find(guidePack => {
+      return (
+        guidePack.type === GUIDE_TYPE.RETURN &&
+        guidePack.locationReference === driveStore.rental.location.reference
+      );
+    });
+    if (!guidePack) {
+      return [];
+    }
+    return guidePack.guides;
+  }
+
+  hasImage(guide) {
+    return guide.media_type === 'image';
+  }
+  hasVideo(guide) {
+    return guide.media_type === 'video';
+  }
+
+  @action
+  async listFindGuides() {
+    const guideType = GUIDE_TYPE.FIND;
+    return await this.listGuides(guideType);
+  }
+
+  @action
+  async listReturnGuides() {
+    const guideType = GUIDE_TYPE.RETURN;
+    return await this.listGuides(guideType);
+  }
+
+  @action
+  async listGuides(guideType) {
+    if (!driveStore.rental) {
+      return false;
     }
 
-    hasImage(guide) {
-        return guide.media_type === 'image'
+    const locationReference = driveStore.rental.location.reference;
+
+    const response = await getFromApi('/guides/' + guideType + '/' + locationReference);
+    if (response && response.status === 'success') {
+      if (DEBUG) {console.info('guideStore.listGuides:', response.data);}
+      const guidePackIndex = this.guidePacks.findIndex(guidePack => {
+        return guidePack.type === guideType && guidePack.locationReference === locationReference;
+      });
+      if (guidePackIndex >= 0) {
+        this.guidePacks.slice(guidePackIndex, guidePackIndex + 1);
+      }
+      const guidePack = new GuidePack();
+      guidePack.type = guideType;
+      guidePack.locationReference = locationReference;
+      guidePack.guides = response.data.guides;
+      this.guidePacks.push(guidePack);
+      return true;
     }
-    hasVideo(guide) {
-        return guide.media_type === 'video'
-    }
-
-
-    @action
-    async listFindGuides() {
-        let guideType = GUIDE_TYPE.FIND
-        return await this.listGuides(guideType)
-    };
-
-    @action
-    async listReturnGuides() {
-        let guideType = GUIDE_TYPE.RETURN
-        return await this.listGuides(guideType)
-    };
-
-    @action
-    async listGuides(guideType) {
-
-        if (!driveStore.rental) {
-            return false
-        }
-
-        let locationReference = driveStore.rental.location.reference
-
-        const response = await getFromApi("/guides/" + guideType + "/" + locationReference);
-        if (response && response.status === "success") {
-            if (DEBUG)
-                console.info("guideStore.listGuides:", response.data);
-            let guidePackIndex = this.guidePacks.findIndex(guidePack => { return guidePack.type === guideType && guidePack.locationReference === locationReference })
-            if (guidePackIndex >= 0) {
-                this.guidePacks.slice(guidePackIndex, guidePackIndex + 1)
-            }
-            let guidePack = new GuidePack
-            guidePack.type = guideType
-            guidePack.locationReference = locationReference
-            guidePack.guides = response.data.guides
-            this.guidePacks.push(guidePack)
-            return true
-        }
-        return false
-    };
+    return false;
+  }
 }
-
-
-
-
