@@ -1,3 +1,4 @@
+/* this theme settings are deprecated, use /theme instead */
 import Color from 'color';
 import configurations from './configurations';
 import { Dimensions, Platform } from 'react-native';
