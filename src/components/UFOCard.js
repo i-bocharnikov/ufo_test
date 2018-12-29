@@ -78,7 +78,10 @@ export default class UFOCard extends Component {
     return (
       <Card style={styles.cardContainer}>
         {hasMedia && (
-          <CardItem cardBody style={mediaStyles}>
+          <CardItem
+            cardBody
+            style={mediaStyles}
+          >
             {imageSource && (
               <UFOImage
                 source={imageSource}
@@ -99,8 +102,11 @@ export default class UFOCard extends Component {
           <CardItem style={textStyles}>
             <Left>
               <Body>
-                <UFOText h5 upper>{title}</UFOText>
-                {texts.map((text, index) => <UFOText key={index} note>{text}</UFOText>)}
+                <UFOText
+                  h5
+                  upper
+                >{title}</UFOText>
+                {texts.map((item, index) => <UFOText key={index} note>{item}</UFOText>)}
               </Body>
             </Left>
           </CardItem>
@@ -114,7 +120,10 @@ export default class UFOCard extends Component {
           <CardItem style={messageStyles}>
             <Left>
               <Body>
-                <UFOText h5 note>{message}</UFOText>
+                <UFOText
+                  h5
+                  note
+                >{message}</UFOText>
               </Body>
             </Left>
           </CardItem>

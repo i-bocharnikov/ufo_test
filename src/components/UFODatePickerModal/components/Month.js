@@ -59,7 +59,10 @@ export default class Month extends PureComponent {
     return (
       <View style={styles.weekLabelsContainer}>
         {dayLabels.map((item, i) => (
-          <Text key={`weekday-${i}`} style={styles.weekLabel}>
+          <Text
+            key={`weekday-${i}`}
+            style={styles.weekLabel}
+          >
             {item}
           </Text>
         ))}

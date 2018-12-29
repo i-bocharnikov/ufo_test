@@ -17,7 +17,7 @@ export default StyleSheet.create({
     paddingVertical: 12,
     width: '55%',
     borderRadius: 6,
-    shadowOffset: {width: 1,  height: 1},
+    shadowOffset: { width: 1, height: 1 },
     shadowRadius: 0.2,
     shadowColor: 'black',
     shadowOpacity: 0.4,
@@ -56,15 +56,9 @@ export default StyleSheet.create({
     borderEndColor: 'transparent'
   },
 
-  tailCenter: {
-    alignSelf: 'center'
-  },
+  tailCenter: { alignSelf: 'center' },
 
-  tailLeft: {
-    left: TAIL_INDENT
-  },
+  tailLeft: { left: TAIL_INDENT },
 
-  tailRight: {
-    right: TAIL_INDENT
-  }
+  tailRight: { right: TAIL_INDENT }
 });

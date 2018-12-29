@@ -1,19 +1,18 @@
 import React, { Component } from 'react';
 import { translate } from 'react-i18next';
-import { WebView } from 'react-native'
+import { WebView } from 'react-native';
 import { observer } from 'mobx-react';
 import { observable, action } from 'mobx';
 
 import UFOHeader from './../../components/header/UFOHeader';
 import UFOActionBar from './../../components/UFOActionBar';
 import { UFOContainer } from './../../components/common';
-import { screens, actionStyles, icons } from './../../utils/global'
-import { driveStore, termStore } from './../../stores'
+import { screens, actionStyles, icons } from './../../utils/global';
+import { driveStore, termStore } from './../../stores';
 import { showPrompt, showToastError } from './../../utils/interaction';
 
 @observer
 class InspectScreen extends Component {
-
   @observable refreshing = false;
   @observable activityPending = false;
 
@@ -35,7 +34,7 @@ class InspectScreen extends Component {
         style: termStore.term.html ? actionStyles.TODO : actionStyles.DISABLE,
         icon: icons.SIGN,
         onPress: this.confirmContractSignature
-      },
+      }
     ];
 
     return (
@@ -44,11 +43,11 @@ class InspectScreen extends Component {
           t={t}
           navigation={navigation}
           currentScreen={screens.DRIVE}
-          title={t('term:rentalAgreementTitle', {rental: driveStore.rental})}
+          title={t('term:rentalAgreementTitle', { rental: driveStore.rental })}
         />
         <WebView
           ref={ref => (this.webView = ref)}
-          source={{html: termStore.term.html}}
+          source={{ html: termStore.term.html }}
         />
         <UFOActionBar
           actions={actions}
@@ -74,7 +73,7 @@ class InspectScreen extends Component {
       await driveStore.refreshRental();
       this.props.navigation.navigate(screens.DRIVE.name);
     }
-    
+
     this.activityPending = false;
   };
 
@@ -94,7 +93,7 @@ class InspectScreen extends Component {
     };
 
     showPrompt(
-      t('term:confirmContractTitle', {strKey: confirmKey}),
+      t('term:confirmContractTitle', { strKey: confirmKey }),
       t('term:confirmContractDescription'),
       promptHandler,
       () => (this.activityPending = false)

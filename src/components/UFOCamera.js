@@ -88,7 +88,7 @@ export default class UFOCamera extends React.Component {
       >
         <TouchableOpacity
           onPress={this.changeFlashMode}
-          style={[styles.torchBtn, torchBtnTopIndent && {marginTop: torchBtnTopIndent}]}
+          style={[ styles.torchBtn, torchBtnTopIndent && { marginTop: torchBtnTopIndent } ]}
           activeOpacity={1}
         >
           <UFOIcon
@@ -109,7 +109,7 @@ export default class UFOCamera extends React.Component {
     const nextIndex = currentIndex + 1 >= FLASH_MODE_ITEMS.length
       ? 0
       : currentIndex + 1;
-    this.setState({flashMode: FLASH_MODE_ITEMS[nextIndex]});
+    this.setState({ flashMode: FLASH_MODE_ITEMS[nextIndex] });
   };
 
   rotateImage = imageData => new Promise((resolve, reject) => {

@@ -16,9 +16,8 @@ import { showToastError } from './../utils/interaction';
 import logger, { codeTypes, severityTypes } from './../utils/userActionsLogger';
 
 const { OTAKeyModule } = NativeModules;
-const PlatformEventEmitter = Platform.OS === 'ios'
-  ? new NativeEventEmitter(OTAKeyModule)
-  : DeviceEventEmitter;
+const PlatformEventEmitter =
+  Platform.OS === 'ios' ? new NativeEventEmitter(OTAKeyModule) : DeviceEventEmitter;
 
 class Vehicle {
   @observable vin;
@@ -34,7 +33,7 @@ class Key {
   @observable beginDate;
   @observable endDate;
   @observable mileageLimit;
-  @observable vehicle = new Vehicle;
+  @observable vehicle = new Vehicle();
   @observable keyId;
   @observable extId;
   @observable isEnabled;
@@ -44,7 +43,6 @@ class Key {
 }
 
 class OTAKeyStore {
-
   ota = OTAKeyModule;
   keyAccessDeviceRegistrationNumber = 9706753;
 
@@ -54,7 +52,7 @@ class OTAKeyStore {
 
   @observable otaLog = '';
 
-  @observable key = new Key;
+  @observable key = new Key();
 
   @observable isConnecting = false;
   @observable isConnected = false;
@@ -67,7 +65,7 @@ class OTAKeyStore {
     const date = moment();
     const { severity, code, action, message, description } = options;
     const logExtraData = {
-      context: {key: this.key, doorsLocked: this.doorsLocked},
+      context: { key: this.key, doorsLocked: this.doorsLocked },
       momentDate: date
     };
 
@@ -148,13 +146,9 @@ class OTAKeyStore {
         severity: severityTypes.INFO,
         action: 'onOtaVehicleDataUpdated',
         code: codeTypes.SUCCESS,
-        message: `>> ${
-          otaVehicleData.doorsLocked ? 'LOCKED' : 'UNLOCKED'
-        } / ${
+        message: `>> ${otaVehicleData.doorsLocked ? 'LOCKED' : 'UNLOCKED'} / ${
           otaVehicleData.engineRunning ? 'STARTED' : 'STOPPED'
-        } / ${
-          otaVehicleData.energyCurrent + '%'
-        }`
+        } / ${otaVehicleData.energyCurrent + '%'}`
       });
       this.doorsLocked = otaVehicleData.doorsLocked === true ? true : false;
       this.engineRunning = otaVehicleData.engineRunning === true ? true : false;
@@ -168,7 +162,7 @@ class OTAKeyStore {
         description: error
       });
     }
-  }
+  };
 
   @action
   onOtaActionPerformed = async otaAction => {
@@ -188,7 +182,7 @@ class OTAKeyStore {
         description: error
       });
     }
-  }
+  };
 
   @action
   onOtaBluetoothStateChanged = async otaBluetoothState => {
@@ -218,7 +212,7 @@ class OTAKeyStore {
         description: error
       });
     }
-  }
+  };
 
   @action
   async register(showError = true): Promise<boolean> {
@@ -231,24 +225,17 @@ class OTAKeyStore {
         severity: severityTypes.DEBUG,
         action: 'register',
         code: codeTypes.SUCCESS,
-        message: `-> this.ota.register(${
-          String(this.keyAccessDeviceRegistrationNumber)
-        }, ${
-          String(showError)
-        }) start`
+        message: `-> this.ota.register(${String(this.keyAccessDeviceRegistrationNumber)}, ${String(
+          showError
+        )}) start`
       });
-      const result = Platform.OS === 'ios'
-        ? await this.ota.register()
-        : await this.ota.register(this.keyAccessDeviceRegistrationNumber);
+      const result =
+        Platform.OS === 'ios'
+          ? await this.ota.register()
+          : await this.ota.register(this.keyAccessDeviceRegistrationNumber);
 
-      PlatformEventEmitter.addListener(
-        'onOtaVehicleDataUpdated',
-        this.onOtaVehicleDataUpdated
-      );
-      PlatformEventEmitter.addListener(
-        'onOtaActionPerformed',
-        this.onOtaActionPerformed
-      );
+      PlatformEventEmitter.addListener('onOtaVehicleDataUpdated', this.onOtaVehicleDataUpdated);
+      PlatformEventEmitter.addListener('onOtaActionPerformed', this.onOtaActionPerformed);
       PlatformEventEmitter.addListener(
         'onOtaBluetoothStateChanged',
         this.onOtaBluetoothStateChanged
@@ -258,13 +245,9 @@ class OTAKeyStore {
         severity: severityTypes.DEBUG,
         action: 'registerToOTA',
         code: codeTypes.SUCCESS,
-        message: `<- this.ota.register(${
-          String(this.keyAccessDeviceRegistrationNumber)
-        }, ${
-          String(showError)
-        }) return ${
-          result
-        }`,
+        message: `<- this.ota.register(${String(this.keyAccessDeviceRegistrationNumber)}, ${String(
+          showError
+        )}) return ${result}`,
         description: result
       });
       this.isRegistered = true;
@@ -275,13 +258,9 @@ class OTAKeyStore {
         severity: severityTypes.DEBUG,
         action: 'registerToOTA',
         code: codeTypes.ERROR,
-        message: `<- this.ota.register(${
-          String(this.keyAccessDeviceRegistrationNumber)
-        }, ${
-          String(showError)
-        }) failed ${
-          error
-        }`,
+        message: `<- this.ota.register(${String(this.keyAccessDeviceRegistrationNumber)}, ${String(
+          showError
+        )}) failed ${error}`,
         description: error
       });
       this.handleOTAAPIError(error, showError);
@@ -296,22 +275,14 @@ class OTAKeyStore {
         severity: severityTypes.DEBUG,
         action: 'getOTAKeyAccessDeviceIdentifier',
         code: codeTypes.SUCCESS,
-        message: `-> this.ota.getAccessDeviceToken(${
-          String(force)
-        }, ${
-          String(showError)
-        }) start`
+        message: `-> this.ota.getAccessDeviceToken(${String(force)}, ${String(showError)}) start`
       });
       this.keyAccessDeviceIdentifier = await this.ota.getAccessDeviceToken(force);
       await this.otaKeyLogger({
         severity: severityTypes.DEBUG,
         action: 'getOTAKeyAccessDeviceIdentifier',
         code: codeTypes.SUCCESS,
-        message: `<- this.ota.getAccessDeviceToken(${
-          String(force)
-        }, ${
-          String(showError)
-        }) return ${
+        message: `<- this.ota.getAccessDeviceToken(${String(force)}, ${String(showError)}) return ${
           this.keyAccessDeviceIdentifier
         }`
       });
@@ -320,13 +291,9 @@ class OTAKeyStore {
         severity: severityTypes.DEBUG,
         action: 'getOTAKeyAccessDeviceIdentifier',
         code: codeTypes.ERROR,
-        message: `<- this.ota.getAccessDeviceToken(${
-          String(force)
-        }, ${
-          String(showError)
-        }) failed ${
-          error
-        }`,
+        message: `<- this.ota.getAccessDeviceToken(${String(force)}, ${String(
+          showError
+        )}) failed ${error}`,
         description: error
       });
       this.handleOTAAPIError(error, showError);
@@ -336,7 +303,7 @@ class OTAKeyStore {
 
   @action
   async openSession(keyAccessDeviceToken: string, showError = true): Promise<boolean> {
-    if (!keyAccessDeviceToken || !keyAccessDeviceToken instanceof String || keyAccessDeviceToken === '') {
+    if (typeof keyAccessDeviceToken !== 'string' || keyAccessDeviceToken === '') {
       return false;
     }
 
@@ -346,11 +313,7 @@ class OTAKeyStore {
         severity: severityTypes.DEBUG,
         action: 'openOTASession',
         code: codeTypes.SUCCESS,
-        message : `-> this.ota.openSession(${
-          this.keyAccessDeviceToken
-        }, ${
-          String(showError)
-        }) start`
+        message: `-> this.ota.openSession(${this.keyAccessDeviceToken}, ${String(showError)}) start`
       });
 
       if (Platform.OS === 'ios') {
@@ -362,13 +325,9 @@ class OTAKeyStore {
         severity: severityTypes.INFO,
         action: 'openOTASession',
         code: codeTypes.SUCCESS,
-        message : `<- this.ota.openSession(${
-          this.keyAccessDeviceToken
-        }, ${
-          String(showError)
-        }) return ${
-          result
-        }`,
+        message: `<- this.ota.openSession(${this.keyAccessDeviceToken}, ${String(
+          showError
+        )}) return ${result}`,
         description: result
       });
 
@@ -378,13 +337,9 @@ class OTAKeyStore {
         severity: severityTypes.ERROR,
         action: 'openOTASession',
         code: codeTypes.ERROR,
-        message: `<- this.ota.openSession(${
-          this.keyAccessDeviceToken
-        }, ${
-          String(showError)
-        }) failed ${
-          error
-        }`,
+        message: `<- this.ota.openSession(${this.keyAccessDeviceToken}, ${String(
+          showError
+        )}) failed ${error}`,
         description: error
       });
       this.handleOTAAPIError(error, showError);
@@ -406,11 +361,9 @@ class OTAKeyStore {
         severity: severityTypes.INFO,
         action: 'getVehicleData',
         code: codeTypes.SUCCESS,
-        message: `<- this.ota.getVehicleData(${
-          String(showError)
-        }) return ${
-          JSON.stringify(result)
-        }`,
+        message: `<- this.ota.getVehicleData(${String(showError)}) return ${JSON.stringify(
+          result
+        )}`,
         description: result
       });
       return result;
@@ -429,7 +382,7 @@ class OTAKeyStore {
 
   @action
   async getKey(keyId: string, showError = true): Promise<boolean> {
-    if (!keyId || !keyId instanceof String || keyId === '') {
+    if (typeof keyId !== 'string' || keyId === '') {
       return false;
     }
 
@@ -445,13 +398,9 @@ class OTAKeyStore {
         severity: severityTypes.INFO,
         action: 'getKey',
         code: codeTypes.SUCCESS,
-        message: `<- this.ota.getKey(${
-          keyId
-        }, ${
-          String(showError)
-        }) return ${
-          JSON.stringify(this.key)
-        }`,
+        message: `<- this.ota.getKey(${keyId}, ${String(showError)}) return ${JSON.stringify(
+          this.key
+        )}`,
         description: this.key
       });
       return true;
@@ -460,13 +409,7 @@ class OTAKeyStore {
         severity: severityTypes.ERROR,
         action: 'getKey',
         code: codeTypes.ERROR,
-        message: `<- this.ota.getKey(${
-          keyId
-        }, ${
-          String(showError)
-        }) failed ${
-          error
-        }`,
+        message: `<- this.ota.getKey(${keyId}, ${String(showError)}) failed ${error}`,
         description: error
       });
       this.handleOTAAPIError(error, showError);
@@ -488,11 +431,7 @@ class OTAKeyStore {
         severity: severityTypes.INFO,
         action: 'getUsedKey',
         code: codeTypes.SUCCESS,
-        message: `<- this.ota.getUsedKey(${
-          String(showError)
-        }) return ${
-          JSON.stringify(this.key)
-        }`,
+        message: `<- this.ota.getUsedKey(${String(showError)}) return ${JSON.stringify(this.key)}`,
         description: this.key
       });
       return true;
@@ -510,12 +449,17 @@ class OTAKeyStore {
   }
 
   @computed get isKeyEnabled() {
-    return this.key && driveStore.rental && this.key.keyId === driveStore.rental.key_id && this.key.isEnabled;
+    return (
+      this.key &&
+      driveStore.rental &&
+      this.key.keyId === driveStore.rental.key_id &&
+      this.key.isEnabled
+    );
   }
 
   @action
   async enableKey(keyId: string, showError = true): Promise<boolean> {
-    if (!keyId || !keyId instanceof String || keyId === '') {
+    if (typeof keyId !== 'string' || keyId === '') {
       return false;
     }
 
@@ -531,16 +475,12 @@ class OTAKeyStore {
         severity: severityTypes.INFO,
         action: 'enableKey',
         code: codeTypes.SUCCESS,
-        message: `<- this.ota.enableKey(${
-          keyId
-        }, ${
-          String(showError)
-        }) return ${
-          JSON.stringify(this.key)
-        }`,
+        message: `<- this.ota.enableKey(${keyId}, ${String(showError)}) return ${JSON.stringify(
+          this.key
+        )}`,
         description: this.key
       });
-      return true
+      return true;
     } catch (error) {
       await this.otaKeyLogger({
         severity: severityTypes.ERROR,
@@ -568,13 +508,9 @@ class OTAKeyStore {
         severity: severityTypes.INFO,
         action: 'endKey',
         code: codeTypes.SUCCESS,
-        message: `<- this.ota.endKey(${
-          this.key.keyId
-        }, ${
-          String(showError)
-        }) return ${
-          JSON.stringify(this.key)
-        }`,
+        message: `<- this.ota.endKey(${this.key.keyId}, ${String(
+          showError
+        )}) return ${JSON.stringify(this.key)}`,
         description: this.key
       });
       return true;
@@ -583,13 +519,7 @@ class OTAKeyStore {
         severity: severityTypes.ERROR,
         action: 'endKey',
         code: codeTypes.ERROR,
-        message: `<- this.ota.endKey(${
-          this.key.keyId
-        }, ${
-          String(showError)
-        }) failed ${
-          error
-        }`,
+        message: `<- this.ota.endKey(${this.key.keyId}, ${String(showError)}) failed ${error}`,
         description: error
       });
       this.handleOTAAPIError(error, showError);
@@ -604,24 +534,16 @@ class OTAKeyStore {
         severity: severityTypes.DEBUG,
         action: 'switchToKey',
         code: codeTypes.SUCCESS,
-        message: `-> this.ota.switchToKey(${
-          JSON.stringify(this.key)
-        }, ${
-          String(showError)
-        }) start`
+        message: `-> this.ota.switchToKey(${JSON.stringify(this.key)}, ${String(showError)}) start`
       });
       this.key = await this.ota.switchToKey();
       await this.otaKeyLogger({
         severity: severityTypes.INFO,
         action: 'switchToKey',
         code: codeTypes.SUCCESS,
-        message: `<- this.ota.switchToKey(${
-          JSON.stringify(this.key)
-        }, ${
-          String(showError)
-        }) return ${
-          JSON.stringify(this.key)
-        }`,
+        message: `<- this.ota.switchToKey(${JSON.stringify(this.key)}, ${String(
+          showError
+        )}) return ${JSON.stringify(this.key)}`,
         description: this.key
       });
       return true;
@@ -630,13 +552,9 @@ class OTAKeyStore {
         severity: severityTypes.ERROR,
         action: 'switchToKey',
         code: codeTypes.ERROR,
-        message: `<- this.ota.switchToKey(${
-          JSON.stringify(this.key)
-        }, ${
-          String(showError)
-        }) failed ${
-          error
-        }`,
+        message: `<- this.ota.switchToKey(${JSON.stringify(this.key)}, ${String(
+          showError
+        )}) failed ${error}`,
         description: error
       });
       this.handleOTAAPIError(error, showError);
@@ -676,35 +594,29 @@ class OTAKeyStore {
   }
 
   @action
-  async configureNetworkTimeouts(connectTimeout: Number, readTimeout: Number, showError = true): Promise<boolean> {
+  async configureNetworkTimeouts(
+    connectTimeout: Number,
+    readTimeout: Number,
+    showError = true
+  ): Promise<boolean> {
     // unused method
     try {
       await this.otaKeyLogger({
         severity: severityTypes.DEBUG,
         action: 'configureOTANetworkTimeouts',
         code: codeTypes.SUCCESS,
-        message: `-> this.ota.configureNetworkTimeouts(${
-          String(connectTimeout)
-        }, ${
-          String(readTimeout)
-        }, ${
-          String(showError)
-        }) start`
+        message: `-> this.ota.configureNetworkTimeouts(${String(connectTimeout)}, ${String(
+          readTimeout
+        )}, ${String(showError)}) start`
       });
       const result = await this.ota.configureNetworkTimeouts(connectTimeout, readTimeout);
       await this.otaKeyLogger({
         severity: severityTypes.INFO,
         action: 'configureOTANetworkTimeouts',
         code: codeTypes.SUCCESS,
-        message: `<- this.ota.configureNetworkTimeouts(${
-          String(connectTimeout)
-        }, ${
-          String(readTimeout)
-        }, ${
-          String(showError)
-        }) return ${
-          result
-        }`,
+        message: `<- this.ota.configureNetworkTimeouts(${String(connectTimeout)}, ${String(
+          readTimeout
+        )}, ${String(showError)}) return ${result}`,
         description: result
       });
       return result;
@@ -713,15 +625,9 @@ class OTAKeyStore {
         severity: severityTypes.ERROR,
         action: 'configureOTANetworkTimeouts',
         code: codeTypes.ERROR,
-        message: `<- this.ota.configureNetworkTimeouts(${
-          String(connectTimeout)
-        }, ${
-          String(readTimeout)
-        }, ${
-          String(showError)
-        }) failed ${
-          error
-        }`,
+        message: `<- this.ota.configureNetworkTimeouts(${String(connectTimeout)}, ${String(
+          readTimeout
+        )}, ${String(showError)}) failed ${error}`,
         description: error
       });
       this.handleOTABLEError(error, showError);
@@ -833,25 +739,20 @@ class OTAKeyStore {
         code: codeTypes.SUCCESS,
         message: `-> this.ota.connect(${String(showNotification)}, ${String(showError)}) start`
       });
-      const result = Platform.OS === 'ios'
-        ? await this.ota.connect()
-        : await this.ota.connect(showNotification);
+      const result =
+        Platform.OS === 'ios' ? await this.ota.connect() : await this.ota.connect(showNotification);
       await this.otaKeyLogger({
         severity: severityTypes.INFO,
         action: 'connectToVehicle',
         code: codeTypes.SUCCESS,
-        message: `<- this.ota.connect(${
-          String(showNotification)
-        }, ${
-          String(showError)
-        }) return ${
-          result
-        }`,
+        message: `<- this.ota.connect(${String(showNotification)}, ${String(
+          showError
+        )}) return ${result}`,
         description: result
       });
       return result;
     } catch (error) {
-      if (error.code = 'ALREADY_CONNECTED') {
+      if ((error.code = 'ALREADY_CONNECTED')) {
         return true;
       }
 
@@ -859,13 +760,9 @@ class OTAKeyStore {
         severity: severityTypes.ERROR,
         action: 'connectToVehicle',
         code: codeTypes.ERROR,
-        message: `<- this.ota.connect(${
-          String(showNotification)
-        }, ${
-          String(showError)
-        }) failed ${
-          error
-        }`,
+        message: `<- this.ota.connect(${String(showNotification)}, ${String(
+          showError
+        )}) failed ${error}`,
         description: error
       });
       this.handleOTABLEError(error, showError);
@@ -911,24 +808,18 @@ class OTAKeyStore {
         severity: severityTypes.DEBUG,
         action: 'unlockDoors',
         code: codeTypes.SUCCESS,
-        message: `-> this.ota.unlockDoors(${
-          String(requestVehicleData)
-        }, ${
-          String(showError)
-        }) start`
+        message: `-> this.ota.unlockDoors(${String(requestVehicleData)}, ${String(
+          showError
+        )}) start`
       });
       const result = await this.ota.unlockDoors(requestVehicleData, true);
       await this.otaKeyLogger({
         severity: severityTypes.INFO,
         action: 'unlockDoors',
         code: codeTypes.SUCCESS,
-        message: `<- this.ota.unlockDoors(${
-          String(requestVehicleData)
-        },  ${
-          String(showError)
-        }) return ${
-          result
-        }`,
+        message: `<- this.ota.unlockDoors(${String(requestVehicleData)},  ${String(
+          showError
+        )}) return ${result}`,
         description: result
       });
       return result;
@@ -937,13 +828,9 @@ class OTAKeyStore {
         severity: severityTypes.ERROR,
         action: 'unlockDoors',
         code: codeTypes.ERROR,
-        message: `<- this.ota.unlockDoors(${
-          String(requestVehicleData)
-        }, ${
-          String(showError)
-        }) failed ${
-          error
-        }`,
+        message: `<- this.ota.unlockDoors(${String(requestVehicleData)}, ${String(
+          showError
+        )}) failed ${error}`,
         description: error
       });
       this.handleOTABLEError(error, showError);
@@ -958,24 +845,16 @@ class OTAKeyStore {
         severity: severityTypes.DEBUG,
         action: 'lockDoors',
         code: codeTypes.SUCCESS,
-        message: `-> this.ota.lockDoors(${
-          String(requestVehicleData)
-        }, ${
-          String(showError)
-        },) start`
+        message: `-> this.ota.lockDoors(${String(requestVehicleData)}, ${String(showError)},) start`
       });
       const result = await this.ota.lockDoors(requestVehicleData);
       await this.otaKeyLogger({
         severity: severityTypes.INFO,
         action: 'lockDoors',
         code: codeTypes.SUCCESS,
-        message: `<- this.ota.lockDoors(${
-          String(requestVehicleData)
-        }, ${
-          String(showError)
-        }) return ${
-          result
-        }`,
+        message: `<- this.ota.lockDoors(${String(requestVehicleData)}, ${String(
+          showError
+        )}) return ${result}`,
         description: result
       });
       return result;
@@ -984,20 +863,15 @@ class OTAKeyStore {
         severity: severityTypes.ERROR,
         action: 'lockDoors',
         code: codeTypes.ERROR,
-        message: `<- this.ota.lockDoors(${
-          String(requestVehicleData)
-        }, ${
-          String(showError)
-        }) failed ${
-          error
-        }`,
+        message: `<- this.ota.lockDoors(${String(requestVehicleData)}, ${String(
+          showError
+        )}) failed ${error}`,
         description: error
       });
       this.handleOTABLEError(error, showError);
       return false;
     }
   }
-
 
   @action
   async enableEngine(requestVehicleData: boolean = false, showError = true): Promise<boolean> {
@@ -1006,24 +880,18 @@ class OTAKeyStore {
         severity: severityTypes.DEBUG,
         action: 'enableEngine',
         code: codeTypes.SUCCESS,
-        message: `-> this.ota.enableEngine(${
-          String(requestVehicleData)
-        }, ${
-          String(showError)
-        }) start`
+        message: `-> this.ota.enableEngine(${String(requestVehicleData)}, ${String(
+          showError
+        )}) start`
       });
       const result = await this.ota.enableEngine(requestVehicleData);
       await this.otaKeyLogger({
         severity: severityTypes.INFO,
         action: 'enableEngine',
         code: codeTypes.SUCCESS,
-        message: `<- this.ota.enableEngine(${
-          String(requestVehicleData)
-        }, ${
-          String(showError)
-        }) return ${
-          result
-        }`,
+        message: `<- this.ota.enableEngine(${String(requestVehicleData)}, ${String(
+          showError
+        )}) return ${result}`,
         description: result
       });
       return result;
@@ -1032,13 +900,9 @@ class OTAKeyStore {
         severity: severityTypes.ERROR,
         action: 'enableEngine',
         code: codeTypes.ERROR,
-        message: `<- this.ota.enableEngine(${
-          String(requestVehicleData)
-        }, ${
-          String(showError)
-        }) failed ${
-          error
-        }`,
+        message: `<- this.ota.enableEngine(${String(requestVehicleData)}, ${String(
+          showError
+        )}) failed ${error}`,
         description: error
       });
       this.handleOTABLEError(error, showError);
@@ -1053,24 +917,18 @@ class OTAKeyStore {
         severity: severityTypes.DEBUG,
         action: 'disableEngine',
         code: codeTypes.SUCCESS,
-        message: `-> this.ota.disableEngine(${
-          String(requestVehicleData)
-        }, ${
-          String(showError)
-        }) start`
+        message: `-> this.ota.disableEngine(${String(requestVehicleData)}, ${String(
+          showError
+        )}) start`
       });
       const result = await this.ota.disableEngine(requestVehicleData);
       await this.otaKeyLogger({
         severity: severityTypes.INFO,
         action: 'disableEngine',
         code: codeTypes.SUCCESS,
-        message: `<- this.ota.disableEngine(${
-          String(requestVehicleData)
-        }, ${
-          String(showError)
-        }) return ${
-          result
-        }`,
+        message: `<- this.ota.disableEngine(${String(requestVehicleData)}, ${String(
+          showError
+        )}) return ${result}`,
         description: result
       });
       return result;
@@ -1079,13 +937,9 @@ class OTAKeyStore {
         severity: severityTypes.ERROR,
         action: 'disableEngine',
         code: codeTypes.ERROR,
-        message: `<- this.ota.disableEngine(${
-          String(requestVehicleData)
-        }, ${
-          String(showError)
-        }) failed ${
-          error
-        }`,
+        message: `<- this.ota.disableEngine(${String(requestVehicleData)}, ${String(
+          showError
+        )}) failed ${error}`,
         description: error
       });
       this.handleOTABLEError(error, showError);
@@ -1118,10 +972,11 @@ class OTAKeyStore {
      * if matching not found in our i18n - use errorMessage
      * if errorMessage empty - use default message
      */
-    const message = i18n.t(`otaKeyNativeErrors:${errorCode}`)
-      || errorMessage
-      || i18n.t(`otaKeyNativeErrors:${defaultCode}`);
-      
+    const message =
+      i18n.t(`otaKeyNativeErrors:${errorCode}`) ||
+      errorMessage ||
+      i18n.t(`otaKeyNativeErrors:${defaultCode}`);
+
     showToastError(message);
   };
 }

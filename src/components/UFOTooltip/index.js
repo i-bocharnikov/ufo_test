@@ -102,7 +102,7 @@ export default class UFOTooltip extends PureComponent {
       // if tooltip in central part of the screen
       styleMixin.alignSelf = 'center';
       const translateX = measures.x + measures.width / 2 - SCREEN_WIDTH / 2;
-      styleMixin.transform = [ { translateX } ];
+      styleMixin.transform = [{ translateX }];
     } else {
       // if tooltip in right part of the screen
       styleMixin.right = SCREEN_WIDTH - measures.x - measures.width / 2 - TAIL_INDENT - TAIL_SIZE / 2;
