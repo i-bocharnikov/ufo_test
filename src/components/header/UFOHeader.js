@@ -4,14 +4,7 @@ import { observer } from 'mobx-react';
 import PropTypes from 'prop-types';
 
 import { UFOText, UFOImage } from './../common';
-import {
-  colors,
-  icons,
-  actionStyles,
-  screens,
-  sizes,
-  logos
-} from './../../utils/global';
+import { colors, icons, actionStyles, screens, sizes, logos } from './../../utils/global';
 import UFOAction from './../UFOAction';
 import activitiesStore from './../../stores/activitiesStore';
 import styles from './styles';
@@ -19,18 +12,16 @@ import styles from './styles';
 @observer
 export default class UFOHeader extends Component {
   render() {
-    const {
-      t,
-      transparent,
-      title,
-      logo,
-      currentScreen = screens.HOME,
-    } = this.props;
+    const { t, transparent, title, logo, currentScreen = screens.HOME } = this.props;
 
-    const titleComponent = title ? <UFOText inverted h3>{title}</UFOText> : null;
-    const logoComponent = logo
-      ? <UFOImage source={logos.horizontal} style={styles.logo} resizeMode='contain' />
-      : null;
+    const titleComponent = title ? (
+      <UFOText inverted h3>
+        {title}
+      </UFOText>
+    ) : null;
+    const logoComponent = logo ? (
+      <UFOImage source={logos.horizontal} style={styles.logo} resizeMode="contain" />
+    ) : null;
 
     const alpha = transparent ? 0 : 0.7;
     const isSupport = currentScreen.supportFaqCategory !== null;
@@ -40,10 +31,8 @@ export default class UFOHeader extends Component {
 
     if (activities.internetAccessFailure && activities.bluetoothAccessFailure) {
       activitiesMessage = t('activities:internetbluetoothAccessFailure');
-
     } else if (activities.internetAccessFailure) {
       activitiesMessage = t('activities:internetAccessFailure');
-
     } else if (activities.bluetoothAccessFailure) {
       activitiesMessage = t('activities:bluetoothAccessFailure');
     }
@@ -57,10 +46,12 @@ export default class UFOHeader extends Component {
             </UFOText>
           </View>
         )}
-        <View style={[
-          styles.headerContainer,
-          {backgroundColor: colors.HEADER_BACKGROUND.alpha(alpha).string()}
-        ]}>
+        <View
+          style={[
+            styles.headerContainer,
+            { backgroundColor: colors.HEADER_BACKGROUND.alpha(alpha).string() }
+          ]}
+        >
           <View style={styles.left}>
             <UFOAction
               action={{
@@ -77,7 +68,7 @@ export default class UFOHeader extends Component {
             {logoComponent}
           </View>
           <View style={styles.right}>
-            {(isSupport &&
+            {isSupport && (
               <UFOAction
                 action={{
                   style: actionStyles.TODO,
@@ -99,13 +90,10 @@ export default class UFOHeader extends Component {
   };
 
   goToSupport = currentScreen => {
-    this.props.navigation.navigate(
-      screens.SUPPORT_FAQS.name,
-      {
-        SUPPORT_FAQ_CATEGORY: currentScreen.supportFaqCategory,
-        PREVIOUS_SCREEN: currentScreen
-      }
-    );
+    this.props.navigation.navigate(screens.SUPPORT_FAQS.name, {
+      SUPPORT_FAQ_CATEGORY: currentScreen.supportFaqCategory,
+      PREVIOUS_SCREEN: currentScreen
+    });
   };
 }
 

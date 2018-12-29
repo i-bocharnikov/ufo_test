@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center'
-  },
+  }
 });
 
 class UFOAction extends Component {
@@ -29,7 +29,7 @@ class UFOAction extends Component {
       activityPending,
       action = {},
       inverted = false,
-      size = sizes.LARGE,
+      size = sizes.LARGE
     } = this.props;
 
     const style = activityPending ? actionStyles.DISABLE : (action.style || actionStyles.WRONG);
@@ -42,7 +42,7 @@ class UFOAction extends Component {
       <View style={styles.area}>
         <Touchable
           foreground={Touchable.Ripple(colors.DONE.string(), true)}
-          style={[styles.button, {
+          style={[ styles.button, {
             backgroundColor: color.string(),
             elevation: elevation,
             width: actionSize,
@@ -52,10 +52,17 @@ class UFOAction extends Component {
           onPress={action.onPress}
           disabled={style === actionStyles.DISABLE}
         >
-          <UFOIcon icon={icon} size={size} />
+          <UFOIcon
+            icon={icon}
+            size={size}
+          />
         </Touchable>
         {!noText && (
-          <UFOText h10 upper inverted={!inverted}>
+          <UFOText
+            h10
+            upper
+            inverted={!inverted}
+          >
             {t(icon.i18nKey)}
           </UFOText>
         )}
@@ -68,7 +75,7 @@ class UFOAction extends Component {
       return style.elevation;
     }
 
-    switch(style) {
+    switch (style) {
       case actionStyles.TODO:
         return 4;
       case actionStyles.ACTIVE:

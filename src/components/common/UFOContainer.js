@@ -15,14 +15,14 @@ export default class UFOContainer extends Component {
 
     return image ? (
       <ImageBackground
-        style={[styles.container, style]}
+        style={[ styles.container, style ]}
         source={image}
         resizeMode="cover"
       >
         {children}
       </ImageBackground>
     ) : (
-      <View style={[styles.container, style]}>
+      <View style={[ styles.container, style ]}>
         {children}
       </View>
     );

@@ -9,7 +9,7 @@ const SLIDE_DEFAULT_WIDTH = SCREEN_WIDTH * 0.9;
 export default class UFOSlider extends React.Component {
   render() {
     return (
-      <Carousel { ...this.props } />
+      <Carousel {...this.props} />
     );
   }
 }
@@ -21,6 +21,4 @@ UFOSlider.defaultProps = {
   inactiveSlideScale: 0.94
 };
 
-UFOSlider.propTypes = {
-  ...Carousel.propTypes
-};
+UFOSlider.propTypes = { ...Carousel.propTypes };

@@ -77,39 +77,40 @@ export default class UFOTextInput_old extends React.Component {
             style.borderColor = colors.ACTIVE.string();
             style.borderWidth = 1;
         }
-        let numberOfLines = this.props.numberOfLines ? this.props.numberOfLines : 1
-        let multiline = this.props.multiline ? this.props.multiline : false
-        let disable = this.props.disable === true ? true : false
-        let editable = this.props.editable === false ? false : true
-        let defaultValue = this.props.defaultValue ? this.props.defaultValue : ''
-        let autoFocus = this.props.autoFocus ? this.props.autoFocus : false
-        let autoCorrect = this.props.autoCorrect ? this.props.autoCorrect : false
-        let autoCapitalize = this.props.autoCorrect ? 'sentences' : 'none'
-        let maxLength = this.props.maxLength
-        let keyboardType = this.props.keyboardType ? this.props.keyboardType : 'default'
-        let placeholder = this.props.placeholder ? this.props.placeholder : '...'
-        let value = this.props.value ? this.props.value : null
+        let numberOfLines = this.props.numberOfLines ? this.props.numberOfLines : 1;
+        let multiline = this.props.multiline ? this.props.multiline : false;
+        let disable = this.props.disable === true ? true : false;
+        let editable = this.props.editable === false ? false : true;
+        let defaultValue = this.props.defaultValue ? this.props.defaultValue : '';
+        let autoFocus = this.props.autoFocus ? this.props.autoFocus : false;
+        let autoCorrect = this.props.autoCorrect ? this.props.autoCorrect : false;
+        let autoCapitalize = this.props.autoCorrect ? 'sentences' : 'none';
+        let maxLength = this.props.maxLength;
+        let keyboardType = this.props.keyboardType ? this.props.keyboardType : 'default';
+        let placeholder = this.props.placeholder ? this.props.placeholder : '...';
+        let value = this.props.value ? this.props.value : null;
         let onChangeText = this.props.onChangeText && editable ? this.props.onChangeText : () => null;
         return (
             <View style={{ paddingHorizontal: 20, width: '100%' }}>
                 <TextInput
-                    style={style}
-                    disable={disable}
-                    keyboardType={keyboardType}
-                    keyboardAppearance='dark'
-                    maxLength={maxLength}
-                    autoFocus={autoFocus}
-                    onChangeText={onChangeText}
-                    value={value}
-                    placeholder={placeholder}
-                    defaultValue={defaultValue}
-                    numberOfLines={numberOfLines}
-                    multiline={multiline}
-                    editable={editable}
-                    underlineColorAndroid={colors.ACTIVE.string()}
-                    autoCorrect={autoCorrect}
-                    autoCapitalize={autoCapitalize}
-                    onSubmitEditing={Keyboard.dismiss}>
+                  style={style}
+                  disable={disable}
+                  keyboardType={keyboardType}
+                  keyboardAppearance="dark"
+                  maxLength={maxLength}
+                  autoFocus={autoFocus}
+                  onChangeText={onChangeText}
+                  value={value}
+                  placeholder={placeholder}
+                  defaultValue={defaultValue}
+                  numberOfLines={numberOfLines}
+                  multiline={multiline}
+                  editable={editable}
+                  underlineColorAndroid={colors.ACTIVE.string()}
+                  autoCorrect={autoCorrect}
+                  autoCapitalize={autoCapitalize}
+                  onSubmitEditing={Keyboard.dismiss}
+                >
                     {this.props.children}
                 </TextInput>
             </View>
