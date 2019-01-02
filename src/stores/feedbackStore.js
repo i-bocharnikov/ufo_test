@@ -53,7 +53,7 @@ export default class FeedbackStore {
     }
 
     this.reserveFeedBack.choices.some(item => {
-      if (item.reference == choiceRef) {
+      if (item.reference === choiceRef) {
         item.value = value;
         return true;
       }

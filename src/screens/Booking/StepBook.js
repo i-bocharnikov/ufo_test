@@ -22,6 +22,7 @@ class StepBookScreen extends Component {
   constructor() {
     super();
     this.minPickedDate = moment().format(values.DATE_STRING_FORMAT);
+    this.isFetched = false;
     this.state = {
       showDateTooltip: false,
       showModalCalendar: false
@@ -94,10 +95,22 @@ class StepBookScreen extends Component {
             />
             <View style={styles.rollPickerSeparatorWrapper}>
               <View style={styles.rollPickerSeparator} />
-              <UFOIcon_next
-                name="ios-calendar-outline"
-                style={styles.rollPickerSeparatorIcon}
-              />
+              <TouchableOpacity
+                onPress={() => this.setState({ showModalCalendar: true })}
+                activeOpacity={values.BTN_OPACITY_DEFAULT}
+                style={styles.rollPickerSeparatorBtn}
+                hitSlop={{
+                  top: 36,
+                  left: 36,
+                  bottom: 36,
+                  right: 36
+                }}
+              >
+                <UFOIcon_next
+                  name="ios-calendar-outline"
+                  style={styles.rollPickerSeparatorIcon}
+                />
+              </TouchableOpacity>
             </View>
             <UFORollPicker
               data={bookingStore.rollPickersData}
@@ -129,7 +142,7 @@ class StepBookScreen extends Component {
               <View style={styles.rollPickerSeparator} />
               <UFOIcon_next
                 name="ios-clock-outline"
-                style={styles.rollPickerSeparatorIcon}
+                style={[ styles.rollPickerSeparatorBtn, styles.rollPickerSeparatorIcon ]}
               />
             </View>
             <UFORollPicker
@@ -162,7 +175,7 @@ class StepBookScreen extends Component {
               {t('booking:tooltipLink')}
             </Text>
           </UFOTooltip>
-          <UFOModalLoader isVisible={bookingStore.isLoading} />
+          <UFOModalLoader isVisible={bookingStore.isLoading && !this.isFetched} />
         </UFOContainer>
       </BookingNavWrapper>
     );
@@ -205,27 +218,24 @@ class StepBookScreen extends Component {
   };
 
   renderBottomPanel = () => {
-    const { t } = this.props;
-
     return (
       <BottomActionPanel
-        t={t}
         action={this.handleToNextStep}
-        actionTitle={t('booking:stepBookNextTitle')}
-        actionSubTitle={t('booking:stepBookNextSubTitle')}
+        actionTitle={this.props.t('booking:stepBookNextTitle')}
+        actionSubTitle={this.props.t('booking:stepBookNextSubTitle')}
         isAvailable={bookingStore.isOrderCarAvailable}
-        price={bookingStore.orderPrice}
-        isAlternative={bookingStore.isOrderCarHasAlt}
-        overlapMessage={bookingStore.orderCarUnavailableMessage}
+        isWaiting={bookingStore.isLoading && this.isFetched}
       />
     );
   };
 
   fetchInitialData = async () => {
     if (!bookingStore.locations.length || !bookingStore.cars.length) {
+      this.isFetched = false;
       const screenWrapper = this.screenWrapper.getWrappedInstance();
       screenWrapper && screenWrapper.scrollToTop();
       await bookingStore.getInitialData();
+      this.isFetched = true;
     }
   };
 

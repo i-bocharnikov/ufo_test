@@ -36,8 +36,8 @@ class SignUpScreen extends Component {
 
   @observable refreshing = false;
 
-  componentDidMount() {
-    this.initLoad();
+  async componentDidMount() {
+    await this.initLoad();
   }
 
   renderIcon(extraStyles) {
@@ -100,7 +100,7 @@ class SignUpScreen extends Component {
     const { t, navigation } = this.props;
     const refCode = registerStore.user.referral_code;
     const hasReferalCode = registerStore.isUserRegistered && Boolean(refCode);
-    const hasPhone = Boolean(registerStore.user.phone_number);
+    const hasPhone = registerStore.isCurrentPhoneValid;
     const hasEmail = Boolean(registerStore.user.email);
     const hasAddress = Boolean(registerStore.user.address);
     const hasMiles = Boolean(registerStore.user.miles_and_more);
@@ -224,7 +224,7 @@ class SignUpScreen extends Component {
 
     } else {
       actions.push({
-        style: actionStyles.ACTIVE,
+        style: registerStore.isCurrentPhoneValid ? actionStyles.TODO : actionStyles.ACTIVE,
         icon: icons.LOGIN,
         onPress: async () => navigation.navigate(screens.REGISTER_PHONE.name)
       });

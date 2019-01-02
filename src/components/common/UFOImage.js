@@ -15,19 +15,19 @@ const ownStyles = StyleSheet.create({
   }
 });
 
-export default class UFOImage extends React.Component {
+export default class UFOImage extends Component {
   render() {
-    const { source, style, children, ...restProps } = this.props;
+    const { fallbackToImage, source, style, children, ...restProps } = this.props;
     const uri = this.getImageUri(source);
     const isLoading = uri === 'loading';
     const isRefImage = source && source.reference;
 
-    return uri ? (
+    return (uri && !fallbackToImage) ? (
       <FastImage
-        style={[style, isLoading && ownStyles.preloader]}
+        style={[ style, isLoading && ownStyles.preloader ]}
         source={{
           uri,
-          headers: isRefImage ? {Authorization: `Bearer ${SAVE_TOKEN}`} : {}
+          headers: isRefImage ? { Authorization: `Bearer ${SAVE_TOKEN}` } : {}
         }}
         {...restProps}
       >
@@ -67,5 +67,7 @@ UFOImage.propTypes = {
    * for other images used FastImage, read doc about it, some props can be expanded
    */
   ...FastImage.propTypes,
-  ...Image.propTypes
+  ...Image.propTypes,
+  /* use exactly Image component. Don't mix FastImage.props with this prop */
+  fallbackToImage: PropTypes.bool
 };

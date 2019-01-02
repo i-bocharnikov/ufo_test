@@ -505,11 +505,35 @@ export default class BookingStore {
     */
   @computed
   get orderPrice() {
-    if (!this.order) {
+    if (!_.has(this.order, 'price.amount')) {
       return '-';
     }
 
-    return `${this.order.price.amount}€`;
+    return `€${this.order.price.amount}`;
+  }
+
+  /**
+    * @description Get formated string for price without discounts
+    */
+  @computed
+  get orderOriginPrice() {
+    if (!_.has(this.order, 'price.amountOrigin')) {
+      return null;
+    }
+
+    return `€${this.order.price.amountOrigin}`;
+  }
+
+  /**
+    * @description Get label for price
+    */
+  @computed
+  get priceMarketingLabel() {
+    if (!_.has(this.order, 'price.marketingLabel')) {
+      return null;
+    }
+
+    return this.order.price.marketingLabel;
   }
 
   /**

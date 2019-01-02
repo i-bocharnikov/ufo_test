@@ -19,13 +19,7 @@ import UFOActionBar from './../../components/UFOActionBar';
 import UFOCard from './../../components/UFOCard';
 import { UFOImage, UFOContainer } from './../../components/common';
 import registerStore from './../../stores/registerStore';
-import {
-  screens,
-  actionStyles,
-  icons,
-  colors,
-  images
-} from './../../utils/global';
+import { screens, actionStyles, icons, images } from './../../utils/global';
 import { showWarning } from './../../utils/interaction';
 import styles from './styles';
 
@@ -45,7 +39,7 @@ const captureStates = {
 };
 
 const bgImageStyles = StyleSheet.create({
-  bg: {
+  bgArea: {
     position: 'absolute',
     top: PADDING_HEIGHT,
     left: PADDING_WIDTH,
@@ -53,15 +47,13 @@ const bgImageStyles = StyleSheet.create({
     right: PADDING_WIDTH,
     width: CARD_WIDTH,
     height: CARD_HEIGHT,
-    justifyContent: 'center',
-    alignContent: 'center',
-    opacity: 0.4
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 });
 
 @observer
 class IdentificationScreen extends Component {
-
   @observable captureState = null;
   @observable frontImageUrl = null;
   @observable backImageUrl = null;
@@ -73,13 +65,13 @@ class IdentificationScreen extends Component {
 
     //Check if we have to retrieve imageUrl from overview screen
     if (this.captureState === null) {
-
       this.frontImageUrl = navigation.getParam('frontImageUrl');
       this.backImageUrl = navigation.getParam('backImageUrl');
 
-      if (this.frontImageUrl === undefined
-        || this.frontImageUrl === null
-        || this.frontImageUrl === 'loading'
+      if (
+        this.frontImageUrl === undefined ||
+        this.frontImageUrl === null ||
+        this.frontImageUrl === 'loading'
       ) {
         this.captureState = captureStates.CAPTURE_FRONT;
       } else {
@@ -87,25 +79,26 @@ class IdentificationScreen extends Component {
       }
     }
 
-    const inputLabel = this.captureState === captureStates.CAPTURE_FRONT
-      ? 'register:identificationFrontInputLabel'
-      : 'register:identificationBackInputLabel';
+    const inputLabel =
+      this.captureState === captureStates.CAPTURE_FRONT
+        ? 'register:identificationFrontInputLabel'
+        : 'register:identificationBackInputLabel';
 
-    const showCamera = this.captureState !== captureStates.VALIDATE
-      && this.captureState !== captureStates.PREVIEW;
+    const showCamera =
+      this.captureState !== captureStates.VALIDATE && this.captureState !== captureStates.PREVIEW;
 
-    const sample = this.captureState === captureStates.CAPTURE_FRONT
-      ? images.captureCardIdFront
-      : images.captureCardIdBack;
+    const sample =
+      this.captureState === captureStates.CAPTURE_FRONT
+        ? images.captureCardIdFront
+        : images.captureCardIdBack;
     return (
       <UFOContainer image={screens.REGISTER_OVERVIEW.backgroundImage}>
         <UFOHeader
           t={t}
           navigation={navigation}
           currentScreen={screens.REGISTER_IDENTIFICATION}
-          title={showCamera
-            ? null
-            : t('register:identificationTitle', {user: registerStore.user})
+          title={
+            showCamera ? null : t('register:identificationTitle', { user: registerStore.user })
           }
           logo={showCamera}
           transparent={showCamera}
@@ -114,16 +107,18 @@ class IdentificationScreen extends Component {
           <ScrollView>
             <View style={styles.cardsWrapper}>
               <UFOCard title={t('register:identificationCheckLabel')}>
-                  <View style={styles.cardsContainer}>
-                    <UFOImage
-                      source={{uri: this.frontImageUrl}}
-                      style={{width: CARD_WIDTH, height: CARD_HEIGHT}}
-                    />
-                    <UFOImage
-                      source={{uri: this.backImageUrl}}
-                      style={{width: CARD_WIDTH, height: CARD_HEIGHT}}
-                    />
-                  </View>
+                <View style={styles.cardsContainer}>
+                  <UFOImage
+                    source={{ uri: this.frontImageUrl }}
+                    style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
+                    fallbackToImage={true}
+                  />
+                  <UFOImage
+                    source={{ uri: this.backImageUrl }}
+                    style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
+                    fallbackToImage={true}
+                  />
+                </View>
               </UFOCard>
             </View>
           </ScrollView>
@@ -137,15 +132,18 @@ class IdentificationScreen extends Component {
             />
             <ImageBackground
               source={sample}
-              style={bgImageStyles.bg}
-            >
-              <Text style={[
-                styles.cardCameraLabel,
-                {color: this.activityPending ? colors.DISABLE : colors.INVERTED_TEXT}
-              ]}>
+              style={[ bgImageStyles.bgArea, styles.cardCameraBackground ]}
+            />
+            <View style={bgImageStyles.bgArea}>
+              <Text
+                style={[
+                  styles.cardCameraLabel,
+                  this.activityPending && styles.cardCameraBackground
+                ]}
+              >
                 {t(inputLabel).toUpperCase()}
               </Text>
-            </ImageBackground>
+            </View>
           </Fragment>
         )}
         <UFOActionBar
@@ -157,21 +155,20 @@ class IdentificationScreen extends Component {
   }
 
   @action
-  doCancel = async isInWizzard => {
-    isInWizzard
-      ? this.props.navigation.navigate(screens.HOME.name)
-      : this.props.navigation.popToTop();
+  doCancel = async () => {
+    this.props.navigation.popToTop();
   };
 
   @action
-  doReset = async isInWizzard => {
+  doReset = async () => {
     this.frontImageUrl = null;
     this.backImageUrl = null;
     this.captureState = captureStates.CAPTURE_FRONT;
   };
 
   @action
-  doCapture = async (t, isInWizzard) => {
+  doCapture = async () => {
+    const t = this.props.t;
     this.activityPending = true;
     const imageData = await this.cameraRef.takePicture();
     if (!imageData) {
@@ -193,35 +190,40 @@ class IdentificationScreen extends Component {
         height: CARD_HEIGHT * ratioy
       }
     };
-    ImageEditor.cropImage(uri, cropData, url => {
-      if (this.captureState === captureStates.CAPTURE_FRONT) {
-        this.frontImageUrl = url;
-        this.captureState = captureStates.CAPTURE_BACK;
-        this.activityPending = false;
+    ImageEditor.cropImage(
+      uri,
+      cropData,
+      url => {
+        if (this.captureState === captureStates.CAPTURE_FRONT) {
+          this.frontImageUrl = url;
+          this.captureState = captureStates.CAPTURE_BACK;
+          this.activityPending = false;
 
-        return;
-      }
-      if (this.captureState === captureStates.CAPTURE_BACK) {
-        this.backImageUrl = url;
-        this.captureState = captureStates.VALIDATE;
-        this.activityPending = false;
+          return;
+        }
+        if (this.captureState === captureStates.CAPTURE_BACK) {
+          this.backImageUrl = url;
+          this.captureState = captureStates.VALIDATE;
+          this.activityPending = false;
 
-        return;
+          return;
+        }
+      },
+      error => {
+        this.activityPending = false;
+        showWarning(t('Registration:CameraProcessingError', { message: error.message }));
       }
-    }, error => {
-      this.activityPending = false;
-      showWarning(t('Registration:CameraProcessingError', {message: error.message}));
-    });
+    );
   };
 
   @action
-  doskip = async (isInWizzard) => {
+  doskip = async () => {
     this.backImageUrl = null;
     this.captureState = captureStates.VALIDATE;
   };
 
   @action
-  doSave = async (t, isInWizzard) => {
+  doSave = async () => {
     this.activityPending = true;
     const type = this.frontImageUrl && this.backImageUrl ? 'two_side' : 'one_side';
 
@@ -237,7 +239,9 @@ class IdentificationScreen extends Component {
       if (document && document.reference) {
         registerStore.user.identification_front_side_reference = document.reference;
         const imgData = await registerStore.downloadDocument(document.reference);
-        registerStore.identificationFrontDocument = imgData ? `data:image/png;base64,${imgData}` : null;
+        registerStore.identificationFrontDocument = imgData
+          ? `data:image/png;base64,${imgData}`
+          : null;
       }
     }
 
@@ -253,64 +257,58 @@ class IdentificationScreen extends Component {
       if (document && document.reference) {
         registerStore.user.identification_back_side_reference = document.reference;
         const imgData = await registerStore.downloadDocument(document.reference);
-        registerStore.identificationBackDocument = imgData ? `data:image/png;base64,${imgData}` : null;
+        registerStore.identificationBackDocument = imgData
+          ? `data:image/png;base64,${imgData}`
+          : null;
       }
     }
 
     if (await registerStore.save()) {
+      this.props.navigation.popToTop();
+      this.activityPending = false;
 
-      if (isInWizzard) {
-        this.props.navigation.navigate(screens.REGISTER_DRIVER_LICENCE.name, { isInWizzard });
-        this.activityPending = false;
-
-        return;
-      } else {
-        this.props.navigation.popToTop();
-        this.activityPending = false;
-
-        return;
-      }
+      return;
     }
   };
 
   compileActions = () => {
     const { t, navigation } = this.props;
-    const isInWizzard = navigation.getParam('isInWizzard', false);
     const actions = [];
 
     actions.push({
       style: actionStyles.ACTIVE,
-      icon: isInWizzard ? icons.CONTINUE_LATER : icons.CANCEL,
-      onPress: async () => await this.doCancel(isInWizzard)
+      icon: icons.CANCEL,
+      onPress: this.doCancel
     });
 
-    if (this.captureState === captureStates.VALIDATE || this.captureState === captureStates.PREVIEW) {
-
+    if (
+      this.captureState === captureStates.VALIDATE ||
+      this.captureState === captureStates.PREVIEW
+    ) {
       actions.push({
         style: actionStyles.ACTIVE,
         icon: icons.NEW_CAPTURE,
-        onPress: async () => await this.doReset(isInWizzard)
+        onPress: this.doReset
       });
     }
 
     if (this.captureState === captureStates.VALIDATE) {
-
       const isNewCapture = _.isEmpty(registerStore.user.identification_front_side_reference);
       actions.push({
         style: isNewCapture ? actionStyles.TODO : actionStyles.DISABLE,
         icon: icons.SAVE,
-        onPress: async () => this.doSave(t, isInWizzard)
+        onPress: this.doSave
       });
     }
 
-    if (this.captureState === captureStates.CAPTURE_FRONT
-      || this.captureState === captureStates.CAPTURE_BACK
+    if (
+      this.captureState === captureStates.CAPTURE_FRONT ||
+      this.captureState === captureStates.CAPTURE_BACK
     ) {
-
       actions.push({
         style: this.isCameraAllowed ? actionStyles.TODO : actionStyles.DISABLE,
         icon: icons.CAPTURE,
-        onPress: () => this.doCapture(t, isInWizzard)
+        onPress: this.doCapture
       });
     }
 

@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-import { colors, fonts } from './../../../utils/global';
+import { colors, textThemes } from './../../../utils/theme';
 
 const GAP_BETWEEN = 9;
 
@@ -11,9 +11,7 @@ export default StyleSheet.create({
     marginTop: 32
   },
 
-  inputBlock: {
-    marginBottom: GAP_BETWEEN
-  },
+  inputBlock: { marginBottom: GAP_BETWEEN },
 
   cardsBlock: {
     flexDirection: 'row',
@@ -23,17 +21,13 @@ export default StyleSheet.create({
   cardWrapper: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: colors.INPUT_BG,
+    backgroundColor: colors.BG_INVERT,
     paddingVertical: 20
   },
 
-  leftGap: {
-    marginLeft: GAP_BETWEEN
-  },
+  leftGap: { marginLeft: GAP_BETWEEN },
 
-  topGap: {
-    marginTop: GAP_BETWEEN
-  },
+  topGap: { marginTop: GAP_BETWEEN },
 
   cardPickerImg: {
     width: 88,
@@ -43,8 +37,7 @@ export default StyleSheet.create({
   },
 
   cardPickerLabel: {
-    fontFamily: fonts.REGULAR,
-    fontSize: 14,
+    ...textThemes.SP_REGULAR,
     lineHeight: 19.1,
     textAlign: 'center',
     marginTop: 8
@@ -57,12 +50,11 @@ export default StyleSheet.create({
   },
 
   registrationStatus: {
-    fontFamily: fonts.REGULAR,
-    fontSize: 14,
+    ...textThemes.SP_REGULAR,
     lineHeight: 18,
     paddingVertical: 10,
     textAlign: 'center',
-    backgroundColor: colors.INPUT_BG
+    backgroundColor: colors.BG_INVERT
   },
 
   referalBlock: {
@@ -70,12 +62,12 @@ export default StyleSheet.create({
     alignItems: 'center',
     height: 58,
     paddingHorizontal: 24,
-    backgroundColor: colors.INPUT_BG
+    backgroundColor: colors.BG_INVERT
   },
 
   referalLabel: {
+    ...textThemes.SP_LIGHT,
     fontSize: 17,
-    fontFamily: fonts.LIGHT,
     flex: 1
   },
 
@@ -89,7 +81,7 @@ export default StyleSheet.create({
   inputIcon: {
     fontSize: 24,
     marginLeft: 8,
-    color: colors.SUCCESS
+    color: colors.SUCCESS_COLOR
   },
 
   cardIcon: {
@@ -113,13 +105,16 @@ export default StyleSheet.create({
   },
 
   cardCameraLabel: {
+    ...textThemes.SP_SEMIBOLD,
     fontSize: 20,
-    fontWeight: 'bold',
     textAlign: 'center',
-    fontFamily: fonts.LIGHT
+    color: colors.TEXT_INVERT_COLOR,
+    opacity: 0.7,
+    paddingHorizontal: 10,
+    lineHeight: 24
   },
 
-  inputMiles: {
-    marginTop: GAP_BETWEEN
-  }
+  cardCameraBackground: { opacity: 0.3 },
+
+  inputMiles: { marginTop: GAP_BETWEEN }
 });

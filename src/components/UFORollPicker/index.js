@@ -62,7 +62,7 @@ export default class UFORollPicker extends Component {
           onMomentumScrollEnd={this.onMomentumScrollEnd}
           onScrollEndDrag={this.onScrollEndDrag}
           onScroll={Animated.event(
-            [ { nativeEvent: { contentOffset: { y: this.scrollY } } } ],
+            [{ nativeEvent: { contentOffset: { y: this.scrollY } } }],
             { listener: this.onScroll, useNativeDriver: true }
           )}
           showsVerticalScrollIndicator={false}
@@ -99,7 +99,7 @@ export default class UFORollPicker extends Component {
       <View style={styles.row}>
         <Animated.Text style={[
           styles.rowLabel,
-          { transform: [ { scaleX: fontSize }, { scaleY: fontSize } ] }
+          { transform: [{ scaleX: fontSize }, { scaleY: fontSize }] }
         ]}
         >
           {item.label}

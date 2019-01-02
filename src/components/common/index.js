@@ -12,17 +12,17 @@ import UFOText from './UFOText_old';
 import UFOTextInput_old from './UFOTextInput_old';
 
 export {
-    UFOContainer,
-    UFOTextInput,
-    ufoInputStyles,
-    UFOIcon,
-    UFOIcon_next,
-    UFOImage,
-    UFOVideo,
-    UFOModalLoader,
-    UFOGradientView,
-    UFOCheckBoxItem,
-    // deprecated components, will be replaced with redesigning
-    UFOText,
-    UFOTextInput_old
+  UFOContainer,
+  UFOTextInput,
+  ufoInputStyles,
+  UFOIcon,
+  UFOIcon_next,
+  UFOImage,
+  UFOVideo,
+  UFOModalLoader,
+  UFOGradientView,
+  UFOCheckBoxItem,
+  // deprecated components, will be replaced with redesigning
+  UFOText,
+  UFOTextInput_old
 };

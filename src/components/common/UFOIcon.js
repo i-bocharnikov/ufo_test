@@ -26,12 +26,8 @@ export default class UFOIcon extends PureComponent {
 }
 
 UFOIcon.propTypes = {
-  icon: PropTypes.shape({
-    name: PropTypes.string
-  }),
-  size: PropTypes.shape({
-    fontSize: PropTypes.number
-  }),
+  icon: PropTypes.shape({ name: PropTypes.string }),
+  size: PropTypes.shape({ fontSize: PropTypes.number }),
   color: PropTypes.oneOfType([
     PropTypes.object,
     PropTypes.string

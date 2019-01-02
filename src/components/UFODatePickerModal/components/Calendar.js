@@ -60,7 +60,10 @@ export default class Calendar extends PureComponent {
     };
   };
 
-  renderMonth = ({ item }) => <Month monthData={item} onDayPress={this.props.onDayPress} />;
+  renderMonth = ({ item }) => <Month
+    monthData={item}
+    onDayPress={this.props.onDayPress}
+  />;
 
   renderEmptyCalendar = () => {
     return (

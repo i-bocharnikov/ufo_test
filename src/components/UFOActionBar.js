@@ -4,7 +4,7 @@ import {
   StyleSheet,
   Keyboard,
   Animated,
-  ProgressBarAndroid,
+  ProgressBarAndroid
 } from 'react-native';
 import PropTypes from 'prop-types';
 
@@ -27,12 +27,8 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     flex: 1
   },
-  progressBar: {
-    height: 14
-  },
-  progressBarAndroid: {
-    height: 24
-  }
+  progressBar: { height: 14 },
+  progressBarAndroid: { height: 24 }
 });
 
 export default class UFOActionBar extends Component {
@@ -81,8 +77,9 @@ export default class UFOActionBar extends Component {
     return (
       <Animated.View style={[
         styles.actionBarContainer,
-        {bottom: bottomAnimatedPosition, opacity: fadeAnim}
-      ]}>
+        { bottom: bottomAnimatedPosition, opacity: fadeAnim }
+      ]}
+      >
         <View style={styles.progressBar}>
           {activityPending && (
             <ProgressBarAndroid
@@ -111,7 +108,7 @@ export default class UFOActionBar extends Component {
       this.state.bottomAnimatedPosition,
       {
         toValue: event.endCoordinates.height,
-        duration: 500,
+        duration: 500
       }
     ).start();
   };
@@ -121,7 +118,7 @@ export default class UFOActionBar extends Component {
       this.state.bottomAnimatedPosition,
       {
         toValue: 0,
-        duration: 500,
+        duration: 500
       }
     ).start();
   };

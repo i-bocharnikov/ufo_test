@@ -82,7 +82,7 @@ export default StyleSheet.create({
 
   dialogContainer: {
     width: '90%',
-    backgroundColor: 'rgba(255,255,255,0.88)',
+    backgroundColor: 'rgba(255,255,255,0.8)',
     paddingVertical: 24,
     paddingHorizontal: 32,
     borderRadius: 10

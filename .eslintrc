@@ -1,25 +1,16 @@
 {
   "root": true,
-
   "parser": "babel-eslint",
-
   "env": {
-    "es6": true,
-    "jasmine": true
+    "es6": true
   },
-
   "plugins": [
-    "flowtype",
-    "prettier",
     "react",
     "react-native"
   ],
-
   // Map from global var to bool specifying if it can be redefined
   "globals": {
     "__DEV__": true,
-    "__dirname": false,
-    "__fbBatchedBridgeConfig": false,
     "alert": false,
     "cancelAnimationFrame": false,
     "cancelIdleCallback": false,
@@ -49,23 +40,11 @@
     "setInterval": false,
     "setTimeout": false,
     "window": false,
-    "XMLHttpRequest": false,
-    "pit": false
+    "XMLHttpRequest": false
   },
-
   "rules": {
-    // Flow Plugin
-    // The following rules are made available via `eslint-plugin-flowtype`
-    "flowtype/define-flow-type": 1,
-    "flowtype/use-flow-type": 1,
-
     // General
-
-    // This must be disallowed in this repo because the minimum supported
-    // version of node is 4 which doesn't support trailing commas.
-    // Once the minimum supported version is 8 or greater this can be changed
-    "comma-dangle": [2],
-
+    "comma-dangle": [2],             // allow or disallow trailing commas
     "no-cond-assign": 1,             // disallow assignment in conditional expressions
     "no-console": 0,                 // disallow use of console (off by default in the node environment)
     "no-const-assign": 2,            // disallow assignment to const-declared variables
@@ -90,16 +69,26 @@
     "use-isnan": 1,                  // disallow comparisons with the value NaN
     "valid-jsdoc": 0,                // Ensure JSDoc comments are valid (off by default)
     "valid-typeof": 1,               // Ensure that the results of typeof are compared against a valid string,
-    "object-curly-spacing": ["error", "always", { "objectsInObjects": true, "arraysInObjects": true }],
-    "object-curly-newline": ["error", {
-      "ObjectExpression": { "minProperties": 9, "multiline": true },
-      "ObjectPattern": { "minProperties": 9, "multiline": true }
-    }],
-    "array-bracket-spacing": ["error", "always", { "arraysInArrays": false }],
+    "object-curly-spacing": [
+        "error",
+        "always",
+        { "objectsInObjects": true, "arraysInObjects": true }
+    ],
+    "object-curly-newline": [
+        "error",
+        {
+            "ObjectExpression": { "minProperties": 9, "multiline": true },
+            "ObjectPattern": { "minProperties": 9, "multiline": true }
+        }
+    ],
+    "array-bracket-spacing": [
+        "error",
+        "always",
+        { "arraysInArrays": false, "objectsInArrays": false }
+    ],
 
     // Best Practices
     // These are rules designed to prevent you from making mistakes. They either prescribe a better way of doing something or help you avoid footguns.
-
     "block-scoped-var": 0,           // treat var statements as if they were block scoped (off by default)
     "complexity": 0,                 // specify the maximum cyclomatic complexity allowed in a program (off by default)
     "consistent-return": 0,          // require return statements to either always or never specify values
@@ -148,7 +137,6 @@
 
     // Variables
     // These rules have to do with variable declarations.
-
     "no-catch-shadow": 1,            // disallow the catch clause parameter name being the same as a variable in the outer scope (off by default in the node environment)
     "no-delete-var": 1,              // disallow deletion of variables
     "no-label-var": 1,               // disallow labels that share a name with a variable
@@ -162,7 +150,6 @@
 
     // Node.js
     // These rules are specific to JavaScript running on Node.js.
-
     "handle-callback-err": 1,        // enforces error handling in callbacks (off by default) (on by default in the node environment)
     "no-mixed-requires": 1,          // disallow mixing regular variable and require declarations (off by default) (on by default in the node environment)
     "no-new-require": 1,             // disallow use of new operator with the require function (off by default) (on by default in the node environment)
@@ -171,13 +158,8 @@
     "no-restricted-modules": 1,      // restrict usage of specified node modules (off by default)
     "no-sync": 0,                    // disallow use of synchronous methods (off by default)
 
-    // Prettier Plugin
-    // https://github.com/prettier/eslint-plugin-prettier
-    //"prettier/prettier": [2, "fb", "@format"],
-
     // Stylistic Issues
     // These rules are purely matters of style and are quite subjective.
-
     "key-spacing": 2,
     "keyword-spacing": 1,            // enforce spacing before and after keywords
     "jsx-quotes": [1, "prefer-double"],
@@ -214,9 +196,8 @@
 
     // Legacy
     // The following rules are included for compatibility with JSHint and JSLint. While the names of the rules may not match up with the JSHint/JSLint counterpart, the functionality is the same.
-
     "max-depth": [ "error", 5 ],     // specify the maximum depth that blocks can be nested (off by default)
-    "max-len": [ 1, 120 ],     // specify the maximum length of a line in your program (off by default)
+    "max-len": [ 1, {"code": 100} ], // specify the maximum length of a line in your program (off by default)
     "max-params": [ "error", 7 ],    // limits the number of parameters that can be used in the function declaration. (off by default)
     "max-statements": 0,             // specify the maximum number of statement allowed in a function (off by default)
     "no-bitwise": 1,                 // disallow use of bitwise operators (off by default)
@@ -225,21 +206,19 @@
 
     // React Plugin
     // The following rules are made available via `eslint-plugin-react`.
-
     "react/display-name": 0,
     "react/jsx-boolean-value": 0,
     "react/jsx-closing-bracket-location": [ "error", "line-aligned" ],
     "react/jsx-curly-spacing": [ "error", {"when": "never", "children": true} ],
     "react/jsx-first-prop-new-line": [ "error", "multiline-multiprop" ],
     "react/jsx-indent-props": [ 2, 2 ],
-    "react/jsx-max-props-per-line": ["error", { "maximum": 1, "when": "multiline" }],
+    "react/jsx-max-props-per-line": ["error", { "maximum": 1, "when": "always" }],
     "react/jsx-no-comment-textnodes": 1,
     "react/jsx-no-duplicate-props": 2,
     "react/jsx-no-undef": 2,
     "react/jsx-sort-props": 0,
     "react/jsx-uses-react": 1,
     "react/jsx-uses-vars": 1,
-    //"react/no-did-mount-set-state": 1,
     "react/no-did-update-set-state": 1,
     "react/no-multi-comp": 0,
     "react/no-string-refs": 1,
@@ -257,6 +236,6 @@
     "react-native/no-unused-styles": 2,
     "react-native/split-platform-components": 1,
     "react-native/no-inline-styles": 1,
-    "react-native/no-color-literals": 2
+    "react-native/no-color-literals": 1
   }
 }

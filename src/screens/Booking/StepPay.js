@@ -29,7 +29,8 @@ class StepPayScreen extends Component {
     this.CARDIO_SCAN_OPTIONS = {
       languageOrLocale: props.i18n.language,
       guideColor: Platform.OS === 'ios' ? processColor(colors.MAIN_COLOR) : colors.MAIN_COLOR,
-      hideCardIOLogo: true
+      hideCardIOLogo: true,
+      usePaypalActionbarIcon: false
     };
     this.handleInputVoucher = _.debounce(this.validateAndApplyVoucher, 300);
     this.state = {
@@ -39,16 +40,11 @@ class StepPayScreen extends Component {
   }
 
   async componentDidMount() {
-    const hasOptions = await bookingStore.getUserPaymentOptions();
+    await bookingStore.getUserPaymentOptions();
     stripe.setOptions({ publishableKey: bookingStore.stripeApiKey });
 
     if (Platform.OS === 'ios') {
       await CardIOUtilities.preload();
-    }
-
-    if (!hasOptions) {
-      /* timeout needed to avoid conflict between modal views at fast re-render (ios) */
-      setTimeout(this.scranCreditCard, 100);
     }
 
     if (bookingStore.voucherCode) {
@@ -102,23 +98,23 @@ class StepPayScreen extends Component {
           {this.renderLoyaltyBlock()}
           {this.renderBookingInfoSection()}
           {this.renderVoucherTooltip()}
-          <UFOModalLoader isVisible={bookingStore.isLoading} />
+          <UFOModalLoader
+            isVisible={bookingStore.isLoading}
+            stealthMode={true}
+          />
         </UFOContainer>
       </BookingNavWrapper>
     );
   }
 
   renderBottomPanel = () => {
-    const { t } = this.props;
-
     return (
       <BottomActionPanel
-        t={t}
         action={this.handleToNextStep}
-        actionTitle={t('stepPayNextTitle')}
-        actionSubTitle={t('stepPayNextSubTitle')}
+        actionTitle={this.props.t('stepPayNextTitle')}
+        actionSubTitle={this.props.t('stepPayNextSubTitle')}
         isAvailable={!!bookingStore.currentCreditCardRef}
-        price={bookingStore.orderPrice}
+        isWaiting={bookingStore.isLoading}
       />
     );
   };

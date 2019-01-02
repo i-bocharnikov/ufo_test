@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 
 import { colors, textThemes } from './../../../utils/theme';
 
@@ -220,14 +220,19 @@ export default StyleSheet.create({
   bottomPanelActionTitle: {
     ...textThemes.SP_BOLD,
     color: colors.TEXT_INVERT_COLOR,
-    fontSize: 15
+    fontSize: 14,
+    /* strange behaviour with lineheight at android */
+    lineHeight: Platform.OS === 'ios' ? 20 : 20.05,
+    textAlign: 'center',
+    letterSpacing: 0.6
   },
 
   bottomPanelActionSubTitle: {
     ...textThemes.SP_LIGHT,
     color: colors.TEXT_INVERT_COLOR,
     fontSize: 12,
-    marginTop: 6
+    lineHeight: Platform.OS === 'ios' ? 13 : 16,
+    letterSpacing: 0.3
   },
 
   bottomPanelPriceLabel: {
@@ -241,8 +246,24 @@ export default StyleSheet.create({
   bottomPanelPriceValue: {
     ...textThemes.SP_REGULAR,
     fontSize: 13,
-    letterSpacing: 1.3,
-    marginRight: 20
+    letterSpacing: 1.3
+  },
+
+  bottomPanelOriginValue: {
+    textDecorationLine: 'line-through',
+    color: colors.TEXT_LIGHT_COLOR,
+    paddingRight: 4
+  },
+
+  bottomPanelMarketing: {
+    ...textThemes.SP_LIGHT,
+    color: colors.MAIN_LIGHT_COLOR,
+    fontSize: 14,
+    textAlign: 'right',
+    position: 'absolute',
+    top: 20,
+    right: 0,
+    minWidth: 180
   },
 
   bottomPanelOverlap: {
@@ -267,6 +288,12 @@ export default StyleSheet.create({
     letterSpacing: 1.2
   },
 
+  bottomPanelActionOverlap: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+
   rollPickerSection: {
     flexDirection: 'row',
     marginHorizontal: SCREEN_HORIZONTAL_INDENTS,
@@ -287,14 +314,18 @@ export default StyleSheet.create({
     backgroundColor: colors.BORDER_COLOR
   },
 
-  rollPickerSeparatorIcon: {
+  rollPickerSeparatorBtn: {
     position: 'absolute',
     top: '50%',
-    marginTop: '-50%',
-    paddingBottom: 2,
-    backgroundColor: colors.BG_INVERT,
+    marginTop: '-50%'
+  },
+
+  rollPickerSeparatorIcon: {
     color: colors.TEXT_LIGHT_COLOR,
-    fontSize: 24
+    fontSize: 24,
+    height: 26,
+    paddingBottom: 2,
+    backgroundColor: colors.BG_INVERT
   },
 
   calendarViewBtn: {

@@ -10,7 +10,7 @@ export default class UFOIcon_next extends Component {
     const { name, style, iconPack, animated } = this.props;
     let Icon;
 
-    switch(iconPack) {
+    switch (iconPack) {
       case 'Ionicons':
         Icon = Ionicons;
         break;
@@ -37,9 +37,7 @@ export default class UFOIcon_next extends Component {
   }
 }
 
-UFOIcon_next.defaultProps = {
-  iconPack: 'Ionicons'
-};
+UFOIcon_next.defaultProps = { iconPack: 'Ionicons' };
 
 UFOIcon_next.propTypes = {
   name: PropTypes.string,
