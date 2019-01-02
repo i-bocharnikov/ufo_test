@@ -7,7 +7,7 @@ import i18n from 'i18next';
 
 import { showWarning } from './../utils/interaction';
 import { checkAndRequestCameraPermission } from './../utils/permissions';
-import { UFOIcon } from './common';
+import { UFOIcon_old } from './common';
 import { icons, sizes, fonts, colors } from './../utils/global';
 
 export const RNCAMERA_CONSTANTS = RNCamera.Constants;
@@ -96,7 +96,7 @@ export default class UFOCamera extends React.Component {
           style={[ styles.torchBtn, torchBtnTopIndent && { marginTop: torchBtnTopIndent } ]}
           activeOpacity={1}
         >
-          <UFOIcon
+          <UFOIcon_old
             icon={icons.TORCH}
             size={sizes.SMALL}
             color={colors.INVERTED_TEXT}

@@ -4,7 +4,7 @@ import { translate } from 'react-i18next';
 import PropTypes from 'prop-types';
 
 import UFONavBarWrapper from './../../../components/header/UFONavBarWrapper';
-import { UFOIcon_next } from './../../../components/common';
+import { UFOIcon } from './../../../components/common';
 import styles from './../styles';
 import navBarStyles from './../../../components/header/styles/navBarStyles';
 
@@ -42,7 +42,7 @@ class BookingNavWrapper extends Component {
         >
           1. {t('booking:subTitleStep1')}
         </Text>
-        <UFOIcon_next
+        <UFOIcon
           name="chevron-thin-right"
           iconPack="Entypo"
           style={[
@@ -60,7 +60,7 @@ class BookingNavWrapper extends Component {
         >
           2. {t('booking:subTitleStep2')}
         </Text>
-        <UFOIcon_next
+        <UFOIcon
           name="chevron-thin-right"
           iconPack="Entypo"
           style={[

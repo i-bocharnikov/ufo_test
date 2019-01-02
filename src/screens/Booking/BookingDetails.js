@@ -7,7 +7,7 @@ import { MarkdownView } from 'react-native-markdown-view';
 import { bookingStore } from './../../stores';
 import UFONavBarWrapper from './../../components/header/UFONavBarWrapper';
 import UFOSlider from './../../components/UFOSlider';
-import { UFOContainer, UFOModalLoader, UFOImage, UFOIcon_next } from './../../components/common';
+import { UFOContainer, UFOModalLoader, UFOImage, UFOIcon } from './../../components/common';
 import styles, { markdownStyles } from './styles/details';
 import commonStyles from './styles';
 import { values, colors } from './../../utils/theme';
@@ -84,7 +84,7 @@ class BookingDetailsScreen extends Component {
             activeOpacity={values.BTN_OPACITY_DEFAULT}
             style={[ commonStyles.actionBtn, styles.selectBtn ]}
           >
-            <UFOIcon_next
+            <UFOIcon
               name={isSelected ? 'md-close' : 'md-checkmark'}
               style={styles.selectbtnIcon}
             />

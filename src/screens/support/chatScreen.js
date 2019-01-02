@@ -6,12 +6,12 @@ import DeviceInfo from 'react-native-device-info';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 import UFOHeader from './../../components/header/UFOHeader';
-import UFOActionBar from './../../components/UFOActionBar';
 import { UFOContainer } from './../../components/common';
-import { actionStyles, icons, screens } from './../../utils/global';
+import { screens } from './../../utils/global';
 import registerStore from './../../stores/registerStore';
 
 const chatSource = require('./../../assets/chat/index.html');
+
 const styles = StyleSheet.create({
   header: { backgroundColor: 'transparent' },
   chatWrapper: { flex: 1 },
@@ -78,17 +78,8 @@ class ChatScreen extends Component {
           />
         </View>
         {Platform.OS === 'android' && <KeyboardSpacer />}
-        <UFOActionBar actions={this.actions} />
       </UFOContainer>
     );
-  }
-
-  get actions() {
-    return [{
-      style: actionStyles.ACTIVE,
-      icon: icons.BACK,
-      onPress: () => this.props.navigation.pop()
-    }];
   }
 }
 

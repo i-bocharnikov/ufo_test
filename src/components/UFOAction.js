@@ -4,7 +4,7 @@ import Touchable from 'react-native-platform-touchable';
 import { translate } from 'react-i18next';
 import PropTypes from 'prop-types';
 
-import { UFOText, UFOIcon } from './common';
+import { UFOText, UFOIcon_old } from './common';
 import { actionStyles, colors, icons, sizes } from './../utils/global';
 
 const styles = StyleSheet.create({
@@ -52,7 +52,7 @@ class UFOAction extends Component {
           onPress={action.onPress}
           disabled={style === actionStyles.DISABLE}
         >
-          <UFOIcon
+          <UFOIcon_old
             icon={icon}
             size={size}
           />
