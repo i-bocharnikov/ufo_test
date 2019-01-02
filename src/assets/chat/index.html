@@ -1,48 +1,42 @@
 <html>
-<title>Widget Mobile Android EN</title>
-
-<head>
-    <meta charset="utf-8">
+  <title>Widget Mobile Android EN</title>
+  <head>
+    <meta charset="utf-8" />
     <style>
-        html,
-        body {
-            height: 100%;
-            width: 100%;
-            background: 'transparent'
-        }
+      html,
+      body {
+        height: 100%;
+        width: 100%;
+        background: "transparent";
+      }
 
-        #chat {
-            height: 100%;
-            width: 100%;
-            background-color: 'transparent' !important;
-        }
+      #chat {
+        height: 100%;
+        width: 100%;
+        background-color: "transparent" !important;
+      }
     </style>
     <script>
-        jivo_config = {
+      jivo_config = {
+        plane_color: "rgb(64, 101, 125)",
 
+        agentMessage_bg_color: "rgb(39, 61, 76)",
+        agentMessage_txt_color: "#FFFFFF",
 
-            "plane_color": "rgb(64, 101, 125)",//EA504C
+        clientMessage_bg_color: "rgb(64, 101, 125)",
+        clientMessage_txt_color: "#FFFFFF",
 
-            "agentMessage_bg_color": "rgb(39, 61, 76)",
-            "agentMessage_txt_color": "#FFFFFF",
-
-            "clientMessage_bg_color": "rgb(64, 101, 125)",
-            "clientMessage_txt_color": "#FFFFFF",
-
-
-            "active_message": "How can we help you?",
-            "widget_id": "Djo103V4eD", //widget_id
-            "site_id": 731597, //site_id
-            "app_link": 'UFODRIVE_ANDROID_en',
-            "placeholder": 'Enter messages'
-        }
-
+        active_message: "How can we help you?",
+        widget_id: "Djo103V4eD", //widget_id
+        site_id: 731597, //site_id
+        app_link: "UFODRIVE_ANDROID_en",
+        placeholder: "Enter messages"
+      };
     </script>
     <script src="./bundle.js"></script>
-</head>
+  </head>
 
-<body>
+  <body>
     <div id="chat"></div>
-</body>
-
+  </body>
 </html>
