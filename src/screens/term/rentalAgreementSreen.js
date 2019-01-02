@@ -3,6 +3,7 @@ import { translate } from 'react-i18next';
 import { WebView } from 'react-native';
 import { observer } from 'mobx-react';
 import { observable, action } from 'mobx';
+import _ from 'lodash';
 
 import UFOHeader from './../../components/header/UFOHeader';
 import UFOActionBar from './../../components/UFOActionBar';
@@ -13,17 +14,17 @@ import { showPrompt, showToastError } from './../../utils/interaction';
 
 @observer
 class InspectScreen extends Component {
-  @observable refreshing = false;
   @observable activityPending = false;
 
   async componentDidMount() {
     this.activityPending = true;
-    await this.refresh();
+    await termStore.getRentalAgreement();
     this.activityPending = false;
   }
 
   render() {
     const { t, navigation } = this.props;
+    const html = termStore.term.html;
     const actions = [
       {
         style: actionStyles.ACTIVE,
@@ -45,10 +46,7 @@ class InspectScreen extends Component {
           currentScreen={screens.DRIVE}
           title={t('term:rentalAgreementTitle', { rental: driveStore.rental })}
         />
-        <WebView
-          ref={ref => (this.webView = ref)}
-          source={{ html: termStore.term.html }}
-        />
+        {_.isString(html) && <WebView source={{ html }} />}
         <UFOActionBar
           actions={actions}
           activityPending={this.activityPending}
@@ -57,13 +55,6 @@ class InspectScreen extends Component {
       </UFOContainer>
     );
   }
-
-  @action
-  refresh = async () => {
-    this.refreshing = true;
-    await termStore.getRentalAgreement();
-    this.refreshing = false;
-  };
 
   @action
   doSign = async () => {
@@ -101,4 +92,4 @@ class InspectScreen extends Component {
   };
 }
 
-export default translate('translations')(InspectScreen);
+export default translate()(InspectScreen);

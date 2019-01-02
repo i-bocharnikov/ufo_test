@@ -4,12 +4,17 @@ import {
   StyleSheet,
   Keyboard,
   Animated,
-  ProgressBarAndroid
+  ProgressBarAndroid,
+  ActivityIndicator,
+  Platform,
+  Dimensions
 } from 'react-native';
 import PropTypes from 'prop-types';
 
 import UFOAction from './UFOAction';
-import { colors } from './../utils/global';
+import { colors } from './../utils/theme';
+
+const SCREEN_HEIGHT = Dimensions.get('screen').height;
 
 const styles = StyleSheet.create({
   actionBarContainer: {
@@ -28,7 +33,13 @@ const styles = StyleSheet.create({
     flex: 1
   },
   progressBar: { height: 14 },
-  progressBarAndroid: { height: 24 }
+  progressBarAndroid: { height: 24 },
+  loaderIOS: {
+    position: 'absolute',
+    bottom: SCREEN_HEIGHT / 2,
+    alignSelf: 'center',
+    transform: [{ translateY: 20 }]
+  }
 });
 
 export default class UFOActionBar extends Component {
@@ -80,15 +91,7 @@ export default class UFOActionBar extends Component {
         { bottom: bottomAnimatedPosition, opacity: fadeAnim }
       ]}
       >
-        <View style={styles.progressBar}>
-          {activityPending && (
-            <ProgressBarAndroid
-              style={styles.progressBarAndroid}
-              styleAttr="Horizontal"
-              color={colors.SUCCESS.string()}
-            />
-          )}
-        </View>
+        {activityPending && this.renderProgressView()}
         <View style={styles.actionBar}>
           {actions.map((action, index) => (
             <UFOAction
@@ -102,6 +105,24 @@ export default class UFOActionBar extends Component {
       </Animated.View>
     );
   }
+
+  renderProgressView = () => {
+    return Platform.OS === 'ios' ? (
+      <ActivityIndicator
+        style={styles.loaderIOS}
+        animating={true}
+        size="large"
+      />
+    ) : (
+      <View style={styles.progressBar}>
+        <ProgressBarAndroid
+          style={styles.progressBarAndroid}
+          styleAttr="Horizontal"
+          color={colors.SUCCESS_COLOR}
+        />
+      </View>
+    );
+  };
 
   keyboardDidShow = event => {
     Animated.timing(
