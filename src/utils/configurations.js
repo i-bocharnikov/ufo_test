@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import packageJson from './../../package.json';
 
 const localhost = 'loalhost';
@@ -5,6 +6,10 @@ const localhost = 'loalhost';
 const UFO_APP_NAME = packageJson.name;
 const UFO_APP_VERSION = packageJson.version;
 const UFO_APP_BUILD_NUMBER = packageJson.build;
+
+export const GOOGLE_API_KEY = Platform.OS === 'ios'
+  ? 'AIzaSyCMxOEjyOc71uyrnbojuJ7sv-R-aXF8V60'
+  : 'AIzaSyBfooZt1k3tKzysBaeityPO8cKGCje3n-w';
 
 const development = {
   UFO_APP_USAGE: 'LOCAL',

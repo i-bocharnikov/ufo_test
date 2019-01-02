@@ -16,9 +16,9 @@ import {
   colors
 } from './../../utils/global';
 import registerStore from './../../stores/registerStore';
+import { GOOGLE_API_KEY } from './../../utils/configurations';
 import styles from './styles';
 
-const GOOGLE_API = 'AIzaSyBZ11c3GCMMBlSpF3H-4DK6PioxJjaFPe0';
 const googleInputStyles = StyleSheet.create({
   container: {
     flex: 0,
@@ -39,9 +39,7 @@ const googleInputStyles = StyleSheet.create({
     marginRight: 0,
     borderRadius: 0
   },
-  separator: {
-    backgroundColor: 'transparent'
-  },
+  separator: { backgroundColor: 'transparent' },
   row: {
     backgroundColor: colors.INPUT_BG,
     marginLeft: 0,
@@ -62,14 +60,12 @@ class AddressScreen extends Component {
         <UFOHeader
           t={t}
           navigation={navigation}
-          title={t('register:addressTitle', {user: registerStore.user})}
+          title={t('register:addressTitle', { user: registerStore.user })}
           currentScreen={screens.REGISTER_ADDRESS}
         />
           <GooglePlacesAutocomplete
             getDefaultValue={() => registerStore.user.address || ''}
-            textInputProps={{
-              onChangeText: text => (this.addressValue = text)
-            }}
+            textInputProps={{ onChangeText: text => (this.addressValue = text) }}
             onPress={(data, details) => {
               let address = data.description;
               if (details && details.formatted_address) {
@@ -85,7 +81,7 @@ class AddressScreen extends Component {
             returnKeyType="default"
             fetchDetails={true}
             query={{
-              key: GOOGLE_API,
+              key: GOOGLE_API_KEY,
               language: i18n.language
             }}
             currentLocation={false}

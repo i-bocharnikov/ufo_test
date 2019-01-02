@@ -109,9 +109,11 @@ export default StyleSheet.create({
     fontSize: 20,
     textAlign: 'center',
     color: colors.TEXT_INVERT_COLOR,
-    opacity: 0.7,
     paddingHorizontal: 10,
-    lineHeight: 24
+    lineHeight: 24,
+    textShadowColor: 'rgba(0,0,0,0.2)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 4
   },
 
   cardCameraBackground: { opacity: 0.3 },

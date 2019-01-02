@@ -6,7 +6,7 @@ import { CardIOModule, CardIOUtilities } from 'react-native-awesome-card-io';
 import stripe from 'tipsi-stripe';
 import _ from 'lodash';
 
-import { bookingStore } from './../../stores';
+import { bookingStore, driveStore } from './../../stores';
 import { keys as screenKeys } from './../../navigators/helpers';
 import {
   UFOContainer,
@@ -295,6 +295,7 @@ class StepPayScreen extends Component {
     await bookingStore.confirmBooking();
 
     if (bookingStore.bookingConfirmation) {
+      await driveStore.reset();
       this.props.navigation.replace(screenKeys.BookingStepDrive);
     }
   };
