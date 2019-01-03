@@ -9,7 +9,7 @@ import {
   Share,
   Platform
 } from 'react-native';
-import { observable } from 'mobx';
+import { observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { translate } from 'react-i18next';
 
@@ -38,6 +38,11 @@ class SignUpScreen extends Component {
 
   async componentDidMount() {
     await this.initLoad();
+
+    reaction(
+      () => registerStore.isConnected,
+      () => registerStore.isConnected && this.refreshSignUpData()
+    );
   }
 
   renderIcon(extraStyles) {
