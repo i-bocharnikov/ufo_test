@@ -6,7 +6,7 @@ import moment from 'moment';
 
 import { bookingStore } from './../../stores';
 import { keys as screenKeys } from './../../navigators/helpers';
-import { UFOContainer, UFOIcon_next, UFOModalLoader } from './../../components/common';
+import { UFOContainer, UFOIcon, UFOModalLoader } from './../../components/common';
 import UFOTooltip from './../../components/UFOTooltip';
 import UFORollPicker from './../../components/UFORollPicker';
 import UFODatePickerModal from './../../components/UFODatePickerModal';
@@ -80,7 +80,7 @@ class StepBookScreen extends Component {
               onPress={() => this.setState({ showDateTooltip: true })}
               ref={ref => (this.dateTooltipRef = ref)}
             >
-              <UFOIcon_next
+              <UFOIcon
                 name="ios-information-circle-outline"
                 style={styles.dateTolltipicon}
               />
@@ -106,7 +106,7 @@ class StepBookScreen extends Component {
                   right: 36
                 }}
               >
-                <UFOIcon_next
+                <UFOIcon
                   name="ios-calendar-outline"
                   style={styles.rollPickerSeparatorIcon}
                 />
@@ -140,7 +140,7 @@ class StepBookScreen extends Component {
             />
             <View style={styles.rollPickerSeparatorWrapper}>
               <View style={styles.rollPickerSeparator} />
-              <UFOIcon_next
+              <UFOIcon
                 name="ios-clock-outline"
                 style={[ styles.rollPickerSeparatorBtn, styles.rollPickerSeparatorIcon ]}
               />

@@ -1,11 +1,8 @@
 import { observable, action } from 'mobx';
 import { persist } from 'mobx-persist';
-import _ from 'lodash';
 
-import { getFromApi, putToApi } from '../utils/api_deprecated';
+import { getFromApi, putToApi } from './../utils/api_deprecated';
 import { driveStore } from './';
-
-const DEBUG = false;
 
 class Term {
   @persist @observable reference = null;
@@ -15,38 +12,39 @@ class Term {
 }
 
 export default class termStore {
-  constructor() {}
-
   @observable term = new Term();
 
   @action
   async getRentalAgreement() {
-    if (!driveStore.rental) {return false;}
+    if (!driveStore.rental) {
+      return false;
+    }
 
     const response = await getFromApi('/terms/' + driveStore.rental.reference);
+
     if (response && response.status === 'success') {
-      if (DEBUG) {console.info('termStore.getRentalAgreement:', response.data);}
       this.term = response.data.term;
       return true;
     }
+
     return false;
   }
 
   @action
   async signRentalAgreement() {
-    if (!driveStore.rental) {return false;}
+    if (!driveStore.rental) {
+      return false;
+    }
 
-    const body = {
-      term: this.term,
-      action: 'contract_signed'
-    };
-    const response = await putToApi('/rentals/' + driveStore.rental.reference, body);
+    const body = { term: this.term, action: 'contract_signed' };
+    const response = await putToApi(`/rentals/${driveStore.rental.reference}`, body);
+
     if (response && response.status === 'success') {
-      if (DEBUG) {console.info('termStore.signRentalAgreement:', response.data);}
       driveStore.rentals[driveStore.index] = response.data.rental;
       this.term = new Term();
       return true;
     }
+
     return false;
   }
 }

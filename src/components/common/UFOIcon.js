@@ -1,37 +1,51 @@
-import React, { PureComponent } from 'react';
-import { Platform } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
+import React, { Component } from 'react';
+import { Animated } from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import Entypo from 'react-native-vector-icons/Entypo';
+import MaterialCommunity from 'react-native-vector-icons/MaterialCommunityIcons';
 import PropTypes from 'prop-types';
 
-import { sizes, colors, icons } from './../../utils/global';
-
-const isIos = Platform.OS === 'ios';
-
-export default class UFOIcon extends PureComponent {
+export default class UFOIcon extends Component {
   render() {
-    const { icon, color, inverted, size, style } = this.props;
-    const name = `${isIos ? 'ios-' : 'md-'}${icon && icon.name ? icon.name : icons.WRONG}`;
-    const fontSize = size && size.fontSize ? size.fontSize : sizes.MASSIVE.fontSize;
-    const iconColor = color ? color : inverted ? colors.ACTIVE : colors.ICON;
+    const { name, style, iconPack, animated } = this.props;
+    let Icon;
+
+    switch (iconPack) {
+      case 'Ionicons':
+        Icon = Ionicons;
+        break;
+      case 'Entypo':
+        Icon = Entypo;
+        break;
+      case 'MaterialCommunity':
+        Icon = MaterialCommunity;
+        break;
+      default:
+        Icon = Ionicons;
+    }
+
+    if (animated) {
+      Icon = Animated.createAnimatedComponent(Icon);
+    }
 
     return (
       <Icon
         name={name}
-        size={fontSize}
-        color={iconColor.string()}
         style={style}
       />
     );
   }
 }
 
+UFOIcon.defaultProps = { iconPack: 'Ionicons' };
+
 UFOIcon.propTypes = {
-  icon: PropTypes.shape({ name: PropTypes.string }),
-  size: PropTypes.shape({ fontSize: PropTypes.number }),
-  color: PropTypes.oneOfType([
-    PropTypes.object,
-    PropTypes.string
-  ]),
-  inverted: PropTypes.bool,
-  style: PropTypes.any
+  name: PropTypes.string,
+  style: PropTypes.any,
+  animated: PropTypes.bool,
+  iconPack: PropTypes.oneOf([
+    'Ionicons',
+    'Entypo',
+    'MaterialCommunity'
+  ])
 };

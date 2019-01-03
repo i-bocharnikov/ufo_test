@@ -7,7 +7,7 @@ import i18n from 'i18next';
 
 import { showWarning } from './../utils/interaction';
 import { checkAndRequestCameraPermission } from './../utils/permissions';
-import { UFOIcon } from './common';
+import { UFOIcon_old } from './common';
 import { icons, sizes, fonts, colors } from './../utils/global';
 
 export const RNCAMERA_CONSTANTS = RNCamera.Constants;
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignSelf: 'center',
     alignItems: 'center',
-    opacity: 0.6,
+    opacity: 0.9,
     paddingHorizontal: 24,
     paddingVertical: 4,
     marginTop: 60
@@ -51,6 +51,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: fonts.LIGHT,
     marginLeft: 4
+  },
+  torchShadow: {
+    textShadowColor: 'rgba(0,0,0,0.2)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2
   }
 });
 
@@ -91,12 +96,13 @@ export default class UFOCamera extends React.Component {
           style={[ styles.torchBtn, torchBtnTopIndent && { marginTop: torchBtnTopIndent } ]}
           activeOpacity={1}
         >
-          <UFOIcon
+          <UFOIcon_old
             icon={icons.TORCH}
             size={sizes.SMALL}
             color={colors.INVERTED_TEXT}
+            style={styles.torchShadow}
           />
-          <Text style={styles.torchLabel}>
+          <Text style={[ styles.torchLabel, styles.torchShadow ]}>
             {flashMode.getLabel()}
           </Text>
         </TouchableOpacity>

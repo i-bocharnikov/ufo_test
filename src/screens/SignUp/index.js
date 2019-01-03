@@ -21,7 +21,7 @@ import {
   UFOContainer,
   UFOTextInput,
   UFOImage,
-  UFOIcon
+  UFOIcon_old
 } from './../../components/common';
 import {
   screens,
@@ -42,7 +42,7 @@ class SignUpScreen extends Component {
 
   renderIcon(extraStyles) {
     return (
-      <UFOIcon
+      <UFOIcon_old
         icon={icons.VALIDATE}
         style={[ styles.inputIcon, extraStyles ]}
       />

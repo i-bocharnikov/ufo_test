@@ -10,7 +10,7 @@ import call from 'react-native-phone-call';
 
 import UFOHeader from '../../components/header/UFOHeader';
 import UFOActionBar from '../../components/UFOActionBar';
-import { UFOContainer, UFOText, UFOIcon, UFOImage } from '../../components/common';
+import { UFOContainer, UFOText, UFOIcon_old, UFOImage } from '../../components/common';
 import { actionStyles, icons, colors, sizes, navigationParams, screens } from '../../utils/global';
 import supportStore from '../../stores/supportStore';
 import { driveStore } from '../../stores';
@@ -99,7 +99,7 @@ class SupportFaqsScreen extends Component {
           >
             {name}
           </UFOText>
-          <UFOIcon
+          <UFOIcon_old
             icon={isOpen ? icons.SEGMENT_OPEN : icons.SEGMENT_CLOSE}
             size={sizes.SMALL}
           />
@@ -125,7 +125,7 @@ class SupportFaqsScreen extends Component {
           }}
         >
           <UFOText style={{ flex: 0.95 }}>{title}</UFOText>
-          <UFOIcon
+          <UFOIcon_old
             style={{ flex: 0.05 }}
             inverted
             icon={icons.NEXT}

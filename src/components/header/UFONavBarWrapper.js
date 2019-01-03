@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, ScrollView, Text, Animated, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 
-import { UFOIcon_next } from './../common';
+import { UFOIcon } from './../common';
 import styles, { HEADER_HEIGHT, TITLE_FONT_SIZE, BACK_ICON_SIZE } from './styles/navBarStyles';
 import { values } from './../../utils/theme';
 
@@ -38,7 +38,7 @@ export default class UFONavBarWrapper extends Component {
                 style={styles.backBtn}
                 activeOpacity={values.BTN_OPACITY_DEFAULT}
               >
-                <UFOIcon_next
+                <UFOIcon
                   name="keyboard-backspace"
                   iconPack="MaterialCommunity"
                   animated={true}

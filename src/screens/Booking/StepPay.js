@@ -6,11 +6,11 @@ import { CardIOModule, CardIOUtilities } from 'react-native-awesome-card-io';
 import stripe from 'tipsi-stripe';
 import _ from 'lodash';
 
-import { bookingStore } from './../../stores';
+import { bookingStore, driveStore } from './../../stores';
 import { keys as screenKeys } from './../../navigators/helpers';
 import {
   UFOContainer,
-  UFOIcon_next,
+  UFOIcon,
   UFOModalLoader,
   UFOImage,
   UFOTextInput,
@@ -167,7 +167,7 @@ class StepPayScreen extends Component {
           onPress={() => this.setState({ showVoucherTooltip: true })}
           ref={ref => (this.voucherTooltipRef = ref)}
         >
-          <UFOIcon_next
+          <UFOIcon
             name="ios-information-circle-outline"
             style={styles.loyalityTolltipIcon}
           />
@@ -179,7 +179,7 @@ class StepPayScreen extends Component {
           {bookingStore.loyaltyProgramInfo}
         </Text>
         {bookingStore.useRefferalAmount && (
-          <UFOIcon_next
+          <UFOIcon
             name="md-checkmark"
             style={styles.loyalityIcon}
           />
@@ -295,6 +295,7 @@ class StepPayScreen extends Component {
     await bookingStore.confirmBooking();
 
     if (bookingStore.bookingConfirmation) {
+      await driveStore.reset();
       this.props.navigation.replace(screenKeys.BookingStepDrive);
     }
   };
