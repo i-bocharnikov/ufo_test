@@ -14,7 +14,8 @@ export default createBottomTabNavigator({
   [keys.Support]: SupportStackNavigator,
   [keys.Find]: { screen: screens.Find },
   [keys.Return]: { screen: screens.Return },
-  [keys.RentalAgreement]: { screen: screens.RentalAgreement }
+  [keys.RentalAgreement]: { screen: screens.RentalAgreement },
+  [keys.FaceRecognizer]: { screen: screens.FaceRecognizer }
 },
 {
   initialRouteName: keys.Home,

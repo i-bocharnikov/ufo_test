@@ -164,7 +164,8 @@ class DriveScreen extends Component {
       actions.push({
         style: driveStore.hasRentalConfirmedOrOngoing ? actionStyles.DONE : actionStyles.TODO,
         icon: icons.RESERVE,
-        onPress: () => navigation.navigate(screenKeys.Booking)
+        //onPress: () => navigation.navigate(screenKeys.Booking)
+        onPress: () => navigation.navigate(screenKeys.FaceRecognizer)
       });
       actions.push({
         style: registerStore.isUserRegistered ? actionStyles.DONE : actionStyles.TODO,
