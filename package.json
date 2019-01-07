@@ -1,7 +1,7 @@
 {
   "name": "driverApp",
   "version": "2.0.0",
-  "build": "4",
+  "build": "7",
   "private": true,
   "scripts": {
     "start": "react-native start",
@@ -13,7 +13,9 @@
     "test": "jest",
     "android.logs": "react-native log-android",
     "ios.logs": "react-native log-ios",
-    "ios.stany": "react-native run-ios 'Stany Blanvalet''s iphone'",
+    "clean": "rm -Rf ./node_modules; rm -Rf ./ios/Pods; rm -Rf ./android/build; rm -Rf ./android/app/build",
+    "release.android": "react-native run-android --variant=release",
+    "release.ios": "react-native run-ios --device \"Stany Blanvalet’s iPhone\"",
     "debug": "react-devtools &",
     "lint": "eslint src",
     "lint-path": "eslint",

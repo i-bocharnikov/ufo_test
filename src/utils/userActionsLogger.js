@@ -1,5 +1,5 @@
-import moment from 'moment';
-import { checkConnectivity, postToApi } from './api_deprecated';
+import moment from "moment";
+import { checkConnectivity, postToApi } from "./api_deprecated";
 
 export const codeTypes = {
   SUCCESS: 0,
@@ -7,18 +7,18 @@ export const codeTypes = {
 };
 
 export const severityTypes = {
-  DEBUG: 'debug',
-  INFO: 'info',
-  WARN: 'warn',
-  ERROR: 'error'
+  DEBUG: "debug",
+  INFO: "info",
+  WARN: "warn",
+  ERROR: "error"
 };
 
 export default async function userActionsLogger(
   severity,
   code,
-  action = '',
-  message = '',
-  description = '',
+  action = "",
+  message = "",
+  description = "",
   extraData = {}
 ) {
   try {
@@ -27,7 +27,9 @@ export default async function userActionsLogger(
     const isConnectionActive = await checkConnectivity();
 
     if (__DEV__ && severity === severityTypes.DEBUG) {
-      console.log(`${date.format('HH:mm:ss')} ${severity} ${action} ${message}`);
+      console.log(
+        `${date.format("HH:mm:ss")} ${severity} ${action} ${message}`
+      );
       return;
     }
 
@@ -36,15 +38,16 @@ export default async function userActionsLogger(
       code,
       action,
       message,
-      description: code === 0 ? { result: description } : { error: description },
+      description:
+        code === 0 ? { result: description } : { error: description },
       performed_at: date.toDate(),
       ...restLogData
     };
 
     if (isConnectionActive) {
-      await postToApi('/user_experiences', payload);
+      await postToApi("/user_experiences", payload, true);
     }
   } catch (error) {
-    console.error('export of UserExperiences failed', error);
+    console.error("export of UserExperiences failed", error);
   }
 }

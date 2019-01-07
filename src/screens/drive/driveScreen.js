@@ -1,25 +1,32 @@
-import React, { Component } from 'react';
-import { View, RefreshControl } from 'react-native';
-import { observer } from 'mobx-react';
-import { observable, action, when } from 'mobx';
-import { translate } from 'react-i18next';
-import DeviceInfo from 'react-native-device-info';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import React, { Component } from "react";
+import { View, RefreshControl } from "react-native";
+import { observer } from "mobx-react";
+import { observable, action, when } from "mobx";
+import { translate } from "react-i18next";
+import DeviceInfo from "react-native-device-info";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
-import UFOHeader from './../../components/header/UFOHeader';
-import UFOActionBar from './../../components/UFOActionBar';
-import { UFOContainer, UFOText } from './../../components/common';
-import { screens, actionStyles, icons, colors, dims, backgrounds } from './../../utils/global';
-import appStore from './../../stores/appStore';
-import { driveStore } from './../../stores';
-import otaKeyStore from './../../stores/otaKeyStore';
-import registerStore from './../../stores/registerStore';
-import UFOCard from './../../components/UFOCard';
-import UFOSlider from './../../components/UFOSlider';
-import DriveCard from './driveCard';
-import { confirm, showToastError } from './../../utils/interaction';
-import { checkAndRequestLocationPermission } from './../../utils/permissions';
-import { keys as screenKeys } from './../../navigators/helpers';
+import UFOHeader from "./../../components/header/UFOHeader";
+import UFOActionBar from "./../../components/UFOActionBar";
+import { UFOContainer, UFOText } from "./../../components/common";
+import {
+  screens,
+  actionStyles,
+  icons,
+  colors,
+  dims,
+  backgrounds
+} from "./../../utils/global";
+import appStore from "./../../stores/appStore";
+import { driveStore } from "./../../stores";
+import otaKeyStore from "./../../stores/otaKeyStore";
+import registerStore from "./../../stores/registerStore";
+import UFOCard from "./../../components/UFOCard";
+import UFOSlider from "./../../components/UFOSlider";
+import DriveCard from "./driveCard";
+import { confirm, showToastError } from "./../../utils/interaction";
+import { checkAndRequestLocationPermission } from "./../../utils/permissions";
+import { keys as screenKeys } from "./../../navigators/helpers";
 
 @observer
 class DriveScreen extends Component {
@@ -84,37 +91,22 @@ class DriveScreen extends Component {
             >
               <View
                 style={{
-                  flexDirection: 'column',
-                  justifyContent: 'flex-start',
-                  alignContent: 'center',
+                  flexDirection: "column",
+                  justifyContent: "flex-start",
+                  alignContent: "center",
                   backgroundColor: colors.CARD_BACKGROUND.string(),
                   borderRadius: 8,
                   padding: 20
                 }}
               >
-                <UFOText
-                  h1
-                  bold
-                  center
-                  style={{ paddingTop: 10 }}
-                >
-                  {t('home:reserve', { user: registerStore.user })}
+                <UFOText h1 bold center style={{ paddingTop: 10 }}>
+                  {t("home:reserve", { user: registerStore.user })}
                 </UFOText>
-                <UFOText
-                  h1
-                  bold
-                  center
-                  style={{ paddingTop: 5 }}
-                >
-                  {t('home:register', { user: registerStore.user })}
+                <UFOText h1 bold center style={{ paddingTop: 5 }}>
+                  {t("home:register", { user: registerStore.user })}
                 </UFOText>
-                <UFOText
-                  h1
-                  bold
-                  center
-                  style={{ paddingTop: 5 }}
-                >
-                  {t('home:drive', { user: registerStore.user })}
+                <UFOText h1 bold center style={{ paddingTop: 5 }}>
+                  {t("home:drive", { user: registerStore.user })}
                 </UFOText>
               </View>
             </View>
@@ -135,14 +127,14 @@ class DriveScreen extends Component {
                 paddingTop: dims.CONTENT_PADDING_TOP,
                 paddingHorizontal: dims.CONTENT_PADDING_HORIZONTAL,
                 flex: 1,
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignContent: 'center'
+                flexDirection: "column",
+                justifyContent: "center",
+                alignContent: "center"
               }}
             >
               <UFOCard
-                title={t('drive:noRentalsTitle')}
-                text={t('drive:noRentalsDescription')}
+                title={t("drive:noRentalsTitle")}
+                text={t("drive:noRentalsDescription")}
               />
             </View>
           )}
@@ -162,17 +154,25 @@ class DriveScreen extends Component {
     if (!this.driveSelected) {
       /* initial home screen */
       actions.push({
-        style: driveStore.hasRentalConfirmedOrOngoing ? actionStyles.DONE : actionStyles.TODO,
+        style: driveStore.hasRentalConfirmedOrOngoing
+          ? actionStyles.DONE
+          : actionStyles.TODO,
         icon: icons.RESERVE,
         onPress: () => navigation.navigate(screenKeys.Booking)
       });
       actions.push({
-        style: registerStore.isUserRegistered ? actionStyles.DONE : actionStyles.TODO,
-        icon: registerStore.isUserRegistered ? icons.MY_DETAILS : icons.REGISTER,
+        style: registerStore.isUserRegistered
+          ? actionStyles.DONE
+          : actionStyles.TODO,
+        icon: registerStore.isUserRegistered
+          ? icons.MY_DETAILS
+          : icons.REGISTER,
         onPress: () => navigation.navigate(screens.REGISTER.name)
       });
       actions.push({
-        style: driveStore.hasRentalOngoing ? actionStyles.TODO : actionStyles.ACTIVE,
+        style: driveStore.hasRentalOngoing
+          ? actionStyles.TODO
+          : actionStyles.ACTIVE,
         icon: icons.DRIVE,
         onPress: () => (this.driveSelected = true)
       });
@@ -244,7 +244,9 @@ class DriveScreen extends Component {
       driveStore.computeActionFinalInspect(actions, () =>
         this.props.navigation.navigate(screens.INSPECT.name)
       );
-      driveStore.computeActionCloseRental(actions, () => this.confirmCloseRental(t));
+      driveStore.computeActionCloseRental(actions, () =>
+        this.confirmCloseRental(t)
+      );
     }
 
     return actions;
@@ -265,7 +267,10 @@ class DriveScreen extends Component {
 
       await otaKeyStore.getUsedKey();
 
-      if (otaKeyStore.key && otaKeyStore.key.keyId !== driveStore.rental.key_id) {
+      if (
+        otaKeyStore.key &&
+        otaKeyStore.key.keyId !== driveStore.rental.key_id
+      ) {
         await otaKeyStore.switchToKey(false);
       }
 
@@ -306,7 +311,10 @@ class DriveScreen extends Component {
 
       await otaKeyStore.getUsedKey();
 
-      if (otaKeyStore.key && otaKeyStore.key.keyId !== driveStore.rental.key_id) {
+      if (
+        otaKeyStore.key &&
+        otaKeyStore.key.keyId !== driveStore.rental.key_id
+      ) {
         await otaKeyStore.switchToKey(true);
       }
 
@@ -337,7 +345,7 @@ class DriveScreen extends Component {
       await otaKeyStore.unlockDoors(false);
       await otaKeyStore.getVehicleData();
     } else {
-      showToastError(this.props.t('error:localPermissionNeeded'));
+      showToastError(this.props.t("error:localPermissionNeeded"));
     }
 
     this.activityPending = false;
@@ -355,7 +363,7 @@ class DriveScreen extends Component {
       await otaKeyStore.lockDoors(false);
       await otaKeyStore.getVehicleData();
     } else {
-      showToastError(this.props.t('error:localPermissionNeeded'));
+      showToastError(this.props.t("error:localPermissionNeeded"));
     }
 
     this.activityPending = false;
@@ -370,13 +378,15 @@ class DriveScreen extends Component {
 
   confirmCloseRental = async t => {
     const keyMessage =
-      driveStore.rental && driveStore.rental.car && driveStore.rental.car.has_key === true
-        ? t('drive:confirmCloseRentalKeyMessageConfirmationMessage')
-        : '';
+      driveStore.rental &&
+      driveStore.rental.car &&
+      driveStore.rental.car.has_key === true
+        ? t("drive:confirmCloseRentalKeyMessageConfirmationMessage")
+        : "";
 
     await confirm(
-      t('global:confirmationTitle'),
-      t('drive:confirmCloseRentalConfirmationMessage', { keyMessage }),
+      t("global:confirmationTitle"),
+      t("drive:confirmCloseRentalConfirmationMessage", { keyMessage }),
       async () => {
         this.doCloseRental();
       }
@@ -384,4 +394,4 @@ class DriveScreen extends Component {
   };
 }
 
-export default translate('translations')(DriveScreen);
+export default translate("translations")(DriveScreen);

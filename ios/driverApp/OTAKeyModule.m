@@ -45,7 +45,7 @@ static id ObjectOrNull(id object)
            @"mileageLimit": [key mileageLimit],
            @"keyId" : [key otaId],
            @"extId" : ObjectOrNull([key extId]),
-           @"enabled": [NSNumber numberWithBool:[key enabled]],
+           @"isEnabled": [NSNumber numberWithBool:[key enabled]],
            @"keyArgs": ObjectOrNull([key keyArgs]),
            @"keySensitiveArgs": ObjectOrNull([key keySensitiveArgs]),
            @"vehicle": [OTAKeyModule convertOTAVehiclePublic:[key vehicle]],
@@ -66,7 +66,7 @@ static id ObjectOrNull(id object)
 
 + (NSDictionary*) convertOTAVehicleData: (OTAVehicleData *)vehicleData {
   return @{
-           @"doorsState" : [[OTAKeyModule OTABLEDoorStateDictionary] objectForKey:@([vehicleData doorsState])],
+           @"doorsLocked" : [[OTAKeyModule OTABLEDoorStateDictionary] objectForKey:@([vehicleData doorsState])],
            @"engineRunning" : [NSNumber numberWithBool:[vehicleData engineRunning]],
            @"energyCurrent" : ObjectOrNull([vehicleData energyCurrent]),
            };
@@ -209,7 +209,7 @@ RCT_REMAP_METHOD(getUsedKey,
 {
   @try
   {
-    OTAKeyPublic *currentKey = [[OTAManager instance] localKey];
+    OTAKeyPublic *currentKey = [[OTAManager instance] currentKey];
     if (currentKey) {
       resolve([OTAKeyModule convertOTAKeyPublic:currentKey]);
     } else {
@@ -256,7 +256,7 @@ RCT_REMAP_METHOD(switchToKey,
     reject(UNEXPECTED_ERROR_CODE, @"enableKey", error);
     return;
   }
-  OTAKeyPublic *currentKey = [[OTAManager instance] localKey];
+  OTAKeyPublic *currentKey = [[OTAManager instance] currentKey];
   [[OTAManager instance] switchToKeyWithID:LAST_ENABLED_KEYID
                            completionBlock:^(BOOL success) {
                              if (success) {
@@ -326,6 +326,9 @@ RCT_REMAP_METHOD(getVehicleData,
       resolve(@YES);
     }
     failure:^(OTABLEErrorCode errorCode, NSError *error) {
+      if([@(errorCode).stringValue  isEqual: @"10"]){
+        [self sendEventWithName:@"onOtaBluetoothStateChanged" body:@{@"newBluetoothState": @"DISCONNECTED"}];
+      }
       reject(@(errorCode).stringValue, @"getVehicleData", error);
     }];
   }
@@ -342,8 +345,16 @@ RCT_REMAP_METHOD(connect,
 {
   @try
   {
-    [[OTAManager instance] connectToVehicle];
-    resolve(@YES);
+    [[OTAManager instance] connectToVehicleWithCompletion:^(NSError *error) {
+                                              if (error) {
+                                                reject(UNEXPECTED_ERROR_CODE, @"connect", error);
+                                              } else {
+                                                resolve(@YES);
+                                              }
+                                            }
+     ];
+    
+    
   }
   @catch (NSError *error)
   {
@@ -379,7 +390,9 @@ RCT_REMAP_METHOD(unlockDoors,
     [[OTAManager instance] unlockDoorsWithRequestVehicleData:requestVehicleData
                                                 enableEngine:enableEngine
                                                      success:^(OTAVehicleData *vehicleData) {
+                                                       if(requestVehicleData && vehicleData ){
                                                        [self sendEventWithName:@"onOtaVehicleDataUpdated" body:[OTAKeyModule convertOTAVehicleData:vehicleData]];
+                                                       }
                                                        resolve(@YES);
                                                      }
                                                      failure:^(OTAVehicleData *vehicleData, OTABLEErrorCode errorCode, NSError *error) {
@@ -403,7 +416,9 @@ RCT_REMAP_METHOD(lockDoors,
   {
     [[OTAManager instance] lockDoorsWithRequestVehicleData:requestVehicleData
                                                    success:^(OTAVehicleData *vehicleData) {
+                                                     if(requestVehicleData && vehicleData){
                                                      [self sendEventWithName:@"onOtaVehicleDataUpdated" body:[OTAKeyModule convertOTAVehicleData:vehicleData]];
+                                                     }
                                                      resolve(@YES);
                                                    }
                                                    failure:^(OTAVehicleData *vehicleData, OTABLEErrorCode errorCode, NSError *error) {
@@ -427,7 +442,9 @@ RCT_REMAP_METHOD(enableEngine,
   {
     [[OTAManager instance] enableEngineWithRequestVehicleData:requestVehicleData
                                                    success:^(OTAVehicleData *vehicleData) {
+                                                     if(requestVehicleData && vehicleData){
                                                      [self sendEventWithName:@"onOtaVehicleDataUpdated" body:[OTAKeyModule convertOTAVehicleData:vehicleData]];
+                                                     }
                                                      resolve(@YES);
                                                    }
                                                    failure:^(OTAVehicleData *vehicleData, OTABLEErrorCode errorCode, NSError *error) {
@@ -451,7 +468,9 @@ RCT_REMAP_METHOD(disableEngine,
   {
     [[OTAManager instance] disableEngineWithRequestVehicleData:requestVehicleData
                                                       success:^(OTAVehicleData *vehicleData) {
+                                                        if(requestVehicleData && vehicleData){
                                                         [self sendEventWithName:@"onOtaVehicleDataUpdated" body:[OTAKeyModule convertOTAVehicleData:vehicleData]];
+                                                        }
                                                         resolve(@YES);
                                                       }
                                                       failure:^(OTAVehicleData *vehicleData, OTABLEErrorCode errorCode, NSError *error) {
