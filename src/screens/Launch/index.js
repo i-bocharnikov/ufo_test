@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
 import SplashController from 'react-native-splash-screen';
 import { observer } from 'mobx-react';
