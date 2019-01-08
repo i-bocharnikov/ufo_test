@@ -57,30 +57,13 @@ class LaunchScreen extends Component {
     return (
       <UFOContainer
         style={styles.container}
-        image={images.BG_HOME002}
+        image={appStore.isAppReady ? images.BG_HOME002 : images.BG_LAUNCH}
       >
-        {!appStore.isAppReady
-          ? this.renderPreloadingBlock()
-          : this.renderSlider()
-        }
+        {appStore.isAppReady && this.renderSlider()}
         <UFOModalLoader isVisible={!appStore.isAppReady} />
       </UFOContainer>
     );
   }
-
-  renderPreloadingBlock = () => {
-    return (
-      <Fragment>
-        <UFOImage
-          source={images.ufoLogoBig}
-          style={styles.logoBigImg}
-        />
-        <Text style={styles.launchTitle}>
-          {this.props.t('launchTitle')}
-        </Text>
-      </Fragment>
-    );
-  };
 
   renderSlider = () => {
     const { showSkipBtn, showNextBtn } = this.slidesData[this.state.activeSlideIndex];

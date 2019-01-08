@@ -9,5 +9,6 @@ export default {
   ufoLogoBig: require('./../../assets/images/logos/ufodrive_logo.png'),
   ufoLogoTiny: require('./../../assets/images/logos/ufodrive_logo_tiny.png'),
   /* screen backgrounds */
-  BG_HOME002: require('./../../assets/images/background/UFOBGHOME002.png')
+  BG_HOME002: require('./../../assets/images/background/UFOBGHOME002.png'),
+  BG_LAUNCH: require('./../../assets/images/background/UFOBGLAUNCH001.png')
 };

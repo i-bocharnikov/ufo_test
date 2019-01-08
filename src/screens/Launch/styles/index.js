@@ -15,23 +15,6 @@ export default StyleSheet.create({
     justifyContent: 'space-between'
   },
 
-  logoBigImg: {
-    width: 200,
-    height: 96,
-    resizeMode: 'contain',
-    marginTop: '22%'
-  },
-
-  launchTitle: {
-    ...textThemes.SP_BOLD,
-    fontSize: 30,
-    color: colors.TEXT_INVERT_COLOR,
-    letterSpacing: 0.48,
-    textAlign: 'center',
-    lineHeight: 34,
-    marginBottom: '22%'
-  },
-
   logoSmallImg: {
     width: 55,
     height: 36,
