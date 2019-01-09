@@ -5,7 +5,7 @@ import { colors, fonts } from './../../utils/global';
 
 export default class UFOText_old extends React.Component {
   render() {
-    const style = this.props.style ? this.props.style : {};
+    const style = this.props.style ? { ...this.props.style } : {};
 
     if (!style.color) {
       style.color = this.props.inverted ? colors.INVERTED_TEXT.string() : colors.TEXT.string();

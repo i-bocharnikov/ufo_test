@@ -31,6 +31,9 @@ const styles = StyleSheet.create({
   cardContainer: { backgroundColor: 'transparent' }
 });
 
+/* used for old UFOText which accept only raw styles object */
+const stylesDepreated = { title: { marginBottom: 8 } };
+
 export default class UFOCard extends Component {
   render() {
     const {
@@ -105,8 +108,14 @@ export default class UFOCard extends Component {
                 <UFOText
                   h5
                   upper
-                >{title}</UFOText>
-                {texts.map((item, index) => <UFOText key={index} note>{item}</UFOText>)}
+                  style={stylesDepreated.title}
+                >
+                  {title}
+                </UFOText>
+                {texts.map((item, index) => <UFOText
+                  key={index}
+                  note
+                >{item}</UFOText>)}
               </Body>
             </Left>
           </CardItem>
