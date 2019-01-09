@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -50,6 +51,8 @@
 		E891AD1F7EA04052A232EE6C /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7288A12FC82D43E38136D624 /* Ionicons.ttf */; };
 		ED855B4EA1BB43B2AAC8DE17 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 914F449DF8E249B4A066C414 /* Entypo.ttf */; };
 		F35A65AB082F496482EEFAD0 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FDD6C0E564104784BEF4D1AC /* FontAwesome.ttf */; };
+		F513FFBC21E50A1C005DB10F /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = F513FFB921E50A1C005DB10F /* index.html */; };
+		F513FFBD21E50A1C005DB10F /* bundle.js in Resources */ = {isa = PBXBuildFile; fileRef = F513FFBA21E50A1C005DB10F /* bundle.js */; };
 		F540751321984D5000BB787A /* SofiaProRegular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F54075112198486800BB787A /* SofiaProRegular.ttf */; };
 		F540751421984D5300BB787A /* SofiaProLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F54075102198486800BB787A /* SofiaProLight.ttf */; };
 		F540751521984D5500BB787A /* SofiaProBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F54075122198486800BB787A /* SofiaProBold.ttf */; };
@@ -494,6 +497,8 @@
 		DEC0CF07DE9F4D32AA578AB0 /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNDeviceInfo.xcodeproj; path = "../node_modules/react-native-device-info/ios/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; };
 		DF7A9F95FFA3E9A7137ED567 /* Pods-driverApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-driverApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-driverApp/Pods-driverApp.release.xcconfig"; sourceTree = "<group>"; };
 		F15388B12C6C4B7E95D746E3 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/native-base/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
+		F513FFB921E50A1C005DB10F /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
+		F513FFBA21E50A1C005DB10F /* bundle.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = bundle.js; sourceTree = "<group>"; };
 		F54075102198486800BB787A /* SofiaProLight.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = SofiaProLight.ttf; path = ../src/assets/fonts/SofiaProLight.ttf; sourceTree = "<group>"; };
 		F54075112198486800BB787A /* SofiaProRegular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = SofiaProRegular.ttf; path = ../src/assets/fonts/SofiaProRegular.ttf; sourceTree = "<group>"; };
 		F54075122198486800BB787A /* SofiaProBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = SofiaProBold.ttf; path = ../src/assets/fonts/SofiaProBold.ttf; sourceTree = "<group>"; };
@@ -717,6 +722,7 @@
 		4AF9BEAEDA904A0285AF6A7E /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				F513FFB821E50A1C005DB10F /* chat */,
 				F54075122198486800BB787A /* SofiaProBold.ttf */,
 				F54075102198486800BB787A /* SofiaProLight.ttf */,
 				F54075112198486800BB787A /* SofiaProRegular.ttf */,
@@ -832,6 +838,16 @@
 				2D16E6721FA4F8DC00B85C8A /* libRCTBlob-tvOS.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		F513FFB821E50A1C005DB10F /* chat */ = {
+			isa = PBXGroup;
+			children = (
+				F513FFB921E50A1C005DB10F /* index.html */,
+				F513FFBA21E50A1C005DB10F /* bundle.js */,
+			);
+			name = chat;
+			path = ../src/assets/chat;
 			sourceTree = "<group>";
 		};
 		F54D9A932194815400FE4741 /* Products */ = {
@@ -1558,6 +1574,7 @@
 				F540751521984D5500BB787A /* SofiaProBold.ttf in Resources */,
 				ED855B4EA1BB43B2AAC8DE17 /* Entypo.ttf in Resources */,
 				610D9A2B4AEA48008499C1AE /* EvilIcons.ttf in Resources */,
+				F513FFBC21E50A1C005DB10F /* index.html in Resources */,
 				F540751421984D5300BB787A /* SofiaProLight.ttf in Resources */,
 				CA4341E9AEB346A5AE9B2972 /* Feather.ttf in Resources */,
 				F35A65AB082F496482EEFAD0 /* FontAwesome.ttf in Resources */,
@@ -1572,6 +1589,7 @@
 				911A4AB8CB2649A78DAB93F0 /* rubicon-icon-font.ttf in Resources */,
 				A3FB0638AAE44E07BB6CED62 /* SimpleLineIcons.ttf in Resources */,
 				ABE9E823C40349EA980FA1BE /* Zocial.ttf in Resources */,
+				F513FFBD21E50A1C005DB10F /* bundle.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
