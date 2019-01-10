@@ -48,8 +48,8 @@ export default {
     jsExceptionFatalReport:
       'We have reported this to our team. Please close the app and start again.',
     localPermissionNeeded: 'Location permission is required to access the car',
-    // it's not just var name - read about 'context' in 'i18next' doc before change name
     invalidCodeError: 'This code is not valid!',
+    // it's not just var name - such format using 'context' in 'i18next'
     invalidCodeError_voucher: 'Voucher code \'{{code}}\' is not valid',
     invalidCodeError_referal: 'Referral code \'{{code}}\' is not valid'
   },
