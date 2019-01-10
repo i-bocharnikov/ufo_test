@@ -169,7 +169,7 @@ async function handleError(error, suppressToastBox) {
   if (!suppressToastBox) {
     showToastError(ufoError.message);
   }
-  if (ufoError.key !== 400 && ufoError.key !== 500) {
+  if (ufoError.key !== 400 && ufoError.key !== 500 && !suppressToastBox) {
     activitiesStore.activities.registerInternetStopFailure();
   } else {
     activitiesStore.activities.registerInternetStopSuccess();
