@@ -129,5 +129,11 @@ export default StyleSheet.create({
     fontSize: 15,
     color: colors.TEXT_INVERT_COLOR,
     letterSpacing: 1.24
+  },
+
+  driveBgShadow: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    zIndex: 0
   }
 });

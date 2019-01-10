@@ -48,6 +48,7 @@ class StepDriveScreen extends Component {
         image={this.backgroundImage}
         style={styles.container}
       >
+        <View style={styles.driveBgShadow} />
         <UFOImage
           style={styles.moonImg}
           source={images.moonLand}

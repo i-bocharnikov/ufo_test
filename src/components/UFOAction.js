@@ -10,12 +10,10 @@ import { actionStyles, colors, icons, sizes } from './../utils/global';
 const styles = StyleSheet.create({
   area: {
     flex: 1,
-    flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center'
   },
   button: {
-    flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center'
   }
@@ -55,6 +53,7 @@ class UFOAction extends Component {
           <UFOIcon_old
             icon={icon}
             size={size}
+            style={{ lineHeight: actionSize }}
           />
         </Touchable>
         {!noText && (
@@ -62,6 +61,7 @@ class UFOAction extends Component {
             h10
             upper
             inverted={!inverted}
+            style={{ marginTop: 5 }}
           >
             {t(icon.i18nKey)}
           </UFOText>
@@ -98,4 +98,4 @@ UFOAction.propTypes = {
   size: PropTypes.object
 };
 
-export default translate('translations')(UFOAction);
+export default translate()(UFOAction);

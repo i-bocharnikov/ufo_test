@@ -1,5 +1,6 @@
 import UFOContainer from './UFOContainer';
-import UFOTextInput, { ufoInputStyles } from './UFOTextInput';
+import UFOTextInput from './UFOTextInput';
+import { ufoInputStyles } from './UFOTextInput/styles';
 import UFOIcon from './UFOIcon';
 import UFOImage from './UFOImage';
 import UFOVideo from './UFOVideo';

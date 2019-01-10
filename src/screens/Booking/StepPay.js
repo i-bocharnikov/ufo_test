@@ -35,7 +35,8 @@ class StepPayScreen extends Component {
     this.handleInputVoucher = _.debounce(this.validateAndApplyVoucher, 300);
     this.state = {
       showVoucherTooltip: false,
-      isVoucherValid: null
+      isVoucherValid: null,
+      voucherInvalidError: ''
     };
   }
 
@@ -48,14 +49,17 @@ class StepPayScreen extends Component {
     }
 
     if (bookingStore.voucherCode) {
-      const isVoucherValid = await bookingStore.validateVoucher(bookingStore.voucherCode);
-      this.setState({ isVoucherValid });
+      const voucherInvalidError = await bookingStore.validateVoucher(bookingStore.voucherCode);
+      this.setState({
+        isVoucherValid: !voucherInvalidError,
+        voucherInvalidError
+      });
     }
   }
 
   render() {
     const { t } = this.props;
-    const { isVoucherValid } = this.state;
+    const { isVoucherValid, voucherInvalidError } = this.state;
 
     return (
       <BookingNavWrapper
@@ -82,9 +86,9 @@ class StepPayScreen extends Component {
             {t('loyalityProgramtitle')}
           </Text>
           <UFOTextInput
+            containerStyle={styles.screenHorizIndents}
             wrapperStyle={[
               styles.voucherInput,
-              styles.screenHorizIndents,
               styles.blockShadow,
               Platform.OS === 'android' && styles.blockShadowAndroidFix
             ]}
@@ -94,6 +98,7 @@ class StepPayScreen extends Component {
             defaultValye={bookingStore.voucherCode}
             invalidStatus={_.isBoolean(isVoucherValid) && !isVoucherValid}
             successStatus={_.isBoolean(isVoucherValid) && isVoucherValid}
+            alertMessage={voucherInvalidError}
           />
           {this.renderLoyaltyBlock()}
           {this.renderBookingInfoSection()}
@@ -266,13 +271,14 @@ class StepPayScreen extends Component {
   */
   validateAndApplyVoucher = async code => {
     let isValid = null;
+    let voucherInvalidError = '';
 
-    if (!code) {
-      this.setState({ isVoucherValid: isValid });
-    } else {
-      isValid = await bookingStore.validateVoucher(code);
-      this.setState({ isVoucherValid: isValid });
+    if (code) {
+      voucherInvalidError = await bookingStore.validateVoucher(code);
+      isValid = !voucherInvalidError;
     }
+
+    this.setState({ isVoucherValid: isValid, voucherInvalidError });
 
     if (isValid) {
       await bookingStore.appyVoucherCode(code);

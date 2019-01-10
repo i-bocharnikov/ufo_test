@@ -397,7 +397,7 @@ export default class BookingStore {
     const isValidFormat = /^[VR][0-9A-Z]{3,11}$/g.test(code);
 
     if (!isValidFormat) {
-      return false;
+      return i18n.t('error:invalidCodeError');
     }
 
     const isValid = await order.validateVoucher(
@@ -406,7 +406,18 @@ export default class BookingStore {
       this.selectedCarRef,
       _.get(this.order, 'schedule.startAt')
     );
-    return isValid;
+
+    if (isValid) {
+      return '';
+    }
+
+    return i18n.t(
+      'error:invalidCodeError',
+      {
+        code,
+        context: code[0] === 'R' ? 'referal' : 'voucher'
+      }
+    );
   }
 
   /*
