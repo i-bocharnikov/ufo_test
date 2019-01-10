@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { translate } from 'react-i18next';
 import { View, Dimensions } from 'react-native';
 import { observer } from 'mobx-react';
+import { Left, Body } from 'native-base';
 
 import { UFOText, UFOImage } from '../../components/common';
 import { dateFormats, colors } from '../../utils/global';
 import { driveStore } from '../../stores';
 import otaKeyStore from '../../stores/otaKeyStore';
 import UFOCard from '../../components/UFOCard';
-import { Left, Body } from 'native-base';
 
 const DRIVE_CARD_WIDTH = Dimensions.get('window').width / 1.5;
 const DRIVE_CARD_HEIGHT = DRIVE_CARD_WIDTH / 2;
