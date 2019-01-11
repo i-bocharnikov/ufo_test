@@ -528,7 +528,7 @@ export default StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.BORDER_COLOR,
     marginLeft: 10,
-    borderRadius: 2
+    borderRadius: 4
   },
 
   loyalityIcon: {

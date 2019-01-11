@@ -17,6 +17,7 @@ import registerStore from './../../stores/registerStore';
 import appStore from './../../stores/appStore';
 import UFOHeader from './../../components/header/UFOHeader';
 import UFOActionBar from './../../components/UFOActionBar';
+import UFOPopover from './../../components/UFOPopover';
 import {
   UFOContainer,
   UFOTextInput,
@@ -170,7 +171,7 @@ class SignUpScreen extends Component {
               </Text>
             </TouchableOpacity>
           </View>
-          {hasReferalCode ? (
+          {hasReferalCode && (
             <TouchableOpacity
               style={[ styles.referalBlock, styles.topGap ]}
               onPress={this.shareRefCode}
@@ -184,10 +185,6 @@ class SignUpScreen extends Component {
                 style={styles.referalImg}
               />
             </TouchableOpacity>
-          ) : (
-            <Text style={[ styles.registrationStatus, styles.topGap ]}>
-              {registerStore.user.registration_message}
-            </Text>
           )}
           {registerStore.isUserRegistered && (
             <UFOTextInput
@@ -199,6 +196,7 @@ class SignUpScreen extends Component {
             />
           )}
         </ScrollView>
+        <UFOPopover message={registerStore.user.registration_message} />
         <UFOActionBar actions={this.compileActions()} />
       </UFOContainer>
     );

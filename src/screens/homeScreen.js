@@ -1,5 +1,5 @@
-import React from 'react';
-import { RefreshControl, View } from 'react-native';
+import React, { Component } from 'react';
+import { RefreshControl, View, ScrollView } from 'react-native';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 import { translate } from 'react-i18next';
@@ -11,15 +11,10 @@ import appStore from '../stores/appStore';
 import registerStore from '../stores/registerStore';
 import { driveStore } from '../stores';
 import { screens, actionStyles, icons } from '../utils/global';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 @observer
-class HomeScreen extends React.Component {
+class HomeScreen extends Component {
   @observable refreshing = false;
-
-  refresh = async () => {
-    await appStore.initialise();
-  };
 
   render() {
     const { t, navigation } = this.props;
@@ -42,18 +37,9 @@ class HomeScreen extends React.Component {
       }
     ];
 
-    const _RefreshControl = <RefreshControl
-      refreshing={this.refreshing}
-      onRefresh={this.refresh}
-    />;
-
     return (
       <UFOContainer image={screens.HOME.backgroundImage}>
-        <KeyboardAwareScrollView
-          enableOnAndroid={true}
-          resetScrollToCoords={{ x: 0, y: 0 }}
-          refreshControl={_RefreshControl}
-        >
+        <ScrollView refreshControl={this.refreshControl}>
           <UFOHeader
             transparent
             logo
@@ -96,11 +82,24 @@ class HomeScreen extends React.Component {
               <View style={{ height: 100 }} />
             </View>
           </View>
-        </KeyboardAwareScrollView>
+        </ScrollView>
         <UFOActionBar actions={actions} />
       </UFOContainer>
     );
   }
+
+  get refreshControl() {
+    return (
+      <RefreshControl
+        refreshing={this.refreshing}
+        onRefresh={this.refresh}
+      />
+    );
+  }
+
+  refresh = async () => {
+    await appStore.initialise();
+  };
 }
 
-export default translate('translations')(HomeScreen);
+export default translate()(HomeScreen);

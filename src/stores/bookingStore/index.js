@@ -347,13 +347,11 @@ export default class BookingStore {
       expYear: cardData.expYear,
       last4: cardData.last4,
       default: !this.currentCreditCardRef,
-      token: cardStripeObj.tokenId
+      token: cardStripeObj.tokenId,
+      imageUrl: cardStripeObj.imageUrl
     };
 
-    if (card.default) {
-      this.currentCreditCardRef = card.reference;
-    }
-
+    this.currentCreditCardRef = card.reference;
     this.userCreditCards.push(card);
   };
 
