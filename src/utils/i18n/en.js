@@ -84,7 +84,7 @@ export default {
     driverLicence: 'Driver licence',
     select: 'Select',
     capture: 'Capture',
-    newCapture: 'New capture',
+    newCapture: 'Try again',
     torch: 'Torch',
     validate: 'Validate',
     done: 'Done',
