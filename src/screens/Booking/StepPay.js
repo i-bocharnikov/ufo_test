@@ -21,6 +21,7 @@ import BookingNavWrapper from './components/BookingNavWrapper';
 import BottomActionPanel from './components/BottomActionPanel';
 import styles from './styles';
 import { values, colors } from './../../utils/theme';
+import { checkAndRequestCameraPermission } from './../../utils/permissions';
 
 @observer
 class StepPayScreen extends Component {
@@ -253,7 +254,9 @@ class StepPayScreen extends Component {
   */
   scranCreditCard = async () => {
     try {
-      const cardIoData = await CardIOModule.scanCard(this.CARDIO_SCAN_OPTIONS);
+      const hasPermit = await checkAndRequestCameraPermission();
+      const options = { ...this.CARDIO_SCAN_OPTIONS, noCamera: !hasPermit };
+      const cardIoData = await CardIOModule.scanCard(options);
       const cardStripeObj = await stripe.createTokenWithCard({
         number: cardIoData.cardNumber,
         expMonth: cardIoData.expiryMonth,
