@@ -23,6 +23,8 @@ import styles from './styles';
 import { values, colors } from './../../utils/theme';
 import { checkAndRequestCameraPermission } from './../../utils/permissions';
 
+const CREDIT_CARD_DEFAULT_IMG = 'https://resources.ufodrive.com/images/userCreditCards/unknown.png';
+
 @observer
 class StepPayScreen extends Component {
   constructor(props) {
@@ -263,7 +265,7 @@ class StepPayScreen extends Component {
         expYear: cardIoData.expiryYear,
         cvc: cardIoData.cvv
       });
-      bookingStore.addCreditCardToList(cardStripeObj);
+      bookingStore.addCreditCardToList({ ...cardStripeObj, imageUrl: CREDIT_CARD_DEFAULT_IMG });
     } catch (error) {
       console.log('CARDIO ERROR:', error);
     }
