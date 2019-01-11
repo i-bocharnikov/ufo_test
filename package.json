@@ -85,7 +85,6 @@
         "jest-react-native": "^18.0.0",
         "jsc-android": "224109.x.x",
         "metro-react-native-babel-preset": "^0.45.6",
-        "pre-commit": "^1.2.2",
         "prettier": "^1.15.3",
         "prettier-eslint": "^8.8.2",
         "prettier-eslint-cli": "^4.7.1",
