@@ -1,9 +1,7 @@
 import moment from 'moment';
-import { checkConnectivity, postToApi, logToApi } from './api_deprecated';
+import { checkConnectivity, logToApi } from './api_deprecated';
 import { AsyncStorage } from 'react-native';
-import registerStore from '../stores/registerStore';
-import appStore from '../stores/appStore';
-
+import _ from 'lodash';
 export const codeTypes = {
   SUCCESS: 0,
   ERROR: 1
@@ -16,12 +14,6 @@ export const severityTypes = {
   ERROR: 'error'
 };
 
-const rawuserActionsLogs = await AsyncStorage.getItem('userActionsLogs');
-const lock = false;
-const userActionsLogs = JSON.parse(
-  rawuserActionsLogs ? rawuserActionsLogs : '[]'
-);
-
 export default async function userActionsLogger(
   severity,
   code,
@@ -30,6 +22,7 @@ export default async function userActionsLogger(
   description = '',
   extraData = {}
 ) {
+  let userActionsLogs = [];
   try {
     const { momentDate, ...restLogData } = extraData;
     const date = momentDate || moment();
@@ -56,41 +49,24 @@ export default async function userActionsLogger(
       ...restLogData
     };
 
+    const rawuserActionsLogs = await AsyncStorage.getItem('userActionsLogs');
+    AsyncStorage.removeItem('userActionsLogs');
+    if (rawuserActionsLogs) {
+      userActionsLogs = JSON.parse(rawuserActionsLogs);
+    }
+    userActionsLogs.push(payload);
     if (isConnectionActive) {
-      await logToApi('/user_experiences', payload);
-      if (!lock) {
-        lock = true;
-        for (const userActionsLog of userActionsLogs) {
-          await logToApi('/user_experiences', userActionsLog);
-        }
-        AsyncStorage.setItem('userActionsLogs', '[]');
-        lock = false;
+      while (userActionsLogs.length > 0) {
+        await logToApi('/user_experiences', userActionsLogs.pop());
       }
     } else {
-      userActionsLogs.push(payload);
-      if (!lock) {
-        lock = true;
-        AsyncStorage.setItem(
-          'userActionsLogs',
-          JSON.stringify(userActionsLogs)
-        );
-        lock = false;
-      }
+      AsyncStorage.setItem('userActionsLogs', JSON.stringify(userActionsLogs));
     }
   } catch (error) {
     if (error.response && error.response.status === 401) {
       //wait next registration
-      userActionsLogs.push(payload);
-      if (!lock) {
-        lock = true;
-        AsyncStorage.setItem(
-          'userActionsLogs',
-          JSON.stringify(userActionsLogs)
-        );
-        lock = false;
-      }
+      AsyncStorage.setItem('userActionsLogs', JSON.stringify(userActionsLogs));
     } else {
-      lock = false;
       console.error('Export of UserExperiences failed', error);
     }
   }

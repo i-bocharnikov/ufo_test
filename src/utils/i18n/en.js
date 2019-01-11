@@ -40,7 +40,7 @@ export default {
     unexpectedServerResponse:
       'Oops, this was not supposed to happen. Apologises for the inconvenience',
     noKey: 'You currently have no key. Please ask support team to have one',
-    stringNotMatch: 'Wrong confirmation string. Try again',
+    stringNotMatch: 'Please type "I agree" to sign the contract.',
     unknown: 'Unknown Error',
     nativeException: 'Native Exception',
     jsException: 'Warning from JS exception handler',
