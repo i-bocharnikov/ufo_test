@@ -36,7 +36,11 @@ export async function useTokenInApi(token) {
  * @param {Boolean} usePublicApi If true, use th epublic api
  * @returns {Promise} of response body
  */
-export async function getFromApi(path, suppressToastBox = false, usePublicApi = false) {
+export async function getFromApi(
+  path,
+  suppressToastBox = false,
+  usePublicApi = false
+) {
   const api = usePublicApi ? ufodrive_server_public_api : ufodrive_server_api;
   try {
     activitiesStore.activities.registerInternetStart();
@@ -56,7 +60,12 @@ export async function getFromApi(path, suppressToastBox = false, usePublicApi = 
  * @param {Boolean} usePublicApi If true, use th epublic api
  * @returns {Promise}  of response body
  */
-export async function postToApi(path, body, suppressToastBox = false, usePublicApi = false) {
+export async function postToApi(
+  path,
+  body,
+  suppressToastBox = false,
+  usePublicApi = false
+) {
   const api = usePublicApi ? ufodrive_server_public_api : ufodrive_server_api;
   try {
     activitiesStore.activities.registerInternetStart();
@@ -76,7 +85,12 @@ export async function postToApi(path, body, suppressToastBox = false, usePublicA
  * @param {Boolean} usePublicApi If true, use th epublic api
  * @returns {Promise}  of response body
  */
-export async function putToApi(path, body, suppressToastBox = false, usePublicApi = false) {
+export async function putToApi(
+  path,
+  body,
+  suppressToastBox = false,
+  usePublicApi = false
+) {
   const api = usePublicApi ? ufodrive_server_public_api : ufodrive_server_api;
   try {
     activitiesStore.activities.registerInternetStart();
@@ -94,7 +108,14 @@ export async function putToApi(path, body, suppressToastBox = false, usePublicAp
  * @param {Boolean} usePublicApi If true, use th epublic api
  * @returns {Promise}  of response body
  */
-export async function uploadToApi(domain, format, type, sub_type, uri, suppressToastBox = false) {
+export async function uploadToApi(
+  domain,
+  format,
+  type,
+  sub_type,
+  uri,
+  suppressToastBox = false
+) {
   try {
     if (!(await checkConnectivity())) {
       throw errors.INTERNET_CONNECTION_REQUIRED;
@@ -115,7 +136,9 @@ export async function uploadToApi(domain, format, type, sub_type, uri, suppressT
     data.append('file_name', fileName);
     data.append('content_type', fileType);
     activitiesStore.activities.registerInternetStart();
-    const response = await ufodrive_server_api.post('documents', data, { headers: { 'Content-Type': 'multipart/form-data;' } });
+    const response = await ufodrive_server_api.post('documents', data, {
+      headers: { 'Content-Type': 'multipart/form-data;' }
+    });
     activitiesStore.activities.registerInternetStopSuccess();
     return response.data;
   } catch (error) {
@@ -129,7 +152,11 @@ export async function uploadToApi(domain, format, type, sub_type, uri, suppressT
  * @param {Boolean} usePublicApi If true, use th epublic api
  * @returns {Promise}  of response body
  */
-export async function downloadFromApi(reference, thumbnail = true, suppressToastBox = false) {
+export async function downloadFromApi(
+  reference,
+  thumbnail = true,
+  suppressToastBox = false
+) {
   try {
     if (!(await checkConnectivity())) {
       throw errors.INTERNET_CONNECTION_REQUIRED;
@@ -141,7 +168,9 @@ export async function downloadFromApi(reference, thumbnail = true, suppressToast
     }/${path}${reference}`;
 
     activitiesStore.activities.registerInternetStart();
-    const response = await RNFetchBlob.fetch('GET', url, { Authorization: 'Bearer ' + SAVE_TOKEN });
+    const response = await RNFetchBlob.fetch('GET', url, {
+      Authorization: 'Bearer ' + SAVE_TOKEN
+    });
     const base64Str = response.base64();
     activitiesStore.activities.registerInternetStopSuccess();
 
@@ -165,7 +194,7 @@ export async function checkConnectivity() {
 
 async function handleError(error, suppressToastBox) {
   const ufoError = formatApiError(error);
-  console.debug('api.get error.stack: ', ufoError);
+  console.debug('api throw error: ', ufoError);
   if (!suppressToastBox) {
     showToastError(ufoError.message);
   }
@@ -214,9 +243,15 @@ const ufodrive_server_api_v2 = axios.create({
   timeout: 30000
 });
 
-export async function getFromApi_v2(path, suppressToastBox = false, usePublicApi = false) {
+export async function getFromApi_v2(
+  path,
+  suppressToastBox = false,
+  usePublicApi = false
+) {
   try {
-    const api = usePublicApi ? ufodrive_server_public_api : ufodrive_server_api_v2;
+    const api = usePublicApi
+      ? ufodrive_server_public_api
+      : ufodrive_server_api_v2;
     activitiesStore.activities.registerInternetStart();
     const response = await api.get(path);
     activitiesStore.activities.registerInternetStopSuccess();

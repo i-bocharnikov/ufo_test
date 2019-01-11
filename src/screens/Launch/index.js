@@ -7,7 +7,11 @@ import { translate } from 'react-i18next';
 import { keys as screenKeys } from './../../navigators/helpers';
 import appStore from './../../stores/appStore';
 import registerStore from './../../stores/registerStore';
-import { UFOContainer, UFOModalLoader, UFOImage } from './../../components/common';
+import {
+  UFOContainer,
+  UFOModalLoader,
+  UFOImage
+} from './../../components/common';
 import UFOSlider from './../../components/UFOSlider';
 import styles from './styles';
 import { images, values } from './../../utils/theme';
@@ -46,7 +50,7 @@ class LaunchScreen extends Component {
 
   async componentDidMount() {
     SplashController.hide();
-    await appStore.initialise(this.props.t);
+    await appStore.initialise();
 
     if (registerStore.isUserRegistered) {
       this.navToApp();
@@ -66,14 +70,13 @@ class LaunchScreen extends Component {
   }
 
   renderSlider = () => {
-    const { showSkipBtn, showNextBtn } = this.slidesData[this.state.activeSlideIndex];
+    const { showSkipBtn, showNextBtn } = this.slidesData[
+      this.state.activeSlideIndex
+    ];
 
     return (
       <View style={styles.sliderWrapper}>
-        <UFOImage
-          source={images.ufoLogoTiny}
-          style={styles.logoSmallImg}
-        />
+        <UFOImage source={images.ufoLogoTiny} style={styles.logoSmallImg} />
         <UFOSlider
           data={this.slidesData}
           renderItem={this.renderSlide}
@@ -88,9 +91,7 @@ class LaunchScreen extends Component {
             activeOpacity={values.BTN_OPACITY_DEFAULT}
             style={styles.skipBtn}
           >
-            <Text style={styles.skipBtnLabel}>
-              {this.props.t('skipBtn')}
-            </Text>
+            <Text style={styles.skipBtnLabel}>{this.props.t('skipBtn')}</Text>
           </TouchableOpacity>
         )}
         {!showNextBtn && (
@@ -113,24 +114,16 @@ class LaunchScreen extends Component {
   renderSlide = ({ item }) => {
     return (
       <View style={styles.slideTextBlock}>
-        <Text style={styles.slideTitle}>
-          {item.title}
-        </Text>
-        <Text style={styles.slideSubTitle}>
-          {item.subTitle}
-        </Text>
-        <Text style={styles.slideText}>
-          {item.text}
-        </Text>
+        <Text style={styles.slideTitle}>{item.title}</Text>
+        <Text style={styles.slideSubTitle}>{item.subTitle}</Text>
+        <Text style={styles.slideText}>{item.text}</Text>
         {item.showNextBtn && (
           <TouchableOpacity
             onPress={this.navToApp}
             activeOpacity={values.BTN_OPACITY_DEFAULT}
             style={styles.nextBtn}
           >
-            <Text style={styles.nextBtnLabel}>
-              {this.props.t('nextBtn')}
-            </Text>
+            <Text style={styles.nextBtnLabel}>{this.props.t('nextBtn')}</Text>
           </TouchableOpacity>
         )}
       </View>

@@ -9,8 +9,20 @@ import call from 'react-native-phone-call';
 
 import UFOHeader from './../../components/header/UFOHeader';
 import UFOActionBar from './../../components/UFOActionBar';
-import { UFOContainer, UFOText, UFOIcon_old, UFOImage } from './../../components/common';
-import { actionStyles, icons, colors, sizes, navigationParams, screens } from './../../utils/global';
+import {
+  UFOContainer,
+  UFOText,
+  UFOIcon_old,
+  UFOImage
+} from './../../components/common';
+import {
+  actionStyles,
+  icons,
+  colors,
+  sizes,
+  navigationParams,
+  screens
+} from './../../utils/global';
 import supportStore from './../../stores/supportStore';
 import { driveStore } from './../../stores';
 
@@ -116,10 +128,7 @@ class SupportFaqsScreen extends Component {
     <View style={styles.sectionWrapper}>
       <Touchable onPress={() => this.onPressSection(reference)}>
         <View style={styles.sectionBody}>
-          <UFOText
-            h3
-            inverted
-          >
+          <UFOText h3 inverted>
             {name}
           </UFOText>
           <UFOIcon_old
@@ -135,9 +144,7 @@ class SupportFaqsScreen extends Component {
   renderItem = ({ item: { reference, title }, index, section }) => (
     <Touchable onPress={() => this.onPressItem(section.reference, reference)}>
       <View style={styles.itemBody}>
-        <UFOText style={stylesDepreated.itemLabel}>
-          {title}
-        </UFOText>
+        <UFOText style={stylesDepreated.itemLabel}>{title}</UFOText>
         <UFOIcon_old
           style={styles.itemIcon}
           inverted
@@ -152,7 +159,7 @@ class SupportFaqsScreen extends Component {
     if (payload && payload.state && payload.state.routeName !== 'SupportFaqs') {
       return;
     }
-    await this.doRefresh();
+    //await this.doRefresh();
   };
 
   onPressSection = reference => {
