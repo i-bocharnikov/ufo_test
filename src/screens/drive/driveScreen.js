@@ -5,7 +5,7 @@ import { observable, action, when } from 'mobx';
 import { translate } from 'react-i18next';
 import DeviceInfo from 'react-native-device-info';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-
+import _ from 'lodash';
 import UFOHeader from './../../components/header/UFOHeader';
 import UFOActionBar from './../../components/UFOActionBar';
 import { UFOContainer, UFOText } from './../../components/common';
@@ -23,6 +23,7 @@ import otaKeyStore from './../../stores/otaKeyStore';
 import registerStore from './../../stores/registerStore';
 import UFOCard from './../../components/UFOCard';
 import UFOSlider from './../../components/UFOSlider';
+import UFOPopover from './../../components/UFOPopover';
 import DriveCard from './driveCard';
 import { confirm, showToastError } from './../../utils/interaction';
 import { checkAndRequestLocationPermission } from './../../utils/permissions';
@@ -164,6 +165,7 @@ class DriveScreen extends Component {
                     actions={this.compileActions()}
                     activityPending={this.activityPending}
                 />
+                <UFOPopover message={_.get(driveStore, 'rental.message_for_driver')} />
             </UFOContainer>
         );
     }
