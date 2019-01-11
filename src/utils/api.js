@@ -63,7 +63,7 @@ export function getErrorMessage(errorObj) {
 */
 export async function setAuthTokenForApi(token) {
   if (token) {
-    ufoServerPrivateApi.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    ufoServerPrivateApi.defaults.headers.common.Authorization = `Bearer ${token}`;
   }
 }
 
@@ -107,5 +107,19 @@ export async function postToApi(path, body, errorHandling = false, usePublicApi 
     }
 
     return formatResponse(error, false);
+  }
+}
+
+/**
+  * @returns {boolean}
+  * @description Check, is connecting to api present
+  */
+export async function checkServerAvailability() {
+  try {
+    await ufoServerPublicApi.get('/');
+
+    return true;
+  } catch (error) {
+    return false;
   }
 }

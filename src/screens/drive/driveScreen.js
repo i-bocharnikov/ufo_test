@@ -1,23 +1,15 @@
 import React, { Component } from 'react';
-import { View, RefreshControl } from 'react-native';
+import { View, RefreshControl, ScrollView } from 'react-native';
 import { observer } from 'mobx-react';
-import { observable, action, when } from 'mobx';
+import { observable } from 'mobx';
 import { translate } from 'react-i18next';
 import DeviceInfo from 'react-native-device-info';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import _ from 'lodash';
 
 import UFOHeader from './../../components/header/UFOHeader';
 import UFOActionBar from './../../components/UFOActionBar';
 import { UFOContainer, UFOText } from './../../components/common';
-import {
-  screens,
-  actionStyles,
-  icons,
-  colors,
-  dims,
-  backgrounds
-} from './../../utils/global';
+import { screens, actionStyles, icons, backgrounds } from './../../utils/global';
 import appStore from './../../stores/appStore';
 import { driveStore } from './../../stores';
 import otaKeyStore from './../../stores/otaKeyStore';
@@ -29,6 +21,8 @@ import DriveCard from './driveCard';
 import { confirm, showToastError } from './../../utils/interaction';
 import { checkAndRequestLocationPermission } from './../../utils/permissions';
 import { keys as screenKeys } from './../../navigators/helpers';
+import { checkServerAvailability } from './../../utils/api';
+import styles from './styles';
 
 @observer
 class DriveScreen extends Component {
@@ -50,24 +44,8 @@ class DriveScreen extends Component {
     this.loadKeyForSelectedRental();
   }
 
-  renderRental({ item }) {
-    if (item) {
-      return <DriveCard rental={item} />;
-    } else {
-      return null;
-    }
-  }
-
   render() {
     const { t, navigation } = this.props;
-
-    const _RefreshControl = (
-      <RefreshControl
-        refreshing={this.refreshing}
-        onRefresh={this.refreshRental}
-      />
-    );
-
     const background = this.driveSelected
       ? this.returnSelected
         ? backgrounds.RETURN001
@@ -83,29 +61,15 @@ class DriveScreen extends Component {
           navigation={navigation}
           currentScreen={screens.DRIVE}
         />
-        <KeyboardAwareScrollView refreshControl={_RefreshControl}>
+        <ScrollView refreshControl={this.refreshControl()}>
           {!this.driveSelected && !driveStore.hasRentals && (
-            <View
-              style={{
-                paddingTop: dims.CONTENT_PADDING_TOP,
-                paddingHorizontal: dims.CONTENT_PADDING_HORIZONTAL
-              }}
-            >
-              <View
-                style={{
-                  flexDirection: 'column',
-                  justifyContent: 'flex-start',
-                  alignContent: 'center',
-                  backgroundColor: colors.CARD_BACKGROUND.string(),
-                  borderRadius: 8,
-                  padding: 20
-                }}
-              >
+            <View style={styles.content}>
+              <View style={styles.instructionContainer}>
                 <UFOText
                   h1
                   bold
                   center
-                  style={{ paddingTop: 10 }}
+                  style={styles.instructionRow}
                 >
                   {t('home:reserve', { user: registerStore.user })}
                 </UFOText>
@@ -113,7 +77,7 @@ class DriveScreen extends Component {
                   h1
                   bold
                   center
-                  style={{ paddingTop: 5 }}
+                  style={styles.instructionRow}
                 >
                   {t('home:register', { user: registerStore.user })}
                 </UFOText>
@@ -121,7 +85,7 @@ class DriveScreen extends Component {
                   h1
                   bold
                   center
-                  style={{ paddingTop: 5 }}
+                  style={styles.instructionRow}
                 >
                   {t('home:drive', { user: registerStore.user })}
                 </UFOText>
@@ -129,7 +93,7 @@ class DriveScreen extends Component {
             </View>
           )}
           {driveStore.hasRentals && driveStore.rental && (
-            <View style={{ paddingTop: dims.CONTENT_PADDING_TOP }}>
+            <View style={styles.rentalsWrapper}>
               <UFOSlider
                 data={driveStore.rentals}
                 renderItem={this.renderRental}
@@ -139,23 +103,14 @@ class DriveScreen extends Component {
             </View>
           )}
           {this.driveSelected && !driveStore.rental && (
-            <View
-              style={{
-                paddingTop: dims.CONTENT_PADDING_TOP,
-                paddingHorizontal: dims.CONTENT_PADDING_HORIZONTAL,
-                flex: 1,
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignContent: 'center'
-              }}
-            >
+            <View style={styles.driveWrapper}>
               <UFOCard
                 title={t('drive:noRentalsTitle')}
                 text={t('drive:noRentalsDescription')}
               />
             </View>
           )}
-        </KeyboardAwareScrollView>
+        </ScrollView>
         <UFOActionBar
           actions={this.compileActions()}
           activityPending={this.activityPending}
@@ -163,6 +118,21 @@ class DriveScreen extends Component {
         <UFOPopover message={_.get(driveStore, 'rental.message_for_driver')} />
       </UFOContainer>
     );
+  }
+
+  refreshControl = () => (
+    <RefreshControl
+      refreshing={this.refreshing}
+      onRefresh={this.refreshRental}
+    />
+  );
+
+  renderRental({ item }) {
+    if (item) {
+      return <DriveCard rental={item} />;
+    } else {
+      return null;
+    }
   }
 
   compileActions = () => {
@@ -176,7 +146,7 @@ class DriveScreen extends Component {
           ? actionStyles.DONE
           : actionStyles.TODO,
         icon: icons.RESERVE,
-        onPress: () => navigation.navigate(screenKeys.Booking)
+        onPress: this.navToBooking
       });
       actions.push({
         style: registerStore.isUserRegistered
@@ -410,6 +380,17 @@ class DriveScreen extends Component {
       }
     );
   };
+
+  navToBooking = async () => {
+    const serverAvailable = await checkServerAvailability();
+
+    if (!serverAvailable) {
+      showToastError( this.props.t('error:connectionIsRequired') );
+      return;
+    }
+
+    this.props.navigation.navigate(screenKeys.Booking);
+  };
 }
 
-export default translate('translations')(DriveScreen);
+export default translate()(DriveScreen);

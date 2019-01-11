@@ -51,7 +51,8 @@ export default {
     invalidCodeError: 'This code is not valid!',
     // it's not just var name - such format using 'context' in 'i18next'
     invalidCodeError_voucher: 'Voucher code \'{{code}}\' is not valid',
-    invalidCodeError_referal: 'Referral code \'{{code}}\' is not valid'
+    invalidCodeError_referal: 'Referral code \'{{code}}\' is not valid',
+    connectionIsRequired: 'Internet connectivity is required'
   },
   icon: {
     reserve: 'Reserve',
