@@ -77,6 +77,11 @@ export async function postToApi(
   }
 }
 
+export async function logToApi(path, body) {
+  const response = await ufodrive_server_api.post(path, body);
+  return response.data;
+}
+
 /**
  * PUT JSON to a path relative to API root url
  * @param {String} path Relative path to the configured API endpoint

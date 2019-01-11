@@ -1,7 +1,8 @@
 import moment from 'moment';
-import { checkConnectivity, postToApi } from './api_deprecated';
+import { checkConnectivity, postToApi, logToApi } from './api_deprecated';
 import { AsyncStorage } from 'react-native';
 import registerStore from '../stores/registerStore';
+import appStore from '../stores/appStore';
 
 export const codeTypes = {
   SUCCESS: 0,
@@ -56,14 +57,18 @@ export default async function userActionsLogger(
     userActionsLogs.push(payload);
     if (isConnectionActive) {
       for (const userActionsLog of userActionsLogs) {
-        await postToApi('/user_experiences', userActionsLog, true, false);
+        await logToApi('/user_experiences', userActionsLog);
       }
       AsyncStorage.setItem('userActionsLogs', '[]');
     } else {
       AsyncStorage.setItem('userActionsLogs', JSON.stringify(userActionsLogs));
     }
   } catch (error) {
-    console.error('Export of UserExperiences failed', error);
-    registerStore.AsyncStorage.removeItem('userActionsLogs');
+    if (error.response && error.response.status === 401) {
+      appStore.initialise();
+    } else {
+      console.error('Export of UserExperiences failed', error);
+      AsyncStorage.removeItem('userActionsLogs');
+    }
   }
 }
