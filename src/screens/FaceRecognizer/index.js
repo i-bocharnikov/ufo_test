@@ -1,13 +1,17 @@
 import React, { Component, Fragment } from 'react';
-import { View, TouchableHighlight, Text, StyleSheet } from 'react-native';
+import { View, TouchableHighlight, Text, StyleSheet, Platform } from 'react-native';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
+import Orientation from 'react-native-orientation';
+import _ from 'lodash';
 
 import { keys as screenKeys } from './../../navigators/helpers';
 import UFOCamera, { RNCAMERA_CONSTANTS } from './../../components/UFOCamera';
 import { UFOImage, UFOContainer, UFOModalLoader } from './../../components/common';
 import styles from './styles';
 import { colors } from './../../utils/theme';
+
+const IS_IOS = Platform.OS === 'ios';
 
 @observer
 class FaceRecognizer extends Component {
@@ -18,15 +22,19 @@ class FaceRecognizer extends Component {
   @observable isScreenFocused = false;
   cameraRef = null;
   faceResetTimer = null;
+  maxValidAngle = 30;
 
   componentDidMount() {
     this.props.navigation.addListener('willFocus', () => {
-      this.isScreenFocused = true
+      this.isScreenFocused = true;
     });
 
     this.props.navigation.addListener('willBlur', () => {
       this.isScreenFocused = false;
     });
+
+    Orientation.lockToPortrait();
+    //Orientation.addOrientationListener((orientation) => {console.log('ORIENT', orientation);});
   }
 
   render() {
@@ -48,6 +56,8 @@ class FaceRecognizer extends Component {
               onFacesDetected={this.onFacesDetected}
               onFaceDetectionError={this.onFaceDetectionError}
               showTorchBtn={false}
+
+              defaultVideoQuality={RNCAMERA_CONSTANTS.VideoQuality['720p']}
             />
             {!this.isPending && this.detectedFaces.map(face => (
               <View
@@ -104,7 +114,7 @@ class FaceRecognizer extends Component {
         <TouchableHighlight
           onPress={allowCapture ? this.captureFace : null}
           underlayColor={colors.BG_DEFAULT}
-          style={[styles.actionBtn, !allowCapture && styles.actionBtnDisabled]}
+          style={[ styles.actionBtn, !allowCapture && styles.actionBtnDisabled ]}
         >
           <Text style={styles.actionLabel}>
             Capture
@@ -123,12 +133,13 @@ class FaceRecognizer extends Component {
       return null;
     }
 
+    /* ios has a bug - data always returned regarding to landscape orientation */
     const styles = StyleSheet.create({
       area: {
-        top: faceData.bounds.origin.y,
-        left: faceData.bounds.origin.x,
-        height: faceData.bounds.size.height,
-        width: faceData.bounds.size.width
+        top: IS_IOS ? faceData.bounds.origin.x : faceData.bounds.origin.y,
+        left: IS_IOS ? faceData.bounds.origin.y : faceData.bounds.origin.x,
+        height: IS_IOS ? faceData.bounds.size.width : faceData.bounds.size.height,
+        width: IS_IOS ? faceData.bounds.size.height : faceData.bounds.size.width
       }
     });
 
@@ -136,7 +147,13 @@ class FaceRecognizer extends Component {
   };
 
   onFacesDetected = ({ faces }) => {
-    clearTimeout(this.faceResetTimer)
+    const angle = _.get(faces[0], 'rollAngle');
+
+    if (!angle || Math.abs(angle) > this.maxValidAngle) {
+      return;
+    }
+
+    clearTimeout(this.faceResetTimer);
     this.detectedFaces = faces;
     this.faceResetTimer = setTimeout(this.clearDetectedFaces, 1000);
   };
@@ -156,7 +173,10 @@ class FaceRecognizer extends Component {
     }
 
     this.isPending = true;
-    const imageData = await this.cameraRef.takePicture();
+    const imageData = await this.cameraRef.takePicture({
+      mirrorImage: true,
+      orientation: 'portrait'
+    });
     this.capturedImgUri = imageData.uri;
     this.isPending = false;
   };
