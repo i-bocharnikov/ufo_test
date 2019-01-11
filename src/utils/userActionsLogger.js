@@ -1,35 +1,40 @@
-import moment from "moment";
-import { checkConnectivity, postToApi } from "./api_deprecated";
-
+import moment from 'moment';
+import { checkConnectivity, logToApi } from './api_deprecated';
+import { AsyncStorage } from 'react-native';
+import _ from 'lodash';
 export const codeTypes = {
   SUCCESS: 0,
   ERROR: 1
 };
 
 export const severityTypes = {
-  DEBUG: "debug",
-  INFO: "info",
-  WARN: "warn",
-  ERROR: "error"
+  DEBUG: 'debug',
+  INFO: 'info',
+  WARN: 'warn',
+  ERROR: 'error'
 };
 
 export default async function userActionsLogger(
   severity,
   code,
-  action = "",
-  message = "",
-  description = "",
+  action = '',
+  message = '',
+  description = '',
   extraData = {}
 ) {
+  let userActionsLogs = [];
   try {
     const { momentDate, ...restLogData } = extraData;
     const date = momentDate || moment();
     const isConnectionActive = await checkConnectivity();
 
-    if (__DEV__ && severity === severityTypes.DEBUG) {
-      console.log(
-        `${date.format("HH:mm:ss")} ${severity} ${action} ${message}`
-      );
+    console.log(
+      `${date.format(
+        'HH:mm:ss'
+      )} ${severity} ${action} ${message} ${description}`
+    );
+
+    if (severity === severityTypes.DEBUG) {
       return;
     }
 
@@ -44,10 +49,25 @@ export default async function userActionsLogger(
       ...restLogData
     };
 
+    const rawuserActionsLogs = await AsyncStorage.getItem('userActionsLogs');
+    AsyncStorage.removeItem('userActionsLogs');
+    if (rawuserActionsLogs) {
+      userActionsLogs = JSON.parse(rawuserActionsLogs);
+    }
+    userActionsLogs.push(payload);
     if (isConnectionActive) {
-      await postToApi("/user_experiences", payload, true);
+      while (userActionsLogs.length > 0) {
+        await logToApi('/user_experiences', userActionsLogs.pop());
+      }
+    } else {
+      AsyncStorage.setItem('userActionsLogs', JSON.stringify(userActionsLogs));
     }
   } catch (error) {
-    console.error("export of UserExperiences failed", error);
+    if (error.response && error.response.status === 401) {
+      //wait next registration
+      AsyncStorage.setItem('userActionsLogs', JSON.stringify(userActionsLogs));
+    } else {
+      console.error('Export of UserExperiences failed', error);
+    }
   }
 }
