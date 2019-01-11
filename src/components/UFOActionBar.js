@@ -45,50 +45,49 @@ const styles = StyleSheet.create({
 export default class UFOActionBar extends Component {
   constructor() {
     super();
-    this.state = {
-      fadeAnim: new Animated.Value(0),
-      bottomAnimatedPosition: new Animated.Value(0)
+    this.animationDuration = 500;
+    this.animations = {
+      opacity: new Animated.Value(0),
+      bottom: new Animated.Value(0)
     };
   }
 
   componentDidMount() {
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow);
     this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.keyboardDidHide);
+    this.animateToShow(true);
+  }
 
-    Animated.timing(
-      this.state.fadeAnim,
-      {
-        toValue: 1,
-        duration: 500
-      }
-    ).start();
+  componentDidUpdate(prevProps) {
+    const actions = this.props.actions;
+    const prevActions = prevProps.actions;
+
+    if (!actions || !prevActions) {
+      return;
+    }
+
+    if (actions.length && prevActions.length && prevActions.length !== actions.length) {
+      this.updateActionsWithAnimation();
+    }
   }
 
   componentWillUnmount() {
     this.keyboardDidShowListener.remove();
     this.keyboardDidHideListener.remove();
-
-    Animated.timing(
-      this.state.fadeAnim,
-      {
-        toValue: 0,
-        duration: 500
-      }
-    ).start();
   }
 
   render() {
+    const { opacity, bottom } = this.animations;
     const {
       actions = [],
       activityPending = false,
       inverted = false
     } = this.props;
-    const { fadeAnim, bottomAnimatedPosition } = this.state;
 
     return (
       <Animated.View style={[
         styles.actionBarContainer,
-        { bottom: bottomAnimatedPosition, opacity: fadeAnim }
+        { bottom, opacity }
       ]}
       >
         {activityPending && this.renderProgressView()}
@@ -124,22 +123,47 @@ export default class UFOActionBar extends Component {
     );
   };
 
+  animateToShow = doLaunch => {
+    const animation = Animated.timing(
+      this.animations.opacity,
+      {
+        toValue: 1,
+        duration: this.animationDuration
+      }
+    );
+
+    if (doLaunch) {
+      animation.start();
+    }
+
+    return animation;
+  };
+
+  animateToHide = () => Animated.timing(this.animations.opacity, { toValue: 0, duration: 0 });
+
+  updateActionsWithAnimation = () => {
+    Animated.sequence([
+      this.animateToHide(),
+      this.animateToShow()
+    ]).start();
+  };
+
   keyboardDidShow = event => {
     Animated.timing(
-      this.state.bottomAnimatedPosition,
+      this.animations.bottom,
       {
         toValue: event.endCoordinates.height,
-        duration: 500
+        duration: this.animationDuration
       }
     ).start();
   };
 
   keyboardDidHide = () => {
     Animated.timing(
-      this.state.bottomAnimatedPosition,
+      this.animations.bottom,
       {
         toValue: 0,
-        duration: 500
+        duration: this.animationDuration
       }
     ).start();
   };
