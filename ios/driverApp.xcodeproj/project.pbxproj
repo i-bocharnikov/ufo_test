@@ -51,7 +51,6 @@
 		E891AD1F7EA04052A232EE6C /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7288A12FC82D43E38136D624 /* Ionicons.ttf */; };
 		ED855B4EA1BB43B2AAC8DE17 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 914F449DF8E249B4A066C414 /* Entypo.ttf */; };
 		F35A65AB082F496482EEFAD0 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FDD6C0E564104784BEF4D1AC /* FontAwesome.ttf */; };
-		F523B6E221E8D86F0030E024 /* libRCTOrientation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F523B6BD21E8D8570030E024 /* libRCTOrientation.a */; };
 		F540751321984D5000BB787A /* SofiaProRegular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F54075112198486800BB787A /* SofiaProRegular.ttf */; };
 		F540751421984D5300BB787A /* SofiaProLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F54075102198486800BB787A /* SofiaProLight.ttf */; };
 		F540751521984D5500BB787A /* SofiaProBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F54075122198486800BB787A /* SofiaProBold.ttf */; };
@@ -345,13 +344,6 @@
 			remoteGlobalIDString = 358F4ED71D1E81A9004DF814;
 			remoteInfo = RCTBlob;
 		};
-		F523B6BC21E8D8570030E024 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F523B6A821E8D8570030E024 /* RCTOrientation.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 134814201AA4EA6300B7C361;
-			remoteInfo = RCTOrientation;
-		};
 		F54D9A972194815500FE4741 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F54D9A922194815400FE4741 /* LRDRCTSimpleToast.xcodeproj */;
@@ -503,7 +495,6 @@
 		DEC0CF07DE9F4D32AA578AB0 /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNDeviceInfo.xcodeproj; path = "../node_modules/react-native-device-info/ios/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; };
 		DF7A9F95FFA3E9A7137ED567 /* Pods-driverApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-driverApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-driverApp/Pods-driverApp.release.xcconfig"; sourceTree = "<group>"; };
 		F15388B12C6C4B7E95D746E3 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/native-base/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
-		F523B6A821E8D8570030E024 /* RCTOrientation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTOrientation.xcodeproj; path = "../node_modules/react-native-orientation/iOS/RCTOrientation.xcodeproj"; sourceTree = "<group>"; };
 		F54075102198486800BB787A /* SofiaProLight.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = SofiaProLight.ttf; path = ../src/assets/fonts/SofiaProLight.ttf; sourceTree = "<group>"; };
 		F54075112198486800BB787A /* SofiaProRegular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = SofiaProRegular.ttf; path = ../src/assets/fonts/SofiaProRegular.ttf; sourceTree = "<group>"; };
 		F54075122198486800BB787A /* SofiaProBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = SofiaProBold.ttf; path = ../src/assets/fonts/SofiaProBold.ttf; sourceTree = "<group>"; };
@@ -536,7 +527,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F523B6E221E8D86F0030E024 /* libRCTOrientation.a in Frameworks */,
 				F5B4E9B321D37267003E8F41 /* libReactNativeExceptionHandler.a in Frameworks */,
 				F5B4E9B221D3725D003E8F41 /* libPods-driverApp.a in Frameworks */,
 				F5E37C9E21CE4F2D0065F910 /* libSplashScreen.a in Frameworks */,
@@ -771,7 +761,6 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				F523B6A821E8D8570030E024 /* RCTOrientation.xcodeproj */,
 				F5E37C9821CE4F160065F910 /* SplashScreen.xcodeproj */,
 				F57C17C521B0316F00C77524 /* TPSStripe.xcodeproj */,
 				F5E3806A21AFD35F000C4486 /* BVLinearGradient.xcodeproj */,
@@ -842,14 +831,6 @@
 			children = (
 				ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */,
 				2D16E6721FA4F8DC00B85C8A /* libRCTBlob-tvOS.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		F523B6A921E8D8570030E024 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				F523B6BD21E8D8570030E024 /* libRCTOrientation.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1126,10 +1107,6 @@
 				{
 					ProductGroup = 00C302D41ABCB9D200DB3ED1 /* Products */;
 					ProjectRef = 00C302D31ABCB9D200DB3ED1 /* RCTNetwork.xcodeproj */;
-				},
-				{
-					ProductGroup = F523B6A921E8D8570030E024 /* Products */;
-					ProjectRef = F523B6A821E8D8570030E024 /* RCTOrientation.xcodeproj */;
 				},
 				{
 					ProductGroup = 139105B71AF99BAD00B5F7CC /* Products */;
@@ -1456,13 +1433,6 @@
 			fileType = archive.ar;
 			path = libRCTBlob.a;
 			remoteRef = ADBDB9261DFEBF0700ED6528 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		F523B6BD21E8D8570030E024 /* libRCTOrientation.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRCTOrientation.a;
-			remoteRef = F523B6BC21E8D8570030E024 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		F54D9A982194815500FE4741 /* libLRDRCTSimpleToast.a */ = {
@@ -1848,7 +1818,6 @@
 					"$(SRCROOT)/../node_modules/rn-fetch-blob/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-exception-handler/ios",
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
-					"$(SRCROOT)/../node_modules/react-native-orientation/iOS/RCTOrientation/",
 				);
 				INFOPLIST_FILE = driverApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1885,7 +1854,6 @@
 					"$(SRCROOT)/../node_modules/rn-fetch-blob/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-exception-handler/ios",
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
-					"$(SRCROOT)/../node_modules/react-native-orientation/iOS/RCTOrientation/",
 				);
 				INFOPLIST_FILE = driverApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;

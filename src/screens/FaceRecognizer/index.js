@@ -2,7 +2,6 @@ import React, { Component, Fragment } from 'react';
 import { View, TouchableHighlight, Text, StyleSheet, Platform } from 'react-native';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
-import Orientation from 'react-native-orientation';
 import _ from 'lodash';
 
 import { keys as screenKeys } from './../../navigators/helpers';
@@ -20,8 +19,10 @@ class FaceRecognizer extends Component {
   @observable capturedImgUri = null;
   @observable isPending = false;
   @observable isScreenFocused = false;
+  @observable isTilt = false;
   cameraRef = null;
   faceResetTimer = null;
+  tiltResetTimer = null;
   maxValidAngle = 30;
 
   componentDidMount() {
@@ -32,9 +33,6 @@ class FaceRecognizer extends Component {
     this.props.navigation.addListener('willBlur', () => {
       this.isScreenFocused = false;
     });
-
-    Orientation.lockToPortrait();
-    //Orientation.addOrientationListener((orientation) => {console.log('ORIENT', orientation);});
   }
 
   render() {
@@ -65,6 +63,11 @@ class FaceRecognizer extends Component {
                 style={[ styles.faceArea, this.getFaceAreaStyles(face) ]}
               />
             ))}
+            {this.isTilt && (
+              <Text style={styles.tiltTitle}>
+                Please, hold phone upright
+              </Text>
+            )}
           </Fragment>
         )}
         {this.renderActionPanel()}
@@ -149,7 +152,11 @@ class FaceRecognizer extends Component {
   onFacesDetected = ({ faces }) => {
     const angle = _.get(faces[0], 'rollAngle');
 
-    if (!angle || Math.abs(angle) > this.maxValidAngle) {
+    if (angle && Math.abs(angle) > this.maxValidAngle) {
+      clearTimeout(this.tiltResetTimer);
+      this.isTilt = true;
+      this.tiltResetTimer = setTimeout(() => (this.isTilt = false), 1000);
+      this.clearDetectedFaces();
       return;
     }
 

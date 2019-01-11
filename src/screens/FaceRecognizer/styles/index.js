@@ -3,9 +3,7 @@ import { StyleSheet } from 'react-native';
 import { colors, textThemes } from './../../../utils/theme';
 
 export default StyleSheet.create({
-  container: {
-    flex: 1
-  },
+  container: { flex: 1 },
 
   faceArea: {
     position: 'absolute',
@@ -46,7 +44,15 @@ export default StyleSheet.create({
     height: '100%'
   },
 
-  actionBtnDisabled: {
-    backgroundColor: colors.BG_DEFAULT
+  actionBtnDisabled: { backgroundColor: colors.BG_DEFAULT },
+
+  tiltTitle: {
+    ...textThemes.SP_BOLD,
+    fontSize: 24,
+    color: colors.TEXT_INVERT_COLOR,
+    opacity: 0.8,
+    position: 'absolute',
+    top: '36%',
+    alignSelf: 'center'
   }
 });
