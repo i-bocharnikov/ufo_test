@@ -5,11 +5,15 @@ import { observable } from 'mobx';
 import { translate } from 'react-i18next';
 import DeviceInfo from 'react-native-device-info';
 import _ from 'lodash';
-
 import UFOHeader from './../../components/header/UFOHeader';
 import UFOActionBar from './../../components/UFOActionBar';
 import { UFOContainer, UFOText } from './../../components/common';
-import { screens, actionStyles, icons, backgrounds } from './../../utils/global';
+import {
+  screens,
+  actionStyles,
+  icons,
+  backgrounds
+} from './../../utils/global';
 import appStore from './../../stores/appStore';
 import { driveStore } from './../../stores';
 import otaKeyStore from './../../stores/otaKeyStore';
@@ -23,6 +27,8 @@ import { checkAndRequestLocationPermission } from './../../utils/permissions';
 import { keys as screenKeys } from './../../navigators/helpers';
 import { checkServerAvailability } from './../../utils/api';
 import styles from './styles';
+import { checkConnectivity } from '../../utils/api_deprecated';
+import DriverCardEditor from '../SignUp/DriverCardEditor';
 
 @observer
 class DriveScreen extends Component {
@@ -32,16 +38,14 @@ class DriveScreen extends Component {
   @observable activityPending = false;
 
   async componentDidMount() {
-    if (driveStore.hasRentalOngoing) {
-      otaKeyStore.register();
-    }
-
     if (driveStore.hasRentalOngoing && registerStore.isUserRegistered) {
       await checkAndRequestLocationPermission();
       this.driveSelected = true;
     }
+  }
 
-    this.loadKeyForSelectedRental();
+  async componentDidUpdate() {
+    await this.doEnableAndSwitch();
   }
 
   render() {
@@ -50,7 +54,17 @@ class DriveScreen extends Component {
       ? this.returnSelected
         ? backgrounds.RETURN001
         : backgrounds.DRIVE001
+      : driveStore.hasRentals
+      ? backgrounds.HOME001
       : backgrounds.HOME002;
+
+    if (driveStore.rental && driveStore.rental.key_id) {
+      console.log(
+        'refresh rentals -> force check if current rental has key [' +
+          driveStore.rental.key_id +
+          ']'
+      );
+    }
 
     return (
       <UFOContainer image={background}>
@@ -65,28 +79,13 @@ class DriveScreen extends Component {
           {!this.driveSelected && !driveStore.hasRentals && (
             <View style={styles.content}>
               <View style={styles.instructionContainer}>
-                <UFOText
-                  h1
-                  bold
-                  center
-                  style={styles.instructionRow}
-                >
+                <UFOText h1 bold center style={styles.instructionRow}>
                   {t('home:reserve', { user: registerStore.user })}
                 </UFOText>
-                <UFOText
-                  h1
-                  bold
-                  center
-                  style={styles.instructionRow}
-                >
+                <UFOText h1 bold center style={styles.instructionRow}>
                   {t('home:register', { user: registerStore.user })}
                 </UFOText>
-                <UFOText
-                  h1
-                  bold
-                  center
-                  style={styles.instructionRow}
-                >
+                <UFOText h1 bold center style={styles.instructionRow}>
                   {t('home:drive', { user: registerStore.user })}
                 </UFOText>
               </View>
@@ -202,15 +201,14 @@ class DriveScreen extends Component {
           this.props.navigation.navigate(screens.RENTAL_AGREEMENT.name)
         );
 
-        otaKeyStore.computeActionEnableKey(actions, this.doEnableKey);
-        otaKeyStore.computeActionUnlock(actions, this.doUnlockCar);
-        otaKeyStore.computeActionLock(actions, this.doLockCar);
-
-        if (
-          driveStore.rental &&
-          driveStore.rental.contract_signed &&
-          !driveStore.rental.contract_ended
-        ) {
+        if (driveStore.inUse) {
+          otaKeyStore.computeActionEnableKey(
+            driveStore.rental ? driveStore.rental.key_id : null,
+            actions,
+            this.doEnableKey
+          );
+          otaKeyStore.computeActionUnlock(actions, this.doUnlockCar);
+          otaKeyStore.computeActionLock(actions, this.doLockCar);
           /* return btn */
           actions.push({
             style: actionStyles.ACTIVE,
@@ -220,7 +218,7 @@ class DriveScreen extends Component {
         }
       }
     } else {
-      /* we see this after press 'return' btn */
+      /* we see this after press "return" btn */
       actions.push({
         style: actionStyles.ACTIVE,
         icon: icons.BACK,
@@ -241,81 +239,70 @@ class DriveScreen extends Component {
   };
 
   selectRental = async index => {
-    driveStore.selectRental(index);
-    this.loadKeyForSelectedRental();
+    this.activityPending = true;
+    await driveStore.selectRental(index);
+    await this.doEnableAndSwitch();
+    this.activityPending = false;
   };
 
-  loadKeyForSelectedRental = async () => {
+  doEnableAndSwitch = async () => {
     if (driveStore.inUse && driveStore.rental.key_id) {
-      await otaKeyStore.getKey(driveStore.rental.key_id, false);
-
-      if (!otaKeyStore.isKeyEnabled) {
-        await otaKeyStore.enableKey(driveStore.rental.key_id, false);
-      }
-
-      await otaKeyStore.getUsedKey();
-
       if (
-        otaKeyStore.key &&
-        otaKeyStore.key.keyId !== driveStore.rental.key_id
+        driveStore.rental.key_id !== otaKeyStore.key.keyId ||
+        !otaKeyStore.isKeyEnabled
       ) {
+        await otaKeyStore.enableKey(driveStore.rental.key_id, false);
         await otaKeyStore.switchToKey(false);
-      }
-
-      await otaKeyStore.syncVehicleData(false);
-      await otaKeyStore.isConnectedToVehicle(false);
-
-      if (!DeviceInfo.isEmulator() && !otaKeyStore.isConnected) {
-        await otaKeyStore.connect(
-          false,
-          false
-        );
-        await otaKeyStore.getVehicleData(false);
       }
     }
   };
 
   refreshRental = async () => {
-    await appStore.initialise();
+    this.activityPending = true;
+    await appStore.register();
     await driveStore.reset();
+    await this.doEnableAndSwitch();
+    this.activityPending = false;
   };
 
   doCloseRental = async () => {
     this.activityPending = true;
-    await otaKeyStore.lockDoors(false);
-    await otaKeyStore.endKey();
+    if (driveStore.rental && driveStore.rental.key_id) {
+      await otaKeyStore.lockDoors(false, false);
+      await otaKeyStore.endKey();
+    }
     await driveStore.closeRental();
+    this.returnSelected = false;
+    this.driveSelected = false;
     this.activityPending = false;
   };
 
   doEnableKey = async () => {
     this.activityPending = true;
-    driveStore.refreshRental();
+    await driveStore.refreshRental();
 
-    if (driveStore.inUse && driveStore.rental.key_id) {
-      if (!otaKeyStore.isKeyEnabled) {
-        await otaKeyStore.enableKey(driveStore.rental.key_id, true);
-      }
+    if (!driveStore.inUse) {
+      showToastError(this.props.t('error:rentalNotOpen'));
+      this.activityPending = false;
+      return;
+    }
+    if (!driveStore.rental.key_id) {
+      showToastError(this.props.t('error:rentalKeyMissing'));
+      this.activityPending = false;
+      return;
+    }
 
-      await otaKeyStore.getUsedKey();
+    await this.doEnableAndSwitch();
 
-      if (
-        otaKeyStore.key &&
-        otaKeyStore.key.keyId !== driveStore.rental.key_id
-      ) {
-        await otaKeyStore.switchToKey(true);
-      }
+    await otaKeyStore.syncVehicleData(false);
+    await otaKeyStore.isConnectedToVehicle(false);
 
-      await otaKeyStore.syncVehicleData(true);
-      await otaKeyStore.isConnectedToVehicle(true);
-
-      if (!DeviceInfo.isEmulator() && !otaKeyStore.isConnected) {
-        await otaKeyStore.connect(
-          false,
-          true
-        );
-        await otaKeyStore.getVehicleData(true);
-      }
+    if (!DeviceInfo.isEmulator() && !otaKeyStore.isConnected) {
+      await otaKeyStore.connect(
+        false,
+        false
+      );
+      await otaKeyStore.getVehicleData(false);
     }
 
     this.activityPending = false;
@@ -324,17 +311,34 @@ class DriveScreen extends Component {
   doUnlockCar = async () => {
     this.activityPending = true;
     const permission = await checkAndRequestLocationPermission();
-
-    if (permission) {
-      if (!DeviceInfo.isEmulator() && !otaKeyStore.isConnected) {
-        await otaKeyStore.connect();
-      }
-
-      await otaKeyStore.unlockDoors(false);
-      await otaKeyStore.getVehicleData();
-    } else {
+    if (!permission) {
       showToastError(this.props.t('error:localPermissionNeeded'));
+      this.activityPending = false;
+      return;
     }
+
+    if (!driveStore.inUse) {
+      showToastError(this.props.t('error:rentalNotOpen'));
+      this.activityPending = false;
+      return;
+    }
+    if (!driveStore.rental.key_id) {
+      showToastError(this.props.t('error:rentalKeyMissing'));
+      this.activityPending = false;
+      return;
+    }
+
+    if (checkConnectivity) await this.doEnableAndSwitch();
+
+    if (!DeviceInfo.isEmulator() && !otaKeyStore.isConnected) {
+      await otaKeyStore.connect(
+        false,
+        false
+      );
+    }
+
+    await otaKeyStore.unlockDoors(false, true);
+    await otaKeyStore.getVehicleData(false);
 
     this.activityPending = false;
   };
@@ -342,17 +346,34 @@ class DriveScreen extends Component {
   doLockCar = async () => {
     this.activityPending = true;
     const permission = await checkAndRequestLocationPermission();
-
-    if (permission) {
-      if (!DeviceInfo.isEmulator() && !otaKeyStore.isConnected) {
-        await otaKeyStore.connect();
-      }
-
-      await otaKeyStore.lockDoors(false);
-      await otaKeyStore.getVehicleData();
-    } else {
+    if (!permission) {
       showToastError(this.props.t('error:localPermissionNeeded'));
+      this.activityPending = false;
+      return;
     }
+
+    if (!driveStore.inUse) {
+      showToastError(this.props.t('error:rentalNotOpen'));
+      this.activityPending = false;
+      return;
+    }
+    if (!driveStore.rental.key_id) {
+      showToastError(this.props.t('error:rentalKeyMissing'));
+      this.activityPending = false;
+      return;
+    }
+
+    if (checkConnectivity) await this.doEnableAndSwitch();
+
+    if (!DeviceInfo.isEmulator() && !otaKeyStore.isConnected) {
+      await otaKeyStore.connect(
+        false,
+        false
+      );
+    }
+
+    await otaKeyStore.lockDoors(false, true);
+    await otaKeyStore.getVehicleData(false);
 
     this.activityPending = false;
   };
@@ -385,7 +406,7 @@ class DriveScreen extends Component {
     const serverAvailable = await checkServerAvailability();
 
     if (!serverAvailable) {
-      showToastError( this.props.t('error:connectionIsRequired') );
+      showToastError(this.props.t('error:connectionIsRequired'));
       return;
     }
 

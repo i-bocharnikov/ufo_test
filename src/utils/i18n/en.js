@@ -40,19 +40,23 @@ export default {
     unexpectedServerResponse:
       'Oops, this was not supposed to happen. Apologises for the inconvenience',
     noKey: 'You currently have no key. Please ask support team to have one',
-    stringNotMatch: 'Wrong confirmation string. Try again',
+    stringNotMatch: 'Please type "I agree" to sign the contract.',
     unknown: 'Unknown Error',
     nativeException: 'Native Exception',
     jsException: 'Warning from JS exception handler',
     jsExceptionFatal: 'Fatal JS exception',
     jsExceptionFatalReport:
       'We have reported this to our team. Please close the app and start again.',
-    localPermissionNeeded: 'Location permission is required to access the car',
+    localPermissionNeeded:
+      'Location permission is required to access the car (please control system settings)',
     invalidCodeError: 'This code is not valid!',
     // it's not just var name - such format using 'context' in 'i18next'
-    invalidCodeError_voucher: 'Voucher code \'{{code}}\' is not valid',
-    invalidCodeError_referal: 'Referral code \'{{code}}\' is not valid',
-    connectionIsRequired: 'Internet connectivity is required'
+    invalidCodeError_voucher: "Voucher code '{{code}}' is not valid",
+    invalidCodeError_referal: "Referral code '{{code}}' is not valid",
+    connectionIsRequired: 'Internet connectivity is required',
+    rentalKeyMissing:
+      'The key is missing, please contact UFODRIVE is the problem persist in 1 minutes',
+    rentalNotOpen: 'The rental is not yet started, please wait...'
   },
   icon: {
     reserve: 'Reserve',
@@ -81,7 +85,7 @@ export default {
     driverLicence: 'Driver licence',
     select: 'Select',
     capture: 'Capture',
-    newCapture: 'New capture',
+    newCapture: 'Try again',
     torch: 'Torch',
     validate: 'Validate',
     done: 'Done',
@@ -138,7 +142,7 @@ export default {
       'Unexpected issues detected during the image processing of the camera ({{message}}). Please try again and/or contact the support team if the problem persists.',
     cameraPermissionTitle: 'Permission to use camera',
     cameraPermissionMessage:
-      'We need your permission to use your phone\'s camera',
+      "We need your permission to use your phone's camera",
     disconnectConfirmationMessage: 'Are you sure you want to disconnect?',
     idCardPickerLabel: 'Passport\nor ID card',
     driveCardPickerLabel: 'Driving\nLicense',
@@ -186,7 +190,7 @@ export default {
     noRentalsDescription:
       'After booking, the actions below will be activated and will allow you to find the car, inspect it, start the rental contract and finally lock/unlock the vehicle',
     confirmCloseRentalConfirmationMessage:
-      'You are about to end your rental contract.{{keyMessage}}\nThe car will then lock automatically so please ensure you don\'t leave any personal belongings in the car as you will not be able to open it once you press \'OK\'.\nThank you.',
+      "You are about to end your rental contract.{{keyMessage}}\nThe car will then lock automatically so please ensure you don't leave any personal belongings in the car as you will not be able to open it once you press 'OK'.\nThank you.",
     confirmCloseRentalKeyMessageConfirmationMessage:
       '\nPLEASE PUT THE KEY BACK IN THE GLOVEBOX.',
     noKey: 'No key',
@@ -204,7 +208,7 @@ export default {
     rentalAgreementTitle: 'Sign the agreement',
     confirmContractDescription:
       'By signing, I certify that I have read and fully accepted the terms and conditions.',
-    confirmContractTitle: 'Enter \'{{strKey}}\' to confirm',
+    confirmContractTitle: "Enter '{{strKey}}' to confirm",
     confirmContractKeyString: 'I agree'
   },
   booking: {
@@ -274,7 +278,7 @@ export default {
     slideThreeTitle: 'Stylish electric cars',
     slideThreeSubTitle: 'Zero emissions, just electric cars',
     slideThreeDescription:
-      'ev technology brings together the best of design and technology to produce a driving experience that\'s out of this world',
+      "ev technology brings together the best of design and technology to produce a driving experience that's out of this world",
     nextBtn: 'Reserve, register and drive',
     skipBtn: 'skip'
   },
