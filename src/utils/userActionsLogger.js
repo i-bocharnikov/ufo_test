@@ -16,6 +16,12 @@ export const severityTypes = {
   ERROR: 'error'
 };
 
+const rawuserActionsLogs = await AsyncStorage.getItem('userActionsLogs');
+const lock = false;
+const userActionsLogs = JSON.parse(
+  rawuserActionsLogs ? rawuserActionsLogs : '[]'
+);
+
 export default async function userActionsLogger(
   severity,
   code,
@@ -50,25 +56,42 @@ export default async function userActionsLogger(
       ...restLogData
     };
 
-    const rawuserActionsLogs = await AsyncStorage.getItem('userActionsLogs');
-    const userActionsLogs = JSON.parse(
-      rawuserActionsLogs ? rawuserActionsLogs : '[]'
-    );
-    userActionsLogs.push(payload);
     if (isConnectionActive) {
-      for (const userActionsLog of userActionsLogs) {
-        await logToApi('/user_experiences', userActionsLog);
+      await logToApi('/user_experiences', payload);
+      if (!lock) {
+        lock = true;
+        for (const userActionsLog of userActionsLogs) {
+          await logToApi('/user_experiences', userActionsLog);
+        }
+        AsyncStorage.setItem('userActionsLogs', '[]');
+        lock = false;
       }
-      AsyncStorage.setItem('userActionsLogs', '[]');
     } else {
-      AsyncStorage.setItem('userActionsLogs', JSON.stringify(userActionsLogs));
+      userActionsLogs.push(payload);
+      if (!lock) {
+        lock = true;
+        AsyncStorage.setItem(
+          'userActionsLogs',
+          JSON.stringify(userActionsLogs)
+        );
+        lock = false;
+      }
     }
   } catch (error) {
     if (error.response && error.response.status === 401) {
-      appStore.initialise();
+      //wait next registration
+      userActionsLogs.push(payload);
+      if (!lock) {
+        lock = true;
+        AsyncStorage.setItem(
+          'userActionsLogs',
+          JSON.stringify(userActionsLogs)
+        );
+        lock = false;
+      }
     } else {
+      lock = false;
       console.error('Export of UserExperiences failed', error);
-      AsyncStorage.removeItem('userActionsLogs');
     }
   }
 }

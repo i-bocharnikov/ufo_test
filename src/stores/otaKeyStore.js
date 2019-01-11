@@ -34,7 +34,7 @@ class Key {
   @observable beginDate;
   @observable endDate;
   @observable mileageLimit;
-  @persist @observable keyId;
+  @persist @observable keyId = 'init';
   @observable extId;
   @persist @observable isEnabled = false;
   @observable isUsed;
@@ -408,7 +408,7 @@ class OTAKeyStore {
       return false;
     }
   }
-
+  /*
   @action
   async getKey(keyId: string, showError = true): Promise<boolean> {
     if (typeof keyId !== 'string' || keyId === '') {
@@ -490,7 +490,7 @@ class OTAKeyStore {
       this.handleOTAAPIError(error, showError);
       return false;
     }
-  }
+  }*/
 
   @computed get isKeyEnabled() {
     return this.key && this.key.isEnabled;
@@ -504,12 +504,15 @@ class OTAKeyStore {
 
     try {
       await this.otaKeyLogger({
-        severity: severityTypes.DEBUG,
+        severity: severityTypes.INFO,
         action: 'enableKey',
         code: codeTypes.SUCCESS,
         message: `-> this.ota.enableKey(${keyId}, ${String(showError)}) start`
       });
-      this.key = await this.ota.enableKey(keyId);
+      let key = await this.ota.enableKey(keyId);
+      if (key && key.keyId) {
+        this.key = key;
+      }
       await this.otaKeyLogger({
         severity: severityTypes.INFO,
         action: 'enableKey',

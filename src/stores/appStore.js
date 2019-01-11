@@ -65,91 +65,126 @@ class AppStore {
       logger(
         severityTypes.ERROR,
         codeTypes.ERROR,
-        'loadRemoteData',
-        'exception',
+        'initialiseRemoteDate',
+        `Global exception: ${error.message}`,
         error
       );
-      console.log('<== LOAD REMOTE DATA FAILED ', error);
       return false;
     }
     return true;
   }
 
   @action
-  async loadLocalData() {
-    console.log('==>  LOAD LOCAL DATA START ');
+  async initialiseLocalStore() {
+    console.log('==>  INIT LOCAL STORE START ');
 
     try {
-      await hydrate('register', registerStore).then(() =>
-        console.log('registerStore hydrated')
-      );
+      hydrate('registerStore', registerStore)
+        .then(() =>
+          logger(
+            severityTypes.INFO,
+            codeTypes.SUCCESS,
+            'initialiseLocalStore',
+            `registerStore loaded`,
+            registerStore.user
+          )
+        )
+        .catch(error => {
+          logger(
+            severityTypes.ERROR,
+            codeTypes.ERROR,
+            'initialiseLocalStore',
+            `registerStore exception: ${error.message}`,
+            error
+          );
+        });
+
+      hydrate('driveStore', driveStore)
+        .then(() =>
+          logger(
+            severityTypes.INFO,
+            codeTypes.SUCCESS,
+            'initialiseLocalStore',
+            `driveStore loaded`,
+            driveStore.rentals ? driveStore.rentals.length : 0 + ' rentals'
+          )
+        )
+        .catch(error => {
+          logger(
+            severityTypes.ERROR,
+            codeTypes.ERROR,
+            'initialiseLocalStore',
+            `driveStore exception: ${error.message}`,
+            error
+          );
+        });
+
+      hydrate('supportStore', supportStore)
+        .then(() =>
+          logger(
+            severityTypes.INFO,
+            codeTypes.SUCCESS,
+            'initialiseLocalStore',
+            `supportStore loaded`,
+            supportStore.faqCategories
+              ? supportStore.faqCategories.length
+              : 0 + ' faqCategories'
+          )
+        )
+        .catch(error => {
+          logger(
+            severityTypes.ERROR,
+            codeTypes.ERROR,
+            'initialiseLocalStore',
+            `supportStore exception: ${error.message}`,
+            error
+          );
+        });
+
+      hydrate('otaKeyStore', otaKeyStore)
+        .then(() =>
+          logger(
+            severityTypes.INFO,
+            codeTypes.SUCCESS,
+            'initialiseLocalStore',
+            `otaKeyStore loaded`,
+            otaKeyStore.key
+          )
+        )
+        .catch(error => {
+          logger(
+            severityTypes.ERROR,
+            codeTypes.ERROR,
+            'initialiseLocalStore',
+            `otaKeyStore exception: ${error.message}`,
+            error
+          );
+        });
     } catch (error) {
       logger(
         severityTypes.ERROR,
         codeTypes.ERROR,
-        'loadLocalData.registerStore',
-        'exception',
+        'initialiseLocalStore',
+        'Global exception',
         error
       );
-      console.log('<== LOAD LOCAL DATA registerStore FAILED ', error);
-    }
-    try {
-      await hydrate('drive', driveStore).then(() =>
-        console.log('driveStore hydrated')
-      );
-    } catch (error) {
-      logger(
-        severityTypes.ERROR,
-        codeTypes.ERROR,
-        'loadLocalData.driveStore',
-        'exception',
-        error
-      );
-      console.log('<== LOAD LOCAL DATA driveStore FAILED ', error);
-    }
-    try {
-      await hydrate('support', supportStore).then(() =>
-        console.log('supportStore hydrated')
-      );
-    } catch (error) {
-      logger(
-        severityTypes.ERROR,
-        codeTypes.ERROR,
-        'loadLocalData.supportStore',
-        'exception',
-        error
-      );
-      console.log('<== LOAD LOCAL DATA supportStore FAILED ', error);
-    }
-    try {
-      await hydrate('otakey', otaKeyStore).then(() =>
-        console.log('otaKeyStore hydrated')
-      );
-    } catch (error) {
-      logger(
-        severityTypes.ERROR,
-        codeTypes.ERROR,
-        'loadLocalData.otaKeyStore',
-        'exception',
-        error
-      );
-      console.log('<== LOAD LOCAL DATA otaKeyStore FAILED ', error);
+      console.log('<== INIT Local STORE FAILED ', error);
+      return false;
     }
 
-    console.log('<==  LOAD LOCAL DATA DONE ');
+    console.log('<==  INIT LOCAL STORE DONE ');
+    return true;
   }
 
   @action
   async initialise() {
     console.log('==>  INITIALISE APPLICATION ');
     this.isAppReady = false;
-    const result =
-      (await checkConnectivity()) &&
-      (await this.register()) &&
-      (await this.loadRemoteData());
-    if (!result) {
-      console.log('<== FALLBACK ');
-      await this.loadLocalData();
+    await this.initialiseLocalStore();
+    if (await checkConnectivity()) {
+      if (await this.register()) {
+        await this.loadRemoteData();
+      }
     }
     this.isAppReady = true;
     console.log('<== INITIALISE DONE ');

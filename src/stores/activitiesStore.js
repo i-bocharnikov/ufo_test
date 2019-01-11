@@ -1,4 +1,8 @@
 import { observable, computed, action } from 'mobx';
+import userActionsLogger, {
+  codeTypes,
+  severityTypes
+} from '../utils/userActionsLogger';
 
 class Activities {
   @observable internetAccessPendingRequests = 0;
@@ -10,12 +14,28 @@ class Activities {
   };
   @action
   registerInternetStopSuccess = () => {
+    if (this.internetAccessFailure === true) {
+      userActionsLogger(
+        severityTypes.WARN,
+        codeTypes.SUCCESS,
+        'onInternetConnectionChanged',
+        `Internet connection back to success`
+      );
+    }
     this.internetAccessPendingRequests--;
     this.internetAccessFailure = false;
   };
 
   @action
   registerInternetStopFailure = () => {
+    if (this.internetAccessFailure === false) {
+      userActionsLogger(
+        severityTypes.WARN,
+        codeTypes.ERROR,
+        'onInternetConnectionChanged',
+        `Internet connection failure`
+      );
+    }
     this.internetAccessPendingRequests--;
     this.internetAccessFailure = true;
   };

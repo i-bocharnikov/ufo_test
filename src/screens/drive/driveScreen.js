@@ -42,18 +42,11 @@ class DriveScreen extends Component {
     if (driveStore.hasRentalOngoing && registerStore.isUserRegistered) {
       await checkAndRequestLocationPermission();
       this.driveSelected = true;
-      this.doEnableAndSwitch();
     }
   }
 
   async componentDidUpdate() {
-    if (
-      driveStore.rental &&
-      driveStore.rental.key_id &&
-      !otaKeyStore.isKeyEnabled
-    ) {
-      this.doEnableAndSwitch();
-    }
+    await this.doEnableAndSwitch();
   }
 
   renderRental({ item }) {
@@ -285,14 +278,19 @@ class DriveScreen extends Component {
 
   doEnableAndSwitch = async () => {
     if (driveStore.inUse && driveStore.rental.key_id) {
-      await otaKeyStore.enableKey(driveStore.rental.key_id, false);
-      await otaKeyStore.switchToKey(false);
+      if (
+        driveStore.rental.key_id !== otaKeyStore.key.keyId ||
+        !otaKeyStore.isKeyEnabled
+      ) {
+        await otaKeyStore.enableKey(driveStore.rental.key_id, false);
+        await otaKeyStore.switchToKey(false);
+      }
     }
   };
 
   refreshRental = async () => {
     this.activityPending = true;
-    await appStore.initialise();
+    await appStore.register();
     await driveStore.reset();
     await this.doEnableAndSwitch();
     this.activityPending = false;
@@ -312,7 +310,7 @@ class DriveScreen extends Component {
 
   doEnableKey = async () => {
     this.activityPending = true;
-    driveStore.refreshRental();
+    await driveStore.refreshRental();
 
     if (!driveStore.inUse) {
       showToastError(this.props.t('error:rentalNotOpen'));
