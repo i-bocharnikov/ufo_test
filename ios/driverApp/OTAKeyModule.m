@@ -84,7 +84,6 @@ static id ObjectOrNull(id object)
    }
 }
 
-NSString *LAST_ENABLED_KEYID = nil;
 NSString *UNEXPECTED_ERROR_CODE = @"999";
 RCT_EXPORT_MODULE();
 
@@ -176,7 +175,6 @@ RCT_REMAP_METHOD(getKey,
   {
     [[OTAManager instance] keyWithID:keyId
                              success:^(OTAKeyPublic *key) {
-                               LAST_ENABLED_KEYID = keyId;
                                resolve([OTAKeyModule convertOTAKeyPublic:key]);
                              }
                              failure:^(OTAErrorCode errorCode, NSError *error) {
@@ -198,10 +196,8 @@ RCT_REMAP_METHOD(enableKey,
 {
   @try
   {
-    LAST_ENABLED_KEYID = keyId;
     [[OTAManager instance] enableKeyWithID:keyId
                              success:^(OTAKeyPublic *key) {
-                               LAST_ENABLED_KEYID = keyId;
                                resolve([OTAKeyModule convertOTAKeyPublic:key]);
                              }
                              failure:^(OTAErrorCode errorCode, NSError *error) {
@@ -261,24 +257,17 @@ RCT_REMAP_METHOD(endKey,
 
 // switchToKey
 RCT_REMAP_METHOD(switchToKey,
+                 keyId:(NSString *) keyId
                  switchToKeyResolver:(RCTPromiseResolveBlock)resolve
                  switchToKeyRejecter:(RCTPromiseRejectBlock)reject)
 {
-  // maybe should put some specific error code from documentation
-  NSError *error = [NSError errorWithDomain:@"" code:404 userInfo:nil];
-  if (!LAST_ENABLED_KEYID) {
-    reject(UNEXPECTED_ERROR_CODE, @"missing key", error);
-    return;
-  }
-  [[OTAManager instance] switchToKeyWithID:LAST_ENABLED_KEYID
+  
+  [[OTAManager instance] switchToKeyWithID:keyId
                            completionBlock:^(BOOL success) {
                              if (success) {
                                resolve(@YES);
                              } else {
-                               @try{
-                               NSError *error = [NSError errorWithDomain:@"" code:404 userInfo:nil];
-                               reject(UNEXPECTED_ERROR_CODE, @"enableKey", error);
-                               }@catch (NSError *error){/*ignore*/}
+                               resolve(@NO);
                              }
                            }
    ];
