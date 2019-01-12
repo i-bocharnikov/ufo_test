@@ -34,7 +34,7 @@ class Key {
   @observable beginDate;
   @observable endDate;
   @observable mileageLimit;
-  @persist @observable keyId = 'init';
+  @persist @observable keyId = null;
   @observable extId;
   @persist @observable isEnabled = false;
   @observable isUsed;
@@ -228,7 +228,7 @@ class OTAKeyStore {
 
     try {
       await this.otaKeyLogger({
-        severity: severityTypes.DEBUG,
+        severity: severityTypes.INFO,
         action: 'register',
         code: codeTypes.SUCCESS,
         message: `-> this.ota.register(${String(
@@ -254,7 +254,7 @@ class OTAKeyStore {
       );
 
       await this.otaKeyLogger({
-        severity: severityTypes.DEBUG,
+        severity: severityTypes.INFO,
         action: 'registerToOTA',
         code: codeTypes.SUCCESS,
         message: `<- this.ota.register(${String(
@@ -334,15 +334,6 @@ class OTAKeyStore {
 
     try {
       this.keyAccessDeviceToken = keyAccessDeviceToken;
-      await this.otaKeyLogger({
-        severity: severityTypes.DEBUG,
-        action: 'openOTASession',
-        code: codeTypes.SUCCESS,
-        message: `-> this.ota.openSession(${
-          this.keyAccessDeviceToken
-        }, ${String(showError)}) start`
-      });
-
       await this.register();
 
       const result = await this.ota.openSession(keyAccessDeviceToken);
@@ -504,15 +495,12 @@ class OTAKeyStore {
 
     try {
       await this.otaKeyLogger({
-        severity: severityTypes.INFO,
+        severity: severityTypes.DEBUG,
         action: 'enableKey',
         code: codeTypes.SUCCESS,
         message: `-> this.ota.enableKey(${keyId}, ${String(showError)}) start`
       });
-      let key = await this.ota.enableKey(keyId);
-      if (key && key.keyId) {
-        this.key = key;
-      }
+      this.key = await this.ota.enableKey(keyId);
       await this.otaKeyLogger({
         severity: severityTypes.INFO,
         action: 'enableKey',
@@ -543,22 +531,20 @@ class OTAKeyStore {
   }
 
   @action
-  async endKey(showError = true): Promise<boolean> {
+  async endKey(keyId, showError = true): Promise<boolean> {
     try {
       await this.otaKeyLogger({
         severity: severityTypes.DEBUG,
         action: 'endKey',
         code: codeTypes.SUCCESS,
-        message: `-> this.ota.endKey(${this.key.keyId}, ${String(
-          showError
-        )}) start`
+        message: `-> this.ota.endKey(${keyId}, ${String(showError)}) start`
       });
-      this.key = await this.ota.endKey(this.key.keyId);
+      this.key = await this.ota.endKey(keyId);
       await this.otaKeyLogger({
         severity: severityTypes.INFO,
         action: 'endKey',
         code: codeTypes.SUCCESS,
-        message: `<- this.ota.endKey(${this.key.keyId}, ${String(
+        message: `<- this.ota.endKey(${keyId}, ${String(
           showError
         )}) return key ${this.key.keyId}`,
         description: this.key
@@ -569,9 +555,7 @@ class OTAKeyStore {
         severity: severityTypes.ERROR,
         action: 'endKey',
         code: error.code && !isNaN(error.code) ? error.code : codeTypes.ERROR,
-        message: `<- this.ota.endKey(${this.key.keyId}, ${String(
-          showError
-        )}) failed: ${
+        message: `<- this.ota.endKey(${keyId}, ${String(showError)}) failed: ${
           error.code
             ? i18n.t(`otaKeyNativeErrors:${error.code}`) || error.message
             : error.message
@@ -584,27 +568,25 @@ class OTAKeyStore {
   }
 
   @action
-  async switchToKey(showError = true): Promise<boolean> {
+  async switchToKey(keyId, showError = true): Promise<boolean> {
     try {
       await this.otaKeyLogger({
         severity: severityTypes.DEBUG,
         action: 'switchToKey',
         code: codeTypes.SUCCESS,
-        message: `-> this.ota.switchToKey(${JSON.stringify(this.key)}, ${String(
-          showError
-        )}) start`
+        message: `-> this.ota.switchToKey(${keyId}, ${String(showError)}) start`
       });
-      await this.ota.switchToKey();
+      let result = await this.ota.switchToKey(keyId);
       await this.otaKeyLogger({
-        severity: severityTypes.INFO,
+        severity: result ? severityTypes.INFO : severityTypes.ERROR,
         action: 'switchToKey',
-        code: codeTypes.SUCCESS,
-        message: `<- this.ota.switchToKey( ${String(showError)}) return key ${
-          this.key.keyId
-        }`,
+        code: result ? codeTypes.SUCCESS : codeTypes.ERROR,
+        message: `<- this.ota.switchToKey( ${keyId}, ${String(
+          showError
+        )}) return key ${result}`,
         description: this.key
       });
-      return true;
+      return result;
     } catch (error) {
       await this.otaKeyLogger({
         severity: severityTypes.ERROR,

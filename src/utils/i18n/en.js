@@ -55,7 +55,7 @@ export default {
     invalidCodeError_referal: "Referral code '{{code}}' is not valid",
     connectionIsRequired: 'Internet connectivity is required',
     rentalKeyMissing:
-      'The key is missing, please contact UFODRIVE is the problem persist in 1 minutes',
+      'The key is missing, please contact UFODRIVE is the problem persist.',
     rentalNotOpen: 'The rental is not yet started, please wait...'
   },
   icon: {

@@ -357,13 +357,25 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
      * No Internet Connectivity Required
      */
     @ReactMethod
-    public void switchToKey( final Promise promise  ) {
+    public void switchToKey( String otaKeyId, final Promise promise  ) {
 
         try {
-            getOtaSdk().getCore().switchToKey(LAST_ENABLED_KEY, new SwitchToKeyCallback() {
+            OtaKey usedKey =  getOtaSdk().getCore().getUsedKey();   
+            if(usedKey == null){
+                usedKey = LAST_ENABLED_KEY;
+            }
+            if(usedKey == null){
+                promise.reject("Input Invalid", "otaKeyId ["+otaKeyId+"] is not used");
+                return;
+            }
+            if(Long.parseLong(otaKeyId) != usedKey.getOtaId()){
+                promise.reject("Input Invalid", "otaKeyId ["+otaKeyId+"] is not the one currently used ["+usedKey.getOtaId()+"]");
+                return;
+            }
+            getOtaSdk().getCore().switchToKey(usedKey, new SwitchToKeyCallback() {
                 @Override
                 public void onKeySwitched(OtaKey otaKey) {
-                     promise.resolve(convert(otaKey));
+                     promise.resolve(true);
                 }
 
             });
