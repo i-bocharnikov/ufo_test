@@ -2,30 +2,37 @@ import React, { Component, Fragment } from 'react';
 import { View, TouchableHighlight, Text, StyleSheet, Platform } from 'react-native';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
+import { translate } from 'react-i18next';
 import _ from 'lodash';
+import PropTypes from 'prop-types';
 
 import { keys as screenKeys } from './../../navigators/helpers';
 import UFOCamera, { RNCAMERA_CONSTANTS } from './../../components/UFOCamera';
 import { UFOImage, UFOContainer, UFOModalLoader } from './../../components/common';
 import styles from './styles';
 import { colors } from './../../utils/theme';
+import { showToastError } from './../../utils/interaction';
 
 const IS_IOS = Platform.OS === 'ios';
 
 @observer
 class FaceRecognizer extends Component {
   @observable isCameraAllowed = false;
+  @observable isScreenFocused = true;
+
   @observable detectedFaces = [];
   @observable capturedImgUri = null;
-  @observable isPending = false;
-  @observable isScreenFocused = false;
   @observable isTilt = false;
+
+  @observable isPending = false;
+  
   cameraRef = null;
   faceResetTimer = null;
   tiltResetTimer = null;
   maxValidAngle = 30;
 
   componentDidMount() {
+    /* exist bug of RNCamera when screen is blur in navigator */
     this.props.navigation.addListener('willFocus', () => {
       this.isScreenFocused = true;
     });
@@ -35,9 +42,13 @@ class FaceRecognizer extends Component {
     });
   }
 
+  componentWillUnmount() {
+    clearTimeout(faceResetTimer);
+    clearTimeout(tiltResetTimer);
+  }
+
   render() {
-    /* exist bug of RNCamera when screen is blur in navigator */
-    return this.isScreenFocused && (
+    return (
       <UFOContainer>
         {this.capturedImgUri ? (
           <UFOImage
@@ -47,16 +58,17 @@ class FaceRecognizer extends Component {
           />
         ) : (
           <Fragment>
-            <UFOCamera
-              ref={ref => (this.cameraRef = ref)}
-              onCameraReady={this.onCameraReady}
-              type={RNCAMERA_CONSTANTS.Type.front}
-              onFacesDetected={this.onFacesDetected}
-              onFaceDetectionError={this.onFaceDetectionError}
-              showTorchBtn={false}
-
-              defaultVideoQuality={RNCAMERA_CONSTANTS.VideoQuality['720p']}
-            />
+            {this.isScreenFocused && (
+              <UFOCamera
+                ref={ref => (this.cameraRef = ref)}
+                onCameraReady={this.onCameraReady}
+                onFacesDetected={this.onFacesDetected}
+                onFaceDetectionError={this.onFaceDetectionError}
+                showTorchBtn={false}
+                defaultVideoQuality={RNCAMERA_CONSTANTS.VideoQuality['720p']}
+                type={RNCAMERA_CONSTANTS.Type.front}
+              />
+            )}
             {!this.isPending && this.detectedFaces.map(face => (
               <View
                 key={face.faceID}
@@ -65,7 +77,7 @@ class FaceRecognizer extends Component {
             ))}
             {this.isTilt && (
               <Text style={styles.tiltTitle}>
-                Please, hold phone upright
+                {this.props.t('incorrectDevicePosition')}
               </Text>
             )}
           </Fragment>
@@ -77,8 +89,10 @@ class FaceRecognizer extends Component {
   }
 
   renderActionPanel = () => {
+    const { t } = this.props;
     const allowCapture = this.detectedFaces.length && !this.isPending;
-    // add more rules, maybe area size validation
+    // add more rules, maybe area size and position validation
+    // add custtom btn labels from navigation params
 
     return this.capturedImgUri ? (
       <View style={styles.actionPanel}>
@@ -88,17 +102,18 @@ class FaceRecognizer extends Component {
           style={styles.actionBtn}
         >
           <Text style={styles.actionLabel}>
-            Reset
+            {t('resetBtn')}
           </Text>
         </TouchableHighlight>
         <View style={styles.actionBtnSeparator} />
         <TouchableHighlight
+          key="nextBtn"
           onPress={this.navToNext}
           underlayColor={colors.BG_DEFAULT}
           style={styles.actionBtn}
         >
           <Text style={styles.actionLabel}>
-            To booking
+            {t('nextBtn')}
           </Text>
         </TouchableHighlight>
       </View>
@@ -110,27 +125,35 @@ class FaceRecognizer extends Component {
           style={styles.actionBtn}
         >
           <Text style={styles.actionLabel}>
-            Back
+            {t('Back')}
           </Text>
         </TouchableHighlight>
         <View style={styles.actionBtnSeparator} />
         <TouchableHighlight
+          key="captureBtn"
           onPress={allowCapture ? this.captureFace : null}
           underlayColor={colors.BG_DEFAULT}
           style={[ styles.actionBtn, !allowCapture && styles.actionBtnDisabled ]}
         >
           <Text style={styles.actionLabel}>
-            Capture
+            {t('captureBtn')}
           </Text>
         </TouchableHighlight>
       </View>
     );
   };
 
+  /*
+   * callback when camera ready for using
+  */
   onCameraReady = () => {
     this.isCameraAllowed = true;
   };
 
+  /*
+   * get position styles for face frame
+   * @param {Object} faceData
+  */
   getFaceAreaStyles = faceData => {
     if (!faceData) {
       return null;
@@ -149,6 +172,9 @@ class FaceRecognizer extends Component {
     return styles.area;
   };
 
+  /*
+   * RNCamera callback when face detected in camera
+  */
   onFacesDetected = ({ faces }) => {
     const angle = _.get(faces[0], 'rollAngle');
 
@@ -165,42 +191,87 @@ class FaceRecognizer extends Component {
     this.faceResetTimer = setTimeout(this.clearDetectedFaces, 1000);
   };
 
+  /*
+   * handle error from RNCamera
+   * @param {Object} error
+  */
   onFaceDetectionError = error => {
-    // implement somethisng from interactions
-    console.log('FACE ERROR', error);
+    const message = error.message || this.props.t('error:unknown');
+    showToastError(message);
   };
 
+  /*
+   * clear detected faces from screen store
+  */
   clearDetectedFaces = () => {
     this.detectedFaces = [];
   };
 
+  /*
+   * capture and handle image
+  */
   captureFace = async () => {
-    if (!this.isCameraAllowed || !this.cameraRef) {
+    if (!this.isCameraAllowed || !this.cameraRef || !this.isScreenFocused) {
       return;
     }
 
     this.isPending = true;
     const imageData = await this.cameraRef.takePicture({
       mirrorImage: true,
-      orientation: 'portrait'
+      orientation: 'portrait',
+
+      // sync below option with imageData.exif.Orientation in UFOCamera component
+      // fixOrientation: true
     });
     this.capturedImgUri = imageData.uri;
     this.isPending = false;
   };
 
+  /*
+   * Navigate to previous screen
+  */
   navBack = () => {
-    this.props.navigation.navigate(screenKeys.Home);
+    const action = this.props.navigation.getParam('actionNavBack');
+
+    if (typeof action === 'function') {
+      action();
+    }
   };
 
+  /*
+   * Navigate to next screen
+  */
   navToNext = () => {
-    // we can throw navNext action outside
-    this.props.navigation.navigate(screenKeys.BookingStepBook);
+    const action = this.props.navigation.getParam('actionNavNext');
+
+    if (typeof action === 'function') {
+      action();
+    }
   };
 
+  /*
+   * reset all capturing data
+  */
   resetCapture = () => {
     this.detectedFaces = [];
     this.capturedImgUri = false;
+    this.isTilt = false;
   };
 }
 
-export default FaceRecognizer;
+/*
+ * declared only custom props like params for navigator
+ * other supported props from HOCs see in doc for them
+ */
+FaceRecognizer.propTypes = {
+  navigation: PropTypes.shape({
+    state: PropTypes.shape({
+      params: PropTypes.shape({
+        actionNavNext: PropTypes.func.isRequired,
+        actionNavBack: PropTypes.func.isRequired,
+      })
+    })
+  })
+};
+
+export default translate('faceRecognizing')(FaceRecognizer);

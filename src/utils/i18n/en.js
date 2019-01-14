@@ -283,5 +283,12 @@ export default {
     nextBtn: 'Reserve, register and drive',
     skipBtn: 'skip'
   },
+  faceRecognizing: {
+    incorrectDevicePosition: 'Please, hold phone upright',
+    resetBtn: 'Reset',
+    nextBtn: 'Next',
+    backBtn: 'Back',
+    captureBtn: 'Capture'
+  },
   otaKeyNativeErrors
 };

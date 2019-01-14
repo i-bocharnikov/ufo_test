@@ -13,6 +13,7 @@ import { observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { translate } from 'react-i18next';
 
+import { keys as screenKeys } from './../../navigators/helpers';
 import registerStore from './../../stores/registerStore';
 import appStore from './../../stores/appStore';
 import UFOHeader from './../../components/header/UFOHeader';
@@ -249,6 +250,15 @@ class SignUpScreen extends Component {
   };
 
   navToIdCardScreen = () => {
+    const { navigation } = this.props;
+    const options = {
+      actionNavNext: () => navigation.navigate(screenKeys.Identification),
+      actionNavBack: () => navigation.navigate(screenKeys.SignUp)
+    };
+
+    navigation.navigate(screenKeys.FaceRecognizer, options);
+
+    /* old
     this.props.navigation.navigate(
       screens.REGISTER_IDENTIFICATION.name,
       {
@@ -256,6 +266,7 @@ class SignUpScreen extends Component {
         backImageUrl: registerStore.identificationBackDocument
       }
     );
+    */
   };
 
   navToDriverCardScreen = () => {
