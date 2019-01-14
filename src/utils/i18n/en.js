@@ -29,7 +29,8 @@ export default {
   global: {
     confirmationTitle: 'Confirmation needed',
     confirmationOk: 'OK',
-    confirmationCancel: 'Cancel'
+    confirmationCancel: 'Cancel',
+    willRestart: 'Application will be restarted'
   },
   error: {
     error: 'Error',
@@ -140,7 +141,7 @@ export default {
     CameraNotAvailable: 'The camera is not available',
     CameraProcessingError:
       'Unexpected issues detected during the image processing of the camera ({{message}}). Please try again and/or contact the support team if the problem persists.',
-    cameraPermissionTitle: 'Permission to use camera',
+    devicePermissionTitle: 'Permission to use {{type}}',
     cameraPermissionMessage:
       "We need your permission to use your phone's camera",
     disconnectConfirmationMessage: 'Are you sure you want to disconnect?',
@@ -150,7 +151,7 @@ export default {
     referalBlock: 'Referal Code {{code}}',
     referalCodeMessage:
       'You can use my UFODRIVE referral code {{code}} to get €30 off of your first ride, and drive to space!',
-    restrictedCamera: 'To use camera activate it in the phone settings'
+    devicePermissionRestricted: 'To use {{type}} activate it in the phone settings'
   },
   inspect: {
     initialInspectionTitle: 'Initial inspection',
