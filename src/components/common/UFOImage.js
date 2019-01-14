@@ -17,14 +17,20 @@ const ownStyles = StyleSheet.create({
 
 export default class UFOImage extends Component {
   render() {
-    const { fallbackToImage, source, style, children, ...restProps } = this.props;
+    const {
+      fallbackToImage,
+      source,
+      style,
+      children,
+      ...restProps
+    } = this.props;
     const uri = this.getImageUri(source);
     const isLoading = uri === 'loading';
     const isRefImage = source && source.reference;
 
-    return (uri && !fallbackToImage) ? (
+    return uri && !fallbackToImage ? (
       <FastImage
-        style={[ style, isLoading && ownStyles.preloader ]}
+        style={[style, isLoading && ownStyles.preloader]}
         source={{
           uri,
           headers: isRefImage ? { Authorization: `Bearer ${SAVE_TOKEN}` } : {}
@@ -34,11 +40,7 @@ export default class UFOImage extends Component {
         {isLoading ? <ActivityIndicator animating={true} /> : children}
       </FastImage>
     ) : (
-      <Image
-        source={this.getSafeSource}
-        style={style}
-        {...restProps}
-      />
+      <Image source={this.getSafeSource} style={style} {...restProps} />
     );
   }
 
@@ -54,13 +56,9 @@ export default class UFOImage extends Component {
 
   getImageUri = (source = {}) => {
     if (source.reference) {
-      const uri = `${
-        configurations.UFO_SERVER_API_URL
-      }api/${
-        configurations.UFO_SERVER_API_VERSION
-      }/documents/${
-        source.reference
-      }`;
+      const uri = `${configurations.UFO_SERVER_API_URL}api/${
+        configurations.UFO_SERVER_DEPRECATED_API_VERSION
+      }/documents/${source.reference}`;
 
       return uri;
     } else if (source.uri) {

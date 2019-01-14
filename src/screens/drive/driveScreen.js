@@ -58,14 +58,6 @@ class DriveScreen extends Component {
       ? backgrounds.HOME001
       : backgrounds.HOME002;
 
-    if (driveStore.rental && driveStore.rental.key_id) {
-      console.log(
-        'refresh rentals -> force check if current rental has key [' +
-          driveStore.rental.key_id +
-          ']'
-      );
-    }
-
     return (
       <UFOContainer image={background}>
         <UFOHeader
@@ -248,12 +240,10 @@ class DriveScreen extends Component {
 
   doEnableAndSwitch = async () => {
     if (driveStore.inUse && driveStore.rental.key_id) {
-      if (
-        driveStore.rental.key_id !== otaKeyStore.key.keyId ||
-        !otaKeyStore.isKeyEnabled
-      ) {
-        await otaKeyStore.enableKey(driveStore.rental.key_id, false);
-        await otaKeyStore.switchToKey(false);
+      let keyId = driveStore.rental.key_id;
+      if (keyId !== otaKeyStore.key.keyId || !otaKeyStore.isKeyEnabled) {
+        await otaKeyStore.enableKey(keyId, false);
+        await otaKeyStore.switchToKey(keyId, false);
       }
     }
   };
@@ -270,7 +260,7 @@ class DriveScreen extends Component {
     this.activityPending = true;
     if (driveStore.rental && driveStore.rental.key_id) {
       await otaKeyStore.lockDoors(false, false);
-      await otaKeyStore.endKey();
+      await otaKeyStore.endKey(driveStore.rental.key_id);
     }
     await driveStore.closeRental();
     this.returnSelected = false;
@@ -329,7 +319,7 @@ class DriveScreen extends Component {
       return;
     }
 
-    if (checkConnectivity) await this.doEnableAndSwitch();
+    if (await checkConnectivity()) await this.doEnableAndSwitch();
 
     if (!DeviceInfo.isEmulator() && !otaKeyStore.isConnected) {
       await otaKeyStore.connect(
@@ -364,7 +354,7 @@ class DriveScreen extends Component {
       return;
     }
 
-    if (checkConnectivity) await this.doEnableAndSwitch();
+    if (await checkConnectivity()) await this.doEnableAndSwitch();
 
     if (!DeviceInfo.isEmulator() && !otaKeyStore.isConnected) {
       await otaKeyStore.connect(

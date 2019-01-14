@@ -116,12 +116,14 @@ class StepPayScreen extends Component {
   }
 
   renderBottomPanel = () => {
+    const isVoucherInvalid = _.isBoolean(this.state.isVoucherValid) && !this.state.isVoucherValid;
+
     return (
       <BottomActionPanel
         action={this.handleToNextStep}
         actionTitle={this.props.t('stepPayNextTitle')}
         actionSubTitle={this.props.t('stepPayNextSubTitle')}
-        isAvailable={!!bookingStore.currentCreditCardRef}
+        isAvailable={!!bookingStore.currentCreditCardRef && !isVoucherInvalid}
         isWaiting={bookingStore.isLoading}
       />
     );

@@ -2,6 +2,9 @@ import moment from 'moment';
 import { checkConnectivity, logToApi } from './api_deprecated';
 import { AsyncStorage } from 'react-native';
 import _ from 'lodash';
+
+const ACTION_LOGS_STORAGE_KEY = 'userActionsLogs';
+
 export const codeTypes = {
   SUCCESS: 0,
   ERROR: 1
@@ -22,52 +25,74 @@ export default async function userActionsLogger(
   description = '',
   extraData = {}
 ) {
-  let userActionsLogs = [];
+  const { momentDate, ...restLogData } = extraData;
+  const date = momentDate || moment();
+
+  console.log(
+    `${date.format('HH:mm:ss')} ${severity} ${action} ${message} ${description}`
+  );
+
+  if (severity === severityTypes.DEBUG) {
+    return;
+  }
+
+  const payload = {
+    severity,
+    code,
+    action,
+    message,
+    description: code === 0 ? { result: description } : { error: description },
+    performed_at: date.toDate(),
+    ...restLogData
+  };
+
   try {
-    const { momentDate, ...restLogData } = extraData;
-    const date = momentDate || moment();
-    const isConnectionActive = await checkConnectivity();
-
-    console.log(
-      `${date.format(
-        'HH:mm:ss'
-      )} ${severity} ${action} ${message} ${description}`
-    );
-
-    if (severity === severityTypes.DEBUG) {
-      return;
-    }
-
-    const payload = {
-      severity,
-      code,
-      action,
-      message,
-      description:
-        code === 0 ? { result: description } : { error: description },
-      performed_at: date.toDate(),
-      ...restLogData
-    };
-
-    const rawuserActionsLogs = await AsyncStorage.getItem('userActionsLogs');
-    AsyncStorage.removeItem('userActionsLogs');
-    if (rawuserActionsLogs) {
-      userActionsLogs = JSON.parse(rawuserActionsLogs);
-    }
-    userActionsLogs.push(payload);
-    if (isConnectionActive) {
-      while (userActionsLogs.length > 0) {
-        await logToApi('/user_experiences', userActionsLogs.pop());
+    if (await checkConnectivity()) {
+      await logToApi('/user_experiences', payload);
+      let oldPayload = await popFromActionsLogs();
+      while (oldPayload != null) {
+        await logToApi('/user_experiences', oldPayload);
+        oldPayload = await popFromActionsLogs();
       }
     } else {
-      AsyncStorage.setItem('userActionsLogs', JSON.stringify(userActionsLogs));
+      await pushInActionsLogs(payload);
     }
   } catch (error) {
     if (error.response && error.response.status === 401) {
       //wait next registration
-      AsyncStorage.setItem('userActionsLogs', JSON.stringify(userActionsLogs));
+      await pushInActionsLogs(payload);
     } else {
       console.error('Export of UserExperiences failed', error);
     }
+  }
+
+  async function popFromActionsLogs() {
+    const rawuserActionsLogs = await AsyncStorage.getItem(
+      ACTION_LOGS_STORAGE_KEY
+    );
+    if (!rawuserActionsLogs) return null;
+    let userActionsLogs = JSON.parse(rawuserActionsLogs);
+    let payload = userActionsLogs.pop();
+    if (!payload) return null;
+    AsyncStorage.setItem(
+      ACTION_LOGS_STORAGE_KEY,
+      JSON.stringify(userActionsLogs)
+    );
+    return payload;
+  }
+
+  async function pushInActionsLogs(payload) {
+    const rawuserActionsLogs = await AsyncStorage.getItem(
+      ACTION_LOGS_STORAGE_KEY
+    );
+    let userActionsLogs = rawuserActionsLogs
+      ? JSON.parse(rawuserActionsLogs)
+      : [];
+    userActionsLogs.push(payload);
+    AsyncStorage.setItem(
+      ACTION_LOGS_STORAGE_KEY,
+      JSON.stringify(userActionsLogs)
+    );
+    return;
   }
 }

@@ -6,7 +6,13 @@ import { observer } from 'mobx-react';
 import UFOHeader from './../../components/header/UFOHeader';
 import UFOActionBar from './../../components/UFOActionBar';
 import { UFOContainer, UFOImage, UFOVideo } from './../../components/common';
-import { actionStyles, icons, screens, navigationParams, dims } from './../../utils/global';
+import {
+  actionStyles,
+  icons,
+  screens,
+  navigationParams,
+  dims
+} from './../../utils/global';
 import supportStore from './../../stores/supportStore';
 import UFOCard from './../../components/UFOCard';
 
@@ -21,7 +27,9 @@ const styles = StyleSheet.create({
 class SupportFaqScreen extends Component {
   render() {
     const { t, navigation } = this.props;
-    const faqCategoryReference = navigation.getParam(navigationParams.SUPPORT_FAQ_CATEGORY);
+    const faqCategoryReference = navigation.getParam(
+      navigationParams.SUPPORT_FAQ_CATEGORY
+    );
     const faqReference = navigation.getParam(navigationParams.SUPPORT_FAQ);
     const faq = supportStore.getFaq(faqCategoryReference, faqReference);
 
@@ -37,9 +45,14 @@ class SupportFaqScreen extends Component {
           <UFOCard
             title={faq.title}
             text={faq.text}
-            imageSource={supportStore.hasImage(faq) ? { uri: faq.media_url } : null}
-            videoSource={supportStore.hasVideo(faq) ? { uri: faq.media_url } : null}
+            imageSource={
+              supportStore.hasImage(faq) ? { uri: faq.media_url } : null
+            }
+            videoSource={
+              supportStore.hasVideo(faq) ? { uri: faq.media_url } : null
+            }
           />
+          <View style={{ height: 100 }} />
         </ScrollView>
         <UFOActionBar actions={this.actions} />
       </UFOContainer>
@@ -47,11 +60,13 @@ class SupportFaqScreen extends Component {
   }
 
   get actions() {
-    return [{
-      style: actionStyles.ACTIVE,
-      icon: icons.BACK,
-      onPress: () => this.props.navigation.pop()
-    }];
+    return [
+      {
+        style: actionStyles.ACTIVE,
+        icon: icons.BACK,
+        onPress: () => this.props.navigation.pop()
+      }
+    ];
   }
 }
 

@@ -67,7 +67,7 @@ class AppStore {
         codeTypes.ERROR,
         'initialiseRemoteDate',
         `Global exception: ${error.message}`,
-        error
+        JSON.stringify(error)
       );
       return false;
     }
@@ -79,14 +79,14 @@ class AppStore {
     console.log('==>  INIT LOCAL STORE START ');
 
     try {
-      hydrate('registerStore', registerStore)
+      await hydrate('registerStore', registerStore)
         .then(() =>
           logger(
             severityTypes.INFO,
             codeTypes.SUCCESS,
             'initialiseLocalStore',
             `registerStore loaded`,
-            registerStore.user
+            JSON.stringify(registerStore.user)
           )
         )
         .catch(error => {
@@ -95,11 +95,11 @@ class AppStore {
             codeTypes.ERROR,
             'initialiseLocalStore',
             `registerStore exception: ${error.message}`,
-            error
+            JSON.stringify(error)
           );
         });
 
-      hydrate('driveStore', driveStore)
+      await hydrate('driveStore', driveStore)
         .then(() =>
           logger(
             severityTypes.INFO,
@@ -115,11 +115,11 @@ class AppStore {
             codeTypes.ERROR,
             'initialiseLocalStore',
             `driveStore exception: ${error.message}`,
-            error
+            JSON.stringify(error)
           );
         });
 
-      hydrate('supportStore', supportStore)
+      await hydrate('supportStore', supportStore)
         .then(() =>
           logger(
             severityTypes.INFO,
@@ -137,18 +137,18 @@ class AppStore {
             codeTypes.ERROR,
             'initialiseLocalStore',
             `supportStore exception: ${error.message}`,
-            error
+            JSON.stringify(error)
           );
         });
 
-      hydrate('otaKeyStore', otaKeyStore)
+      await hydrate('otaKeyStore', otaKeyStore)
         .then(() =>
           logger(
             severityTypes.INFO,
             codeTypes.SUCCESS,
             'initialiseLocalStore',
             `otaKeyStore loaded`,
-            otaKeyStore.key
+            JSON.stringify(otaKeyStore.key)
           )
         )
         .catch(error => {
@@ -157,7 +157,7 @@ class AppStore {
             codeTypes.ERROR,
             'initialiseLocalStore',
             `otaKeyStore exception: ${error.message}`,
-            error
+            JSON.stringify(error)
           );
         });
     } catch (error) {
@@ -166,7 +166,7 @@ class AppStore {
         codeTypes.ERROR,
         'initialiseLocalStore',
         'Global exception',
-        error
+        JSON.stringify(error)
       );
       console.log('<== INIT Local STORE FAILED ', error);
       return false;
@@ -186,6 +186,17 @@ class AppStore {
         await this.loadRemoteData();
       }
     }
+    /*if (otaKeyStore.key && otaKeyStore.key.keyId) {
+      logger(
+        severityTypes.INFO,
+        codeTypes.SUCCESS,
+        'initialise',
+        `re enableKey and switch last key ${otaKeyStore.key.keyId}`,
+        JSON.stringify(otaKeyStore.key)
+      );
+      await otaKeyStore.enableKey(otaKeyStore.key.keyId, false);
+      await otaKeyStore.switchToKey(otaKeyStore.key.keyId, false);
+    }*/
     this.isAppReady = true;
     console.log('<== INITIALISE DONE ');
   }
