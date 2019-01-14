@@ -249,7 +249,9 @@ class DriveScreen extends Component {
 
   refreshRental = async () => {
     this.activityPending = true;
-    await appStore.register();
+    if (await checkConnectivity()) {
+      await appStore.register();
+    }
     await driveStore.reset();
     await this.doEnableAndSwitch();
     this.activityPending = false;

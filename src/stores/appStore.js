@@ -24,9 +24,23 @@ class AppStore {
         keyAccessDeviceIdentifier
       );
       if (keyAccessDeviceToken) {
+        logger(
+          severityTypes.INFO,
+          codeTypes.SUCCESS,
+          'register',
+          `registration success including keyAccessDeviceToken`,
+          JSON.stringify(registerStore.user)
+        );
         console.log('- OPEN SESSION IN OTA ');
         await OTAKeyStore.openSession(keyAccessDeviceToken);
       } else {
+        logger(
+          severityTypes.WARN,
+          codeTypes.ERROR,
+          'register',
+          `registration done but without keyAccessDeviceToken so we force creating new one`,
+          JSON.stringify(registerStore.user)
+        );
         keyAccessDeviceIdentifier = await OTAKeyStore.getKeyAccessDeviceIdentifier(
           true
         );
@@ -35,8 +49,23 @@ class AppStore {
           keyAccessDeviceIdentifier
         );
         if (keyAccessDeviceToken) {
+          logger(
+            severityTypes.INFO,
+            codeTypes.SUCCESS,
+            'register',
+            `registration success with new keyAccessDeviceToken`,
+            JSON.stringify(registerStore.user)
+          );
           console.log('- OPEN SESSION IN OTA');
           await OTAKeyStore.openSession(keyAccessDeviceToken);
+        } else {
+          logger(
+            severityTypes.ERROR,
+            codeTypes.ERROR,
+            'register',
+            `registration success but doesn't include keyAccessDeviceToken for the second time after forcing new temp token. give up`,
+            JSON.stringify(registerStore.user)
+          );
         }
       }
       console.log('<== REGISTER DONE ');
@@ -46,8 +75,8 @@ class AppStore {
         severityTypes.ERROR,
         codeTypes.ERROR,
         'register',
-        'exception',
-        error
+        `exception: ${error.message}`,
+        JSON.stringify(error)
       );
       return false;
     }
@@ -185,18 +214,16 @@ class AppStore {
       if (await this.register()) {
         await this.loadRemoteData();
       }
-    }
-    /*if (otaKeyStore.key && otaKeyStore.key.keyId) {
+    } else {
       logger(
         severityTypes.INFO,
         codeTypes.SUCCESS,
         'initialise',
-        `re enableKey and switch last key ${otaKeyStore.key.keyId}`,
-        JSON.stringify(otaKeyStore.key)
+        `Without connectivity, we only add OTAlisterners`
       );
-      await otaKeyStore.enableKey(otaKeyStore.key.keyId, false);
-      await otaKeyStore.switchToKey(otaKeyStore.key.keyId, false);
-    }*/
+      console.log('- ADD OTA Listener ONLY ');
+      await OTAKeyStore.addListeners();
+    }
     this.isAppReady = true;
     console.log('<== INITIALISE DONE ');
   }
