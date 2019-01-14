@@ -56,7 +56,7 @@ export default {
     invalidCodeError_referal: "Referral code '{{code}}' is not valid",
     connectionIsRequired: 'Internet connectivity is required',
     rentalKeyMissing:
-      'The key is missing, please contact UFODRIVE is the problem persist.',
+      'The key is missing, please contact UFODRIVE if the problem persist.',
     rentalNotOpen: 'The rental is not yet started, please wait...'
   },
   icon: {
@@ -189,7 +189,7 @@ export default {
       '{{rental.car.car_model.manufacturer}} {{rental.car.car_model.name}}',
     noRentalsTitle: 'No rentals',
     noRentalsDescription:
-      'After booking, the actions below will be activated and will allow you to find the car, inspect it, start the rental contract and finally lock/unlock the vehicle',
+      'After booking, the actions below will be activated and will allow you to find the car, inspect it, start the rental contract and ultimately lock/unlock the vehicle',
     confirmCloseRentalConfirmationMessage:
       "You are about to end your rental contract.{{keyMessage}}\nThe car will then lock automatically so please ensure you don't leave any personal belongings in the car as you will not be able to open it once you press 'OK'.\nThank you.",
     confirmCloseRentalKeyMessageConfirmationMessage:
@@ -221,13 +221,13 @@ export default {
     carsSectionTitle: 'CARS',
     timeSectionTitle: 'PICK-UP & RETURN TIME',
     notFoundData: 'Data not found',
-    infoLink: 'infos',
+    infoLink: 'info',
     datesTooltip:
       'Enter your pick-up & return date here. You can also use the calendar view.\nNeed more help? ',
     tooltipLink: 'Contact us',
     dareSectionTitle: 'PICK-UP & RETURN DATE',
     totalPrice: 'TOTAL',
-    stepBookNextTitle: 'FILL YOUR\nINFOS',
+    stepBookNextTitle: 'FILL YOUR\nINFO',
     stepBookNextSubTitle: 'Go to step 2',
     calendarViewBtn: 'open calendar view',
     locationInfoTitle: 'LOCATION',
@@ -239,13 +239,14 @@ export default {
     unseclectInfoBtn: 'UNSELECT THIS',
     stepPayNextTitle: 'CONFIRM',
     stepPayNextSubTitle: 'Go to step 3',
-    creditCardTitle: 'CREDIT CARD INFOS',
+    creditCardTitle: 'CREDIT CARD INFO',
     loyalityProgramtitle: 'VOUCHER & LOYALTY PROGRAM',
-    infoAtPaymentTitle: 'BOOKING INFORMATIONS',
-    totalPricePayment: 'TOTAL ALL INCLUDED',
+    infoAtPaymentTitle: 'BOOKING INFORMATION',
+    totalPricePayment: 'TOTAL - ALL INCLUDED',
     voucherPlaceholder: 'Voucher / referral code',
     milesPlaceholder: 'Miles and more number',
-    voucherTooltip: 'Info about loyality program',
+    voucherTooltip:
+      'Select to use your balance amount for this booking. More information on https://www.ufodrive.com/en/ufo-world/referral',
     scanCreditCardBtn: 'Scan a new credit card',
     applyBtn: 'APPLY\nALTERNATIVE',
     pickUpAlt: 'Pickup',
@@ -276,7 +277,7 @@ export default {
     slideTwoSubTitle: 'No refuelling cost',
     slideTwoDescription:
       'Simple and transparent pricing: all-inclusive per day price. Fully comprehensive insurance included. No fuel costs, free recharging',
-    slideThreeTitle: 'Stylish electric cars',
+    slideThreeTitle: 'Sleek electric cars',
     slideThreeSubTitle: 'Zero emissions, just electric cars',
     slideThreeDescription:
       "ev technology brings together the best of design and technology to produce a driving experience that's out of this world",
