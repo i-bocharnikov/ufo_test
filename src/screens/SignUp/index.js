@@ -251,22 +251,13 @@ class SignUpScreen extends Component {
 
   navToIdCardScreen = () => {
     const { navigation } = this.props;
-    const options = {
+    const params = {
       actionNavNext: () => navigation.navigate(screenKeys.Identification),
-      actionNavBack: () => navigation.navigate(screenKeys.SignUp)
+      actionNavBack: () => navigation.navigate(screenKeys.SignUp),
+      actionHandleFileAsync: this.uploadFaceCapture
     };
 
-    navigation.navigate(screenKeys.FaceRecognizer, options);
-
-    /* old
-    this.props.navigation.navigate(
-      screens.REGISTER_IDENTIFICATION.name,
-      {
-        frontImageUrl: registerStore.identificationFrontDocument,
-        backImageUrl: registerStore.identificationBackDocument
-      }
-    );
-    */
+    navigation.navigate(screenKeys.FaceRecognizer, params);
   };
 
   navToDriverCardScreen = () => {
@@ -358,6 +349,21 @@ class SignUpScreen extends Component {
     await registerStore.getUserData();
     await this.initLoad();
     this.refreshing = false;
+  };
+
+  uploadFaceCapture = async fileUri => {
+    const uploadedData = await registerStore.uploadDocument(
+      'identification',
+      'one_side',
+      'face_capture',
+      'front_side',
+      fileUri
+    );
+console.log('DOCUMENT DATA', uploadedData);
+    registerStore.user.identification_face_capture_reference = uploadedData.reference;
+    const responce = await registerStore.save();
+console.log('UPDATE USER', responce);
+    return true;
   };
 }
 
