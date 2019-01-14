@@ -55,8 +55,8 @@ class DriveScreen extends Component {
         ? backgrounds.RETURN001
         : backgrounds.DRIVE001
       : driveStore.hasRentals
-      ? backgrounds.HOME001
-      : backgrounds.HOME002;
+        ? backgrounds.HOME001
+        : backgrounds.HOME002;
 
     return (
       <UFOContainer image={background}>
@@ -249,7 +249,9 @@ class DriveScreen extends Component {
 
   refreshRental = async () => {
     this.activityPending = true;
-    await appStore.register();
+    if (await checkConnectivity()) {
+      await appStore.register();
+    }
     await driveStore.reset();
     await this.doEnableAndSwitch();
     this.activityPending = false;
@@ -378,8 +380,8 @@ class DriveScreen extends Component {
   confirmCloseRental = async t => {
     const keyMessage =
       driveStore.rental &&
-      driveStore.rental.car &&
-      driveStore.rental.car.has_key === true
+        driveStore.rental.car &&
+        driveStore.rental.car.has_key === true
         ? t('drive:confirmCloseRentalKeyMessageConfirmationMessage')
         : '';
 

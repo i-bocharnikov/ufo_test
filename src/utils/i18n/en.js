@@ -55,7 +55,7 @@ export default {
     invalidCodeError_referal: "Referral code '{{code}}' is not valid",
     connectionIsRequired: 'Internet connectivity is required',
     rentalKeyMissing:
-      'The key is missing, please contact UFODRIVE is the problem persist.',
+      'The key is missing, please contact UFODRIVE if the problem persist.',
     rentalNotOpen: 'The rental is not yet started, please wait...'
   },
   icon: {
@@ -244,7 +244,7 @@ export default {
     totalPricePayment: 'TOTAL ALL INCLUDED',
     voucherPlaceholder: 'Voucher / referral code',
     milesPlaceholder: 'Miles and more number',
-    voucherTooltip: 'Info about loyality program',
+    voucherTooltip: 'More information on https://www.ufodrive.com/en/ufo-world/referral',
     scanCreditCardBtn: 'Scan a new credit card',
     applyBtn: 'APPLY\nALTERNATIVE',
     pickUpAlt: 'Pickup',
