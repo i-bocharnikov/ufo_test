@@ -92,6 +92,9 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
     private WritableMap convert(OtaVehicleData otaVehicleData) {
 
         WritableMap otaKeyMap = Arguments.createMap();
+        if(otaVehicleData == null){
+            return otaKeyMap;
+        }
         otaKeyMap.putString("date", convert(otaVehicleData.getDate()));
         otaKeyMap.putDouble("mileageStart", otaVehicleData.getMileageStart());
         otaKeyMap.putDouble("mileageCurrent", otaVehicleData.getMileageCurrent());
@@ -127,6 +130,9 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
     private WritableMap convert(OtaLastVehicleData otaVehicleData) {
 
         WritableMap otaKeyMap = Arguments.createMap();
+        if(otaVehicleData == null){
+            return otaKeyMap;
+        }
         otaKeyMap.putString("energyType", otaVehicleData.getEnergyType() != null ? otaVehicleData.getEnergyType().name() : null);
         otaKeyMap.putDouble("batteryVoltage", otaVehicleData.getBatteryVoltage());
         otaKeyMap.putBoolean("connectedToCharger", otaVehicleData.isConnectedToCharger());

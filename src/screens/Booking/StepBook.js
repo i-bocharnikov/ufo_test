@@ -212,7 +212,7 @@ class StepBookScreen extends Component {
   renderEmptyList = () => {
     return (
       <Text style={styles.emptyList}>
-        {this.props.t('booking:notFoundData')}
+        {this.props.t('error:connectionIsRequired')}
       </Text>
     );
   };

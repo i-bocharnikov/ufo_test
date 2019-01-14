@@ -27,7 +27,9 @@ class SupportStore {
   @persist('list', FaqCategory) @observable faqCategories = [];
 
   getFaq(faqCategoryReference, faqReference) {
-    const category = this.faqCategories.find(item => item.reference === faqCategoryReference);
+    const category = this.faqCategories.find(
+      item => item.reference === faqCategoryReference
+    );
 
     if (!category) {
       return null;
@@ -38,7 +40,7 @@ class SupportStore {
       severityTypes.INFO,
       codeTypes.SUCCESS,
       'open faq reference action',
-      `faq reference: ${faq.reference}`
+      `FAQ-${faq.reference}-${faq.title}`
     );
 
     return faq;

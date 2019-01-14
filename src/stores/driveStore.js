@@ -85,15 +85,20 @@ export default class DriveStore {
 
   format(date, format) {
     if (!date) {
-        return '';
+      return '';
     }
 
-    const timezone = this.rental && this.rental.location ? this.rental.location.timezone : 'UTC';
+    const timezone =
+      this.rental && this.rental.location
+        ? this.rental.location.timezone
+        : 'UTC';
 
     if (timezone) {
-        return moment(date).tz(timezone).format(format);
+      return moment(date)
+        .tz(timezone)
+        .format(format);
     } else {
-        return moment(date).format(format);
+      return moment(date).format(format);
     }
   }
 
@@ -108,9 +113,17 @@ export default class DriveStore {
   }
 
   @computed get emergencyNumber() {
-    if (this.index === null || this.rental === null || this.rental.car === null) {
+    if (
+      this.index === null ||
+      this.rental === null ||
+      this.rental.car === null
+    ) {
       return null;
     }
+    if (!this.hasRentalOngoing) {
+      return null;
+    }
+
     return this.rental.car.support_number;
   }
 
@@ -119,8 +132,10 @@ export default class DriveStore {
   }
 
   @computed get hasRentalConfirmedOrOngoing() {
-    return this.rentals.find(rental =>
-      rental.status === RENTAL_STATUS.CONFIRMED || rental.status === RENTAL_STATUS.ONGOING
+    return this.rentals.find(
+      rental =>
+        rental.status === RENTAL_STATUS.CONFIRMED ||
+        rental.status === RENTAL_STATUS.ONGOING
     );
   }
 
@@ -174,7 +189,8 @@ export default class DriveStore {
     }
     actions.push({
       style:
-        !this.rental.rental_can_begin || this.rental.status !== RENTAL_STATUS.ONGOING
+        !this.rental.rental_can_begin ||
+        this.rental.status !== RENTAL_STATUS.ONGOING
           ? actionStyles.DISABLE
           : this.rental.initial_inspection_done
           ? actionStyles.ACTIVE
@@ -213,7 +229,9 @@ export default class DriveStore {
       return;
     }
     actions.push({
-      style: this.rental.ready_for_return ? actionStyles.TODO : actionStyles.ACTIVE,
+      style: this.rental.ready_for_return
+        ? actionStyles.TODO
+        : actionStyles.ACTIVE,
       icon: icons.WHERE,
       onPress: onPress
     });
@@ -277,7 +295,9 @@ export default class DriveStore {
   async listRentals() {
     const response = await getFromApi('/rentals');
     if (response && response.status === 'success') {
-      if (DEBUG) {console.info('driveStore.list:', response.data);}
+      if (DEBUG) {
+        console.info('driveStore.list:', response.data);
+      }
       this.rentals = [];
       this.rentals = this.rentals.concat(response.data.closed_rentals);
       this.rentals = this.rentals.concat(response.data.ongoing_rentals);
@@ -308,7 +328,9 @@ export default class DriveStore {
 
     const response = await getFromApi('/rentals/' + this.rental.reference);
     if (response && response.status === 'success') {
-      if (DEBUG) {console.info('driveStore.getRental:', response.data);}
+      if (DEBUG) {
+        console.info('driveStore.getRental:', response.data);
+      }
       this.rentals[this.index] = response.data.rental;
       return true;
     }
@@ -321,9 +343,13 @@ export default class DriveStore {
       return false;
     }
 
-    const response = await putToApi('/rentals/' + this.rental.reference, { action: 'car_found' });
+    const response = await putToApi('/rentals/' + this.rental.reference, {
+      action: 'car_found'
+    });
     if (response && response.status === 'success') {
-      if (DEBUG) {console.info('driveStore.carFound:', response.data);}
+      if (DEBUG) {
+        console.info('driveStore.carFound:', response.data);
+      }
       this.rentals[this.index] = response.data.rental;
       return true;
     }
@@ -336,9 +362,13 @@ export default class DriveStore {
       return false;
     }
 
-    const response = await putToApi('/rentals/' + this.rental.reference, { action: 'contract_ended' });
+    const response = await putToApi('/rentals/' + this.rental.reference, {
+      action: 'contract_ended'
+    });
     if (response && response.status === 'success') {
-      if (DEBUG) {console.info('driveStore.closeRental:', response.data);}
+      if (DEBUG) {
+        console.info('driveStore.closeRental:', response.data);
+      }
       this.rentals[this.index] = response.data.rental;
       return true;
     }

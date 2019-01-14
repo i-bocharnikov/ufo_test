@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { translate } from 'react-i18next';
 import { View, Dimensions } from 'react-native';
 import { observer } from 'mobx-react';
+import { Left, Body } from 'native-base';
 
 import { UFOText, UFOImage } from '../../components/common';
 import { dateFormats, colors } from '../../utils/global';
 import { driveStore } from '../../stores';
 import otaKeyStore from '../../stores/otaKeyStore';
 import UFOCard from '../../components/UFOCard';
-import { Left, Body } from 'native-base';
 
 const DRIVE_CARD_WIDTH = Dimensions.get('window').width / 1.5;
 const DRIVE_CARD_HEIGHT = DRIVE_CARD_WIDTH / 2;
@@ -27,8 +27,7 @@ class DriveCard extends Component {
     }
 
     return (
-      <View
-        style={{
+      <View style={{
           flex: 1,
           flexDirection: 'column',
           justifyContent: 'center',
@@ -38,9 +37,7 @@ class DriveCard extends Component {
           borderRadius: 8
         }}
       >
-        <UFOText h3>
-          {t('drive:rentalReference', { rental: rental })}
-        </UFOText>
+        <UFOText h3>{t('drive:rentalReference', { rental })}</UFOText>
         <UFOImage
           source={{ uri: carModel.image_side_url }}
           style={{ width: DRIVE_CARD_WIDTH, height: DRIVE_CARD_HEIGHT }}
@@ -50,13 +47,13 @@ class DriveCard extends Component {
           h3
           bold
         >
-          {t('drive:rentalCarModel', { rental: rental })}
+          {t('drive:rentalCarModel', { rental })}
         </UFOText>
         <UFOText
           h3
           bold
         >
-          {t('drive:rentalCar', { rental: rental })}
+          {t('drive:rentalCar', { rental })}
         </UFOText>
         <UFOText h4>
           {!driveStore.inUse
@@ -96,4 +93,4 @@ class DriveCard extends Component {
   }
 }
 
-export default translate('translations')(DriveCard);
+export default translate()(DriveCard);

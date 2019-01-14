@@ -35,11 +35,21 @@ export default class UFOImage extends Component {
       </FastImage>
     ) : (
       <Image
-        source={source}
+        source={this.getSafeSource}
         style={style}
         {...restProps}
       />
     );
+  }
+
+  get getSafeSource() {
+    const source = this.props.source;
+
+    if (source && source.hasOwnProperty('uri') && !source.uri) {
+      return null;
+    }
+
+    return source;
   }
 
   getImageUri = (source = {}) => {

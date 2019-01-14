@@ -5,8 +5,6 @@ import _ from 'lodash';
 import { driveStore } from './';
 import { getFromApi } from '../utils/api_deprecated';
 
-const DEBUG = false;
-
 const GUIDE_TYPE = {
   FIND: 'location_find',
   RETURN: 'location_return'
@@ -93,16 +91,17 @@ export default class GuideStore {
     }
 
     const locationReference = driveStore.rental.location.reference;
+    const response = await getFromApi(`/guides/${guideType}/${locationReference}`);
 
-    const response = await getFromApi('/guides/' + guideType + '/' + locationReference);
     if (response && response.status === 'success') {
-      if (DEBUG) {console.info('guideStore.listGuides:', response.data);}
       const guidePackIndex = this.guidePacks.findIndex(guidePack =>
         guidePack.type === guideType && guidePack.locationReference === locationReference
       );
+
       if (guidePackIndex >= 0) {
         this.guidePacks.slice(guidePackIndex, guidePackIndex + 1);
       }
+
       const guidePack = new GuidePack();
       guidePack.type = guideType;
       guidePack.locationReference = locationReference;

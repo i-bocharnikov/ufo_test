@@ -21,6 +21,9 @@ import BookingNavWrapper from './components/BookingNavWrapper';
 import BottomActionPanel from './components/BottomActionPanel';
 import styles from './styles';
 import { values, colors } from './../../utils/theme';
+import { checkAndRequestCameraPermission } from './../../utils/permissions';
+
+const CREDIT_CARD_DEFAULT_IMG = 'https://resources.ufodrive.com/images/userCreditCards/unknown.png';
 
 @observer
 class StepPayScreen extends Component {
@@ -35,7 +38,8 @@ class StepPayScreen extends Component {
     this.handleInputVoucher = _.debounce(this.validateAndApplyVoucher, 300);
     this.state = {
       showVoucherTooltip: false,
-      isVoucherValid: null
+      isVoucherValid: null,
+      voucherInvalidError: ''
     };
   }
 
@@ -48,14 +52,17 @@ class StepPayScreen extends Component {
     }
 
     if (bookingStore.voucherCode) {
-      const isVoucherValid = await bookingStore.validateVoucher(bookingStore.voucherCode);
-      this.setState({ isVoucherValid });
+      const voucherInvalidError = await bookingStore.validateVoucher(bookingStore.voucherCode);
+      this.setState({
+        isVoucherValid: !voucherInvalidError,
+        voucherInvalidError
+      });
     }
   }
 
   render() {
     const { t } = this.props;
-    const { isVoucherValid } = this.state;
+    const { isVoucherValid, voucherInvalidError } = this.state;
 
     return (
       <BookingNavWrapper
@@ -82,9 +89,9 @@ class StepPayScreen extends Component {
             {t('loyalityProgramtitle')}
           </Text>
           <UFOTextInput
+            containerStyle={styles.screenHorizIndents}
             wrapperStyle={[
               styles.voucherInput,
-              styles.screenHorizIndents,
               styles.blockShadow,
               Platform.OS === 'android' && styles.blockShadowAndroidFix
             ]}
@@ -94,6 +101,7 @@ class StepPayScreen extends Component {
             defaultValye={bookingStore.voucherCode}
             invalidStatus={_.isBoolean(isVoucherValid) && !isVoucherValid}
             successStatus={_.isBoolean(isVoucherValid) && isVoucherValid}
+            alertMessage={voucherInvalidError}
           />
           {this.renderLoyaltyBlock()}
           {this.renderBookingInfoSection()}
@@ -248,14 +256,16 @@ class StepPayScreen extends Component {
   */
   scranCreditCard = async () => {
     try {
-      const cardIoData = await CardIOModule.scanCard(this.CARDIO_SCAN_OPTIONS);
+      const hasPermit = await checkAndRequestCameraPermission();
+      const options = { ...this.CARDIO_SCAN_OPTIONS, noCamera: !hasPermit };
+      const cardIoData = await CardIOModule.scanCard(options);
       const cardStripeObj = await stripe.createTokenWithCard({
         number: cardIoData.cardNumber,
         expMonth: cardIoData.expiryMonth,
         expYear: cardIoData.expiryYear,
         cvc: cardIoData.cvv
       });
-      bookingStore.addCreditCardToList(cardStripeObj);
+      bookingStore.addCreditCardToList({ ...cardStripeObj, imageUrl: CREDIT_CARD_DEFAULT_IMG });
     } catch (error) {
       console.log('CARDIO ERROR:', error);
     }
@@ -266,13 +276,14 @@ class StepPayScreen extends Component {
   */
   validateAndApplyVoucher = async code => {
     let isValid = null;
+    let voucherInvalidError = '';
 
-    if (!code) {
-      this.setState({ isVoucherValid: isValid });
-    } else {
-      isValid = await bookingStore.validateVoucher(code);
-      this.setState({ isVoucherValid: isValid });
+    if (code) {
+      voucherInvalidError = await bookingStore.validateVoucher(code);
+      isValid = !voucherInvalidError;
     }
+
+    this.setState({ isVoucherValid: isValid, voucherInvalidError });
 
     if (isValid) {
       await bookingStore.appyVoucherCode(code);

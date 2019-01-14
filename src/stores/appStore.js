@@ -7,6 +7,7 @@ import OTAKeyStore from '../stores/otaKeyStore';
 import { checkConnectivity } from '../utils/api_deprecated';
 import { hydrate } from '../utils/store';
 import { confirm } from '../utils/interaction';
+import logger, { codeTypes, severityTypes } from '../utils/userActionsLogger';
 import otaKeyStore from '../stores/otaKeyStore';
 
 class AppStore {
@@ -19,14 +20,20 @@ class AppStore {
       console.log('- GET OTA DEVICE IDENTIFICATION ');
       let keyAccessDeviceIdentifier = await OTAKeyStore.getKeyAccessDeviceIdentifier();
       console.log('- OPEN SESSION ON SERVER ');
-      let keyAccessDeviceToken = await registerStore.registerDevice(keyAccessDeviceIdentifier);
+      let keyAccessDeviceToken = await registerStore.registerDevice(
+        keyAccessDeviceIdentifier
+      );
       if (keyAccessDeviceToken) {
         console.log('- OPEN SESSION IN OTA ');
         await OTAKeyStore.openSession(keyAccessDeviceToken);
       } else {
-        keyAccessDeviceIdentifier = await OTAKeyStore.getKeyAccessDeviceIdentifier(true);
+        keyAccessDeviceIdentifier = await OTAKeyStore.getKeyAccessDeviceIdentifier(
+          true
+        );
         console.log('- OPEN SESSION ON SERVER ');
-        let keyAccessDeviceToken = await registerStore.registerDevice(keyAccessDeviceIdentifier);
+        let keyAccessDeviceToken = await registerStore.registerDevice(
+          keyAccessDeviceIdentifier
+        );
         if (keyAccessDeviceToken) {
           console.log('- OPEN SESSION IN OTA');
           await OTAKeyStore.openSession(keyAccessDeviceToken);
@@ -35,6 +42,13 @@ class AppStore {
       console.log('<== REGISTER DONE ');
     } catch (error) {
       console.log('<== REGISTER FAILED ', error);
+      logger(
+        severityTypes.ERROR,
+        codeTypes.ERROR,
+        'register',
+        'exception',
+        error
+      );
       return false;
     }
     return true;
@@ -48,34 +62,129 @@ class AppStore {
       await supportStore.reset();
       console.log('<== LOAD REMOTE DATA DONE ');
     } catch (error) {
-      console.log('<== LOAD REMOTE DATA FAILED ', error);
+      logger(
+        severityTypes.ERROR,
+        codeTypes.ERROR,
+        'initialiseRemoteDate',
+        `Global exception: ${error.message}`,
+        error
+      );
       return false;
     }
     return true;
   }
 
   @action
-  async loadLocalData() {
-    console.log('==>  LOAD LOCAL DATA START ');
+  async initialiseLocalStore() {
+    console.log('==>  INIT LOCAL STORE START ');
 
     try {
-      await hydrate('register', registerStore).then(() => console.log('registerStore hydrated'));
-      await hydrate('drive', driveStore).then(() => console.log('driveStore hydrated'));
-      await hydrate('support', supportStore).then(() => console.log('supportStore hydrated'));
-      console.log('<== LOAD LOCAL DATA DONE ');
+      hydrate('registerStore', registerStore)
+        .then(() =>
+          logger(
+            severityTypes.INFO,
+            codeTypes.SUCCESS,
+            'initialiseLocalStore',
+            `registerStore loaded`,
+            registerStore.user
+          )
+        )
+        .catch(error => {
+          logger(
+            severityTypes.ERROR,
+            codeTypes.ERROR,
+            'initialiseLocalStore',
+            `registerStore exception: ${error.message}`,
+            error
+          );
+        });
+
+      hydrate('driveStore', driveStore)
+        .then(() =>
+          logger(
+            severityTypes.INFO,
+            codeTypes.SUCCESS,
+            'initialiseLocalStore',
+            `driveStore loaded`,
+            driveStore.rentals ? driveStore.rentals.length : 0 + ' rentals'
+          )
+        )
+        .catch(error => {
+          logger(
+            severityTypes.ERROR,
+            codeTypes.ERROR,
+            'initialiseLocalStore',
+            `driveStore exception: ${error.message}`,
+            error
+          );
+        });
+
+      hydrate('supportStore', supportStore)
+        .then(() =>
+          logger(
+            severityTypes.INFO,
+            codeTypes.SUCCESS,
+            'initialiseLocalStore',
+            `supportStore loaded`,
+            supportStore.faqCategories
+              ? supportStore.faqCategories.length
+              : 0 + ' faqCategories'
+          )
+        )
+        .catch(error => {
+          logger(
+            severityTypes.ERROR,
+            codeTypes.ERROR,
+            'initialiseLocalStore',
+            `supportStore exception: ${error.message}`,
+            error
+          );
+        });
+
+      hydrate('otaKeyStore', otaKeyStore)
+        .then(() =>
+          logger(
+            severityTypes.INFO,
+            codeTypes.SUCCESS,
+            'initialiseLocalStore',
+            `otaKeyStore loaded`,
+            otaKeyStore.key
+          )
+        )
+        .catch(error => {
+          logger(
+            severityTypes.ERROR,
+            codeTypes.ERROR,
+            'initialiseLocalStore',
+            `otaKeyStore exception: ${error.message}`,
+            error
+          );
+        });
     } catch (error) {
-      console.log('<== LOAD LOCAL DATA FAILED ', error);
+      logger(
+        severityTypes.ERROR,
+        codeTypes.ERROR,
+        'initialiseLocalStore',
+        'Global exception',
+        error
+      );
+      console.log('<== INIT Local STORE FAILED ', error);
+      return false;
     }
+
+    console.log('<==  INIT LOCAL STORE DONE ');
+    return true;
   }
 
   @action
-  async initialise(t) {
+  async initialise() {
     console.log('==>  INITIALISE APPLICATION ');
     this.isAppReady = false;
-    const result = (await checkConnectivity()) && (await this.register()) && (await this.loadRemoteData());
-    if (!result) {
-      console.log('<== FALLBACK ');
-      await this.loadLocalData();
+    await this.initialiseLocalStore();
+    if (await checkConnectivity()) {
+      if (await this.register()) {
+        await this.loadRemoteData();
+      }
     }
     this.isAppReady = true;
     console.log('<== INITIALISE DONE ');
@@ -106,7 +215,7 @@ class AppStore {
       async () => {
         if (await checkConnectivity()) {
           registerStore.disconnect(t);
-          await this.initialise(t);
+          await this.initialise();
         }
       }
     );

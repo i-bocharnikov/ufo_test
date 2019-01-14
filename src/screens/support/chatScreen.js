@@ -10,8 +10,6 @@ import { UFOContainer } from './../../components/common';
 import { screens } from './../../utils/global';
 import registerStore from './../../stores/registerStore';
 
-const chatSource = require('./../../assets/chat/index.html');
-
 const styles = StyleSheet.create({
   header: { backgroundColor: 'transparent' },
   chatWrapper: { flex: 1 },
@@ -66,7 +64,7 @@ class ChatScreen extends Component {
         />
         <View style={styles.chatWrapper}>
           <WebView
-            source={chatSource}
+            source={{ uri: Platform.OS === 'ios' ? 'index.html' : 'file:///android_asset/chat/index.html' }}
             originWhitelist={[ '*' ]}
             injectedJavaScript={this.injectjs()}
             javaScriptEnabled={true}
