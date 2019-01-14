@@ -18,7 +18,7 @@ export default Platform.select({
         '8':
             'This action is not possible because the CSM does not support it or is deactivated',
         '9': 'No need to connect again, already connected to the vehicle',
-        '10': "Action can't be performed because not connected to vehicle",
+        '10': 'Vehicle is not reachable',
         '11': 'Vehicle has not been found after 10s searching',
         '12':
             "Can't process the action, as a previous one is still in progress, wait for it to finish",

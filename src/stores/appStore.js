@@ -24,9 +24,25 @@ class AppStore {
         keyAccessDeviceIdentifier
       );
       if (keyAccessDeviceToken) {
+        logger(
+          severityTypes.INFO,
+          codeTypes.SUCCESS,
+          'register',
+          `registration success inclusing keyAccessDeviceToken`,
+          '',
+          registerStore.user
+        );
         console.log('- OPEN SESSION IN OTA ');
         await OTAKeyStore.openSession(keyAccessDeviceToken);
       } else {
+        logger(
+          severityTypes.WARN,
+          codeTypes.ERROR,
+          'register',
+          `registration done but without keyAccessDeviceToken so we force creating new one`,
+          '',
+          registerStore.user
+        );
         keyAccessDeviceIdentifier = await OTAKeyStore.getKeyAccessDeviceIdentifier(
           true
         );
@@ -35,8 +51,26 @@ class AppStore {
           keyAccessDeviceIdentifier
         );
         if (keyAccessDeviceToken) {
+          logger(
+            severityTypes.INFO,
+            codeTypes.SUCCESS,
+            'register',
+            `registration success with new keyAccessDeviceToken`,
+            '',
+            registerStore.user
+          );
+
           console.log('- OPEN SESSION IN OTA');
           await OTAKeyStore.openSession(keyAccessDeviceToken);
+        } else {
+          logger(
+            severityTypes.ERROR,
+            codeTypes.ERROR,
+            'register',
+            `registration success but doesn't give back keyAccessDeviceToken for the second time after forcing new temp token. give up`,
+            '',
+            registerStore.user
+          );
         }
       }
       console.log('<== REGISTER DONE ');
