@@ -128,13 +128,6 @@ RCT_REMAP_METHOD(openSession,
 {
   @try
   {
-
-    BOOL authenticate = [[OTAManager instance] authenticated];
-    if(authenticate){
-      resolve(@YES);
-      return;
-    }
-
     [[OTAManager instance] openSessionWithToken:token
                                         success:^(bool success) {
                                           if (success) {
@@ -155,7 +148,7 @@ RCT_REMAP_METHOD(openSession,
 }
 
 // register
-RCT_REMAP_METHOD(addListeners,
+RCT_REMAP_METHOD(register,
                  registerResolver:(RCTPromiseResolveBlock)resolve
                  registerRejecter:(RCTPromiseRejectBlock)reject)
 {
@@ -167,7 +160,7 @@ RCT_REMAP_METHOD(addListeners,
   }
   @catch (NSError *error)
   {
-    reject(UNEXPECTED_ERROR_CODE, @"addListeners", error);
+    reject(UNEXPECTED_ERROR_CODE, @"register", error);
   }
 }
 

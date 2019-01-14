@@ -158,7 +158,7 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
     }
 
     @ReactMethod
-    public void addListeners(int registrationNumber, final Promise promise) {
+    public void register(int registrationNumber, final Promise promise) {
         try {
             OtaLogger.setDebugMode(true);
 
