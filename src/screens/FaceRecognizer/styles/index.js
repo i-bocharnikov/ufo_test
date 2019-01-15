@@ -46,13 +46,15 @@ export default StyleSheet.create({
 
   actionBtnDisabled: { backgroundColor: colors.BG_DEFAULT },
 
-  tiltTitle: {
-    ...textThemes.SP_BOLD,
+  message: {
+    ...textThemes.SP_SEMI_BOLD,
     fontSize: 24,
     color: colors.TEXT_INVERT_COLOR,
     opacity: 0.8,
     position: 'absolute',
-    top: '36%',
-    alignSelf: 'center'
+    top: '6%',
+    alignSelf: 'center',
+    textAlign: 'center',
+    paddingHorizontal: 36
   }
 });

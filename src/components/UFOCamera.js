@@ -146,18 +146,18 @@ export default class UFOCamera extends React.Component {
         base64: false,
         exif: true,
         doNotSave: false,
-        ...customOptions
+        ...customOptions,
+        /*
+         * for main camera the fix image take a lot of time or make app crash
+         * leave this option only for low resolution images (nov for frontal camera)
+         */
+        fixOrientation: customOptions.fixOrientation && this.props.type === RNCAMERA_CONSTANTS.Type.front
       };
       const imageData = await this.camera.takePictureAsync(options);
 
       // For all samsung device the picture is rotated so this code fix this issues
       if (imageData.exif.Orientation === 6) {
         return await this.rotateImage(imageData);
-      }
-
-      // Same fix but for frontal camera (needed more tests)
-      if (imageData.exif.Orientation === 8) {
-        return await this.rotateImage(imageData, 270);
       }
 
       return imageData;

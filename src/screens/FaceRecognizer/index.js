@@ -25,6 +25,7 @@ class FaceRecognizer extends Component {
   @observable isTilt = false;
 
   @observable isPending = false;
+  @observable handlingWasFailure = false;
   
   cameraRef = null;
   faceResetTimer = null;
@@ -39,6 +40,7 @@ class FaceRecognizer extends Component {
 
     this.props.navigation.addListener('willBlur', () => {
       this.isScreenFocused = false;
+      this.handlingWasFailure = false;
     });
   }
 
@@ -66,7 +68,7 @@ class FaceRecognizer extends Component {
                 onFaceDetectionError={this.onFaceDetectionError}
                 showTorchBtn={false}
                 defaultVideoQuality={RNCAMERA_CONSTANTS.VideoQuality['720p']}
-                //type={RNCAMERA_CONSTANTS.Type.front}
+                type={RNCAMERA_CONSTANTS.Type.front}
               />
             )}
             {!this.isPending && this.detectedFaces.map(face => (
@@ -75,11 +77,7 @@ class FaceRecognizer extends Component {
                 style={[ styles.faceArea, this.getFaceAreaStyles(face) ]}
               />
             ))}
-            {this.isTilt && (
-              <Text style={styles.tiltTitle}>
-                {this.props.t('incorrectDevicePosition')}
-              </Text>
-            )}
+            {this.renderMessage()}
           </Fragment>
         )}
         {this.renderActionPanel()}
@@ -89,10 +87,10 @@ class FaceRecognizer extends Component {
   }
 
   renderActionPanel = () => {
-    const { t } = this.props;
+    const { t, navigation } = this.props;
+    const nextBtnLabel = navigation.getParam('nextBtnLabel');
     const allowCapture = this.detectedFaces.length && !this.isPending;
     // add more rules, maybe area size and position validation
-    // add custtom btn labels from navigation params
 
     return this.capturedImgUri ? (
       <View style={styles.actionPanel}>
@@ -113,7 +111,7 @@ class FaceRecognizer extends Component {
           style={styles.actionBtn}
         >
           <Text style={styles.actionLabel}>
-            {t('nextBtn')}
+            {nextBtnLabel || t('nextBtn')}
           </Text>
         </TouchableHighlight>
       </View>
@@ -140,6 +138,36 @@ class FaceRecognizer extends Component {
           </Text>
         </TouchableHighlight>
       </View>
+    );
+  };
+
+  renderMessage = () => {
+    if (this.capturedImgUri || this.isPending) {
+      return null;
+    }
+
+    let mesage;
+    const description = this.props.navigation.getParam('description');
+    const errorMessage = this.props.navigation.getParam('handlingErrorMessage');
+
+    switch (true) {
+      case this.isTilt:
+        message = this.props.t('incorrectDevicePosition');
+        break;
+      case this.handlingWasFailure:
+        message = errorMessage || this.props.t('handlingDefaultError');
+        break;
+      case !!description:
+        message = description;
+        break;
+      default:
+        message = null;
+    }
+
+    return message && (
+      <Text style={styles.message}>
+        {message}
+      </Text>
     );
   };
 
@@ -219,17 +247,9 @@ class FaceRecognizer extends Component {
     const imageData = await this.cameraRef.takePicture({
       mirrorImage: true,
       orientation: 'portrait',
-
-      // sync below option with imageData.exif.Orientation in UFOCamera component
-      // fixOrientation: true
+      fixOrientation: true
     });
     this.capturedImgUri = imageData.uri;
-    const handleFile = this.props.navigation.getParam('actionHandleFileAsync');
-
-    if (typeof handleFile === 'function') {
-      const isSuccess = await handleFile(this.capturedImgUri);
-    }
-
     this.isPending = false;
   };
 
@@ -245,13 +265,27 @@ class FaceRecognizer extends Component {
   };
 
   /*
-   * Navigate to next screen
+   * Handle image and navigate to next screen
   */
-  navToNext = () => {
-    const action = this.props.navigation.getParam('actionNavNext');
+  navToNext = async () => {
+    const handleFile = this.props.navigation.getParam('actionHandleFileAsync');
+    const actionNavNext = this.props.navigation.getParam('actionNavNext');
 
-    if (typeof action === 'function') {
-      action();
+    if (typeof handleFile === 'function') {
+      this.isPending = true;
+      const isSuccess = await handleFile(this.capturedImgUri);
+      this.isPending = false;
+      
+      if (!isSuccess) {
+        this.handlingWasFailure = true;
+        this.resetCapture();
+        return;
+      }
+    }
+
+    if (typeof actionNavNext === 'function') {
+      this.resetCapture();
+      actionNavNext();
     }
   };
 
@@ -275,7 +309,10 @@ FaceRecognizer.propTypes = {
       params: PropTypes.shape({
         actionNavNext: PropTypes.func.isRequired,
         actionNavBack: PropTypes.func.isRequired,
-        actionHandleFileAsync: PropTypes.func
+        actionHandleFileAsync: PropTypes.func,
+        description: PropTypes.string,
+        handlingErrorMessage: PropTypes.string,
+        nextBtnLabel: PropTypes.string
       })
     })
   })

@@ -250,11 +250,13 @@ class SignUpScreen extends Component {
   };
 
   navToIdCardScreen = () => {
-    const { navigation } = this.props;
+    const { navigation, t } = this.props;
     const params = {
       actionNavNext: () => navigation.navigate(screenKeys.Identification),
       actionNavBack: () => navigation.navigate(screenKeys.SignUp),
-      actionHandleFileAsync: this.uploadFaceCapture
+      actionHandleFileAsync: this.uploadFaceCapture,
+      description: t('faceRecognizing:registerCaptureDescription'),
+      nextBtnLabel: t('faceRecognizing:saveBtnLabel')
     };
 
     navigation.navigate(screenKeys.FaceRecognizer, params);
@@ -352,18 +354,23 @@ class SignUpScreen extends Component {
   };
 
   uploadFaceCapture = async fileUri => {
-    const uploadedData = await registerStore.uploadDocument(
-      'identification',
-      'one_side',
-      'face_capture',
-      'front_side',
-      fileUri
-    );
-console.log('DOCUMENT DATA', uploadedData);
-    registerStore.user.identification_face_capture_reference = uploadedData.reference;
-    const responce = await registerStore.validateTest(uploadedData.reference);
+    try {
+      const uploadedFace = await registerStore.uploadDocument(
+        'identification',
+        'one_side',
+        'face_capture',
+        'front_side',
+        fileUri
+      );
 
-    return true;
+      const isSuccess = await registerStore.save({
+        identification_face_capture_reference: uploadedFace.reference
+      });
+
+      return isSuccess;
+    } catch (error) {
+      return false
+    }
   };
 }
 

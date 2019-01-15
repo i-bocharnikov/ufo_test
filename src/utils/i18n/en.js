@@ -288,7 +288,13 @@ export default {
     resetBtn: 'Reset',
     nextBtn: 'Next',
     backBtn: 'Back',
-    captureBtn: 'Capture'
+    saveBtnLabel: 'Save',
+    validateBtnLabel: 'Validate',
+    captureBtn: 'Capture',
+    handlingDefaultError: 'Something went wrong. try again',
+    handlingRentalError: 'Identity wasn\'t validate, something went wrong, try again',
+    registerCaptureDescription: 'Please, capture your face to validate access in future',
+    rentalCaptureDescription: 'Please, capture your face to confirm your identity'
   },
   otaKeyNativeErrors
 };

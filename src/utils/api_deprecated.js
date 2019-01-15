@@ -103,7 +103,6 @@ export async function putToApi(
     activitiesStore.activities.registerInternetStopSuccess();
     return response.data;
   } catch (error) {
-    console.log('ERROR', {...error});
     handleError(error, suppressToastBox);
   }
 }
