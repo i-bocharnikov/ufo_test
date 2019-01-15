@@ -8,14 +8,20 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import UFOHeader from '../../components/header/UFOHeader';
 import UFOActionBar from '../../components/UFOActionBar';
 import { UFOContainer } from '../../components/common';
-import { screens, actionStyles, icons, dims, backgrounds } from '../../utils/global';
+import {
+  screens,
+  actionStyles,
+  icons,
+  dims,
+  backgrounds
+} from '../../utils/global';
 import { driveStore, guideStore } from '../../stores';
 import UFOCard from '../../components/UFOCard';
 import UFOSlider from '../../components/UFOSlider';
+import { NavigationEvents } from 'react-navigation';
 
 @observer
 class ReturnScreen extends Component {
-
   @observable guideIndex = 0;
   @observable refreshing = false;
 
@@ -24,7 +30,9 @@ class ReturnScreen extends Component {
   }
 
   refresh = async () => {
+    this.refreshing = true;
     await guideStore.listReturnGuides();
+    this.refreshing = false;
   };
 
   renderGuide({ item }) {
@@ -53,15 +61,15 @@ class ReturnScreen extends Component {
       }
     ];
 
-    const _RefreshControl = <RefreshControl
-      refreshing={this.refreshing}
-      onRefresh={this.refresh}
-    />;
+    const _RefreshControl = (
+      <RefreshControl refreshing={this.refreshing} onRefresh={this.refresh} />
+    );
 
     const guides = guideStore.returnGuides;
 
     return (
       <UFOContainer image={backgrounds.RETURN001}>
+        <NavigationEvents onWillFocus={() => this.refresh()} />
         <KeyboardAwareScrollView refreshControl={_RefreshControl}>
           <UFOHeader
             t={t}
