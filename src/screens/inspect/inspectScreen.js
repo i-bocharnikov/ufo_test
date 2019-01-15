@@ -13,22 +13,24 @@ import { driveStore, inspectStore } from '../../stores';
 import UFOSlider from '../../components/UFOSlider';
 import { confirm } from '../../utils/interaction';
 import UFOCard from '../../components/UFOCard';
+import { NavigationEvents } from 'react-navigation';
+
 const markerImage = require('../../assets/images/marker.png');
 
 const INSPECT_DEVICE_WIDTH = Dimensions.get('window').width;
 const INSPECT_CAR_WIDTH = (INSPECT_DEVICE_WIDTH * 80) / 100;
 const INSPECT_CAR_HEIGHT = INSPECT_CAR_WIDTH / 2;
-const INSPECT_CAR_PADDING_HORIZONTAL = (INSPECT_DEVICE_WIDTH - INSPECT_CAR_WIDTH) / 2;
+const INSPECT_CAR_PADDING_HORIZONTAL =
+  (INSPECT_DEVICE_WIDTH - INSPECT_CAR_WIDTH) / 2;
 
 @observer
 class InspectScreen extends Component {
-
   @observable damageIndex = 0;
   @observable isReady = false;
   @observable refreshing = false;
   @observable activityPending = false;
 
-  componentDidMount() {
+  componentWillMount() {
     this.refresh();
   }
 
@@ -61,14 +63,13 @@ class InspectScreen extends Component {
     if (driveStore.rental && driveStore.rental.contract_signed) {
       if (await inspectStore.confirmFinalInspection(t)) {
         driveStore.refreshRental();
-        this.props.navigation.navigate(screens.DRIVE.name);
       }
     } else {
       if (await inspectStore.confirmInitialInspection(t)) {
         driveStore.refreshRental();
-        this.props.navigation.navigate(screens.DRIVE.name);
       }
     }
+    this.props.navigation.navigate(screens.DRIVE.name);
   };
 
   confirmInspection = async t => {
@@ -94,10 +95,12 @@ class InspectScreen extends Component {
 
     return (
       <KeyboardAwareScrollView
-        refreshControl={<RefreshControl
-          refreshing={this.refreshing}
-          onRefresh={this.refresh}
-        />}
+        refreshControl={
+          <RefreshControl
+            refreshing={this.refreshing}
+            onRefresh={this.refresh}
+          />
+        }
       >
         <View
           style={{
@@ -154,12 +157,12 @@ class InspectScreen extends Component {
       {
         style: actionStyles.ACTIVE,
         icon: icons.CANCEL,
-        onPress: () => this.props.navigation.navigate(screens.DRIVE.name)
+        onPress: () => navigation.navigate(screens.DRIVE.name)
       },
       {
         style: actionStyles.ACTIVE,
         icon: icons.ADD,
-        onPress: () => this.props.navigation.navigate(screens.INSPECT_LOCATE.name)
+        onPress: () => navigation.navigate(screens.INSPECT_LOCATE.name)
       },
       {
         style: actionStyles.TODO,
@@ -175,6 +178,7 @@ class InspectScreen extends Component {
 
     return (
       <UFOContainer image={screens.INSPECT.backgroundImage}>
+        <NavigationEvents onWillFocus={() => this.refresh()} />
         <UFOHeader
           transparent
           t={t}
@@ -182,7 +186,9 @@ class InspectScreen extends Component {
           currentScreen={screens.INSPECT}
           title={
             isInitialInspection
-              ? t('inspect:initialInspectionTitle', { rental: driveStore.rental })
+              ? t('inspect:initialInspectionTitle', {
+                  rental: driveStore.rental
+                })
               : t('inspect:finalInspectionTitle', { rental: driveStore.rental })
           }
           subTitle={driveStore.rental ? driveStore.rental.car.reference : ''}

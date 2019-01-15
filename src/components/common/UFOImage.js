@@ -33,6 +33,7 @@ export default class UFOImage extends Component {
         style={[style, isLoading && ownStyles.preloader]}
         source={{
           uri,
+          cache: FastImage.cacheControl.web,
           headers: isRefImage ? { Authorization: `Bearer ${SAVE_TOKEN}` } : {}
         }}
         {...restProps}

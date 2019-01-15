@@ -8,14 +8,21 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import UFOHeader from '../../components/header/UFOHeader';
 import UFOActionBar from '../../components/UFOActionBar';
 import { UFOContainer } from '../../components/common';
-import { screens, actionStyles, icons, colors, dims, backgrounds } from '../../utils/global';
+import {
+  screens,
+  actionStyles,
+  icons,
+  colors,
+  dims,
+  backgrounds
+} from '../../utils/global';
 import { driveStore, guideStore } from '../../stores';
 import UFOCard from '../../components/UFOCard';
 import UFOSlider from '../../components/UFOSlider';
+import { NavigationEvents } from 'react-navigation';
 
 @observer
 class FindScreen extends Component {
-
   @observable guideIndex = 0;
   @observable refreshing = false;
 
@@ -24,7 +31,9 @@ class FindScreen extends Component {
   }
 
   refresh = async () => {
+    this.refreshing = true;
     await guideStore.listFindGuides();
+    this.refreshing = false;
   };
 
   renderGuide({ item }) {
@@ -44,9 +53,11 @@ class FindScreen extends Component {
   };
 
   doCarFound = async () => {
+    this.activityPending = true;
     if (driveStore.carFound()) {
       this.props.navigation.navigate(screens.DRIVE.name);
     }
+    this.activityPending = false;
   };
 
   render() {
@@ -55,7 +66,7 @@ class FindScreen extends Component {
       {
         style: actionStyles.ACTIVE,
         icon: icons.BACK,
-        onPress: () => this.props.navigation.navigate(screens.DRIVE.name)
+        onPress: () => this.props.navigation.goBack()
       },
       {
         style: driveStore.rental
@@ -68,15 +79,15 @@ class FindScreen extends Component {
       }
     ];
 
-    const _RefreshControl = <RefreshControl
-      refreshing={this.refreshing}
-      onRefresh={this.refresh}
-    />;
+    const _RefreshControl = (
+      <RefreshControl refreshing={this.refreshing} onRefresh={this.refresh} />
+    );
 
     const guides = guideStore.findGuides;
 
     return (
       <UFOContainer image={backgrounds.DRIVE001}>
+        <NavigationEvents onWillFocus={() => this.refresh()} />
         <KeyboardAwareScrollView refreshControl={_RefreshControl}>
           <UFOHeader
             t={t}

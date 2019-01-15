@@ -151,7 +151,8 @@ export default {
     referalBlock: 'Referal Code {{code}}',
     referalCodeMessage:
       'You can use my UFODRIVE referral code {{code}} to get €30 off of your first ride, and drive to space!',
-    devicePermissionRestricted: 'To use {{type}} activate it in the phone settings'
+    devicePermissionRestricted:
+      'To use {{type}} activate it in the phone settings'
   },
   inspect: {
     initialInspectionTitle: 'Initial inspection',
@@ -246,7 +247,7 @@ export default {
     voucherPlaceholder: 'Voucher / referral code',
     milesPlaceholder: 'Miles and more number',
     voucherTooltip:
-      'Select to use your balance amount for this booking. More information on https://www.ufodrive.com/en/ufo-world/referral',
+      'Gain free credit and additional benefits by referring new customers. More information on https://www.ufodrive.com/en/ufo-world/referral',
     scanCreditCardBtn: 'Scan a new credit card',
     applyBtn: 'APPLY\nALTERNATIVE',
     pickUpAlt: 'Pickup',
@@ -262,7 +263,7 @@ export default {
       'Before the rental,please register youself by scanning your ID and driver licence. If you want to know more about how it works, ',
     dreveDescrDriveP1:
       'Find your bookings in the drive section of the app. If you want to know more about how it works, ',
-    dreveDescrGuideLink: 'read the guide.',
+    dreveDescrGuideLink: 'Please consult the FAQ.',
     feedBackTitle: 'Just one question',
     confirmDialog: 'DONE',
     feedBackInputPlaceholder: 'Your variant'
