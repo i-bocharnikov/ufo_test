@@ -1,65 +1,84 @@
-import React, { Component } from "react";
-import { translate } from "react-i18next";
-import { observer } from "mobx-react";
-import { View } from 'react-native'
-import DeviceInfo from 'react-native-device-info'
+import React, { Component } from 'react';
+import { WebView, View, StyleSheet, Platform } from 'react-native';
+import { translate } from 'react-i18next';
+import { observer } from 'mobx-react';
+import DeviceInfo from 'react-native-device-info';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
-import UFOHeader from "../../components/header/UFOHeader";
-import UFOActionBar from "../../components/UFOActionBar";
-import { UFOContainer } from '../../components/common'
-import { actionStyles, icons, screens } from '../../utils/global'
-import registerStore from "../../stores/registerStore";
-import { WebView } from 'react-native';
+import UFOHeader from './../../components/header/UFOHeader';
+import { UFOContainer } from './../../components/common';
+import { screens } from './../../utils/global';
+import registerStore from './../../stores/registerStore';
+
+const styles = StyleSheet.create({
+  header: { backgroundColor: 'transparent' },
+  chatWrapper: { flex: 1 },
+  chat: { zIndex: 10 }
+});
 
 @observer
 class ChatScreen extends Component {
-
-  async componentDidMount() {
-
-  }
-
-  //sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
-
   injectjs() {
-    let userName = registerStore.user.last_name ? (registerStore.user.first_name + registerStore.user.last_name) : registerStore.user.reference
-    let userEmail = registerStore.user.email ? registerStore.user.email : ""
-    let userPhone = registerStore.user.phone_number ? registerStore.user.phone_number : ""
-    let userDescription = `DeviceCountry: ${DeviceInfo.getDeviceCountry()}, DeviceLocale: ${DeviceInfo.getDeviceLocale()}, DeviceName: ${DeviceInfo.getDeviceName()}, DeviceManufacturer: ${DeviceInfo.getManufacturer()}, DeviceModel: ${DeviceInfo.getModel()}, SystemName: ${DeviceInfo.getSystemName()}, SystemVersion: ${DeviceInfo.getSystemVersion()}, SystemTimezone: ${DeviceInfo.getTimezone()}, IsTablet: ${DeviceInfo.isTablet()}, ApplicationID: ${DeviceInfo.getBundleId()}, ApplicationBuild: ${DeviceInfo.getBuildNumber()}`
-    let method = `setContactInfo`
-    let data = `{\"client_name\": \"${userName}\", \"email\": \"${userEmail}\", \"phone\": \"${userPhone}\",\"description\": \"${userDescription}\"}`
+    const userName = registerStore.user.last_name
+      ? `${registerStore.user.first_name} ${registerStore.user.last_name}`
+      : registerStore.user.reference;
 
-    let jsCode = `setTimeout(() => {window.jivo_api.${method}(${data});}, 1000)`;
+    const userEmail = registerStore.user.email || '';
+    const userPhone = registerStore.user.phone_number || '';
+    const userDescription = `DeviceCountry: ${DeviceInfo.getDeviceCountry()}, `
+      + `DeviceLocale: ${DeviceInfo.getDeviceLocale()}, `
+      + `DeviceName: ${DeviceInfo.getDeviceName()}, `
+      + `DeviceManufacturer: ${DeviceInfo.getManufacturer()}, `
+      + `DeviceModel: ${DeviceInfo.getModel()}, `
+      + `SystemName: ${DeviceInfo.getSystemName()}, `
+      + `SystemVersion: ${DeviceInfo.getSystemVersion()}, `
+      + `SystemTimezone: ${DeviceInfo.getTimezone()}, `
+      + `IsTablet: ${DeviceInfo.isTablet()}, `
+      + `ApplicationID: ${DeviceInfo.getBundleId()}, `
+      + `ApplicationBuild: ${DeviceInfo.getBuildNumber()}`;
 
-    return jsCode;
+    const method = 'setContactInfo';
+    const data = `{\"client_name\": \"${
+      userName
+    }\", \"email\": \"${
+      userEmail
+    }\", \"phone\": \"${
+      userPhone
+    }\",\"description\": \"${
+      userDescription
+    }\"}`;
+
+    return `setTimeout(() => { window.jivo_api.${method}(${data}); }, 1000)`;
   }
 
   render() {
-    const { t, navigation } = this.props;
-
-    let actions = [
-      {
-        style: actionStyles.ACTIVE,
-        icon: icons.BACK,
-        onPress: () => this.props.navigation.pop()
-      },
-    ]
     return (
       <UFOContainer image={screens.SUPPORT_CHAT.backgroundImage}>
-        <UFOHeader transparent logo t={t} navigation={navigation} currentScreen={screens.SUPPORT_CHAT} style={{ backgroundColor: 'transparent' }} />
-        <View style={{ flex: 0.4 }}>
+        <UFOHeader
+          t={this.props.t}
+          navigation={this.props.navigation}
+          transparent={true}
+          logo={true}
+          currentScreen={screens.SUPPORT_CHAT}
+          style={styles.header}
+        />
+        <View style={styles.chatWrapper}>
           <WebView
-            ref={(ref) => { this.webView = ref; }}
-            source={{ uri: "file:///android_asset/chat/index.html" }}
+            source={{ uri: Platform.OS === 'ios' ? 'index.html' : 'file:///android_asset/chat/index.html' }}
+            originWhitelist={[ '*' ]}
             injectedJavaScript={this.injectjs()}
             javaScriptEnabled={true}
             domStorageEnabled={true}
             startInLoadingState={true}
-            style={{ zIndex: 10 }}
+            style={styles.chat}
+            useWebKit={true}
+            bounces={false}
           />
         </View>
-        <UFOActionBar actions={actions} />
+        {Platform.OS === 'android' && <KeyboardSpacer />}
       </UFOContainer>
     );
   }
 }
-export default translate("translations")(ChatScreen);
+
+export default translate()(ChatScreen);

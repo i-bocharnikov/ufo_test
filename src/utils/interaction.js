@@ -1,55 +1,64 @@
+import { Platform, Alert, Vibration, ToastAndroid } from 'react-native';
+import prompt from 'react-native-prompt-android';
+import Toast from 'react-native-simple-toast';
+import i18n from 'i18next';
 
-import { Alert, Vibration, ToastAndroid } from 'react-native';
-
-export async function confirm(title, message, action) {
-    await Alert.alert(
-        title,
+export function showToastError(errorMessage, yOffset = 0, xOffset = 0) {
+  const message = typeof errorMessage === 'string' ? errorMessage : i18n.t('error:unknown');
+  Vibration.vibrate();
+  Platform.OS === 'ios'
+    ? Toast.showWithGravity(
         message,
-        [
-            { text: 'Cancel', onPress: () => { }, style: 'cancel' },
-            { text: 'OK', onPress: () => { action() } },
-        ],
-        { cancelable: true }
-    )
+        Toast.LONG,
+        Toast.TOP
+      )
+    : ToastAndroid.showWithGravityAndOffset(
+        message,
+        ToastAndroid.LONG,
+        ToastAndroid.TOP,
+        xOffset,
+        yOffset
+      );
 }
 
-export async function showToastError(key, message) {
-    await Vibration.vibrate()
-    //TODO TRANSLATION with key
-    await ToastAndroid.showWithGravity(message, ToastAndroid.LONG, ToastAndroid.TOP)
+export async function showAlertInfo(title = '', message = '') {
+  return new Promise(resolve => {
+    Alert.alert(
+      title,
+      message,
+      [
+        {text: i18n.t('common:okBtn'), onPress: resolve}
+      ],
+    );
+  });
 }
 
-export function showInfo(message) {
-    Toast.show({
-        text: message,
-        buttonText: 'Ok',
-        type: "info",
-        duration: 5000,
-        position: "top",
-
-        buttonTextStyle: { color: "#008000" },
-        buttonStyle: { backgroundColor: "#5cb85c" }
-    });
+export async function confirm(title = '', message = '', confirmAction) {
+  await Alert.alert(
+    title,
+    message,
+    [
+      {text: i18n.t('common:cancelBtn'), style: 'cancel'},
+      {text: i18n.t('common:okBtn'), onPress: confirmAction}
+    ],
+    {cancelable: true}
+  );
 }
 
-export function showWarning(message) {
-    Toast.show({
-        text: message,
-        buttonText: 'Ok',
-        type: "warning",
-        duration: 5000,
-        position: "top",
+export function showPrompt(title = '', descr = '', action, cancelAction, options = {}) {
+  const cancelFn = typeof cancelAction === 'function' ? cancelAction : () => null;
+  const actions = [
+    {text: i18n.t('common:cancelBtn'), onPress: cancelFn, style: 'cancel'}
+  ];
 
-        buttonTextStyle: { color: "#008000" },
-        buttonStyle: { backgroundColor: "#5cb85c" }
-    });
-}
+  if (typeof action === 'function') {
+    const agreeAction = {text: i18n.t('common:okBtn'), onPress: action};
+    actions.push(agreeAction);
+  }
 
-export function showActivitiesState(message) {
-    Toast.show({
-        text: message,
-        position: 'top',
-        type: "warning",
-        duration: 15000,
-    });
+  if (Array.isArray(action)) {
+    action.forEach(a => actions.push(a));
+  }
+
+  prompt(title, descr, actions, options);
 }

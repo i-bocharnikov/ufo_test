@@ -1,53 +1,82 @@
-import React from "react";
-import FastImage from 'react-native-fast-image'
-import { Image } from 'react-native'
-import { SAVE_TOKEN } from '../../utils/api'
-import configurations from "../../utils/configurations"
+import React, { Component } from 'react';
+import { Image, ActivityIndicator, StyleSheet } from 'react-native';
+import FastImage from 'react-native-fast-image';
+import PropTypes from 'prop-types';
 
-export default class UFOImage extends React.Component {
+import { SAVE_TOKEN } from './../../utils/api_deprecated';
+import configurations from './../../utils/configurations';
 
-    render() {
+const ownStyles = StyleSheet.create({
+  preloader: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.1)'
+  }
+});
 
-        let style = this.props.style
-        let resizeMode = this.props.resizeMode ? this.props.resizeMode : 'cover'
-        let source = this.props.source
+export default class UFOImage extends Component {
+  render() {
+    const {
+      fallbackToImage,
+      source,
+      style,
+      children,
+      ...restProps
+    } = this.props;
+    const uri = this.getImageUri(source);
+    const isLoading = uri === 'loading';
+    const isRefImage = source && source.reference;
 
-        if (source.uri && source.uri === 'loading') {
-            return (
-                <FastImage source={require('../../assets/images/loading.gif')} style={style} resizeMode={resizeMode} >
-                    {this.props.children}
-                </FastImage >
+    return uri && !fallbackToImage ? (
+      <FastImage
+        style={[style, isLoading && ownStyles.preloader]}
+        source={{
+          uri,
+          cache: FastImage.cacheControl.web,
+          headers: isRefImage ? { Authorization: `Bearer ${SAVE_TOKEN}` } : {}
+        }}
+        {...restProps}
+      >
+        {isLoading ? <ActivityIndicator animating={true} /> : children}
+      </FastImage>
+    ) : (
+      <Image source={this.getSafeSource} style={style} {...restProps} />
+    );
+  }
 
-            );
-        }
+  get getSafeSource() {
+    const source = this.props.source;
 
-        if (source.reference) {
-            let url = configurations.UFO_SERVER_API_URL + "api/" + configurations.UFO_SERVER_API_VERSION + "/documents/" + source.reference
-            let header = { Authorization: 'Bearer ' + SAVE_TOKEN }
-            return (
-                <FastImage source={{
-                    uri: url,
-                    headers: header,
-                    priority: FastImage.priority.normal
-                }}
-                    style={style} resizeMode={resizeMode}>
-                    {this.props.children}
-                </FastImage>
-            )
-        }
-
-        if (source.uri) {
-            source.headers = {} //TODO add authentication if we secure resources
-            source.priority = FastImage.priority.normal
-            return (
-
-                <FastImage source={source} style={style} resizeMode={resizeMode} >
-                    {this.props.children}
-                </FastImage>
-
-            );
-        }
-
-        return <Image source={source} style={style} resizeMode={resizeMode} />
+    if (source && source.hasOwnProperty('uri') && !source.uri) {
+      return null;
     }
+
+    return source;
+  }
+
+  getImageUri = (source = {}) => {
+    if (source.reference) {
+      const uri = `${configurations.UFO_SERVER_API_URL}api/${
+        configurations.UFO_SERVER_DEPRECATED_API_VERSION
+      }/documents/${source.reference}`;
+
+      return uri;
+    } else if (source.uri) {
+      return source.uri;
+    } else {
+      return null;
+    }
+  };
 }
+
+UFOImage.propTypes = {
+  /*
+   * for rendering local images (assets) used Image component with all his props
+   * for other images used FastImage, read doc about it, some props can be expanded
+   */
+  ...FastImage.propTypes,
+  ...Image.propTypes,
+  /* use exactly Image component. Don't mix FastImage.props with this prop */
+  fallbackToImage: PropTypes.bool
+};

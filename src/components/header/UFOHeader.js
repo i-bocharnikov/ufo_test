@@ -1,115 +1,106 @@
-import React from "react";
-import { View, StyleSheet } from 'react-native';
-import { observer } from "mobx-react";
+import React, { Component } from 'react';
+import { View } from 'react-native';
+import { observer } from 'mobx-react';
+import PropTypes from 'prop-types';
 
-import { UFOText, UFOImage } from '../common'
-import { colors, icons, actionStyles, screens, navigationParams, sizes, logos } from '../../utils/global'
-import UFOAction from "../UFOAction";
-
-const SUPPORT_FAQ_CATEGORY = navigationParams.SUPPORT_FAQ_CATEGORY
-const PREVIOUS_SCREEN = navigationParams.PREVIOUS_SCREEN
+import { UFOText, UFOImage } from './../common';
+import { colors, icons, actionStyles, screens, sizes, logos } from './../../utils/global';
+import UFOAction from './../UFOAction';
+import activitiesStore from './../../stores/activitiesStore';
+import styles from './styles';
 
 @observer
-export default class UFOHeader extends React.Component {
+export default class UFOHeader extends Component {
+  render() {
+    const { t, transparent, title, logo, currentScreen = screens.HOME } = this.props;
 
-    missing = () => console.log('Missing action method')
-    goToHome = () => this.props.navigation.navigate(screens.HOME.name)
-    goToSupport = (currentScreen) => this.props.navigation.navigate(screens.SUPPORT_FAQS.name, { SUPPORT_FAQ_CATEGORY: currentScreen.supportFaqCategory, PREVIOUS_SCREEN: currentScreen })
+    const titleComponent = title ? (
+      <UFOText inverted h3>
+        {title}
+      </UFOText>
+    ) : null;
+    const logoComponent = logo ? (
+      <UFOImage source={logos.horizontal} style={styles.logo} resizeMode="contain" />
+    ) : null;
 
-    render() {
+    const alpha = transparent ? 0 : 0.7;
+    const isSupport = currentScreen.supportFaqCategory !== null;
 
-        let t = this.props.t
-        let title = this.props.title ? (<UFOText inverted h3>{this.props.title}</UFOText>) : null
-        let subTitle = this.props.subTitle ? (<UFOText inverted h4>{this.props.subTitle}</UFOText>) : null
-        let logo = this.props.logo ? (<UFOImage source={logos.horizontal} style={styles.logo} resizeMode='contain' />) : null
-        let alpha = this.props.transparent ? 0 : 0.7
-        let currentScreen = this.props.currentScreen ? this.props.currentScreen : screens.HOME
-        let isSupport = currentScreen.supportFaqCategory !== null
-        let activities = activitiesStore.activities
-        let activitiesMessage = null
-        if (activities.internetAccessFailure && activities.bluetoothAccessFailure) {
-            activitiesMessage = t('activities:internetbluetoothAccessFailure')
-        } else if (activities.internetAccessFailure) {
-            activitiesMessage = t('activities:internetAccessFailure')
-        } else if (activities.bluetoothAccessFailure) {
-            activitiesMessage = t('activities:bluetoothAccessFailure')
-        }
+    const activities = activitiesStore.activities;
+    let activitiesMessage = null;
 
-        return (
-            <View style={styles.headerMasterContainer}>
-                {activitiesMessage && (
-                    <View style={styles.activityMessages}>
-                        <UFOText h11 inverted center>{activitiesMessage}</UFOText>
-                    </View>
-                )}
-                <View style={[styles.headerContainer, { backgroundColor: colors.HEADER_BACKGROUND.alpha(alpha).string() }]}>
-                    <View style={styles.left}>
-                        <UFOAction action={{
-                            style: actionStyles.ACTIVE,
-                            icon: icons.HOME,
-                            onPress: this.goToHome
-
-                        }} size={sizes.SMALL} noText />
-                    </View >
-                    <View style={styles.body}>
-                        {title}
-                        {logo}
-                    </View>
-                    <View style={styles.right}>
-                        {(isSupport &&
-                            <UFOAction action={{
-                                style: actionStyles.TODO,
-                                icon: icons.HELP,
-                                onPress: () => this.goToSupport(currentScreen)
-
-                            }} size={sizes.SMALL} noText />
-                        )}
-                    </View>
-                </View>
-            </View>
-        );
+    if (activities.internetAccessFailure && activities.bluetoothAccessFailure) {
+      activitiesMessage = t('activities:internetbluetoothAccessFailure');
+    } else if (activities.internetAccessFailure) {
+      activitiesMessage = t('activities:internetAccessFailure');
+    } else if (activities.bluetoothAccessFailure) {
+      activitiesMessage = t('activities:bluetoothAccessFailure');
     }
+
+    return (
+      <View style={styles.headerMasterContainer}>
+        {activitiesMessage && (
+          <View style={styles.activityMessages}>
+            <UFOText h11 inverted center>
+              {activitiesMessage}
+            </UFOText>
+          </View>
+        )}
+        <View
+          style={[
+            styles.headerContainer,
+            { backgroundColor: colors.HEADER_BACKGROUND.alpha(alpha).string() }
+          ]}
+        >
+          <View style={styles.left}>
+            <UFOAction
+              action={{
+                style: actionStyles.ACTIVE,
+                icon: icons.HOME,
+                onPress: this.goToHome
+              }}
+              size={sizes.SMALL}
+              noText
+            />
+          </View>
+          <View style={styles.body}>
+            {titleComponent}
+            {logoComponent}
+          </View>
+          <View style={styles.right}>
+            {isSupport && (
+              <UFOAction
+                action={{
+                  style: actionStyles.TODO,
+                  icon: icons.HELP,
+                  onPress: () => this.goToSupport(currentScreen)
+                }}
+                size={sizes.SMALL}
+                noText
+              />
+            )}
+          </View>
+        </View>
+      </View>
+    );
+  }
+
+  goToHome = () => {
+    this.props.navigation.navigate(screens.HOME.name);
+  };
+
+  goToSupport = currentScreen => {
+    this.props.navigation.navigate(screens.SUPPORT_FAQS.name, {
+      SUPPORT_FAQ_CATEGORY: currentScreen.supportFaqCategory,
+      PREVIOUS_SCREEN: currentScreen
+    });
+  };
 }
 
-const styles = StyleSheet.create({
-    headerMasterContainer: {
-        flexDirection: 'column',
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        zIndex: 20
-    },
-    activityMessages: {
-        backgroundColor: colors.ERROR.string(),
-        height: 15,
-        width: "100%",
-    },
-    headerContainer: {
-        paddingVertical: 10,
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        alignContent: 'center',
-        width: "100%",
-    },
-    left: {
-        flex: 0.15,
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    body: {
-        flex: 0.7,
-        flexDirection: 'row',
-        alignItems: 'flex-start',
-        justifyContent: 'center',
-    },
-    right: {
-        flex: 0.15,
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    logo: {
-        flex: 1,
-        height: 35
-    },
-});
+UFOHeader.propTypes = {
+  t: PropTypes.func.isRequired,
+  transparent: PropTypes.bool,
+  title: PropTypes.string,
+  logo: PropTypes.bool,
+  currentScreen: PropTypes.object
+};

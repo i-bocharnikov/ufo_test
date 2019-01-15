@@ -1,13 +1,29 @@
-import UFOIcon from './UFOIcon'
-import UFOImage from './UFOImage'
-import UFOText from './UFOText'
-import UFOTextInput from './UFOTextInput'
-import UFOContainer from './UFOContainer'
+import UFOContainer from './UFOContainer';
+import UFOTextInput from './UFOTextInput';
+import { ufoInputStyles } from './UFOTextInput/styles';
+import UFOIcon from './UFOIcon';
+import UFOImage from './UFOImage';
+import UFOVideo from './UFOVideo';
+import UFOModalLoader from './UFOModalLoader';
+import UFOGradientView from './UFOGradientView';
+import UFOCheckBoxItem from './UFOCheckBoxItem';
+
+import UFOText from './UFOText_old';
+import UFOTextInput_old from './UFOTextInput_old';
+import UFOIcon_old from './UFOIcon_old';
 
 export {
-    UFOIcon,
-    UFOImage,
-    UFOText,
-    UFOTextInput,
-    UFOContainer
-}
+  UFOContainer,
+  UFOTextInput,
+  ufoInputStyles,
+  UFOIcon,
+  UFOImage,
+  UFOVideo,
+  UFOModalLoader,
+  UFOGradientView,
+  UFOCheckBoxItem,
+  // deprecated components, will be replaced with redesigning
+  UFOText,
+  UFOTextInput_old,
+  UFOIcon_old
+};

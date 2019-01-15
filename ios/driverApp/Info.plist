@@ -2,14 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSCameraUsageDescription</key>
-	<string>UFODrive needs access to the camera to capture your driver license and inspect your vehicle</string>
-	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>UFODrive needs Bluetooh usage, for you to open or close the rented car.</string>
-	<key>NSFaceIDUsageDescription</key>
-	<string>UFODrive needs Face ID authorisation, for you to confirm rental booking and approve terms.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>UFODrive needs access to store photos taken with the camera</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -17,7 +9,7 @@
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.ufodrive.$(PRODUCT_NAME:rfc1034identifier)</string>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -25,40 +17,50 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>2.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>16</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>UILaunchStoryboardName</key>
-	<string>LaunchScreen</string>
-	<key>UIRequiredDeviceCapabilities</key>
-	<array>
-		<string>armv7</string>
-	</array>
-	<key>UISupportedInterfaceOrientations</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
-	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false/>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+		<key>NSAllowsArbitraryLoadsInWebContent</key>
+		<true/>
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
 		<key>NSExceptionDomains</key>
 		<dict>
 			<key>localhost</key>
 			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
-				<true/>
+				<false/>
 			</dict>
 		</dict>
 	</dict>
+	<key>NSAppleEventsUsageDescription</key>
+	<string/>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>UFODrive needs access</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>UFODrive needs Bluetooh usage, for you to open or close the rented car.</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>UFODrive needs access</string>
+	<key>NSCameraUsageDescription</key>
+	<string>UFODrive needs access to the camera to capture your driver license and inspect your vehicle</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>UFODrive needs Face ID authorisation, for you to confirm rental booking and approve terms.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>UFODrive need location to be able to connect to vehicule in ble (open / close the car)</string>
+	<key>NSMotionUsageDescription</key>
+	<string>UFODrive needs access</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>UFODrive needs access to store photos taken with the camera</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>UFODrive needs access</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>
@@ -75,8 +77,32 @@
 		<string>rubicon-icon-font.ttf</string>
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
-		<string>Sofia Pro.otf</string>
-		<string>SofiaProLight.otf</string>
+		<string>SofiaProRegular.ttf</string>
+		<string>SofiaProLight.ttf</string>
+		<string>SofiaProBold.ttf</string>
+		<string>SofiaProSemiBold.ttf</string>
 	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>bluetooth-central</string>
+	</array>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>armv7</string>
+	</array>
+	<key>UIRequiresFullScreen</key>
+	<false/>
+	<key>UIStatusBarHidden</key>
+	<false/>
+	<key>UIStatusBarStyle</key>
+	<string>UIStatusBarStyleLightContent</string>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
+	<key>kTCCServiceMediaLibrary</key>
+	<string>UFODrive needs access</string>
 </dict>
 </plist>

@@ -92,6 +92,9 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
     private WritableMap convert(OtaVehicleData otaVehicleData) {
 
         WritableMap otaKeyMap = Arguments.createMap();
+        if(otaVehicleData == null){
+            return otaKeyMap;
+        }
         otaKeyMap.putString("date", convert(otaVehicleData.getDate()));
         otaKeyMap.putDouble("mileageStart", otaVehicleData.getMileageStart());
         otaKeyMap.putDouble("mileageCurrent", otaVehicleData.getMileageCurrent());
@@ -127,6 +130,9 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
     private WritableMap convert(OtaLastVehicleData otaVehicleData) {
 
         WritableMap otaKeyMap = Arguments.createMap();
+        if(otaVehicleData == null){
+            return otaKeyMap;
+        }
         otaKeyMap.putString("energyType", otaVehicleData.getEnergyType() != null ? otaVehicleData.getEnergyType().name() : null);
         otaKeyMap.putDouble("batteryVoltage", otaVehicleData.getBatteryVoltage());
         otaKeyMap.putBoolean("connectedToCharger", otaVehicleData.isConnectedToCharger());
@@ -152,7 +158,7 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
     }
 
     @ReactMethod
-    public void register(int registrationNumber, final Promise promise) {
+    public void addListeners(int registrationNumber, final Promise promise) {
         try {
             OtaLogger.setDebugMode(true);
 
@@ -351,13 +357,25 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
      * No Internet Connectivity Required
      */
     @ReactMethod
-    public void switchToKey( final Promise promise  ) {
+    public void switchToKey( String otaKeyId, final Promise promise  ) {
 
         try {
-            getOtaSdk().getCore().switchToKey(LAST_ENABLED_KEY, new SwitchToKeyCallback() {
+            OtaKey usedKey =  getOtaSdk().getCore().getUsedKey();   
+            if(usedKey == null){
+                usedKey = LAST_ENABLED_KEY;
+            }
+            if(usedKey == null){
+                promise.reject("Input Invalid", "otaKeyId ["+otaKeyId+"] is not used");
+                return;
+            }
+            if(Long.parseLong(otaKeyId) != usedKey.getOtaId()){
+                promise.reject("Input Invalid", "otaKeyId ["+otaKeyId+"] is not the one currently used ["+usedKey.getOtaId()+"]");
+                return;
+            }
+            getOtaSdk().getCore().switchToKey(usedKey, new SwitchToKeyCallback() {
                 @Override
                 public void onKeySwitched(OtaKey otaKey) {
-                     promise.resolve(convert(otaKey));
+                     promise.resolve(true);
                 }
 
             });

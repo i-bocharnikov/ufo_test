@@ -1,73 +1,73 @@
-import { Platform } from 'react-native'
-import moment from "moment";
-import "moment-timezone";
-import { observable, action, computed } from 'mobx';
-import { persist } from 'mobx-persist'
-import _ from 'lodash'
+import moment from 'moment';
+import 'moment-timezone';
+import { observable, action } from 'mobx';
+import { persist } from 'mobx-persist';
 
-import { getFromApi } from '../utils/api'
-
-const DEBUG = false
+import { getFromApi } from './../utils/api_deprecated';
+import logger, { codeTypes, severityTypes } from './../utils/userActionsLogger';
 
 class FaqCategory {
-    @persist @observable reference = null
-    @persist @observable name = null
-    @persist @observable priority = null
-    @observable expanded = false
-    @persist('list', Faq) @observable faqs = []
+  @persist @observable reference = null;
+  @persist @observable name = null;
+  @persist @observable priority = null;
+  @observable expanded = false;
+  @persist('list', Faq) @observable faqs = [];
 }
 
 class Faq {
-    @persist @observable reference = null
-    @persist @observable title = null
-    @persist @observable media_type = null
-    @persist @observable media_url = null
-    @persist @observable text = null
-    @persist @observable priority = null
-
-
+  @persist @observable reference = null;
+  @persist @observable title = null;
+  @persist @observable media_type = null;
+  @persist @observable media_url = null;
+  @persist @observable text = null;
+  @persist @observable priority = null;
 }
 
-class supportStore {
+class SupportStore {
+  @persist('list', FaqCategory) @observable faqCategories = [];
 
-    @persist('list', FaqCategory) @observable faqCategories = []
+  getFaq(faqCategoryReference, faqReference) {
+    const category = this.faqCategories.find(
+      item => item.reference === faqCategoryReference
+    );
 
-    getFaq(faqCategoryReference, faqReference) {
-        let faqCategory = this.faqCategories.find(faqCategory => { return faqCategory.reference === faqCategoryReference })
-        if (faqCategory) {
-            return faqCategory.faqs.find(faq => { return faq.reference === faqReference })
-        } else {
-            return null
-        }
+    if (!category) {
+      return null;
     }
 
-    hasImage(faq) {
-        return faq.media_type === 'image'
-    }
-    hasVideo(faq) {
-        return faq.media_type === 'video'
-    }
+    const faq = category.faqs.find(item => item.reference === faqReference);
+    logger(
+      severityTypes.INFO,
+      codeTypes.SUCCESS,
+      'open faq reference action',
+      `FAQ-${faq.reference}-${faq.title}`
+    );
 
-    @action
-    async reset() {
-        return await this.list()
+    return faq;
+  }
+
+  hasImage(faq) {
+    return faq.media_type === 'image';
+  }
+  hasVideo(faq) {
+    return faq.media_type === 'video';
+  }
+
+  @action
+  async reset() {
+    return await this.list();
+  }
+
+  @action
+  async list() {
+    const response = await getFromApi('/faqs');
+    if (response && response.status === 'success') {
+      this.faqCategories = response.data.faq_categories;
+      return true;
     }
-
-    @action
-    async list() {
-
-        const response = await getFromApi("/faqs");
-        if (response && response.status === "success") {
-            if (DEBUG)
-                console.info("supportStore.list:", response.data);
-            this.faqCategories = response.data.faq_categories
-            return true
-        }
-        return false
-    };
+    return false;
+  }
 }
 
-export default supportStore = new supportStore();
-
-
-
+const supportStore = new SupportStore();
+export default supportStore;

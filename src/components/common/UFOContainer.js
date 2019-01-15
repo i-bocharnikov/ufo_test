@@ -1,28 +1,36 @@
-import React, { Component } from "react";
-import { Container } from 'native-base'
-import { ImageBackground, Dimensions } from 'react-native'
+import React, { Component } from 'react';
+import { View, ImageBackground, StyleSheet, Image, ViewPropTypes } from 'react-native';
+import PropTypes from 'prop-types';
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'black'
+  }
+});
 
-class UFOContainer extends Component {
+export default class UFOContainer extends Component {
+  render() {
+    const { image, children, style } = this.props;
 
-    render() {
-        let image = this.props.image
-        if (image) {
-            return (
-                <Container style={{ backgroundColor: 'black' }}>
-                    <ImageBackground style={{ width: Dimensions.get('window').width, height: Dimensions.get('window').height }} source={image} resizeMode='cover'>
-                        {this.props.children}
-                    </ImageBackground>
-                </Container>
-            );
-        }
-        return (
-            <Container>
-                {this.props.children}
-            </Container>
-        );
-    }
+    return image ? (
+      <ImageBackground
+        style={[ styles.container, style ]}
+        source={image}
+        resizeMode="cover"
+      >
+        {children}
+      </ImageBackground>
+    ) : (
+      <View style={[ styles.container, style ]}>
+        {children}
+      </View>
+    );
+  }
 }
 
-
-export default UFOContainer;
+UFOContainer.propTypes = {
+  image: Image.propTypes.source,
+  style: ViewPropTypes.style,
+  children: PropTypes.node
+};
