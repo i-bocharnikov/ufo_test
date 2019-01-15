@@ -361,8 +361,8 @@ class SignUpScreen extends Component {
     );
 console.log('DOCUMENT DATA', uploadedData);
     registerStore.user.identification_face_capture_reference = uploadedData.reference;
-    const responce = await registerStore.save();
-console.log('UPDATE USER', responce);
+    const responce = await registerStore.validateTest(uploadedData.reference);
+
     return true;
   };
 }

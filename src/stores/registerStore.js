@@ -25,6 +25,8 @@ import {
 } from "./../utils/api_deprecated";
 import { setAuthTokenForApi } from "./../utils/api";
 
+import { driveStore } from './';
+
 const DEBUG = false;
 
 const USER_STATUS_REGISTERED = "registered";
@@ -55,6 +57,7 @@ class User {
   @persist @observable driver_licence_front_side_reference = null;
   @persist @observable driver_licence_back_side_reference = null;
   @persist @observable miles_and_more = null;
+  @persist @observable identification_face_capture_reference = null;
 }
 
 class registerStore {
@@ -253,6 +256,12 @@ class registerStore {
 
     return false;
   };
+
+  @action
+  validateTest = async capture_face => {
+    const res = await putToApi(`/rentals/${driveStore.rental.reference}`, { action: 'capture_face', identification_face_capture_reference: capture_face })
+    console.log('VALIDATION CAPT', res);
+  }
 }
 
 export default (registerStore = new registerStore());
