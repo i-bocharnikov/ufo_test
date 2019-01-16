@@ -90,7 +90,6 @@ class FaceRecognizer extends Component {
     const { t, navigation } = this.props;
     const nextBtnLabel = navigation.getParam('nextBtnLabel');
     const allowCapture = this.detectedFaces.length && !this.isPending;
-    // add more rules, maybe area size and position validation
 
     return this.capturedImgUri ? (
       <View style={styles.actionPanel}>
@@ -233,11 +232,13 @@ class FaceRecognizer extends Component {
     }
 
     if (false) {
-      // check paddings
+      // check how centred position
+      return true;
     }
 
     if (false) {
-      // check square
+      // check square of face in screen
+      return true;
     }
 
     return false;
