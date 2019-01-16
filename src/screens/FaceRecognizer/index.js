@@ -247,7 +247,9 @@ class FaceRecognizer extends Component {
     const imageData = await this.cameraRef.takePicture({
       mirrorImage: true,
       orientation: 'portrait',
-      fixOrientation: true
+      fixOrientation: true,
+      /* use this option with camera type back to test with different faces */
+      // rotateAngle: 270
     });
     this.capturedImgUri = imageData.uri;
     this.isPending = false;

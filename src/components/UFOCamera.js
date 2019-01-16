@@ -157,7 +157,7 @@ export default class UFOCamera extends React.Component {
 
       // For all samsung device the picture is rotated so this code fix this issues
       if (imageData.exif.Orientation === 6) {
-        return await this.rotateImage(imageData);
+        return await this.rotateImage(imageData, customOptions.rotateAngle);
       }
 
       return imageData;
