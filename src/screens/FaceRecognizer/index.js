@@ -22,15 +22,15 @@ class FaceRecognizer extends Component {
 
   @observable detectedFaces = [];
   @observable capturedImgUri = null;
-  @observable isTilt = false;
+  @observable positionError = false;
 
   @observable isPending = false;
   @observable handlingWasFailure = false;
   
   cameraRef = null;
   faceResetTimer = null;
-  tiltResetTimer = null;
-  maxValidAngle = 30;
+  positionErrorTimer = null;
+  maxValidAngle = 20;
 
   componentDidMount() {
     /* exist bug of RNCamera when screen is blur in navigator */
@@ -46,7 +46,7 @@ class FaceRecognizer extends Component {
 
   componentWillUnmount() {
     clearTimeout(faceResetTimer);
-    clearTimeout(tiltResetTimer);
+    clearTimeout(positionErrorTimer);
   }
 
   render() {
@@ -151,8 +151,8 @@ class FaceRecognizer extends Component {
     const errorMessage = this.props.navigation.getParam('handlingErrorMessage');
 
     switch (true) {
-      case this.isTilt:
-        message = this.props.t('incorrectDevicePosition');
+      case !!this.positionError:
+        message = this.positionError;
         break;
       case this.handlingWasFailure:
         message = errorMessage || this.props.t('handlingDefaultError');
@@ -203,13 +203,10 @@ class FaceRecognizer extends Component {
   /*
    * RNCamera callback when face detected in camera
   */
-  onFacesDetected = ({ faces }) => {
-    const angle = _.get(faces[0], 'rollAngle');
+  onFacesDetected = ({ faces = [] }) => {
+    const isPositionInvalid = this.setFacePositionError(faces[0]);
 
-    if (angle && Math.abs(angle) > this.maxValidAngle) {
-      clearTimeout(this.tiltResetTimer);
-      this.isTilt = true;
-      this.tiltResetTimer = setTimeout(() => (this.isTilt = false), 1000);
+    if (isPositionInvalid) {
       this.clearDetectedFaces();
       return;
     }
@@ -217,6 +214,33 @@ class FaceRecognizer extends Component {
     clearTimeout(this.faceResetTimer);
     this.detectedFaces = faces;
     this.faceResetTimer = setTimeout(this.clearDetectedFaces, 1000);
+  };
+
+  /*
+   * Validate face position, if invalid save error and return true (error wa setted)
+   * @param {Object} faceData
+  */
+  setFacePositionError = faceData => {
+    if (!faceData) {
+      return false;
+    }
+
+    if (faceData.rollAngle && Math.abs(faceData.rollAngle) > this.maxValidAngle) {
+      clearTimeout(this.positionErrorTimer);
+      this.positionError = this.props.t('incorrectDevicePosition');
+      this.positionErrorTimer = setTimeout(() => (this.positionError = null), 1000);
+      return true;
+    }
+
+    if (false) {
+      // check paddings
+    }
+
+    if (false) {
+      // check square
+    }
+
+    return false;
   };
 
   /*
@@ -297,7 +321,7 @@ class FaceRecognizer extends Component {
   resetCapture = () => {
     this.detectedFaces = [];
     this.capturedImgUri = false;
-    this.isTilt = false;
+    this.positionError = null;
   };
 }
 
