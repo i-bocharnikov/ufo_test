@@ -289,7 +289,7 @@ class OTAKeyStore {
     showError = true
   ): Promise<string> {
     try {
-      if (this.keyAccessDeviceIdentifier != null) {
+      if (this.keyAccessDeviceIdentifier != null && !force) {
         return this.keyAccessDeviceIdentifier;
       }
       await this.otaKeyLogger({
