@@ -1,12 +1,10 @@
 import React, { Component, Fragment } from 'react';
-import { View, TouchableHighlight, Text, StyleSheet, Platform } from 'react-native';
+import { View, TouchableHighlight, Text, StyleSheet, Platform, Dimensions } from 'react-native';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 import { translate } from 'react-i18next';
-import _ from 'lodash';
 import PropTypes from 'prop-types';
 
-import { keys as screenKeys } from './../../navigators/helpers';
 import UFOCamera, { RNCAMERA_CONSTANTS } from './../../components/UFOCamera';
 import { UFOImage, UFOContainer, UFOModalLoader } from './../../components/common';
 import styles from './styles';
@@ -14,6 +12,8 @@ import { colors } from './../../utils/theme';
 import { showToastError } from './../../utils/interaction';
 
 const IS_IOS = Platform.OS === 'ios';
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('screen');
+const SCREEN_AREA = SCREEN_WIDTH * SCREEN_HEIGHT;
 
 @observer
 class FaceRecognizer extends Component {
@@ -26,11 +26,15 @@ class FaceRecognizer extends Component {
 
   @observable isPending = false;
   @observable handlingWasFailure = false;
-  
+
   cameraRef = null;
   faceResetTimer = null;
   positionErrorTimer = null;
   maxValidAngle = 20;
+  maxValidFrameTrim = 20;
+  maxValidFaceYaw = 30;
+  /* percent relative to screen area */
+  minValidFaceArea = 0.12;
 
   componentDidMount() {
     /* exist bug of RNCamera when screen is blur in navigator */
@@ -45,8 +49,8 @@ class FaceRecognizer extends Component {
   }
 
   componentWillUnmount() {
-    clearTimeout(faceResetTimer);
-    clearTimeout(positionErrorTimer);
+    clearTimeout(this.faceResetTimer);
+    clearTimeout(this.positionErrorTimer);
   }
 
   render() {
@@ -145,7 +149,7 @@ class FaceRecognizer extends Component {
       return null;
     }
 
-    let mesage;
+    let message;
     const description = this.props.navigation.getParam('description');
     const errorMessage = this.props.navigation.getParam('handlingErrorMessage');
 
@@ -178,7 +182,7 @@ class FaceRecognizer extends Component {
   };
 
   /*
-   * get position styles for face frame
+   * get styles for face frame
    * @param {Object} faceData
   */
   getFaceAreaStyles = faceData => {
@@ -186,17 +190,45 @@ class FaceRecognizer extends Component {
       return null;
     }
 
-    /* ios has a bug - data always returned regarding to landscape orientation */
+    const position = this.getFacePosition(faceData);
     const styles = StyleSheet.create({
       area: {
-        top: IS_IOS ? faceData.bounds.origin.x : faceData.bounds.origin.y,
-        left: IS_IOS ? faceData.bounds.origin.y : faceData.bounds.origin.x,
-        height: IS_IOS ? faceData.bounds.size.width : faceData.bounds.size.height,
-        width: IS_IOS ? faceData.bounds.size.height : faceData.bounds.size.width
+        top: position.top,
+        left: position.left,
+        height: position.height,
+        width: position.width
       }
     });
 
     return styles.area;
+  };
+
+  /*
+   * get positions for face relative to screen
+   * @param {Object} faceData
+  */
+  getFacePosition = faceData => {
+    if (!faceData) {
+      return null;
+    }
+
+    /* ios has a bug - data always returned regarding to landscape orientation and some bloated */
+    const iosHorizontalCorrecting = 0.75;
+    const iosVerticalCorrecting = 0.85;
+    const height = IS_IOS ? faceData.bounds.size.width : faceData.bounds.size.height;
+    const width = IS_IOS
+      ? ( faceData.bounds.size.height * iosHorizontalCorrecting )
+      : faceData.bounds.size.width;
+    const top = IS_IOS
+      ? ( faceData.bounds.origin.x * iosVerticalCorrecting )
+      : faceData.bounds.origin.y;
+    const left = IS_IOS
+      ? ( faceData.bounds.origin.y + width * (1 - iosHorizontalCorrecting) / 2 )
+      : faceData.bounds.origin.x;
+    const bottom = SCREEN_HEIGHT - top - height;
+    const right = SCREEN_WIDTH - left - width;
+
+    return { top, left, bottom, right, width, height };
   };
 
   /*
@@ -224,20 +256,35 @@ class FaceRecognizer extends Component {
       return false;
     }
 
-    if (faceData.rollAngle && Math.abs(faceData.rollAngle) > this.maxValidAngle) {
+    const facePosition = this.getFacePosition(faceData);
+    const setError = message => {
       clearTimeout(this.positionErrorTimer);
-      this.positionError = this.props.t('incorrectDevicePosition');
+      this.positionError = message;
       this.positionErrorTimer = setTimeout(() => (this.positionError = null), 1000);
+    };
+
+    if (faceData.rollAngle && Math.abs(faceData.rollAngle) > this.maxValidAngle) {
+      setError( this.props.t('incorrectDevicePosition') );
       return true;
     }
 
-    if (false) {
-      // check how centred position
+    if (
+      facePosition.left < -this.maxValidFrameTrim
+      || facePosition.right < -this.maxValidFrameTrim
+      || facePosition.top < -this.maxValidFrameTrim
+      || facePosition.bottom < -this.maxValidFrameTrim
+    ) {
+      setError( this.props.t('incorrectFacePosition') );
       return true;
     }
 
-    if (false) {
-      // check square of face in screen
+    if (facePosition.height * facePosition.width < SCREEN_AREA * this.minValidFaceArea) {
+      setError( this.props.t('incorrectFaceSize') );
+      return true;
+    }
+
+    if (Math.abs(faceData.yawAngle) > this.maxValidFaceYaw) {
+      setError( this.props.t('incorrectFaceYaw') );
       return true;
     }
 
@@ -272,7 +319,7 @@ class FaceRecognizer extends Component {
     const imageData = await this.cameraRef.takePicture({
       mirrorImage: true,
       orientation: 'portrait',
-      fixOrientation: true,
+      fixOrientation: true
       /* use this option with camera type back to test with different faces */
       // rotateAngle: 270
     });
@@ -302,7 +349,7 @@ class FaceRecognizer extends Component {
       this.isPending = true;
       const isSuccess = await handleFile(this.capturedImgUri);
       this.isPending = false;
-      
+
       if (!isSuccess) {
         this.handlingWasFailure = true;
         this.resetCapture();

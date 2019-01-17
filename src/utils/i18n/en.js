@@ -143,7 +143,7 @@ export default {
       'Unexpected issues detected during the image processing of the camera ({{message}}). Please try again and/or contact the support team if the problem persists.',
     devicePermissionTitle: 'Permission to use {{type}}',
     cameraPermissionMessage:
-      "We need your permission to use your phone's camera",
+      'We need your permission to use your phone\'s camera',
     disconnectConfirmationMessage: 'Are you sure you want to disconnect?',
     idCardPickerLabel: 'Passport\nor ID card',
     driveCardPickerLabel: 'Driving\nLicense',
@@ -279,7 +279,7 @@ export default {
     slideThreeTitle: 'Stylish electric cars',
     slideThreeSubTitle: 'Zero emissions, just electric cars',
     slideThreeDescription:
-      "ev technology brings together the best of design and technology to produce a driving experience that's out of this world",
+      'ev technology brings together the best of design and technology to produce a driving experience that\'s out of this world',
     nextBtn: 'Reserve, register and drive',
     skipBtn: 'skip'
   },
@@ -294,7 +294,10 @@ export default {
     handlingDefaultError: 'Something went wrong. try again',
     handlingRentalError: 'Identity wasn\'t validate, something went wrong, try again',
     registerCaptureDescription: 'Please, capture your face to validate access in future',
-    rentalCaptureDescription: 'Please, capture your face to confirm your identity'
+    rentalCaptureDescription: 'Please, capture your face to confirm your identity',
+    incorrectFacePosition: 'Please, place your face in the center',
+    incorrectFaceSize: 'Please, place your face closer to the camera',
+    incorrectFaceYaw: 'Please, don\'t turn away'
   },
   otaKeyNativeErrors
 };

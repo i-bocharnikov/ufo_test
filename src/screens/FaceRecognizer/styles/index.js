@@ -55,6 +55,9 @@ export default StyleSheet.create({
     top: '6%',
     alignSelf: 'center',
     textAlign: 'center',
-    paddingHorizontal: 36
+    paddingHorizontal: 36,
+    textShadowOffset: { height: 1, width: 0 },
+    textShadowColor: 'rgba(0,0,0,0.32)',
+    textShadowRadius: 1
   }
 });
