@@ -40,12 +40,7 @@ export async function confirm(title = '', message = '', confirmAction) {
       message,
       [
         { text: i18n.t('common:cancelBtn'), style: 'cancel', onPress: resolve },
-        {
- text: i18n.t('common:okBtn'), onPress: () => {
-          confirmAction();
-          resolve();
-        }
-}
+        { text: i18n.t('common:okBtn'), onPress: () => { confirmAction(); resolve(); }}
       ],
       { cancelable: true }
     );
