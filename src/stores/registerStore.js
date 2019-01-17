@@ -1,12 +1,12 @@
-import { Platform } from "react-native";
-import { observable, computed, action } from "mobx";
-import DeviceInfo from "react-native-device-info";
-import { persist } from "mobx-persist";
-import uuid from "uuid";
-import { parsePhoneNumber } from "libphonenumber-js";
-import _ from "lodash";
+import { Platform } from 'react-native';
+import { observable, computed, action } from 'mobx';
+import { persist } from 'mobx-persist';
+import DeviceInfo from 'react-native-device-info';
+import uuid from 'uuid';
+import { parsePhoneNumber } from 'libphonenumber-js';
+import _ from 'lodash';
 
-import configurations from "../utils/configurations";
+import configurations from '../utils/configurations';
 import {
   clearAuthenticationsFromStore,
   getAuthenticationUUIDFromStore,
@@ -14,7 +14,7 @@ import {
   setAuthenticationPasswordInStore,
   getAuthenticationPasswordFromStore,
   setAuthenticationTokenInStore
-} from "../utils/authentications";
+} from '../utils/authentications';
 import {
   useTokenInApi as useTokenInApi_deprecated,
   postToApi,
@@ -22,19 +22,18 @@ import {
   downloadFromApi,
   uploadToApi,
   getFromApi
-} from "./../utils/api_deprecated";
-import { setAuthTokenForApi } from "./../utils/api";
+} from './../utils/api_deprecated';
+import { setAuthTokenForApi } from './../utils/api';
 
 const DEBUG = false;
 
-const USER_STATUS_REGISTERED = "registered";
-const USER_STATUS_REGISTRATION_PENDING = "registration_pending";
-const USER_STATUS_REGISTRATION_MISSING = "registration_missing";
-const STATUS_MISSING = "missing";
-const STATUS_NOT_VALIDATED = "not_validated";
-const STATUS_VALIDATED = "validated";
-
-const USER_ROLE_ADMIN = "admin";
+const USER_STATUS_REGISTERED = 'registered';
+const USER_STATUS_REGISTRATION_PENDING = 'registration_pending';
+const USER_STATUS_REGISTRATION_MISSING = 'registration_missing';
+const STATUS_MISSING = 'missing';
+const STATUS_NOT_VALIDATED = 'not_validated';
+const STATUS_VALIDATED = 'validated';
+const USER_ROLE_ADMIN = 'admin';
 
 class User {
   @persist @observable reference = null;
@@ -58,14 +57,14 @@ class User {
 }
 
 class registerStore {
-  @persist("object", User) @observable user = new User();
+  @persist('object', User) @observable user = new User();
 
-  @observable identificationFrontDocument = "loading";
-  @observable identificationBackDocument = "loading";
-  @observable driverLicenceFrontDocument = "loading";
-  @observable driverLicenceBackDocument = "loading";
+  @observable identificationFrontDocument = 'loading';
+  @observable identificationBackDocument = 'loading';
+  @observable driverLicenceFrontDocument = 'loading';
+  @observable driverLicenceBackDocument = 'loading';
 
-  acknowledge_uri = "";
+  acknowledge_uri = '';
 
   @computed get isAdmin() {
     return this.user.role === USER_ROLE_ADMIN;
@@ -87,10 +86,9 @@ class registerStore {
     return this.user.status === USER_STATUS_REGISTRATION_MISSING;
   }
 
-  @computed
-  get isCurrentPhoneValid() {
+  @computed get isCurrentPhoneValid() {
     try {
-      const phone = _.get(this.user, "phone_number");
+      const phone = _.get(this.user, 'phone_number');
 
       if (!phone) {
         return false;
@@ -130,7 +128,7 @@ class registerStore {
       uuid: device_uuid,
       password: device_pwd,
       key_access_device_identifier: keyAccessDeviceIdentifier,
-      type: Platform.OS === "ios" ? "ios" : "android",
+      type: Platform.OS === 'ios' ? 'ios' : 'android',
       customer_app_name: await DeviceInfo.getBundleId(),
       customer_app_version: configurations.UFO_APP_VERSION,
       customer_app_build_number: configurations.UFO_APP_BUILD_NUMBER,
@@ -142,18 +140,18 @@ class registerStore {
       description: await DeviceInfo.getUserAgent()
     };
     const response = isNew
-      ? await postToApi("/users/devices", body, true, true)
-      : await putToApi("/users/devices/" + device_uuid, body, true, true);
+      ? await postToApi('/users/devices', body, true, true)
+      : await putToApi('/users/devices/' + device_uuid, body, true, true);
 
     if (
       response &&
-      response.status === "success" &&
+      response.status === 'success' &&
       response.data &&
       response.data.token &&
       response.data.user
     ) {
       if (DEBUG) {
-        console.info("registerStore.registerDevice:", response.data);
+        console.info('registerStore.registerDevice:', response.data);
       }
       await setAuthenticationUUIDInStore(device_uuid);
       await setAuthenticationPasswordInStore(device_pwd);
@@ -169,17 +167,17 @@ class registerStore {
   @action
   async requestCode() {
     const response = await postToApi(
-      "/users/validation/phone_number/" + this.user.phone_number,
+      '/users/validation/phone_number/' + this.user.phone_number,
       {}
     );
     if (
       response &&
-      response.status === "success" &&
+      response.status === 'success' &&
       response.data &&
       response.data.notification
     ) {
       if (DEBUG) {
-        console.info("registerStore.requestCode:", response.data);
+        console.info('registerStore.requestCode:', response.data);
       }
       this.acknowledge_uri = response.data.notification.acknowledge_uri;
       return true;
@@ -189,12 +187,12 @@ class registerStore {
 
   @action
   async connect(code: string): Promise<boolean> {
-    const response = await postToApi("/" + this.acknowledge_uri, {
+    const response = await postToApi('/' + this.acknowledge_uri, {
       validation_code: code
     });
-    if (response && response.status === "success") {
+    if (response && response.status === 'success') {
       if (DEBUG) {
-        console.info("registerStore.connect:", response.data);
+        console.info('registerStore.connect:', response.data);
       }
       return true;
     }
@@ -212,17 +210,14 @@ class registerStore {
   }
 
   @action
-  async save() {
-    const response = await putToApi("/users/" + this.user.reference, {
-      ...this.user
-    });
-    if (response && response.status === "success") {
-      if (DEBUG) {
-        console.info("registerStore.save:", response.data);
-      }
+  async save(extraData = {}) {
+    const response = await putToApi(`/users/${this.user.reference}`, { ...this.user, extraData });
+
+    if (response && response.status === 'success' && _.has(response, 'data.user')) {
       this.user = response.data.user;
       return true;
     }
+
     return false;
   }
 
@@ -232,9 +227,9 @@ class registerStore {
 
   async uploadDocument(domain, format, type, sub_type, uri) {
     const response = await uploadToApi(domain, format, type, sub_type, uri);
-    if (response && response.status === "success") {
+    if (response && response.status === 'success') {
       if (DEBUG) {
-        console.info("registerStore.uploadDocument:", response.data);
+        console.info('registerStore.uploadDocument:', response.data);
       }
       return response.data.document;
     }
@@ -243,9 +238,9 @@ class registerStore {
 
   @action
   getUserData = async () => {
-    const response = await getFromApi("/users/" + this.user.reference);
+    const response = await getFromApi('/users/' + this.user.reference);
 
-    if (response && response.status === "success") {
+    if (response && response.status === 'success') {
       this.user = response.data.user;
 
       return true;

@@ -374,4 +374,17 @@ export default class DriveStore {
     }
     return false;
   }
+
+  rentalFaceValidation = async faceImgRef => {
+    const response = await putToApi(
+      `/rentals/${this.rental.reference}`,
+      { action: 'capture_face', identification_face_capture_reference: faceImgRef }
+    );
+
+    if (response && response.status === 'success') {
+      return true;
+    }
+
+    return false;
+  };
 }

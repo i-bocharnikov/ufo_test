@@ -54,29 +54,21 @@ const bgImageStyles = StyleSheet.create({
 
 @observer
 class IdentificationScreen extends Component {
+  @observable frontImageUrl = registerStore.identificationFrontDocument;
+  @observable backImageUrl = registerStore.identificationBackDocument;
   @observable captureState = null;
-  @observable frontImageUrl = null;
-  @observable backImageUrl = null;
   @observable activityPending = false;
   @observable isCameraAllowed = false;
 
   render() {
     const { t, navigation } = this.props;
 
-    //Check if we have to retrieve imageUrl from overview screen
     if (this.captureState === null) {
-      this.frontImageUrl = navigation.getParam('frontImageUrl');
-      this.backImageUrl = navigation.getParam('backImageUrl');
 
-      if (
-        this.frontImageUrl === undefined ||
-        this.frontImageUrl === null ||
-        this.frontImageUrl === 'loading'
-      ) {
-        this.captureState = captureStates.CAPTURE_FRONT;
-      } else {
-        this.captureState = captureStates.PREVIEW;
-      }
+      this.captureState =
+        !this.frontImageUrl || this.frontImageUrl === 'loading'
+          ? captureStates.CAPTURE_FRONT
+          : this.captureState = captureStates.PREVIEW;
     }
 
     const inputLabel =
@@ -91,6 +83,7 @@ class IdentificationScreen extends Component {
       this.captureState === captureStates.CAPTURE_FRONT
         ? images.captureCardIdFront
         : images.captureCardIdBack;
+
     return (
       <UFOContainer image={screens.REGISTER_OVERVIEW.backgroundImage}>
         <UFOHeader
