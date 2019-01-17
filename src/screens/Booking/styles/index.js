@@ -393,7 +393,6 @@ export default StyleSheet.create({
     fontSize: 13,
     lineHeight: 19,
     letterSpacing: 1.3
-    //marginRight: 120
   },
 
   infoTitle: {
