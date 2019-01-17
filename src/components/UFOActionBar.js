@@ -15,13 +15,14 @@ import UFOAction from './UFOAction';
 import { colors } from './../utils/theme';
 
 const SCREEN_HEIGHT = Dimensions.get('screen').height;
+export const ACTION_BAR_HEIGHT = 80;
 
 const styles = StyleSheet.create({
   actionBarContainer: {
     position: 'absolute',
     left: 0,
     right: 0,
-    height: 80,
+    height: ACTION_BAR_HEIGHT,
     backgroundColor: 'transparent',
     flexDirection: 'column-reverse',
     justifyContent: 'flex-start'

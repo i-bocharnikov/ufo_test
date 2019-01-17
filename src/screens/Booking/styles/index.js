@@ -392,8 +392,8 @@ export default StyleSheet.create({
     ...textThemes.SP_LIGHT,
     fontSize: 13,
     lineHeight: 19,
-    letterSpacing: 1.3,
-    marginRight: 120
+    letterSpacing: 1.3
+    //marginRight: 120
   },
 
   infoTitle: {

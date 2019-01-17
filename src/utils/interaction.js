@@ -27,32 +27,39 @@ export async function showAlertInfo(title = '', message = '') {
       title,
       message,
       [
-        {text: i18n.t('common:okBtn'), onPress: resolve}
+        { text: i18n.t('common:okBtn'), onPress: resolve }
       ],
     );
   });
 }
 
 export async function confirm(title = '', message = '', confirmAction) {
-  await Alert.alert(
-    title,
-    message,
-    [
-      {text: i18n.t('common:cancelBtn'), style: 'cancel'},
-      {text: i18n.t('common:okBtn'), onPress: confirmAction}
-    ],
-    {cancelable: true}
-  );
+  return new Promise(resolve => {
+    Alert.alert(
+      title,
+      message,
+      [
+        { text: i18n.t('common:cancelBtn'), style: 'cancel', onPress: resolve },
+        {
+ text: i18n.t('common:okBtn'), onPress: () => {
+          confirmAction();
+          resolve();
+        }
+}
+      ],
+      { cancelable: true }
+    );
+  });
 }
 
 export function showPrompt(title = '', descr = '', action, cancelAction, options = {}) {
   const cancelFn = typeof cancelAction === 'function' ? cancelAction : () => null;
   const actions = [
-    {text: i18n.t('common:cancelBtn'), onPress: cancelFn, style: 'cancel'}
+    { text: i18n.t('common:cancelBtn'), onPress: cancelFn, style: 'cancel' }
   ];
 
   if (typeof action === 'function') {
-    const agreeAction = {text: i18n.t('common:okBtn'), onPress: action};
+    const agreeAction = { text: i18n.t('common:okBtn'), onPress: action };
     actions.push(agreeAction);
   }
 

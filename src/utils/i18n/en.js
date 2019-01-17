@@ -266,7 +266,8 @@ export default {
     dreveDescrGuideLink: 'Please consult the FAQ.',
     feedBackTitle: 'Just one question',
     confirmDialog: 'DONE',
-    feedBackInputPlaceholder: 'Your variant'
+    feedBackInputPlaceholder: 'Your variant',
+    ageConfirmation: 'By confirming, I certify that I have read and fully accepted the general terms and conditions and that I am at least 26 years old and in possession of a valid driver license.'
   },
   launch: {
     launchTitle: 'Fast track\ncar rental',

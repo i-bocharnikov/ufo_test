@@ -120,6 +120,7 @@ class SignUpScreen extends Component {
           currentScreen={screens.REGISTER_OVERVIEW}
         />
         <ScrollView
+          style={styles.scrollWrapper}
           contentContainerStyle={styles.bodyWrapper}
           refreshControl={
             <RefreshControl
