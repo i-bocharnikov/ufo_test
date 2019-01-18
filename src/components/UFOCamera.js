@@ -80,7 +80,7 @@ export default class UFOCamera extends React.Component {
   }
 
   render() {
-    const { torchBtnTopIndent, ...restCameraProps } = this.props;
+    const { showTorchBtn, torchBtnTopIndent, ...restCameraProps } = this.props;
     const { hasPermit, flashMode } = this.state;
 
     return hasPermit ? (
@@ -91,21 +91,23 @@ export default class UFOCamera extends React.Component {
         {...restCameraProps}
         ref={ref => (this.camera = ref)}
       >
-        <TouchableOpacity
-          onPress={this.changeFlashMode}
-          style={[ styles.torchBtn, torchBtnTopIndent && { marginTop: torchBtnTopIndent } ]}
-          activeOpacity={1}
-        >
-          <UFOIcon_old
-            icon={icons.TORCH}
-            size={sizes.SMALL}
-            color={colors.INVERTED_TEXT}
-            style={styles.torchShadow}
-          />
-          <Text style={[ styles.torchLabel, styles.torchShadow ]}>
-            {flashMode.getLabel()}
-          </Text>
-        </TouchableOpacity>
+        {showTorchBtn && (
+          <TouchableOpacity
+            onPress={this.changeFlashMode}
+            style={[ styles.torchBtn, torchBtnTopIndent && { marginTop: torchBtnTopIndent } ]}
+            activeOpacity={1}
+          >
+            <UFOIcon_old
+              icon={icons.TORCH}
+              size={sizes.SMALL}
+              color={colors.INVERTED_TEXT}
+              style={styles.torchShadow}
+            />
+            <Text style={[ styles.torchLabel, styles.torchShadow ]}>
+              {flashMode.getLabel()}
+            </Text>
+          </TouchableOpacity>
+        )}
       </RNCamera>
     ) : null;
   }
@@ -118,10 +120,10 @@ export default class UFOCamera extends React.Component {
     this.setState({ flashMode: FLASH_MODE_ITEMS[nextIndex] });
   };
 
-  rotateImage = imageData => new Promise((resolve, reject) => {
+  rotateImage = (imageData, angle = 90) => new Promise((resolve, reject) => {
     const { uri, width, height } = imageData;
 
-    ImageRotate.rotateImage(uri, 90, res => {
+    ImageRotate.rotateImage(uri, angle, res => {
       imageData.uri = res;
       imageData.width = height;
       imageData.height = width;
@@ -144,13 +146,18 @@ export default class UFOCamera extends React.Component {
         base64: false,
         exif: true,
         doNotSave: false,
-        ...customOptions
+        ...customOptions,
+        /*
+         * for main camera the fix image take a lot of time or make app crash
+         * leave this option only for low resolution images (nov for frontal camera)
+         */
+        fixOrientation: customOptions.fixOrientation && this.props.type === RNCAMERA_CONSTANTS.Type.front
       };
       const imageData = await this.camera.takePictureAsync(options);
 
       // For all samsung device the picture is rotated so this code fix this issues
       if (imageData.exif.Orientation === 6) {
-        return await this.rotateImage(imageData);
+        return await this.rotateImage(imageData, customOptions.rotateAngle);
       }
 
       return imageData;
@@ -162,8 +169,13 @@ export default class UFOCamera extends React.Component {
   };
 }
 
+UFOCamera.defaultProps = {
+  showTorchBtn: true
+};
+
 UFOCamera.propTypes = {
   forbiddenCallback: PropTypes.func,
   torchBtnTopIndent: PropTypes.number,
+  showTorchBtn: PropTypes.bool,
   ...RNCamera.propTypes
 };

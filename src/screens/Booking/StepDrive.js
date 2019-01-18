@@ -12,12 +12,13 @@ import { observer } from 'mobx-react';
 import _ from 'lodash';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import { bookingStore, feedbackStore, registerStore } from './../../stores';
+import { bookingStore, feedbackStore } from './../../stores';
+import registerStore from './../../stores/registerStore';
 import { keys as screenKeys } from './../../navigators/helpers';
 import {
   UFOContainer,
   UFOImage,
-  UFOModalLoader,
+  UFOLoader,
   UFOCheckBoxItem,
   UFOTextInput
 } from './../../components/common';
@@ -56,7 +57,7 @@ class StepDriveScreen extends Component {
         />
         {this.renderMainContent()}
         {this.renderFeedBackDialog()}
-        {<UFOModalLoader isVisible={feedbackStore.isLoading} />}
+        <UFOLoader isVisible={feedbackStore.isLoading} isModal={false} />
       </UFOContainer>
     );
   }

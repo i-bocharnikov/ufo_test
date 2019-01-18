@@ -11,7 +11,7 @@ import { keys as screenKeys } from './../../navigators/helpers';
 import {
   UFOContainer,
   UFOIcon,
-  UFOModalLoader,
+  UFOLoader,
   UFOImage,
   UFOTextInput,
   UFOGradientView
@@ -22,6 +22,7 @@ import BottomActionPanel from './components/BottomActionPanel';
 import styles from './styles';
 import { values, colors } from './../../utils/theme';
 import { checkAndRequestCameraPermission } from './../../utils/permissions';
+import { confirm } from './../../utils/interaction';
 
 const CREDIT_CARD_DEFAULT_IMG = 'https://resources.ufodrive.com/images/userCreditCards/unknown.png';
 
@@ -36,6 +37,7 @@ class StepPayScreen extends Component {
       usePaypalActionbarIcon: false
     };
     this.handleInputVoucher = _.debounce(this.validateAndApplyVoucher, 300);
+    this.agreementConfirmed = false;
     this.state = {
       showVoucherTooltip: false,
       isVoucherValid: null,
@@ -106,7 +108,7 @@ class StepPayScreen extends Component {
           {this.renderLoyaltyBlock()}
           {this.renderBookingInfoSection()}
           {this.renderVoucherTooltip()}
-          <UFOModalLoader
+          <UFOLoader
             isVisible={bookingStore.isLoading}
             stealthMode={true}
           />
@@ -212,13 +214,13 @@ class StepPayScreen extends Component {
             source={{ uri: bookingStore.order.carModel.imageUrl }}
             resizeMode="contain"
           />
-          <Text style={styles.infoTitle}>
+          <Text style={[ styles.infoTitle, styles.infoBlockCarImgIndent ]}>
             {t('subTitleStep3')} : {bookingStore.orderPrice}
           </Text>
-          <Text style={styles.infoText}>
+          <Text style={[ styles.infoText, styles.infoBlockCarImgIndent ]}>
             {bookingStore.order.location.name}
           </Text>
-          <Text style={styles.infoText}>
+          <Text style={[ styles.infoText, styles.infoBlockCarImgIndent ]}>
             {bookingStore.order.carModel.name}
           </Text>
           <Text style={styles.infoText}>
@@ -305,6 +307,15 @@ class StepPayScreen extends Component {
    * Handle payment and go to next step
   */
   handleToNextStep = async () => {
+    if (!this.agreementConfirmed) {
+      const confirmAction = () => { this.agreementConfirmed = true; };
+      await confirm('', this.props.t('ageConfirmation'), confirmAction);
+    }
+
+    if (!this.agreementConfirmed) {
+      return;
+    }
+
     await bookingStore.confirmBooking();
 
     if (bookingStore.bookingConfirmation) {

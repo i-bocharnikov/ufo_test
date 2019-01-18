@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Keyboard } from 'react-native';
+import { View } from 'react-native';
 import { observer } from 'mobx-react';
 import { observable, action } from 'mobx';
 import { translate } from 'react-i18next';
@@ -9,14 +9,12 @@ import UFOActionBar from './../../components/UFOActionBar';
 import { UFOContainer, UFOTextInput } from './../../components/common';
 import { screens, actionStyles, icons } from '../../utils/global';
 import registerStore from './../../stores/registerStore';
-import UFOCard from './../../components/UFOCard';
 import styles from './styles';
 
 const REGEX_EMAIL_VALIDATION = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 @observer
 class EmailScreen extends Component {
-
   @observable emailValue = registerStore.user.email;
 
   render() {
@@ -37,6 +35,11 @@ class EmailScreen extends Component {
             defaultValue={registerStore.user.email}
             placeholder={t('register:emailInputLabel')}
             onChangeText={value => (this.emailValue = value)}
+            autoCapitalize="none"
+            autoCorrect={false}
+            spellCheck={false}
+            textContentType="emailAddress"
+            enablesReturnKeyAutomatically={true}
           />
         </View>
         <UFOActionBar actions={this.compileActions()} />

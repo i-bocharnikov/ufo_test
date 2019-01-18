@@ -27,6 +27,8 @@ import Find from './../../screens/guide/findScreen';
 import Return from './../../screens/guide/returnScreen';
 import RentalAgreement from './../../screens/term/rentalAgreementSreen';
 
+import FaceRecognizer from './../../screens/FaceRecognizer';
+
 export default {
   Launch,
   Drive,
@@ -55,5 +57,7 @@ export default {
 
   Find,
   Return,
-  RentalAgreement
+  RentalAgreement,
+
+  FaceRecognizer
 };

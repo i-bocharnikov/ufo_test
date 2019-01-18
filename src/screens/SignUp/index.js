@@ -13,6 +13,7 @@ import { observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { translate } from 'react-i18next';
 
+import { keys as screenKeys } from './../../navigators/helpers';
 import registerStore from './../../stores/registerStore';
 import appStore from './../../stores/appStore';
 import UFOHeader from './../../components/header/UFOHeader';
@@ -120,6 +121,7 @@ class SignUpScreen extends Component {
           currentScreen={screens.REGISTER_OVERVIEW}
         />
         <ScrollView
+          style={styles.scrollWrapper}
           contentContainerStyle={styles.bodyWrapper}
           refreshControl={
             <RefreshControl
@@ -249,13 +251,16 @@ class SignUpScreen extends Component {
   };
 
   navToIdCardScreen = () => {
-    this.props.navigation.navigate(
-      screens.REGISTER_IDENTIFICATION.name,
-      {
-        frontImageUrl: registerStore.identificationFrontDocument,
-        backImageUrl: registerStore.identificationBackDocument
-      }
-    );
+    const { navigation, t } = this.props;
+    const params = {
+      actionNavNext: () => navigation.navigate(screenKeys.Identification),
+      actionNavBack: () => navigation.navigate(screenKeys.SignUp),
+      actionHandleFileAsync: this.uploadFaceCapture,
+      description: t('faceRecognizing:registerCaptureDescription'),
+      nextBtnLabel: t('faceRecognizing:saveBtnLabel')
+    };
+
+    navigation.navigate(screenKeys.FaceRecognizer, params);
   };
 
   navToDriverCardScreen = () => {
@@ -347,6 +352,26 @@ class SignUpScreen extends Component {
     await registerStore.getUserData();
     await this.initLoad();
     this.refreshing = false;
+  };
+
+  uploadFaceCapture = async fileUri => {
+    try {
+      const uploadedFace = await registerStore.uploadDocument(
+        'identification',
+        'one_side',
+        'face_capture',
+        'front_side',
+        fileUri
+      );
+
+      const isSuccess = await registerStore.save({
+        identification_face_capture_reference: uploadedFace.reference
+      });
+
+      return isSuccess;
+    } catch (error) {
+      return false
+    }
   };
 }
 

@@ -143,7 +143,7 @@ export default {
       'Unexpected issues detected during the image processing of the camera ({{message}}). Please try again and/or contact the support team if the problem persists.',
     devicePermissionTitle: 'Permission to use {{type}}',
     cameraPermissionMessage:
-      "We need your permission to use your phone's camera",
+      'We need your permission to use your phone\'s camera',
     disconnectConfirmationMessage: 'Are you sure you want to disconnect?',
     idCardPickerLabel: 'Passport\nor ID card',
     driveCardPickerLabel: 'Driving\nLicense',
@@ -266,7 +266,8 @@ export default {
     dreveDescrGuideLink: 'Please consult the FAQ.',
     feedBackTitle: 'Just one question',
     confirmDialog: 'DONE',
-    feedBackInputPlaceholder: 'Your variant'
+    feedBackInputPlaceholder: 'Your variant',
+    ageConfirmation: 'By confirming, I certify that I have read and fully accepted the general terms and conditions and that I am at least 26 years old and in possession of a valid driver license.'
   },
   launch: {
     launchTitle: 'Fast track\ncar rental',
@@ -281,9 +282,25 @@ export default {
     slideThreeTitle: 'Sleek electric cars',
     slideThreeSubTitle: 'Zero emissions, just electric cars',
     slideThreeDescription:
-      "ev technology brings together the best of design and technology to produce a driving experience that's out of this world",
+      'ev technology brings together the best of design and technology to produce a driving experience that\'s out of this world',
     nextBtn: 'Reserve, register and drive',
     skipBtn: 'skip'
+  },
+  faceRecognizing: {
+    incorrectDevicePosition: 'Please, hold phone upright',
+    resetBtn: 'Reset',
+    nextBtn: 'Next',
+    backBtn: 'Back',
+    saveBtnLabel: 'Save',
+    validateBtnLabel: 'Validate',
+    captureBtn: 'Capture',
+    handlingDefaultError: 'Something went wrong. try again',
+    handlingRentalError: 'Identity wasn\'t validate, something went wrong, try again',
+    registerCaptureDescription: 'Please, capture your face to validate access in future',
+    rentalCaptureDescription: 'Please, capture your face to confirm your identity',
+    incorrectFacePosition: 'Please, place your face in the center',
+    incorrectFaceSize: 'Please, place your face closer to the camera',
+    incorrectFaceYaw: 'Please, don\'t turn away'
   },
   otaKeyNativeErrors
 };

@@ -1,10 +1,11 @@
 import React, { Component, Fragment } from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { translate } from 'react-i18next';
 import { observer } from 'mobx-react';
 import PropTypes from 'prop-types';
 
 import { bookingStore } from './../../../stores';
+import { UFOLoader } from './../../../components/common';
 import styles from './../styles';
 import { values } from './../../../utils/theme';
 
@@ -89,7 +90,10 @@ class BottomActionPanel extends Component {
   renderActionOverlap = () => {
     return (
       <View style={styles.bottomPanelActionOverlap}>
-        <ActivityIndicator size="large" />
+        <UFOLoader
+          fallbackToNative={true}
+          isVisible={true}
+        />
       </View>
     );
   };

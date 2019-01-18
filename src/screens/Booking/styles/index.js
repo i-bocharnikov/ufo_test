@@ -388,12 +388,15 @@ export default StyleSheet.create({
     height: 50
   },
 
+  infoBlockCarImgIndent: {
+    marginRight: 120
+  },
+
   infoText: {
     ...textThemes.SP_LIGHT,
     fontSize: 13,
     lineHeight: 19,
-    letterSpacing: 1.3,
-    marginRight: 120
+    letterSpacing: 1.3
   },
 
   infoTitle: {

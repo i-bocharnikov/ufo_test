@@ -7,7 +7,7 @@ import { MarkdownView } from 'react-native-markdown-view';
 import { bookingStore } from './../../stores';
 import UFONavBarWrapper from './../../components/header/UFONavBarWrapper';
 import UFOSlider from './../../components/UFOSlider';
-import { UFOContainer, UFOModalLoader, UFOImage, UFOIcon } from './../../components/common';
+import { UFOContainer, UFOLoader, UFOImage, UFOIcon } from './../../components/common';
 import styles, { markdownStyles } from './styles/details';
 import commonStyles from './styles';
 import { values, colors } from './../../utils/theme';
@@ -101,7 +101,7 @@ class BookingDetailsScreen extends Component {
               {this.props.t('common:close')}
             </Text>
           </TouchableOpacity>
-          <UFOModalLoader isVisible={bookingStore.isLoading} />
+          <UFOLoader isVisible={bookingStore.isLoading} />
         </UFOContainer>
       </UFONavBarWrapper>
     );

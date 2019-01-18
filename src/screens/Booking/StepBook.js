@@ -6,7 +6,7 @@ import moment from 'moment';
 
 import { bookingStore } from './../../stores';
 import { keys as screenKeys } from './../../navigators/helpers';
-import { UFOContainer, UFOIcon, UFOModalLoader } from './../../components/common';
+import { UFOContainer, UFOIcon, UFOLoader } from './../../components/common';
 import UFOTooltip from './../../components/UFOTooltip';
 import UFORollPicker from './../../components/UFORollPicker';
 import UFODatePickerModal from './../../components/UFODatePickerModal';
@@ -175,7 +175,7 @@ class StepBookScreen extends Component {
               {t('booking:tooltipLink')}
             </Text>
           </UFOTooltip>
-          <UFOModalLoader isVisible={bookingStore.isLoading && !this.isFetched} />
+          <UFOLoader isVisible={bookingStore.isLoading && !this.isFetched} />
         </UFOContainer>
       </BookingNavWrapper>
     );

@@ -27,7 +27,7 @@ import { checkAndRequestLocationPermission } from './../../utils/permissions';
 import { keys as screenKeys } from './../../navigators/helpers';
 import { checkServerAvailability } from './../../utils/api';
 import styles from './styles';
-import { checkConnectivity } from '../../utils/api_deprecated';
+import { checkConnectivity, uploadToApi } from '../../utils/api_deprecated';
 import DriverCardEditor from '../SignUp/DriverCardEditor';
 
 @observer
@@ -137,7 +137,7 @@ class DriveScreen extends Component {
           ? actionStyles.DONE
           : actionStyles.TODO,
         icon: icons.RESERVE,
-        onPress: this.navToBooking
+        onPress: () => navigation.navigate(screenKeys.Booking)
       });
       actions.push({
         style: registerStore.isUserRegistered
@@ -189,9 +189,7 @@ class DriveScreen extends Component {
         driveStore.computeActionInitialInspect(actions, () =>
           this.props.navigation.navigate(screens.INSPECT.name)
         );
-        driveStore.computeActionStartContract(actions, () =>
-          this.props.navigation.navigate(screens.RENTAL_AGREEMENT.name)
-        );
+        driveStore.computeActionStartContract(actions, this.startContractSigning);
 
         if (driveStore.inUse) {
           otaKeyStore.computeActionEnableKey(
@@ -403,6 +401,40 @@ class DriveScreen extends Component {
     }
 
     this.props.navigation.navigate(screenKeys.Booking);
+  };
+
+  startContractSigning = () => {
+    const { navigation, t } = this.props;
+    const params = {
+      actionNavNext: () => navigation.navigate(screenKeys.RentalAgreement),
+      actionNavBack: () => navigation.navigate(screenKeys.Drive),
+      actionHandleFileAsync: this.validateCapturedFace,
+      description: t('faceRecognizing:rentalCaptureDescription'),
+      nextBtnLabel: t('faceRecognizing:validateBtnLabel'),
+      handlingErrorMessage: t('faceRecognizing:handlingRentalError')
+    };
+
+    navigation.navigate(screenKeys.FaceRecognizer, params);
+  };
+
+  validateCapturedFace = async fileUri => {
+    try {
+      const uploadedFace = await uploadToApi(
+        'identification',
+        'one_side',
+        'face_capture',
+        'front_side',
+        fileUri
+      );
+
+      if (_.has(uploadedFace, 'data.document.reference')) {
+        return await driveStore.rentalFaceValidation(uploadedFace.data.document.reference);
+      }
+
+      return false;
+    } catch (error) {
+      return false
+    }
   };
 }
 
