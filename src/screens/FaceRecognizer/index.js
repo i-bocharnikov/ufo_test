@@ -6,7 +6,7 @@ import { translate } from 'react-i18next';
 import PropTypes from 'prop-types';
 
 import UFOCamera, { RNCAMERA_CONSTANTS } from './../../components/UFOCamera';
-import { UFOImage, UFOContainer, UFOModalLoader } from './../../components/common';
+import { UFOImage, UFOContainer, UFOLoader } from './../../components/common';
 import styles from './styles';
 import { colors } from './../../utils/theme';
 import { showToastError } from './../../utils/interaction';
@@ -85,7 +85,7 @@ class FaceRecognizer extends Component {
           </Fragment>
         )}
         {this.renderActionPanel()}
-        <UFOModalLoader isVisible={this.isPending} />
+        <UFOLoader isVisible={this.isPending} />
       </UFOContainer>
     );
   }

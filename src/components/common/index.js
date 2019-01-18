@@ -4,7 +4,7 @@ import { ufoInputStyles } from './UFOTextInput/styles';
 import UFOIcon from './UFOIcon';
 import UFOImage from './UFOImage';
 import UFOVideo from './UFOVideo';
-import UFOModalLoader from './UFOModalLoader';
+import UFOLoader from './UFOLoader';
 import UFOGradientView from './UFOGradientView';
 import UFOCheckBoxItem from './UFOCheckBoxItem';
 
@@ -18,7 +18,7 @@ export {
   UFOIcon,
   UFOImage,
   UFOVideo,
-  UFOModalLoader,
+  UFOLoader,
   UFOGradientView,
   UFOCheckBoxItem,
   // deprecated components, will be replaced with redesigning

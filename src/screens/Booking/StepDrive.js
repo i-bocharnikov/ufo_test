@@ -18,7 +18,7 @@ import { keys as screenKeys } from './../../navigators/helpers';
 import {
   UFOContainer,
   UFOImage,
-  UFOModalLoader,
+  UFOLoader,
   UFOCheckBoxItem,
   UFOTextInput
 } from './../../components/common';
@@ -57,7 +57,7 @@ class StepDriveScreen extends Component {
         />
         {this.renderMainContent()}
         {this.renderFeedBackDialog()}
-        {<UFOModalLoader isVisible={feedbackStore.isLoading} />}
+        <UFOLoader isVisible={feedbackStore.isLoading} isModal={false} />
       </UFOContainer>
     );
   }

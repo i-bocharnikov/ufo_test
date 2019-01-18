@@ -11,7 +11,7 @@ import { keys as screenKeys } from './../../navigators/helpers';
 import {
   UFOContainer,
   UFOIcon,
-  UFOModalLoader,
+  UFOLoader,
   UFOImage,
   UFOTextInput,
   UFOGradientView
@@ -108,7 +108,7 @@ class StepPayScreen extends Component {
           {this.renderLoyaltyBlock()}
           {this.renderBookingInfoSection()}
           {this.renderVoucherTooltip()}
-          <UFOModalLoader
+          <UFOLoader
             isVisible={bookingStore.isLoading}
             stealthMode={true}
           />

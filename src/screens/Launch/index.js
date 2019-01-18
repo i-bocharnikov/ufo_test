@@ -9,7 +9,7 @@ import appStore from './../../stores/appStore';
 import registerStore from './../../stores/registerStore';
 import {
   UFOContainer,
-  UFOModalLoader,
+  UFOLoader,
   UFOImage
 } from './../../components/common';
 import UFOSlider from './../../components/UFOSlider';
@@ -64,7 +64,7 @@ class LaunchScreen extends Component {
         image={appStore.isAppReady ? images.BG_HOME002 : images.BG_LAUNCH}
       >
         {appStore.isAppReady && this.renderSlider()}
-        <UFOModalLoader isVisible={!appStore.isAppReady} />
+        <UFOLoader isVisible={!appStore.isAppReady} />
       </UFOContainer>
     );
   }
