@@ -135,9 +135,10 @@ export default class BookingStore {
       this.cars = await cars.getCars();
     }
 
-    await Promise.all([this.getCarCalendar(), this.getOrderSimulation()]);
-
+    await this.getOrderSimulation();
     this.isLoading = false;
+    // fetch calendar in shadow mode
+    this.getCarCalendar();
   };
 
   /**
@@ -157,9 +158,10 @@ export default class BookingStore {
       this.locations = await locations.getLocations();
     }
 
-    await Promise.all([this.getCarCalendar(), this.getOrderSimulation()]);
-
+    await this.getOrderSimulation();
     this.isLoading = false;
+    // fetch calendar in shadow mode
+    this.getCarCalendar();
   };
 
   /**
