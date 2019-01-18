@@ -1,108 +1,74 @@
 import React, { Component } from 'react';
+import { Dimensions, View, ScrollView, StyleSheet, Keyboard } from 'react-native';
 import { translate } from 'react-i18next';
-import { Dimensions, View, Image, ImageBackground, ScrollView, RefreshControl } from 'react-native';
 import { observer } from 'mobx-react';
 import { observable, action } from 'mobx';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
-import UFOHeader from '../../components/header/UFOHeader';
-import UFOActionBar from '../../components/UFOActionBar';
-import { UFOContainer, UFOText, UFOImage, UFOTextInput_old } from '../../components/common';
-import { screens, actionStyles, icons, colors, dims } from '../../utils/global';
-import { driveStore, inspectStore } from '../../stores';
-import UFOCard from '../../components/UFOCard';
-const markerImage = require('../../assets/images/marker.png');
+import { driveStore, inspectStore } from './../../stores';
+import UFOHeader from './../../components/header/UFOHeader';
+import UFOActionBar, { ACTION_BAR_HEIGHT } from './../../components/UFOActionBar';
+import UFOCard from './../../components/UFOCard';
+import { UFOContainer, UFOImage, UFOTextInput } from './../../components/common';
+import { screens, actionStyles, icons, colors, dims } from './../../utils/global';
+import { images, textThemes } from './../../utils/theme';
 
-const { width: DEVICE_WIDTH, height: DEVICE_HEIGHT } = Dimensions.get('window');
+const DEVICE_WIDTH = Dimensions.get('window').width;
 const CAMERA_RATIO = 4 / 3;
 const THUMB_WIDTH = DEVICE_WIDTH / 3;
 const THUMB_HEIGHT = THUMB_WIDTH * CAMERA_RATIO;
 
+const styles = StyleSheet.create({
+  body: {
+    paddingTop: 12,
+    paddingHorizontal: dims.CONTENT_PADDING_HORIZONTAL,
+    paddingBottom: ACTION_BAR_HEIGHT
+  },
+  cardInner: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignContent: 'center'
+  },
+  descriptionWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignContent: 'center'
+  },
+  marker: {
+    position: 'relative',
+    width: 10,
+    height: 10
+  },
+  inputWrapper: {
+    backgroundColor: 'transparent',
+    marginTop: 10,
+    marginBottom: 5
+  },
+  input: {
+    ...textThemes.SP_REGULAR,
+    color: colors.TEXT.string(),
+    paddingLeft: 20,
+    borderBottomWidth: 1,
+    borderColor: colors.ACTIVE.string(),
+    height: 64
+  }
+});
+
 @observer
 class CommentDamageScreen extends Component {
+  @observable comment = '';
+  scrollContainerRef = null;
 
-  @observable comment = null;
-
-  renderBody(t) {
-    const carModel = driveStore.rental
-      ? driveStore.rental.car
-        ? driveStore.rental.car.car_model
-        : null
-      : null;
-    return (
-      <View
-        style={{
-          paddingTop: 10,
-          paddingHorizontal: dims.CONTENT_PADDING_HORIZONTAL,
-          flex: 1,
-          flexDirection: 'column',
-          justifyContent: 'flex-start',
-          alignContent: 'center'
-        }}
-      >
-        <UFOCard title={t('inspect:commentGuidance')}>
-          <View
-            style={{
-              flex: 1,
-              flexDirection: 'column',
-              justifyContent: 'flex-start',
-              alignContent: 'center'
-            }}
-          >
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-around',
-                alignContent: 'center'
-              }}
-            >
-              <UFOImage
-                source={{ reference: inspectStore.documentReference }}
-                style={{ width: THUMB_WIDTH, height: THUMB_HEIGHT }}
-              />
-              <UFOImage
-                style={{ width: DEVICE_WIDTH / 3, height: DEVICE_WIDTH / 6 }}
-                source={{ uri: carModel.image_top_h_url }}
-              >
-                <UFOImage
-                  style={{
-                    position: 'relative',
-                    left: inspectStore.relativePositionX * 100 - 3 + '%',
-                    top: inspectStore.relativePositionY * 100 - 3 + '%',
-                    width: 10,
-                    height: 10
-                  }}
-                  source={markerImage}
-                />
-              </UFOImage>
-            </View>
-            <View style={{ paddingTop: 10 }}>
-              <UFOTextInput_old
-                autofocus
-                value={this.comment}
-                autoCorrect={true}
-                placeholder={t('inspect:commentPlaceholder')}
-                multiline={true}
-                numberOfLines={4}
-                onChangeText={text => (this.comment = text)}
-              />
-            </View>
-          </View>
-        </UFOCard>
-      </View>
-    );
+  componentDidMount() {
+    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow);
   }
 
-  @action
-  doSave = async () => {
-    inspectStore.comment = this.comment;
-    if (inspectStore.addCarDamage()) {
-      this.props.navigation.popToTop();
-    }
-  };
+  componentWillUnmount() {
+    this.keyboardDidShowListener.remove();
+  }
 
   render() {
-    const { t, navigation } = this.props;
-
     const actions = [
       {
         style: actionStyles.ACTIVE,
@@ -124,17 +90,86 @@ class CommentDamageScreen extends Component {
     return (
       <UFOContainer image={screens.INSPECT_COMMENT.backgroundImage}>
         <UFOHeader
-          transparent
-          t={t}
-          navigation={navigation}
+          t={this.props.t}
+          navigation={this.props.navigation}
+          transparent={true}
           currentScreen={screens.DRIVE}
-          title={t('inspect:commentDamageTitle', { rental: driveStore.rental })}
+          title={this.props.t('inspect:commentDamageTitle', { rental: driveStore.rental })}
         />
-        {this.renderBody(t)}
+        {this.renderBody()}
+        <KeyboardSpacer />
         <UFOActionBar actions={actions} />
       </UFOContainer>
     );
   }
+
+  renderBody() {
+    const carModel = (driveStore.rental && driveStore.rental.car)
+      ? driveStore.rental.car.car_model
+      : null;
+
+    return (
+      <ScrollView
+        contentContainerStyle={styles.body}
+        bounces={false}
+        keyboardShouldPersistTaps="handled"
+        ref={ref => (this.scrollContainerRef = ref)}
+      >
+        <UFOCard title={this.props.t('inspect:commentGuidance')}>
+          <View style={styles.cardInner}>
+            <View style={styles.descriptionWrapper}>
+              <UFOImage
+                source={{ reference: inspectStore.documentReference }}
+                style={{ width: THUMB_WIDTH, height: THUMB_HEIGHT }}
+              />
+              <UFOImage
+                style={{ width: DEVICE_WIDTH / 3, height: DEVICE_WIDTH / 6 }}
+                source={{ uri: carModel.image_top_h_url }}
+              >
+                <UFOImage
+                  style={[
+                    styles.marker,
+                    {
+                      left: `${inspectStore.relativePositionX * 100 - 3}%`,
+                      top: `${inspectStore.relativePositionY * 100 - 3}%`
+                    }
+                  ]}
+                  source={images.markerImage}
+                />
+              </UFOImage>
+            </View>
+            <UFOTextInput
+              value={this.comment}
+              onChangeText={text => (this.comment = text)}
+              autoFocus={true}
+              placeholder={this.props.t('inspect:commentPlaceholder')}
+              multiline={true}
+              numberOfLines={4}
+              style={styles.input}
+              wrapperStyle={styles.inputWrapper}
+              placeholderColor={colors.ACTIVE.string()}
+            />
+          </View>
+        </UFOCard>
+      </ScrollView>
+    );
+  }
+
+  @action
+  doSave = async () => {
+    inspectStore.comment = this.comment;
+
+    if (inspectStore.addCarDamage()) {
+      this.props.navigation.popToTop();
+    }
+  };
+
+  keyboardDidShow = () => {
+    if (this.scrollContainerRef) {
+      /* wait when keyboard animation will be ended */
+      setTimeout(this.scrollContainerRef.scrollToEnd, 500);
+    }
+  };
 }
 
 export default translate('translations')(CommentDamageScreen);

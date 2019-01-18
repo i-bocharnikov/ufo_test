@@ -9,7 +9,6 @@ import UFOGradientView from './UFOGradientView';
 import UFOCheckBoxItem from './UFOCheckBoxItem';
 
 import UFOText from './UFOText_old';
-import UFOTextInput_old from './UFOTextInput_old';
 import UFOIcon_old from './UFOIcon_old';
 
 export {
@@ -24,6 +23,5 @@ export {
   UFOCheckBoxItem,
   // deprecated components, will be replaced with redesigning
   UFOText,
-  UFOTextInput_old,
   UFOIcon_old
 };
