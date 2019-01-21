@@ -110,6 +110,21 @@ export async function postToApi(path, body, errorHandling = false, usePublicApi 
   }
 }
 
+export async function putToApi(path, body, errorHandling = false, usePublicApi = false) {
+  try {
+    const api = usePublicApi ? ufoServerPublicApi : ufoServerPrivateApi;
+    const response = await api.put(path, body);
+
+    return formatResponse(response);
+  } catch (error) {
+    if (errorHandling) {
+      defaultErrorHandler(error);
+    }
+
+    return formatResponse(error, false);
+  }
+}
+
 /**
   * @returns {boolean}
   * @description Check, is connecting to api present

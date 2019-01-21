@@ -63,6 +63,7 @@
     "react-native-phone-input": "^0.2.1",
     "react-native-platform-touchable": "^1.1.1",
     "react-native-prompt-android": "^0.3.3",
+    "react-native-push-notification": "^3.1.2",
     "react-native-sensitive-info": "^5.2.4",
     "react-native-simple-toast": "0.0.8",
     "react-native-snap-carousel": "^3.7.4",

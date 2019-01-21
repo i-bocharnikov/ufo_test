@@ -155,13 +155,14 @@ configurations.all {
 }
 
 dependencies {
+    implementation project(':react-native-push-notification')
     implementation project(':react-native-splash-screen')
     implementation project(':react-native-awesome-card-io')
     implementation project(':react-native-prompt-android')
     implementation project(':react-native-linear-gradient')
     implementation project(':tipsi-stripe')
-    
-    implementation 'com.google.firebase:firebase-core:16.0.1'
+
+    implementation 'com.google.firebase:firebase-core:16.0.6'
     implementation 'com.google.android.gms:play-services-location:15+'
     implementation project(':react-native-exception-handler')
     implementation project(':react-native-sensitive-info')
@@ -195,3 +196,5 @@ task copyDownloadableDepsToLibs(type: Copy) {
     into 'libs'
 }
 
+apply plugin: 'com.google.gms.google-services'
+com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true

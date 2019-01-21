@@ -67,6 +67,8 @@
 		F5CD80AC21AEAD84005F86F6 /* libRNCardIO.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5CD80A521AEAD65005F86F6 /* libRNCardIO.a */; };
 		F5D4833E2189AFAD00943D6B /* libRNImageRotate.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5D4833D2189AE7800943D6B /* libRNImageRotate.a */; };
 		F5D483882189B1B700943D6B /* libFastImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5D483582189B1A600943D6B /* libFastImage.a */; };
+		F5D9C36221F5CC3D00A2BFCE /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5D9C35F21F5CC2A00A2BFCE /* libRCTPushNotification.a */; };
+		F5D9C36421F5E45500A2BFCE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F5D9C36321F5E45500A2BFCE /* GoogleService-Info.plist */; };
 		F5E37C9E21CE4F2D0065F910 /* libSplashScreen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5E37C9D21CE4F160065F910 /* libSplashScreen.a */; };
 		F5E380A521AFD4F8000C4486 /* libBVLinearGradient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5E3807021AFD360000C4486 /* libBVLinearGradient.a */; };
 		F5E8CC7B218AE96D001B8F8B /* OTAKeyModule.m in Sources */ = {isa = PBXBuildFile; fileRef = F5E8CC7A218AE96D001B8F8B /* OTAKeyModule.m */; };
@@ -391,6 +393,20 @@
 			remoteGlobalIDString = A287971D1DE0C0A60081BDFA;
 			remoteInfo = FastImage;
 		};
+		F5D9C35E21F5CC2A00A2BFCE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5D9C35921F5CC2900A2BFCE /* RCTPushNotification.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RCTPushNotification;
+		};
+		F5D9C36021F5CC2A00A2BFCE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5D9C35921F5CC2900A2BFCE /* RCTPushNotification.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 3D05745F1DE6004600184BB4;
+			remoteInfo = "RCTPushNotification-tvOS";
+		};
 		F5E37C9C21CE4F160065F910 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F5E37C9821CE4F160065F910 /* SplashScreen.xcodeproj */;
@@ -528,6 +544,9 @@
 		F5CD807521AEAD65005F86F6 /* RNCardIO.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNCardIO.xcodeproj; path = "../node_modules/react-native-awesome-card-io/ios/RNCardIO.xcodeproj"; sourceTree = "<group>"; };
 		F5D4830A2189AE7800943D6B /* RNImageRotate.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNImageRotate.xcodeproj; path = "../node_modules/react-native-image-rotate/RNImageRotate.xcodeproj"; sourceTree = "<group>"; };
 		F5D483522189B1A600943D6B /* FastImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FastImage.xcodeproj; path = "../node_modules/react-native-fast-image/ios/FastImage.xcodeproj"; sourceTree = "<group>"; };
+		F5D9C35821F5CBD100A2BFCE /* driverApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = driverApp.entitlements; path = driverApp/driverApp.entitlements; sourceTree = "<group>"; };
+		F5D9C35921F5CC2900A2BFCE /* RCTPushNotification.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTPushNotification.xcodeproj; path = "../node_modules/react-native/Libraries/PushNotificationIOS/RCTPushNotification.xcodeproj"; sourceTree = "<group>"; };
+		F5D9C36321F5E45500A2BFCE /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		F5E37C9821CE4F160065F910 /* SplashScreen.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SplashScreen.xcodeproj; path = "../node_modules/react-native-splash-screen/ios/SplashScreen.xcodeproj"; sourceTree = "<group>"; };
 		F5E3806A21AFD35F000C4486 /* BVLinearGradient.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BVLinearGradient.xcodeproj; path = "../node_modules/react-native-linear-gradient/BVLinearGradient.xcodeproj"; sourceTree = "<group>"; };
 		F5E8CC49218AE954001B8F8B /* OTAKeyModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OTAKeyModule.h; path = driverApp/OTAKeyModule.h; sourceTree = "<group>"; };
@@ -550,6 +569,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F5D9C36221F5CC3D00A2BFCE /* libRCTPushNotification.a in Frameworks */,
 				F5B4E9B321D37267003E8F41 /* libReactNativeExceptionHandler.a in Frameworks */,
 				F5E37C9E21CE4F2D0065F910 /* libSplashScreen.a in Frameworks */,
 				F57C17FF21B0318700C77524 /* libTPSStripe.a in Frameworks */,
@@ -688,6 +708,7 @@
 		13B07FAE1A68108700A75B9A /* driverApp */ = {
 			isa = PBXGroup;
 			children = (
+				F5D9C35821F5CBD100A2BFCE /* driverApp.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -695,6 +716,7 @@
 				13B07FB71A68108700A75B9A /* main.m */,
 				F5E8CC49218AE954001B8F8B /* OTAKeyModule.h */,
 				F5E8CC7A218AE96D001B8F8B /* OTAKeyModule.m */,
+				F5D9C36321F5E45500A2BFCE /* GoogleService-Info.plist */,
 			);
 			name = driverApp;
 			sourceTree = "<group>";
@@ -787,6 +809,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				F5D9C35921F5CC2900A2BFCE /* RCTPushNotification.xcodeproj */,
 				F5E37C9821CE4F160065F910 /* SplashScreen.xcodeproj */,
 				F57C17C521B0316F00C77524 /* TPSStripe.xcodeproj */,
 				F5E3806A21AFD35F000C4486 /* BVLinearGradient.xcodeproj */,
@@ -916,6 +939,15 @@
 			isa = PBXGroup;
 			children = (
 				F5D483582189B1A600943D6B /* libFastImage.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F5D9C35A21F5CC2900A2BFCE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F5D9C35F21F5CC2A00A2BFCE /* libRCTPushNotification.a */,
+				F5D9C36121F5CC2A00A2BFCE /* libRCTPushNotification-tvOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1079,6 +1111,9 @@
 							com.apple.BackgroundModes = {
 								enabled = 1;
 							};
+							com.apple.Push = {
+								enabled = 1;
+							};
 						};
 					};
 					2D02E47A1E0B4A5D006451C7 = {
@@ -1145,6 +1180,10 @@
 				{
 					ProductGroup = 00C302D41ABCB9D200DB3ED1 /* Products */;
 					ProjectRef = 00C302D31ABCB9D200DB3ED1 /* RCTNetwork.xcodeproj */;
+				},
+				{
+					ProductGroup = F5D9C35A21F5CC2900A2BFCE /* Products */;
+					ProjectRef = F5D9C35921F5CC2900A2BFCE /* RCTPushNotification.xcodeproj */;
 				},
 				{
 					ProductGroup = 139105B71AF99BAD00B5F7CC /* Products */;
@@ -1515,6 +1554,20 @@
 			remoteRef = F5D483572189B1A600943D6B /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		F5D9C35F21F5CC2A00A2BFCE /* libRCTPushNotification.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTPushNotification.a;
+			remoteRef = F5D9C35E21F5CC2A00A2BFCE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5D9C36121F5CC2A00A2BFCE /* libRCTPushNotification-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libRCTPushNotification-tvOS.a";
+			remoteRef = F5D9C36021F5CC2A00A2BFCE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		F5E37C9D21CE4F160065F910 /* libSplashScreen.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1611,6 +1664,7 @@
 				68762648BA1449A39A9ACB40 /* Roboto.ttf in Resources */,
 				911A4AB8CB2649A78DAB93F0 /* rubicon-icon-font.ttf in Resources */,
 				A3FB0638AAE44E07BB6CED62 /* SimpleLineIcons.ttf in Resources */,
+				F5D9C36421F5E45500A2BFCE /* GoogleService-Info.plist in Resources */,
 				ABE9E823C40349EA980FA1BE /* Zocial.ttf in Resources */,
 				F513FFBD21E50A1C005DB10F /* bundle.js in Resources */,
 			);
@@ -1831,6 +1885,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_ENTITLEMENTS = driverApp/driverApp.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1873,6 +1928,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_ENTITLEMENTS = driverApp/driverApp.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
