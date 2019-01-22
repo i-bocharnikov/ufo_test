@@ -42,7 +42,7 @@
 		</dict>
 	</dict>
 	<key>NSAppleEventsUsageDescription</key>
-	<string></string>
+	<string/>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>UFODrive needs access</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>

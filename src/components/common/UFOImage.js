@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Image, ActivityIndicator, StyleSheet } from 'react-native';
+import { Image, StyleSheet } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import PropTypes from 'prop-types';
 

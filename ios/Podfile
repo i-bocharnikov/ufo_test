@@ -37,7 +37,8 @@ target 'driverApp' do
   pod 'react-native-camera', path: '../node_modules/react-native-camera', subspecs: [
     'FaceDetector'
   ]
-  pod 'Firebase/Core'
+  pod 'Firebase/Core', '~> 5.15.0'
+  pod 'Firebase/Messaging', '~> 5.15.0'
   
 end
 

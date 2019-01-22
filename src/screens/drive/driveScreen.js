@@ -29,7 +29,7 @@ import { checkServerAvailability } from './../../utils/api';
 import styles from './styles';
 import { checkConnectivity, uploadToApi } from '../../utils/api_deprecated';
 import DriverCardEditor from '../SignUp/DriverCardEditor';
-import pushNotifications from './../../utils/pushNotificationService';
+import pushNotificationService from './../../utils/pushNotificationService';
 
 @observer
 class DriveScreen extends Component {
@@ -43,7 +43,16 @@ class DriveScreen extends Component {
       await checkAndRequestLocationPermission();
       this.driveSelected = true;
     }
-    pushNotifications.configure();
+
+    const isRegister = await pushNotificationService.register();
+
+    if (isRegister) {
+      pushNotificationService.addListeners();
+    }
+  }
+
+  componentWillUnmount() {
+    pushNotificationService.removeListeners();
   }
 
   async componentDidUpdate() {
