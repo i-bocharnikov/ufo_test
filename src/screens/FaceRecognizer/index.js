@@ -342,7 +342,7 @@ class FaceRecognizer extends Component {
 
     const ratioX = width / SCREEN_WIDTH;
     const ratioy = height / SCREEN_HEIGHT;
-    const captureFrame = {
+    const cropFrame = {
       top: IS_IOS ? -24 : 24,
       bottom: IS_IOS ? 64 : 24,
       left: IS_IOS ? -24 : 0,
@@ -353,12 +353,12 @@ class FaceRecognizer extends Component {
       cameraUri,
       {
         offset: {
-          x: (facePosition.left + captureFrame.left) * ratioX,
-          y: (facePosition.top + captureFrame.top) * ratioy
+          x: (facePosition.left + cropFrame.left) * ratioX,
+          y: (facePosition.top + cropFrame.top) * ratioy
         },
         size: {
-          width: (facePosition.width + captureFrame.right) * ratioX,
-          height: (facePosition.height + captureFrame.bottom) * ratioy
+          width: (facePosition.width + cropFrame.right) * ratioX,
+          height: (facePosition.height + cropFrame.bottom) * ratioy
         }
       },
       uri => {
