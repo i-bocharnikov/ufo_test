@@ -19,6 +19,9 @@ import com.cardio.RNCardIOPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.gettipsi.stripe.StripeReactPackage;
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
+import io.invertase.firebase.RNFirebasePackage;
+import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
+import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -48,7 +51,10 @@ public class MainApplication extends OtaKeysApplication implements ReactApplicat
           new RNCardIOPackage(),
           new LinearGradientPackage(),
           new StripeReactPackage(),
-          new SplashScreenReactPackage()
+          new SplashScreenReactPackage(),
+          new RNFirebasePackage(),
+          new RNFirebaseMessagingPackage(),
+          new RNFirebaseNotificationsPackage()
       );
     }
 

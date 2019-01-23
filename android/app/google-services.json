@@ -1,0 +1,37 @@
+{
+  "project_info": {
+    "project_number": "460958527990",
+    "firebase_url": "https://ufodrive-215814.firebaseio.com",
+    "project_id": "ufodrive-215814",
+    "storage_bucket": "ufodrive-215814.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:460958527990:android:a944c549f2660f25",
+        "android_client_info": {
+          "package_name": "com.ufodrive.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGsoZfP4bfjPgX24FTVtUhBOz3U2O6SLc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
