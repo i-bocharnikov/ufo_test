@@ -155,7 +155,7 @@ configurations.all {
 }
 
 dependencies {
-    implementation "com.google.firebase:firebase-messaging:17.3.4"
+    implementation 'com.google.firebase:firebase-messaging:17.3.4'
     implementation project(':react-native-firebase')
     implementation project(':react-native-splash-screen')
     implementation project(':react-native-awesome-card-io')
