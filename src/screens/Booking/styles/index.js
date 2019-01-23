@@ -184,7 +184,7 @@ export default StyleSheet.create({
     fontSize: 18
   },
 
-  notAvailableCar: { opacity: 0.5 },
+  notAvailable: { opacity: 0.5 },
 
   opacityLabel: { opacity: 0.5 },
 

@@ -55,7 +55,6 @@
 		F35A65AB082F496482EEFAD0 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FDD6C0E564104784BEF4D1AC /* FontAwesome.ttf */; };
 		F513FFBC21E50A1C005DB10F /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = F513FFB921E50A1C005DB10F /* index.html */; };
 		F513FFBD21E50A1C005DB10F /* bundle.js in Resources */ = {isa = PBXBuildFile; fileRef = F513FFBA21E50A1C005DB10F /* bundle.js */; };
-		F51A4E7021F85AB900FB46F3 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F51A4E6F21F85AB900FB46F3 /* Info.plist */; };
 		F540751321984D5000BB787A /* SofiaProRegular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F54075112198486800BB787A /* SofiaProRegular.ttf */; };
 		F540751421984D5300BB787A /* SofiaProLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F54075102198486800BB787A /* SofiaProLight.ttf */; };
 		F540751521984D5500BB787A /* SofiaProBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F54075122198486800BB787A /* SofiaProBold.ttf */; };
@@ -525,7 +524,6 @@
 		F15388B12C6C4B7E95D746E3 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/native-base/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		F513FFB921E50A1C005DB10F /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
 		F513FFBA21E50A1C005DB10F /* bundle.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = bundle.js; sourceTree = "<group>"; };
-		F51A4E6F21F85AB900FB46F3 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = driverApp/Info.plist; sourceTree = "<group>"; };
 		F54075102198486800BB787A /* SofiaProLight.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = SofiaProLight.ttf; path = ../src/assets/fonts/SofiaProLight.ttf; sourceTree = "<group>"; };
 		F54075112198486800BB787A /* SofiaProRegular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = SofiaProRegular.ttf; path = ../src/assets/fonts/SofiaProRegular.ttf; sourceTree = "<group>"; };
 		F54075122198486800BB787A /* SofiaProBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = SofiaProBold.ttf; path = ../src/assets/fonts/SofiaProBold.ttf; sourceTree = "<group>"; };
@@ -700,7 +698,6 @@
 		13B07FAE1A68108700A75B9A /* driverApp */ = {
 			isa = PBXGroup;
 			children = (
-				F51A4E6F21F85AB900FB46F3 /* Info.plist */,
 				F5D9C35821F5CBD100A2BFCE /* driverApp.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -1642,7 +1639,6 @@
 				CA4341E9AEB346A5AE9B2972 /* Feather.ttf in Resources */,
 				F35A65AB082F496482EEFAD0 /* FontAwesome.ttf in Resources */,
 				A19F4431E78541778FE1C74C /* Foundation.ttf in Resources */,
-				F51A4E7021F85AB900FB46F3 /* Info.plist in Resources */,
 				E891AD1F7EA04052A232EE6C /* Ionicons.ttf in Resources */,
 				6399501CBF384C5895FCDADA /* MaterialCommunityIcons.ttf in Resources */,
 				F540751321984D5000BB787A /* SofiaProRegular.ttf in Resources */,

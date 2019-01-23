@@ -107,7 +107,7 @@ export default class BookingStore {
     this.resetStore();
     this.isLoading = true;
 
-    const [receivedLocations, receivedCars] = await Promise.all([
+    const [ receivedLocations, receivedCars ] = await Promise.all([
       locations.getLocations(),
       cars.getCars()
     ]);
@@ -184,6 +184,10 @@ export default class BookingStore {
       this.endRentalDate = this.startRentalDate;
     }
 
+    if (this.startRentalDate.diff(this.endRentalDate, 'days') === 0) {
+      this.correctSelectedTime();
+    }
+
     this.isLoading = true;
     await this.getOrderSimulation();
     this.isLoading = false;
@@ -209,9 +213,37 @@ export default class BookingStore {
       this.startRentalDate = this.endRentalDate;
     }
 
+    if (this.startRentalDate.diff(this.endRentalDate, 'days') === 0) {
+      this.correctSelectedTime();
+    }
+
     this.isLoading = true;
     await this.getOrderSimulation();
     this.isLoading = false;
+  };
+
+  /**
+   * @description Correct chosen time if was selected the same dates
+  */
+  @action
+  correctSelectedTime = () => {
+    let startIndex = this.rollPickerStartSelectedTimeItem;
+    let endIndex = this.rollPickerEndSelectedTimeItem;
+
+    if (startIndex < endIndex) {
+      return;
+    }
+
+    if (startIndex + 1 < this.rollPickersTimeItems.length) {
+      this.endRentalTime = this.rollPickersTimeItems[startIndex + 1].label;
+
+    } else if (endIndex > 0) {
+      this.startRentalTime = this.rollPickersTimeItems[endIndex - 1].label;
+
+    } else {
+      this.startRentalTime = this._defaultStore.startRentalTime;
+      this.endRentalTime = this._defaultStore.endRentalTime;
+    }
   };
 
   /**
@@ -223,6 +255,10 @@ export default class BookingStore {
   selectCalendarDates = async (dateMomentStart, dateMomentEnd) => {
     this.startRentalDate = dateMomentStart;
     this.endRentalDate = dateMomentEnd;
+
+    if (this.startRentalDate.diff(this.endRentalDate, 'days') === 0) {
+      this.correctSelectedTime();
+    }
 
     this.isLoading = true;
     await this.getOrderSimulation();
@@ -240,8 +276,8 @@ export default class BookingStore {
       return;
     }
 
-    const isOneDayRental =
-      this.startRentalDate.diff(this.endRentalDate, 'days') === 0;
+    const isOneDayRental = this.startRentalDate.diff(this.endRentalDate, 'days') === 0;
+
     if (isOneDayRental && itemIndex + 1 >= this.rollPickersTimeItems.length) {
       // forbid to choose last time-item of day as start
       this.startRentalTime = this.rollPickersTimeItems[itemIndex - 1].label;
@@ -249,7 +285,7 @@ export default class BookingStore {
       this.startRentalTime = timeStr;
     }
 
-    if (this.rollPickerEndSelectedTimeItem <= itemIndex) {
+    if (isOneDayRental && this.rollPickerEndSelectedTimeItem <= itemIndex) {
       const nextIndex =
         this.rollPickersTimeItems.length > itemIndex + 1
           ? itemIndex + 1
@@ -272,8 +308,8 @@ export default class BookingStore {
       return;
     }
 
-    const isOneDayRental =
-      this.startRentalDate.diff(this.endRentalDate, 'days') === 0;
+    const isOneDayRental = this.startRentalDate.diff(this.endRentalDate, 'days') === 0;
+
     if (isOneDayRental && itemIndex === 0) {
       // forbid to choose first time-item of day as end
       this.endRentalTime = this.rollPickersTimeItems[itemIndex + 1].label;
@@ -281,7 +317,7 @@ export default class BookingStore {
       this.endRentalTime = timeStr;
     }
 
-    if (this.rollPickerStartSelectedTimeItem >= itemIndex) {
+    if (isOneDayRental && this.rollPickerStartSelectedTimeItem >= itemIndex) {
       const prevIndex = itemIndex - 1 >= 0 ? itemIndex - 1 : itemIndex;
       this.startRentalTime = this.rollPickersTimeItems[prevIndex].label;
     }
@@ -337,7 +373,7 @@ export default class BookingStore {
     this.loyaltyProgramInfo = data.loyaltyProgram.message;
 
     this.userCreditCards = data.userCreditCards;
-    const defaultCard = _.find(this.userCreditCards, ['default', true]);
+    const defaultCard = _.find(this.userCreditCards, [ 'default', true ]);
     this.currentCreditCardRef = defaultCard ? defaultCard.reference : null;
 
     this.isLoading = false;
@@ -760,9 +796,7 @@ export default class BookingStore {
    * @description Get description how will looking the order
    */
   getOrderSimulation = async (requestHandling = true) => {
-    const location = _.find(this.locations, {
-      reference: this.selectedLocationRef
-    });
+    const location = _.find(this.locations, { reference: this.selectedLocationRef });
 
     if (!this.selectedLocationRef || !this.selectedCarRef || !location) {
       if (requestHandling) {
