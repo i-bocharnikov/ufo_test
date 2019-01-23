@@ -58,6 +58,7 @@ class User {
 
 class registerStore {
   @persist('object', User) @observable user = new User();
+  @persist support_chat_identification_key = null;
 
   @observable identificationFrontDocument = 'loading';
   @observable identificationBackDocument = 'loading';
@@ -159,6 +160,8 @@ class registerStore {
       await useTokenInApi_deprecated(response.data.token);
       await setAuthTokenForApi(response.data.token);
       this.user = response.data.user;
+      this.support_chat_identification_key =
+        response.data.support_chat_identification_key;
       return response.data.key_access_device_token;
     }
     return null;
@@ -211,9 +214,16 @@ class registerStore {
 
   @action
   async save(extraData = {}) {
-    const response = await putToApi(`/users/${this.user.reference}`, { ...this.user, extraData });
+    const response = await putToApi(`/users/${this.user.reference}`, {
+      ...this.user,
+      extraData
+    });
 
-    if (response && response.status === 'success' && _.has(response, 'data.user')) {
+    if (
+      response &&
+      response.status === 'success' &&
+      _.has(response, 'data.user')
+    ) {
       this.user = response.data.user;
       return true;
     }

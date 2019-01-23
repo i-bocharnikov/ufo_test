@@ -29,6 +29,10 @@ import { checkServerAvailability } from './../../utils/api';
 import styles from './styles';
 import { checkConnectivity, uploadToApi } from '../../utils/api_deprecated';
 import DriverCardEditor from '../SignUp/DriverCardEditor';
+import userActionsLogger, {
+  severityTypes,
+  codeTypes
+} from '../../utils/userActionsLogger';
 
 @observer
 class DriveScreen extends Component {
@@ -68,21 +72,6 @@ class DriveScreen extends Component {
           currentScreen={screens.DRIVE}
         />
         <ScrollView refreshControl={this.refreshControl()}>
-          {!this.driveSelected && !driveStore.hasRentals && (
-            <View style={styles.content}>
-              <View style={styles.instructionContainer}>
-                <UFOText h1 bold center style={styles.instructionRow}>
-                  {t('home:reserve', { user: registerStore.user })}
-                </UFOText>
-                <UFOText h1 bold center style={styles.instructionRow}>
-                  {t('home:register', { user: registerStore.user })}
-                </UFOText>
-                <UFOText h1 bold center style={styles.instructionRow}>
-                  {t('home:drive', { user: registerStore.user })}
-                </UFOText>
-              </View>
-            </View>
-          )}
           {driveStore.hasRentals && driveStore.rental && (
             <View style={styles.rentalsWrapper}>
               <UFOSlider
@@ -189,7 +178,10 @@ class DriveScreen extends Component {
         driveStore.computeActionInitialInspect(actions, () =>
           this.props.navigation.navigate(screens.INSPECT.name)
         );
-        driveStore.computeActionStartContract(actions, this.startContractSigning);
+        driveStore.computeActionStartContract(
+          actions,
+          this.startContractSigning
+        );
 
         if (driveStore.inUse) {
           otaKeyStore.computeActionEnableKey(
@@ -273,11 +265,23 @@ class DriveScreen extends Component {
 
     if (!driveStore.inUse) {
       showToastError(this.props.t('error:rentalNotOpen'));
+      userActionsLogger(
+        severityTypes.ERROR,
+        codeTypes.ERROR,
+        'doEnableKey',
+        this.props.t('error:localPermissionNeeded')
+      );
       this.activityPending = false;
       return;
     }
     if (!driveStore.rental.key_id) {
       showToastError(this.props.t('error:rentalKeyMissing'));
+      userActionsLogger(
+        severityTypes.ERROR,
+        codeTypes.ERROR,
+        'doEnableKey',
+        this.props.t('error:rentalKeyMissing')
+      );
       this.activityPending = false;
       return;
     }
@@ -303,17 +307,35 @@ class DriveScreen extends Component {
     const permission = await checkAndRequestLocationPermission();
     if (!permission) {
       showToastError(this.props.t('error:localPermissionNeeded'));
+      userActionsLogger(
+        severityTypes.ERROR,
+        codeTypes.ERROR,
+        'doUnlockCar',
+        this.props.t('error:localPermissionNeeded')
+      );
       this.activityPending = false;
       return;
     }
 
     if (!driveStore.inUse) {
       showToastError(this.props.t('error:rentalNotOpen'));
+      userActionsLogger(
+        severityTypes.ERROR,
+        codeTypes.ERROR,
+        'doUnlockCar',
+        this.props.t('error:rentalNotOpen')
+      );
       this.activityPending = false;
       return;
     }
     if (!driveStore.rental.key_id) {
       showToastError(this.props.t('error:rentalKeyMissing'));
+      userActionsLogger(
+        severityTypes.ERROR,
+        codeTypes.ERROR,
+        'doUnlockCar',
+        this.props.t('error:rentalKeyMissing')
+      );
       this.activityPending = false;
       return;
     }
@@ -338,17 +360,35 @@ class DriveScreen extends Component {
     const permission = await checkAndRequestLocationPermission();
     if (!permission) {
       showToastError(this.props.t('error:localPermissionNeeded'));
+      userActionsLogger(
+        severityTypes.ERROR,
+        codeTypes.ERROR,
+        'doLockCar',
+        this.props.t('error:localPermissionNeede6')
+      );
       this.activityPending = false;
       return;
     }
 
     if (!driveStore.inUse) {
       showToastError(this.props.t('error:rentalNotOpen'));
+      userActionsLogger(
+        severityTypes.ERROR,
+        codeTypes.ERROR,
+        'doLockCar',
+        this.props.t('error:rentalNotOpen')
+      );
       this.activityPending = false;
       return;
     }
     if (!driveStore.rental.key_id) {
       showToastError(this.props.t('error:rentalKeyMissing'));
+      userActionsLogger(
+        severityTypes.ERROR,
+        codeTypes.ERROR,
+        'doLockCar',
+        this.props.t('error:rentalKeyMissing')
+      );
       this.activityPending = false;
       return;
     }
@@ -428,12 +468,14 @@ class DriveScreen extends Component {
       );
 
       if (_.has(uploadedFace, 'data.document.reference')) {
-        return await driveStore.rentalFaceValidation(uploadedFace.data.document.reference);
+        return await driveStore.rentalFaceValidation(
+          uploadedFace.data.document.reference
+        );
       }
 
       return false;
     } catch (error) {
-      return false
+      return false;
     }
   };
 }

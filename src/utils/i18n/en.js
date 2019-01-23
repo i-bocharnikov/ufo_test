@@ -21,11 +21,6 @@ export default {
     internetbluetoothAccessFailure:
       'Unexpected internet and bluetooth connectivity issues. Operating in offline/degraded mode'
   },
-  home: {
-    reserve: '1. Reserve a car',
-    register: '2. Register your profile',
-    drive: '3. Drive your rented car'
-  },
   global: {
     confirmationTitle: 'Confirmation needed',
     confirmationOk: 'OK',
@@ -76,8 +71,8 @@ export default {
     slideNext: 'Slide next',
     home: 'Home',
     continueLater: 'Continue later',
-    login: 'Connect',
-    logout: 'Disconnect',
+    login: 'Login',
+    logout: 'Logout',
     resendCode: 'Resend code',
     phone: 'Phone Number',
     email: 'Email',
@@ -143,14 +138,14 @@ export default {
       'Unexpected issues detected during the image processing of the camera ({{message}}). Please try again and/or contact the support team if the problem persists.',
     devicePermissionTitle: 'Permission to use {{type}}',
     cameraPermissionMessage:
-      'We need your permission to use your phone\'s camera',
+      "We need your permission to use your phone's camera",
     disconnectConfirmationMessage: 'Are you sure you want to disconnect?',
     idCardPickerLabel: 'Passport\nor ID card',
     driveCardPickerLabel: 'Driving\nLicense',
     shareDialogTitle: 'Share referal code',
     referalBlock: 'Referal Code {{code}}',
     referalCodeMessage:
-      'You can use my UFODRIVE referral code {{code}} to get €30 off of your first ride, and drive to space!',
+      'You can use my UFODRIVE referral code {{code}} to get €30 off of your first ride',
     devicePermissionRestricted:
       'To use {{type}} activate it in the phone settings'
   },
@@ -260,18 +255,19 @@ export default {
     driveNextRegister: 'REGISTER',
     driveNextDrive: 'DRIVE YOUR CAR',
     dreveDescrRegisterP1:
-      'Before the rental,please register youself by scanning your ID and driver licence. If you want to know more about how it works, ',
+      'Before the rental, please register by scanning your ID and driver licence. If you want to know more about how it works, ',
     dreveDescrDriveP1:
       'Find your bookings in the drive section of the app. If you want to know more about how it works, ',
     dreveDescrGuideLink: 'Please consult the FAQ.',
     feedBackTitle: 'Just one question',
     confirmDialog: 'DONE',
     feedBackInputPlaceholder: 'Your variant',
-    ageConfirmation: 'By confirming, I certify that I have read and fully accepted the general terms and conditions and that I am at least 26 years old and in possession of a valid driver license.'
+    ageConfirmation:
+      'By confirming, I certify that I have read and fully accepted the general terms and conditions and that I am at least 26 years old and in possession of a valid driver license.'
   },
   launch: {
     launchTitle: 'Fast track\ncar rental',
-    slideOneTitle: 'Fully automated, app based',
+    slideOneTitle: 'The most advanced car rental',
     slideOneSubTitle: 'No key pick-up, no paperwork, no queues.',
     slideOneDescription:
       'This app will perform car inspection, activate your rental agreement and unlock your car',
@@ -282,8 +278,8 @@ export default {
     slideThreeTitle: 'Sleek electric cars',
     slideThreeSubTitle: 'Zero emissions, just electric cars',
     slideThreeDescription:
-      'ev technology brings together the best of design and technology to produce a driving experience that\'s out of this world',
-    nextBtn: 'Reserve, register and drive',
+      "ev technology brings together the best of design and technology to produce a driving experience that's out of this world",
+    nextBtn: 'Reserve, Register and Drive',
     skipBtn: 'skip'
   },
   faceRecognizing: {
@@ -295,12 +291,15 @@ export default {
     validateBtnLabel: 'Validate',
     captureBtn: 'Capture',
     handlingDefaultError: 'Something went wrong. try again',
-    handlingRentalError: 'Identity wasn\'t validate, something went wrong, try again',
-    registerCaptureDescription: 'Please, capture your face to validate access in future',
-    rentalCaptureDescription: 'Please, capture your face to confirm your identity',
+    handlingRentalError:
+      "Identity wasn't validate, something went wrong, try again",
+    registerCaptureDescription:
+      'Please, capture your face to validate access in future',
+    rentalCaptureDescription:
+      'Please, capture your face to confirm your identity',
     incorrectFacePosition: 'Please, place your face in the center',
     incorrectFaceSize: 'Please, place your face closer to the camera',
-    incorrectFaceYaw: 'Please, don\'t turn away'
+    incorrectFaceYaw: "Please, don't turn away"
   },
   otaKeyNativeErrors
 };

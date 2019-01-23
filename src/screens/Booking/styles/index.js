@@ -238,15 +238,16 @@ export default StyleSheet.create({
   bottomPanelPriceLabel: {
     ...textThemes.SP_BOLD,
     color: colors.MAIN_COLOR,
-    fontSize: 13,
+    fontSize: 15,
     letterSpacing: 4,
     marginLeft: 26
   },
 
   bottomPanelPriceValue: {
-    ...textThemes.SP_REGULAR,
-    fontSize: 13,
-    letterSpacing: 1.3
+    ...textThemes.SP_BOLD,
+    color: colors.TEXT_DEFAULT_COLOR,
+    fontSize: 15,
+    letterSpacing: 1.5
   },
 
   bottomPanelOriginValue: {

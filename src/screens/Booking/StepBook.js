@@ -45,7 +45,7 @@ class StepBookScreen extends Component {
         ref={ref => (this.screenWrapper = ref)}
       >
         <UFOContainer style={styles.screenContainer}>
-          <Text style={[ styles.sectionTitle, styles.sectionTitleIndents ]}>
+          <Text style={[styles.sectionTitle, styles.sectionTitleIndents]}>
             {t('booking:locSectionTitle')}
           </Text>
           <FlatList
@@ -59,7 +59,7 @@ class StepBookScreen extends Component {
             extraData={bookingStore.selectedLocationRef}
             pagingEnabled={true}
           />
-          <Text style={[ styles.sectionTitle, styles.sectionTitleIndents ]}>
+          <Text style={[styles.sectionTitle, styles.sectionTitleIndents]}>
             {t('booking:carsSectionTitle')}
           </Text>
           <FlatList
@@ -72,8 +72,8 @@ class StepBookScreen extends Component {
             contentContainerStyle={styles.carSlider}
             extraData={bookingStore.selectedCarRef}
           />
-          <View style={[ styles.row, styles.sectionTitleIndents ]}>
-            <Text style={[ styles.sectionTitle, styles.datePickTitle ]}>
+          <View style={[styles.row, styles.sectionTitleIndents]}>
+            <Text style={[styles.sectionTitle, styles.datePickTitle]}>
               {t('booking:dareSectionTitle')}
             </Text>
             <TouchableOpacity
@@ -86,7 +86,7 @@ class StepBookScreen extends Component {
               />
             </TouchableOpacity>
           </View>
-          <View style={[ styles.rollPickerSection, styles.blockShadow ]}>
+          <View style={[styles.rollPickerSection, styles.blockShadow]}>
             <UFORollPicker
               data={bookingStore.rollPickersData}
               onRowChange={this.onSelectStartRollDate}
@@ -128,10 +128,10 @@ class StepBookScreen extends Component {
               {t('booking:calendarViewBtn')}
             </Text>
           </TouchableOpacity>
-          <Text style={[ styles.sectionTitle, styles.sectionTitleIndents ]}>
+          <Text style={[styles.sectionTitle, styles.sectionTitleIndents]}>
             {t('booking:timeSectionTitle')}
           </Text>
-          <View style={[ styles.rollPickerSection, styles.blockShadow ]}>
+          <View style={[styles.rollPickerSection, styles.blockShadow]}>
             <UFORollPicker
               data={bookingStore.rollPickersTimeItems}
               onRowChange={this.onSelectStartTime}
@@ -142,7 +142,10 @@ class StepBookScreen extends Component {
               <View style={styles.rollPickerSeparator} />
               <UFOIcon
                 name="ios-clock-outline"
-                style={[ styles.rollPickerSeparatorBtn, styles.rollPickerSeparatorIcon ]}
+                style={[
+                  styles.rollPickerSeparatorBtn,
+                  styles.rollPickerSeparatorIcon
+                ]}
               />
             </View>
             <UFORollPicker
@@ -159,8 +162,12 @@ class StepBookScreen extends Component {
             calendarData={bookingStore.carCalendar}
             minPickedDate={this.minPickedDate}
             maxPickedDate={bookingStore.maxCarCalendarDate}
-            startRental={bookingStore.startRentalDate.format(values.DATE_STRING_FORMAT)}
-            endRental={bookingStore.endRentalDate.format(values.DATE_STRING_FORMAT)}
+            startRental={bookingStore.startRentalDate.format(
+              values.DATE_STRING_FORMAT
+            )}
+            endRental={bookingStore.endRentalDate.format(
+              values.DATE_STRING_FORMAT
+            )}
           />
           <UFOTooltip
             isVisible={this.state.showDateTooltip}
@@ -168,10 +175,7 @@ class StepBookScreen extends Component {
             originBtn={this.dateTooltipRef}
           >
             {t('booking:datesTooltip')}
-            <Text
-              style={styles.tooltipLink}
-              onPress={this.onDateTooltipLink}
-            >
+            <Text style={styles.tooltipLink} onPress={this.onDateTooltipLink}>
               {t('booking:tooltipLink')}
             </Text>
           </UFOTooltip>
@@ -266,18 +270,24 @@ class StepBookScreen extends Component {
   };
 
   onDateTooltipLink = () => {
-    Linking.openURL('https://booking-uft.ufodrive.com/');
+    Linking.openURL('https://www.ufodrive.com/en/contact');
   };
 
   onSelectStartRollDate = async index => {
     const item = bookingStore.rollPickersData[index];
-    const selectedDate = moment(item.label, values.DATE_ROLLPICKER_FORMAT).startOf('day');
+    const selectedDate = moment(
+      item.label,
+      values.DATE_ROLLPICKER_FORMAT
+    ).startOf('day');
     await bookingStore.selectStartDate(selectedDate);
   };
 
   onSelectEndRollDate = async index => {
     const item = bookingStore.rollPickersData[index];
-    const selectedDate = moment(item.label, values.DATE_ROLLPICKER_FORMAT).startOf('day');
+    const selectedDate = moment(
+      item.label,
+      values.DATE_ROLLPICKER_FORMAT
+    ).startOf('day');
     await bookingStore.selectEndDate(selectedDate);
   };
 
