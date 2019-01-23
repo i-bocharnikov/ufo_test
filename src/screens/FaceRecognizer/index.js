@@ -1,5 +1,13 @@
 import React, { Component, Fragment } from 'react';
-import { View, TouchableHighlight, Text, StyleSheet, Platform, Dimensions } from 'react-native';
+import {
+  View,
+  TouchableHighlight,
+  Text,
+  StyleSheet,
+  Platform,
+  Dimensions,
+  ImageEditor
+} from 'react-native';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 import { translate } from 'react-i18next';
@@ -316,15 +324,52 @@ class FaceRecognizer extends Component {
     }
 
     this.isPending = true;
-    const imageData = await this.cameraRef.takePicture({
+    const facePosition = this.getFacePosition( this.detectedFaces[0] );
+    const options = {
       mirrorImage: true,
       orientation: 'portrait',
       fixOrientation: true
-      /* use this option with camera type back to test with different faces */
-      // rotateAngle: 270
-    });
-    this.capturedImgUri = imageData.uri;
-    this.isPending = false;
+    };
+
+    const { uri: cameraUri, width, height } = await this.cameraRef.takePicture(options);
+    const withoutCropping = this.props.navigation.getParam('withoutCropping');
+
+    if (withoutCropping) {
+      this.capturedImgUri = cameraUri;
+      this.isPending = false;
+      return;
+    }
+
+    const ratioX = width / SCREEN_WIDTH;
+    const ratioy = height / SCREEN_HEIGHT;
+    const captureFrame = {
+      top: IS_IOS ? -24 : 24,
+      bottom: IS_IOS ? 64 : 24,
+      left: IS_IOS ? -24 : 0,
+      right: IS_IOS ? 48 : 0
+    };
+
+    ImageEditor.cropImage(
+      cameraUri,
+      {
+        offset: {
+          x: (facePosition.left + captureFrame.left) * ratioX,
+          y: (facePosition.top + captureFrame.top) * ratioy
+        },
+        size: {
+          width: (facePosition.width + captureFrame.right) * ratioX,
+          height: (facePosition.height + captureFrame.bottom) * ratioy
+        }
+      },
+      uri => {
+        this.capturedImgUri = uri;
+        this.isPending = false;
+      },
+      error => {
+        this.capturedImgUri = cameraUri;
+        this.isPending = false;
+      }
+    );
   };
 
   /*
@@ -386,7 +431,8 @@ FaceRecognizer.propTypes = {
         actionHandleFileAsync: PropTypes.func,
         description: PropTypes.string,
         handlingErrorMessage: PropTypes.string,
-        nextBtnLabel: PropTypes.string
+        nextBtnLabel: PropTypes.string,
+        withoutCropping: PropTypes.bool
       })
     })
   })

@@ -41,7 +41,8 @@ export default StyleSheet.create({
 
   capturedImage: {
     width: '100%',
-    height: '100%'
+    height: '100%',
+    resizeMode: 'contain'
   },
 
   actionBtnDisabled: { backgroundColor: colors.BG_DEFAULT },
