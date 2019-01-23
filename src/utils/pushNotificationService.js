@@ -48,7 +48,7 @@ class NotificationService {
   }
 
   removeListeners() {
-    this.tokenListener()
+    this.tokenListener();
     this.notificationListener();
   }
 
@@ -69,7 +69,8 @@ class NotificationService {
       .setBody(data.body)
       .setData(data.data)
       .ios.setBadge(this.iosNotifBadge)
-      .android.setChannelId(this.androidDefaultChannelId);
+      .android.setChannelId(this.androidDefaultChannelId)
+      .android.setDefaults(firebase.notifications.Android.Defaults.All);
 
     FCN.displayNotification(notification);
   });
