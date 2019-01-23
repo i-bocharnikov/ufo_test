@@ -102,8 +102,8 @@ export default class UFOActionBar extends Component {
     return (
       <UFOLoader
         isVisible={isVisible}
-        isModal={isIOS ? false : true}
-        fallbackToNative={isIOS ? true : false}
+        isModal={!isIOS}
+        fallbackToNative={isIOS}
         style={isIOS && styles.loader}
       />
     );
