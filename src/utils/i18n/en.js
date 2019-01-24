@@ -11,7 +11,9 @@ export default {
     calendarTitle: 'SELECT DATE',
     saveBtn: 'Save',
     scheduleFrom: 'from',
-    scheduleTo: 'to'
+    scheduleTo: 'to',
+    postponeBtn: 'Ask me later',
+    termsUrl: 'https://www.ufodrive.com/en/terms-and-conditions'
   },
   activities: {
     internetAccessFailure:
@@ -267,7 +269,9 @@ export default {
     feedBackTitle: 'Just one question',
     confirmDialog: 'DONE',
     feedBackInputPlaceholder: 'Your variant',
-    ageConfirmation: 'By confirming, I certify that I have read and fully accepted the general terms and conditions and that I am at least 26 years old and in possession of a valid driver license.'
+    ageConfirmation: 'By confirming, I certify that I have read and fully accepted the general terms and conditions and that I am at least 26 years old and in possession of a valid driver license.',
+    termsAlertBtn: 'Read terms',
+    termsLinkLabel: 'Terms and conditions'
   },
   launch: {
     launchTitle: 'Fast track\ncar rental',

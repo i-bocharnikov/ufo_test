@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, Platform, processColor } from 'react-native';
+import { View, Text, TouchableOpacity, Platform, Linking, processColor } from 'react-native';
 import { translate } from 'react-i18next';
 import { observer } from 'mobx-react';
 import { CardIOModule, CardIOUtilities } from 'react-native-awesome-card-io';
@@ -239,6 +239,17 @@ class StepPayScreen extends Component {
             </Text>
           </View>
         </View>
+        <TouchableOpacity
+          style={styles.termsLink}
+          activeOpacity={values.BTN_OPACITY_DEFAULT}
+          onPress={this.openTermsUrl}
+        >
+          <UFOIcon
+            name="md-open"
+            style={styles.termsLinkIcon}
+          />
+          <Text style={styles.termsLinkLabel}>{t('termsLinkLabel')}</Text>
+        </TouchableOpacity>
       </View>
     );
   };
@@ -309,7 +320,13 @@ class StepPayScreen extends Component {
   handleToNextStep = async () => {
     if (!this.agreementConfirmed) {
       const confirmAction = () => { this.agreementConfirmed = true; };
-      await confirm('', this.props.t('ageConfirmation'), confirmAction);
+      await confirm(
+        null,
+        this.props.t('ageConfirmation'),
+        confirmAction,
+        this.openTermsUrl,
+        { neutral: this.props.t('termsAlertBtn') }
+      );
     }
 
     if (!this.agreementConfirmed) {
@@ -322,6 +339,13 @@ class StepPayScreen extends Component {
       await driveStore.reset();
       this.props.navigation.replace(screenKeys.BookingStepDrive);
     }
+  };
+
+  /*
+   * Open external url with terms
+  */
+  openTermsUrl = () => {
+    Linking.openURL( this.props.t('common:termsUrl') );
   };
 }
 
