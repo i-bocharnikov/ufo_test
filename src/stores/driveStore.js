@@ -151,6 +151,10 @@ export default class DriveStore {
     });
   }
 
+  @computed get isOngoing() {
+    return this.rental && this.rental.status === RENTAL_STATUS.ONGOING;
+  }
+
   @computed get inUse() {
     return (
       this.rental &&
@@ -376,10 +380,10 @@ export default class DriveStore {
   }
 
   rentalFaceValidation = async faceImgRef => {
-    const response = await putToApi(
-      `/rentals/${this.rental.reference}`,
-      { action: 'capture_face', identification_face_capture_reference: faceImgRef }
-    );
+    const response = await putToApi(`/rentals/${this.rental.reference}`, {
+      action: 'capture_face',
+      identification_face_capture_reference: faceImgRef
+    });
 
     if (response && response.status === 'success') {
       return true;
