@@ -257,7 +257,7 @@ class SignUpScreen extends Component {
       actionNavBack: () => navigation.navigate(screenKeys.SignUp),
       actionHandleFileAsync: this.uploadFaceCapture,
       description: t('faceRecognizing:registerCaptureDescription'),
-      nextBtnLabel: t('faceRecognizing:saveBtnLabel')
+      autohandling: true
     };
 
     navigation.navigate(screenKeys.FaceRecognizer, params);

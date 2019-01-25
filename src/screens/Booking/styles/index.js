@@ -257,14 +257,20 @@ export default StyleSheet.create({
   },
 
   bottomPanelMarketing: {
-    ...textThemes.SP_LIGHT,
-    color: colors.MAIN_LIGHT_COLOR,
-    fontSize: 14,
-    textAlign: 'right',
     position: 'absolute',
     top: 20,
     right: 0,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
     minWidth: 180
+  },
+
+  bottomPanelMarketingLabel: {
+    ...textThemes.SP_LIGHT,
+    color: colors.MAIN_LIGHT_COLOR,
+    fontSize: 14,
+    marginRight: 4
   },
 
   bottomPanelOverlap: {

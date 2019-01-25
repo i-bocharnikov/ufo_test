@@ -26,59 +26,51 @@ class BookingDetailsScreen extends Component {
   }
 
   render() {
-    const data = bookingStore.infoDescription;
-    const isSelected = this.isSelected();
-
     return (
       <UFONavBarWrapper
         backBtnAction={this.navBack}
         title={this.getTitle()}
-        subtitle={data.name ? data.name.toUpperCase() : ''}
+        subtitle={this.getSubTitle()}
         backgroundWrapper={colors.BG_INVERT}
       >
         <UFOContainer style={styles.container}>
-          <UFOSlider
-            data={data.descriptionImageUrls}
-            renderItem={this.renderSlide}
-            itemWidth={SCREEN_WIDTH}
-            inactiveSlideScale={1}
-            onSnapToItem={this.onSnapToItem}
-            loop={true}
-            autoplay={true}
-            lockScrollWhileSnapping={true}
-          />
-          <View style={styles.sliderPagination}>
-            {data.descriptionImageUrls && data.descriptionImageUrls.map((item, index) => (
-              <View
-                key={index}
-                style={[
-                  styles.sliderDot,
-                  this.state.activeSlide === index && styles.sliderDotActive
-                ]}
-              />
-            ))}
-          </View>
-          <View style={styles.separateLine} />
-          <Text style={[ styles.commonText, styles.descriptionTitle ]}>
-            {data.descriptionHeader}
-          </Text>
+          {this.renderBody()}
+          <UFOLoader isVisible={bookingStore.isLoading} />
+        </UFOContainer>
+      </UFONavBarWrapper>
+    );
+  }
+
+  renderBody = () => {
+    const data = bookingStore.infoDescription;
+    const isSelected = this.isSelected();
+
+    return (
+      <Fragment>
+        {this.renderSliderBlock()}
+        <Text style={[ styles.commonText, styles.descriptionTitle ]}>
+          {data.descriptionHeader}
+        </Text>
+        {data.descriptionSubHeader && (
           <Text style={[ styles.commonBoldText, styles.descriptionSubTitle ]}>
             {data.descriptionSubHeader}
           </Text>
-          <View style={styles.descriptionBody}>
-            <MarkdownView
-              styles={markdownStyles}
-              onLinkPress={this.onLinkPress}
-            >
-              {data.descriptionBody}
-            </MarkdownView>
-          </View>
-          {this.getFuturesBlock()}
-          {data.message && (
-            <Text style={styles.priceMessage}>
-              {data.message}
-            </Text>
-          )}
+        )}
+        <View style={styles.descriptionBody}>
+          <MarkdownView
+            styles={markdownStyles}
+            onLinkPress={this.onLinkPress}
+          >
+            {data.descriptionBody}
+          </MarkdownView>
+        </View>
+        {this.getFuturesBlock()}
+        {data.message && (
+          <Text style={styles.priceMessage}>
+            {data.message}
+          </Text>
+        )}
+        {(data.isLocation || data.isCar) && (
           <TouchableOpacity
             onPress={this.handleSelect}
             activeOpacity={values.BTN_OPACITY_DEFAULT}
@@ -92,31 +84,53 @@ class BookingDetailsScreen extends Component {
               {this.props.t(isSelected ? 'booking:unseclectInfoBtn' : 'booking:seclectInfoBtn')}
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={this.navBack}
-            activeOpacity={values.BTN_OPACITY_DEFAULT}
-            style={styles.closeBtn}
-          >
-            <Text style={styles.closeBtnLabel}>
-              {this.props.t('common:close')}
-            </Text>
-          </TouchableOpacity>
-          <UFOLoader isVisible={bookingStore.isLoading} />
-        </UFOContainer>
-      </UFONavBarWrapper>
+        )}
+        <TouchableOpacity
+          onPress={this.navBack}
+          activeOpacity={values.BTN_OPACITY_DEFAULT}
+          style={styles.closeBtn}
+        >
+          <Text style={styles.closeBtnLabel}>
+            {this.props.t('common:close')}
+          </Text>
+        </TouchableOpacity>
+      </Fragment>
     );
-  }
+  };
 
-  getTitle = () => {
-    if (bookingStore.infoDescription.isLocation) {
-      return this.props.t('booking:locationInfoTitle');
+  renderSliderBlock = () => {
+    const data = bookingStore.infoDescription;
+
+    if (!data.descriptionImageUrls || !data.descriptionImageUrls.length) {
+      return null;
     }
 
-    if (bookingStore.infoDescription.isCar) {
-      return this.props.t('booking:carInfoTitle');
-    }
-
-    return '';
+    return (
+      <View style={styles.sliderBlock}>
+        <UFOSlider
+          data={data.descriptionImageUrls}
+          renderItem={this.renderSlide}
+          itemWidth={SCREEN_WIDTH}
+          inactiveSlideScale={1}
+          onSnapToItem={this.onSnapToItem}
+          loop={true}
+          autoplay={true}
+          lockScrollWhileSnapping={true}
+        />
+        <View style={styles.sliderPagination}>
+          {data.descriptionImageUrls && data.descriptionImageUrls.map((item, index) => (
+            <View
+              key={index}
+              style={[
+                styles.sliderDot,
+                this.state.activeSlide === index && styles.sliderDotActive
+              ]}
+            />
+          ))}
+        </View>
+        <View style={styles.separateLine} />
+      </View>
+    );
   };
 
   renderSlide = ({ item }) => {
@@ -129,6 +143,34 @@ class BookingDetailsScreen extends Component {
         />
       </View>
     );
+  };
+
+  getTitle = () => {
+    if (bookingStore.infoDescription.isLocation) {
+      return this.props.t('booking:locationInfoTitle');
+    }
+
+    if (bookingStore.infoDescription.isCar) {
+      return this.props.t('booking:carInfoTitle');
+    }
+
+    if (bookingStore.infoDescription.isPrice) {
+      return this.props.t('booking:priceInfoTitle');
+    }
+
+    return '';
+  };
+
+  getSubTitle = () => {
+    if (bookingStore.infoDescription.isPrice) {
+      return this.props.t('booking:priceInfoSubTitle');
+    }
+
+    if (bookingStore.infoDescription.name) {
+      return bookingStore.infoDescription.name.toUpperCase();
+    }
+
+    return '';
   };
 
   onLinkPress = url => {
@@ -211,6 +253,7 @@ class BookingDetailsScreen extends Component {
     this.props.navigation.goBack();
     bookingStore.carInfoRef = null;
     bookingStore.locationInfoRef = null;
+    bookingStore.priceInfoRef = null;
   };
 }
 

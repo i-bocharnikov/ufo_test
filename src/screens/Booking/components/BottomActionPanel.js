@@ -76,14 +76,26 @@ class BottomActionPanel extends Component {
   };
 
   renderMarketingLabel = () => {
-    if (!bookingStore.priceMarketingLabel) {
+    if (!bookingStore.order || !bookingStore.order.price) {
       return null;
     }
 
     return (
-      <Text style={styles.bottomPanelMarketing}>
-        {bookingStore.priceMarketingLabel}
-      </Text>
+      <View style={styles.bottomPanelMarketing}>
+        {bookingStore.priceMarketingLabel && (
+          <Text style={styles.bottomPanelMarketingLabel}>
+            {bookingStore.priceMarketingLabel}
+          </Text>
+        )}
+        <TouchableOpacity
+          onPress={this.props.openPriceInfo}
+          activeOpacity={values.BTN_OPACITY_DEFAULT}
+        >
+          <Text style={styles.slideInfoLink}>
+            {this.props.t('booking:infoLink')}
+          </Text>
+        </TouchableOpacity>
+      </View>
     );
   };
 

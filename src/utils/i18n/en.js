@@ -230,6 +230,8 @@ export default {
     calendarViewBtn: 'open calendar view',
     locationInfoTitle: 'LOCATION',
     carInfoTitle: 'CAR',
+    priceInfoTitle: 'PRICE',
+    priceInfoSubTitle: 'PRICE DESCRIPTION',
     infoRange: 'RANGE',
     infoPeople: 'PEOPLE',
     address: 'Address',
