@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Platform, ScrollView } from 'react-native';
-import { WebView } from 'react-native-webview';
+import { View, StyleSheet, Platform, WebView } from 'react-native';
 import { translate } from 'react-i18next';
 import { observer } from 'mobx-react';
 import DeviceInfo from 'react-native-device-info';

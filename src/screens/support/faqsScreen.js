@@ -25,6 +25,7 @@ import {
 } from './../../utils/global';
 import supportStore from './../../stores/supportStore';
 import { driveStore } from './../../stores';
+import userActionsLogger from '../../utils/userActionsLogger';
 
 const SUPPORT_FAQ = navigationParams.SUPPORT_FAQ;
 const SUPPORT_FAQ_CATEGORY = navigationParams.SUPPORT_FAQ_CATEGORY;
@@ -188,6 +189,13 @@ class SupportFaqsScreen extends Component {
   };
 
   doOpenChat = () => {
+    userActionsLogger(
+      severityTypes.INFO,
+      codeTypes.SUCCESS,
+      'openChat',
+      '',
+      ''
+    );
     this.props.navigation.navigate(screens.SUPPORT_CHAT.name);
   };
 
