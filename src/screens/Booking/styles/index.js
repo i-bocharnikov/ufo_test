@@ -217,6 +217,12 @@ export default StyleSheet.create({
     justifyContent: 'space-around'
   },
 
+  bottomPanelInfoIcon: {
+    color: colors.MAIN_COLOR,
+    fontSize: 16,
+    marginRight: 8
+  },
+
   bottomPanelActionTitle: {
     ...textThemes.SP_BOLD,
     color: colors.TEXT_INVERT_COLOR,
@@ -239,8 +245,7 @@ export default StyleSheet.create({
     ...textThemes.SP_BOLD,
     color: colors.MAIN_COLOR,
     fontSize: 13,
-    letterSpacing: 4,
-    marginLeft: 26
+    letterSpacing: 4
   },
 
   bottomPanelPriceValue: {

@@ -5,23 +5,33 @@ import { observer } from 'mobx-react';
 import PropTypes from 'prop-types';
 
 import { bookingStore } from './../../../stores';
-import { UFOLoader } from './../../../components/common';
+import { UFOLoader, UFOIcon } from './../../../components/common';
 import styles from './../styles';
 import { values } from './../../../utils/theme';
 
 @observer
 class BottomActionPanel extends Component {
   render() {
-    const { t, action, actionTitle, actionSubTitle, isAvailable, isWaiting } = this.props;
+    const { t, action, actionTitle, actionSubTitle, isAvailable, isWaiting, openPriceInfo } = this.props;
     const isAlternative = bookingStore.isOrderCarHasAlt;
     const isBtnActive = (isAvailable || isAlternative) && !isWaiting;
 
     return (
       <View style={styles.bottomPanel}>
-        <View style={styles.bottomPanelInfo}>
-          <Text style={styles.bottomPanelPriceLabel}>
-            {t('booking:totalPrice')}
-          </Text>
+        <TouchableOpacity
+          style={styles.bottomPanelInfo}
+          onPress={openPriceInfo}
+          activeOpacity={1}
+        >
+          <View style={styles.row}>
+            <UFOIcon
+              name="ios-information-circle-outline"
+              style={styles.bottomPanelInfoIcon}
+            />
+            <Text style={styles.bottomPanelPriceLabel}>
+              {t('booking:totalPrice')}
+            </Text>
+          </View>
           <View>
             <Text style={styles.bottomPanelPriceValue}>
               {this.priceLabel}
@@ -29,7 +39,7 @@ class BottomActionPanel extends Component {
             {this.renderMarketingLabel()}
           </View>
           {this.renderBarredOverlap()}
-        </View>
+        </TouchableOpacity>
         <TouchableOpacity
           style={styles.bottomPanelActionBtn}
           activeOpacity={isBtnActive ? values.BTN_OPACITY_DEFAULT : 1}
@@ -38,16 +48,14 @@ class BottomActionPanel extends Component {
           <Text style={[
             styles.bottomPanelActionTitle,
             !isBtnActive && styles.opacityLabel
-          ]}
-          >
+          ]}>
             {!isAlternative ? actionTitle : t('booking:applyBtn')}
           </Text>
           {actionSubTitle && !isAlternative && (
             <Text style={[
               styles.bottomPanelActionSubTitle,
               !isBtnActive && styles.opacityLabel
-            ]}
-            >
+            ]}>
               {actionSubTitle}
             </Text>
           )}
@@ -76,25 +84,15 @@ class BottomActionPanel extends Component {
   };
 
   renderMarketingLabel = () => {
-    if (!bookingStore.order || !bookingStore.order.price) {
+    if (!bookingStore.priceMarketingLabel) {
       return null;
     }
 
     return (
       <View style={styles.bottomPanelMarketing}>
-        {bookingStore.priceMarketingLabel && (
-          <Text style={styles.bottomPanelMarketingLabel}>
-            {bookingStore.priceMarketingLabel}
-          </Text>
-        )}
-        <TouchableOpacity
-          onPress={this.props.openPriceInfo}
-          activeOpacity={values.BTN_OPACITY_DEFAULT}
-        >
-          <Text style={styles.slideInfoLink}>
-            {this.props.t('booking:infoLink')}
-          </Text>
-        </TouchableOpacity>
+        <Text style={styles.bottomPanelMarketingLabel}>
+          {bookingStore.priceMarketingLabel}
+        </Text>
       </View>
     );
   };
