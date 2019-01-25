@@ -12,7 +12,7 @@ import { observer } from 'mobx-react';
 import _ from 'lodash';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import { bookingStore, feedbackStore } from './../../stores';
+import { bookingStore, feedbackStore, driveStore } from './../../stores';
 import registerStore from './../../stores/registerStore';
 import { keys as screenKeys } from './../../navigators/helpers';
 import {
@@ -45,10 +45,7 @@ class StepDriveScreen extends Component {
 
   render() {
     return (
-      <UFOContainer
-        image={this.backgroundImage}
-        style={styles.container}
-      >
+      <UFOContainer image={this.backgroundImage} style={styles.container}>
         <View style={styles.driveBgShadow} />
         <UFOImage
           style={styles.moonImg}
@@ -63,24 +60,32 @@ class StepDriveScreen extends Component {
   }
 
   get backgroundImage() {
-    const uri = _.get(bookingStore, 'bookingConfirmation.confirmationBackgroundImageUrl');
+    const uri = _.get(
+      bookingStore,
+      'bookingConfirmation.confirmationBackgroundImageUrl'
+    );
     return /^(https?:\/\/)/.test(uri) ? { uri } : null;
   }
 
   renderMainContent = () => {
-    const isRegistered = registerStore.isUserRegistered;
+    const isRegisteredAndBookings =
+      registerStore.isUserRegistered && driveStore.hasRentals;
     const t = this.props.t;
 
     return (
       <Fragment>
-        <Text style={[ styles.headerTitle, styles.textShadow ]}>
+        <Text style={[styles.headerTitle, styles.textShadow]}>
           {t('driveTitle')}
         </Text>
-        <Text style={[ styles.headerSubTitle, styles.textShadow ]}>
+        <Text style={[styles.headerSubTitle, styles.textShadow]}>
           {t('driveSubTitle')}
         </Text>
-        <Text style={[ styles.descriptionText, styles.textShadow ]}>
-          {t(isRegistered ? 'dreveDescrDriveP1' : 'dreveDescrRegisterP1')}
+        <Text style={[styles.descriptionText, styles.textShadow]}>
+          {t(
+            isRegisteredAndBookings
+              ? 'dreveDescrDriveP1'
+              : 'dreveDescrRegisterP1'
+          )}
           <Text style={styles.linkedText} onPress={this.navToGuide}>
             {t('dreveDescrGuideLink')}
           </Text>
@@ -91,7 +96,9 @@ class StepDriveScreen extends Component {
           style={styles.nextBtn}
         >
           <Text style={styles.nextBtnLabel}>
-            {t(isRegistered ? 'driveNextDrive' : 'driveNextRegister')}
+            {t(
+              isRegisteredAndBookings ? 'driveNextDrive' : 'driveNextRegister'
+            )}
           </Text>
         </TouchableHighlight>
       </Fragment>
@@ -99,7 +106,8 @@ class StepDriveScreen extends Component {
   };
 
   renderFeedBackDialog = () => {
-    const showDialog = this.state.showFeedBackDialog && !feedbackStore.isLoading;
+    const showDialog =
+      this.state.showFeedBackDialog && !feedbackStore.isLoading;
     const feedback = feedbackStore.reserveFeedBack;
 
     if (!showDialog || !feedback) {
@@ -107,15 +115,13 @@ class StepDriveScreen extends Component {
     }
 
     const additionalInputRef = this.state.additionalInputRef;
-    const showConfirmBtn = additionalInputRef
-      || feedback.multiSelectionAllowed && _.find(feedback.choices, [ 'value', true ]);
+    const showConfirmBtn =
+      additionalInputRef ||
+      (feedback.multiSelectionAllowed &&
+        _.find(feedback.choices, ['value', true]));
 
     return (
-      <Modal
-        transparent={true}
-        visible={true}
-        onRequestClose={() => null}
-      >
+      <Modal transparent={true} visible={true} onRequestClose={() => null}>
         <KeyboardAwareScrollView
           style={styles.dialogScrollWrapper}
           contentContainerStyle={styles.dialogWrapper}
@@ -126,20 +132,20 @@ class StepDriveScreen extends Component {
             <Text style={styles.dialogTitle}>
               {this.props.t('feedBackTitle')}
             </Text>
-            <Text style={styles.dialogQuestion}>
-              {feedback.question}
-            </Text>
-            {feedback.choices.map(item => item.reference === additionalInputRef
-              ? this.renderAdditionalInput()
-              : (
-              <UFOCheckBoxItem
-                key={item.reference}
-                label={_.isString(item.value) ? item.value : item.text}
-                isChecked={!!item.value}
-                onCheck={() => this.handleCooseAnswer(item.reference)}
-                wrapperStyle={styles.dialogItem}
-              />
-            ))}
+            <Text style={styles.dialogQuestion}>{feedback.question}</Text>
+            {feedback.choices.map(item =>
+              item.reference === additionalInputRef ? (
+                this.renderAdditionalInput()
+              ) : (
+                <UFOCheckBoxItem
+                  key={item.reference}
+                  label={_.isString(item.value) ? item.value : item.text}
+                  isChecked={!!item.value}
+                  onCheck={() => this.handleCooseAnswer(item.reference)}
+                  wrapperStyle={styles.dialogItem}
+                />
+              )
+            )}
           </View>
           {showConfirmBtn && (
             <TouchableHighlight
@@ -170,9 +176,12 @@ class StepDriveScreen extends Component {
 
   /*
    * Handler for pressing on any options
-  */
+   */
   handleCooseAnswer = choiceRef => {
-    const choice = _.find(feedbackStore.reserveFeedBack.choices, [ 'reference', choiceRef ]);
+    const choice = _.find(feedbackStore.reserveFeedBack.choices, [
+      'reference',
+      choiceRef
+    ]);
     const sendCallback = () => {
       if (!feedbackStore.reserveFeedBack.multiSelectionAllowed) {
         this.handleSendFeedBack();
@@ -196,30 +205,36 @@ class StepDriveScreen extends Component {
 
   /*
    * Handler for input custom option
-  */
+   */
   handleInputAnswer = value => {
     feedbackStore.inputReserveOption(this.state.additionalInputRef, value);
   };
 
   /*
    * Send feedback and close modal dialog
-  */
+   */
   handleSendFeedBack = () => {
     if (this.state.additionalInputRef) {
       /* valifate input value (now only non empty) */
-      const choice = _.find(feedbackStore.reserveFeedBack.choices, [ 'reference', this.state.additionalInputRef ]);
+      const choice = _.find(feedbackStore.reserveFeedBack.choices, [
+        'reference',
+        this.state.additionalInputRef
+      ]);
 
       if (!_.isString(choice.value) || !choice.value.length) {
         return;
       }
     }
 
-    this.setState({ showFeedBackDialog: false }, feedbackStore.sendReserveFeedback);
+    this.setState(
+      { showFeedBackDialog: false },
+      feedbackStore.sendReserveFeedback
+    );
   };
 
   /*
    * Finish this screen actions and go next
-  */
+   */
   navNext = () => {
     const { navigation } = this.props;
     navigation.popToTop();
@@ -231,7 +246,7 @@ class StepDriveScreen extends Component {
 
   /*
    * Navigation to FAQ screen
-  */
+   */
   navToGuide = () => {
     this.props.navigation.popToTop();
     this.props.navigation.navigate(screenKeys.SupportFaqs);
