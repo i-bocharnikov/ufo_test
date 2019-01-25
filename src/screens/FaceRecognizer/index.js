@@ -333,9 +333,15 @@ class FaceRecognizer extends Component {
 
     const { uri: cameraUri, width, height } = await this.cameraRef.takePicture(options);
     const withoutCropping = this.props.navigation.getParam('withoutCropping');
+    const autohandling = this.props.navigation.getParam('autohandling');
 
     if (withoutCropping) {
       this.capturedImgUri = cameraUri;
+
+      if (autohandling) {
+        await this.handleCapture();
+      }
+
       this.isPending = false;
       return;
     }
@@ -361,8 +367,13 @@ class FaceRecognizer extends Component {
           height: (facePosition.height + cropFrame.bottom) * ratioy
         }
       },
-      uri => {
+      async uri => {
         this.capturedImgUri = uri;
+
+        if (autohandling) {
+          await this.handleCapture();
+        }
+
         this.isPending = false;
       },
       error => {
@@ -371,6 +382,28 @@ class FaceRecognizer extends Component {
       }
     );
   };
+
+  /*
+   * Handle captured image
+  */
+  handleCapture = async () => {
+    const handleFile = this.props.navigation.getParam('actionHandleFileAsync');
+
+    if (typeof handleFile === 'function') {
+      this.isPending = true;
+      const isSuccess = await handleFile(this.capturedImgUri);
+      this.isPending = false;
+
+      if (!isSuccess) {
+        this.handlingWasFailure = true;
+        this.resetCapture();
+
+        return false;
+      }
+
+      return true;
+    }
+  }
 
   /*
    * Navigate to previous screen
@@ -387,17 +420,13 @@ class FaceRecognizer extends Component {
    * Handle image and navigate to next screen
   */
   navToNext = async () => {
-    const handleFile = this.props.navigation.getParam('actionHandleFileAsync');
+    const autohandling = this.props.navigation.getParam('autohandling');
     const actionNavNext = this.props.navigation.getParam('actionNavNext');
 
-    if (typeof handleFile === 'function') {
-      this.isPending = true;
-      const isSuccess = await handleFile(this.capturedImgUri);
-      this.isPending = false;
+    if (!autohandling) {
+      const isSuccess = await this.handleCapture();
 
       if (!isSuccess) {
-        this.handlingWasFailure = true;
-        this.resetCapture();
         return;
       }
     }
@@ -432,7 +461,8 @@ FaceRecognizer.propTypes = {
         description: PropTypes.string,
         handlingErrorMessage: PropTypes.string,
         nextBtnLabel: PropTypes.string,
-        withoutCropping: PropTypes.bool
+        withoutCropping: PropTypes.bool,
+        autohandling: PropTypes.bool
       })
     })
   })
