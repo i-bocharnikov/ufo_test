@@ -40,9 +40,10 @@ export default class BookingStore {
 
   @observable locationInfoRef = this._defaultStore.locationInfoRef;
   @observable carInfoRef = this._defaultStore.carInfoRef;
-  @observable locationInfoDescription = this._defaultStore
-    .locationInfoDescription;
+  @observable priceInfoRef = this._defaultStore.priceInfoRef;
+  @observable locationInfoDescription = this._defaultStore.locationInfoDescription;
   @observable carInfoDescription = this._defaultStore.carInfoDescription;
+  @observable priceInfoDescription = this._defaultStore.priceInfoDescription
 
   /* step pay & confirm */
   @observable stripeApiKey = this._defaultStore.stripeApiKey;
@@ -77,8 +78,10 @@ export default class BookingStore {
         .format(values.TIME_STRING_FORMAT),
       locationInfoRef: null,
       carInfoRef: null,
+      priceInfoRef: null,
       locationInfoDescription: {},
       carInfoDescription: {},
+      priceInfoDescription: {},
       stripeApiKey: null,
       userCreditCards: [],
       currentCreditCardRef: null,
@@ -338,9 +341,7 @@ export default class BookingStore {
       this.locationInfoRef &&
       this.locationInfoRef !== this.locationInfoDescription.reference
     ) {
-      this.locationInfoDescription = await locations.getDescription(
-        this.locationInfoRef
-      );
+      this.locationInfoDescription = await locations.getDescription(this.locationInfoRef);
     }
 
     if (
@@ -348,6 +349,13 @@ export default class BookingStore {
       this.carInfoRef !== this.carInfoDescription.reference
     ) {
       this.carInfoDescription = await cars.getDescription(this.carInfoRef);
+    }
+
+    if (
+      this.priceInfoRef &&
+      this.priceInfoRef !== this.priceInfoDescription.reference
+    ) {
+      this.priceInfoDescription = await order.getPriceDescription(this.priceInfoRef);
     }
 
     this.isLoading = false;
@@ -713,6 +721,13 @@ export default class BookingStore {
       this.carInfoRef === this.carInfoDescription.reference
     ) {
       return { isCar: true, ...this.carInfoDescription };
+    }
+
+    if (
+      this.priceInfoRef &&
+      this.priceInfoRef === this.priceInfoDescription.reference
+    ) {
+      return { isPrice: true, ...this.priceInfoDescription };
     }
 
     return {};

@@ -10,6 +10,7 @@ import { getFromApi, postToApi } from './../../utils/api';
 export default class Order {
 
   static fallbackOrder = null;
+  static fallbackPriceDescription = {};
   static fallbackPaymentOptions = {};
   static fallbackOrderConfirmation = null;
 
@@ -98,6 +99,21 @@ export default class Order {
       return true;
     } else {
       return false;
+    }
+  }
+
+  /**
+    * @param {string} priceRef
+    * @returns {Object}
+    * @description Get description for simulation price
+    */
+  static async getPriceDescription(priceRef) {
+    const response = await getFromApi(`/pricings/${priceRef}`, true);
+
+    if (response.isSuccess && _.has(response, 'data.pricing')) {
+      return response.data.pricing;
+    } else {
+      return this.fallbackPriceDescription;
     }
   }
 }

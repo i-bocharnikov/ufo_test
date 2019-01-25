@@ -3,6 +3,7 @@ import { View, Text, FlatList, TouchableOpacity, Linking } from 'react-native';
 import { translate } from 'react-i18next';
 import { observer } from 'mobx-react';
 import moment from 'moment';
+import _ from 'lodash';
 
 import { bookingStore } from './../../stores';
 import { keys as screenKeys } from './../../navigators/helpers';
@@ -225,6 +226,7 @@ class StepBookScreen extends Component {
         actionSubTitle={this.props.t('booking:stepBookNextSubTitle')}
         isAvailable={bookingStore.isOrderCarAvailable}
         isWaiting={bookingStore.isLoading && this.isFetched}
+        openPriceInfo={this.openPriceInfo}
       />
     );
   };
@@ -258,6 +260,17 @@ class StepBookScreen extends Component {
 
   openLocationInfo = ref => {
     bookingStore.locationInfoRef = ref;
+    this.props.navigation.navigate(screenKeys.BookingDetails);
+  };
+
+  openPriceInfo = () => {
+    const ref = _.get(bookingStore, 'order.price.pricingReference');
+
+    if (!ref) {
+      return;
+    }
+
+    bookingStore.priceInfoRef = ref;
     this.props.navigation.navigate(screenKeys.BookingDetails);
   };
 
