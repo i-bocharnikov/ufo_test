@@ -1,7 +1,7 @@
 {
   "name": "driverApp",
-  "version": "2.0.0",
-  "build": "17",
+  "version": "2.1.0",
+  "build": "18",
   "private": true,
   "scripts": {
     "start": "react-native start",
@@ -13,7 +13,7 @@
     "test": "jest",
     "android.logs": "react-native log-android",
     "ios.logs": "react-native log-ios",
-    "clean": "rm -Rf ./node_modules; rm -Rf ./ios/Pods; rm -Rf ./android/build; rm -Rf ./android/app/build",
+    "clean": "rm -Rf ./node_modules; rm -Rf ./ios/Pods; rm -Rf ./android/build; rm -Rf ./android/app/build; rm -Rf ios/build",
     "release.android": "react-native run-android --variant=release",
     "release.ios": "react-native run-ios --configuration Release --device \"Stany Blanvalet’s iPhone\"",
     "debug": "react-devtools &",
