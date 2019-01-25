@@ -216,7 +216,7 @@ class registerStore {
   async save(extraData = {}) {
     const response = await putToApi(`/users/${this.user.reference}`, {
       ...this.user,
-      extraData
+      ...extraData
     });
 
     if (
