@@ -184,7 +184,7 @@ export default StyleSheet.create({
     fontSize: 18
   },
 
-  notAvailableCar: { opacity: 0.5 },
+  notAvailable: { opacity: 0.5 },
 
   opacityLabel: { opacity: 0.5 },
 
@@ -371,7 +371,7 @@ export default StyleSheet.create({
     backgroundColor: colors.BG_INVERT_TINT,
     marginTop: 28,
     paddingTop: 16,
-    paddingBottom: 48
+    paddingBottom: 36
   },
 
   infoBlock: {
@@ -539,5 +539,25 @@ export default StyleSheet.create({
     color: colors.TEXT_INVERT_COLOR,
     fontSize: 28,
     marginLeft: 8
+  },
+
+  termsLink: {
+    flexDirection: 'row',
+    marginHorizontal: SCREEN_HORIZONTAL_INDENTS,
+    alignItems: 'center',
+    marginTop: 20
+  },
+
+  termsLinkIcon: {
+    marginRight: 8,
+    marginLeft: 2,
+    color: colors.MAIN_LIGHT_COLOR,
+    fontSize: 16
+  },
+
+  termsLinkLabel: {
+    ...textThemes.SP_REGULAR,
+    color: colors.MAIN_LIGHT_COLOR,
+    fontSize: 14
   }
 });

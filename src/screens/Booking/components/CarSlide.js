@@ -16,7 +16,7 @@ export default class CarSlide extends PureComponent {
     } = this.props;
 
     return (
-      <View style={!car.available && styles.notAvailableCar}>
+      <View style={!car.available && styles.notAvailable}>
         <TouchableOpacity
           onPress={this.handleSelectCar}
           activeOpacity={car.available ? values.BTN_OPACITY_DEFAULT : 1}
