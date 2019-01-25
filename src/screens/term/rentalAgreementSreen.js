@@ -12,6 +12,10 @@ import { screens, actionStyles, icons } from './../../utils/global';
 import { driveStore, termStore } from './../../stores';
 import { showPrompt, showToastError } from './../../utils/interaction';
 import { NavigationEvents } from 'react-navigation';
+import userActionsLogger, {
+  severityTypes,
+  codeTypes
+} from '../../utils/userActionsLogger';
 
 @observer
 class InspectScreen extends Component {
@@ -81,11 +85,26 @@ class InspectScreen extends Component {
     const confirmKey = t('term:confirmContractKeyString');
 
     const promptHandler = str => {
-      if (str.toUpperCase() === confirmKey.toUpperCase()) {
+      if (str.toUpperCase().trim() === confirmKey.toUpperCase()) {
+        userActionsLogger(
+          severityTypes.INFO,
+          codeTypes.SUCCESS,
+          'confirmContractSignature',
+          'confirmation accepted',
+          `Input ${str} does match confirmKey ${confirmKey}`
+        );
         this.doSign();
         this.activityPending = false;
         return;
       }
+
+      userActionsLogger(
+        severityTypes.ERROR,
+        codeTypes.ERROR,
+        'confirmContractSignature',
+        t('error:stringNotMatch'),
+        `Input ${str} does not match confirmKey ${confirmKey}`
+      );
 
       showToastError(t('error:stringNotMatch'), 160);
       this.activityPending = false;
