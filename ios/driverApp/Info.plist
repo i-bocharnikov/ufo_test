@@ -54,7 +54,7 @@
 	<key>NSFaceIDUsageDescription</key>
 	<string>UFODrive needs Face ID authorisation, for you to confirm rental booking and approve terms.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>UFODrive need location to be able to connect to vehicule in ble (open / close the car)</string>
+	<string>UFODrive need location to be able to connect to vehicule (lock / unlock)</string>
 	<key>NSMotionUsageDescription</key>
 	<string>UFODrive needs access</string>
 	<key>NSPhotoLibraryUsageDescription</key>

@@ -23,10 +23,20 @@ export const ufodrive_server_api = axios.create({
   timeout: 30000
 });
 
+export const ufodrive_server_log_api = axios.create({
+  baseURL: `${configurations.UFO_SERVER_PRIVATE_API_URL}v1/`,
+  timeout: 1000
+});
+
 export async function useTokenInApi(token) {
   SAVE_TOKEN = token;
   ufodrive_server_api.defaults.headers.common.Authorization = 'Bearer ' + token;
   ufodrive_server_api.defaults.headers.post.Authorization = 'Bearer ' + token;
+
+  ufodrive_server_log_api.defaults.headers.common.Authorization =
+    'Bearer ' + token;
+  ufodrive_server_log_api.defaults.headers.post.Authorization =
+    'Bearer ' + token;
 }
 
 /**
@@ -43,9 +53,9 @@ export async function getFromApi(
 ) {
   const api = usePublicApi ? ufodrive_server_public_api : ufodrive_server_api;
   try {
-    activitiesStore.activities.registerInternetStart();
+    await activitiesStore.activities.registerInternetStart();
     const response = await api.get(path);
-    activitiesStore.activities.registerInternetStopSuccess();
+    await activitiesStore.activities.registerInternetStopSuccess();
     return response.data;
   } catch (error) {
     handleError(error, suppressToastBox);
@@ -68,9 +78,9 @@ export async function postToApi(
 ) {
   const api = usePublicApi ? ufodrive_server_public_api : ufodrive_server_api;
   try {
-    activitiesStore.activities.registerInternetStart();
+    await activitiesStore.activities.registerInternetStart();
     const response = await api.post(path, body);
-    activitiesStore.activities.registerInternetStopSuccess();
+    await activitiesStore.activities.registerInternetStopSuccess();
     return response.data;
   } catch (error) {
     handleError(error, suppressToastBox);
@@ -78,8 +88,8 @@ export async function postToApi(
 }
 
 export async function logToApi(path, body) {
-  const response = await ufodrive_server_api.post(path, body);
-  return response.data;
+  await ufodrive_server_log_api.post(path, body);
+  return;
 }
 
 /**
@@ -98,9 +108,9 @@ export async function putToApi(
 ) {
   const api = usePublicApi ? ufodrive_server_public_api : ufodrive_server_api;
   try {
-    activitiesStore.activities.registerInternetStart();
+    await activitiesStore.activities.registerInternetStart();
     const response = await api.put(path, body);
-    activitiesStore.activities.registerInternetStopSuccess();
+    await activitiesStore.activities.registerInternetStopSuccess();
     return response.data;
   } catch (error) {
     handleError(error, suppressToastBox);
@@ -140,11 +150,11 @@ export async function uploadToApi(
     data.append('sub_type', sub_type);
     data.append('file_name', fileName);
     data.append('content_type', fileType);
-    activitiesStore.activities.registerInternetStart();
+    await activitiesStore.activities.registerInternetStart();
     const response = await ufodrive_server_api.post('documents', data, {
       headers: { 'Content-Type': 'multipart/form-data;' }
     });
-    activitiesStore.activities.registerInternetStopSuccess();
+    await activitiesStore.activities.registerInternetStopSuccess();
     return response.data;
   } catch (error) {
     handleError(error, suppressToastBox);
@@ -172,12 +182,12 @@ export async function downloadFromApi(
       configurations.UFO_SERVER_DEPRECATED_API_VERSION
     }/${path}${reference}`;
 
-    activitiesStore.activities.registerInternetStart();
+    await activitiesStore.activities.registerInternetStart();
     const response = await RNFetchBlob.fetch('GET', url, {
       Authorization: 'Bearer ' + SAVE_TOKEN
     });
     const base64Str = response.base64();
-    activitiesStore.activities.registerInternetStopSuccess();
+    await activitiesStore.activities.registerInternetStopSuccess();
 
     return base64Str;
   } catch (error) {
@@ -187,12 +197,12 @@ export async function downloadFromApi(
 
 export async function checkConnectivity() {
   try {
-    activitiesStore.activities.registerInternetStart();
+    await activitiesStore.activities.registerInternetStart();
     await ufodrive_server_connectivity_test_api.get('/');
-    activitiesStore.activities.registerInternetStopSuccess();
+    await activitiesStore.activities.registerInternetStopSuccess();
     return true;
   } catch (error) {
-    activitiesStore.activities.registerInternetStopFailure();
+    await activitiesStore.activities.registerInternetStopFailure();
     return false;
   }
 }
@@ -204,9 +214,9 @@ async function handleError(error, suppressToastBox) {
     showToastError(ufoError.message);
   }
   if (ufoError.key !== 400 && ufoError.key !== 500 && !suppressToastBox) {
-    activitiesStore.activities.registerInternetStopFailure();
+    await activitiesStore.activities.registerInternetStopFailure();
   } else {
-    activitiesStore.activities.registerInternetStopSuccess();
+    await activitiesStore.activities.registerInternetStopSuccess();
   }
 }
 
@@ -257,9 +267,9 @@ export async function getFromApi_v2(
     const api = usePublicApi
       ? ufodrive_server_public_api
       : ufodrive_server_api_v2;
-    activitiesStore.activities.registerInternetStart();
+    await activitiesStore.activities.registerInternetStart();
     const response = await api.get(path);
-    activitiesStore.activities.registerInternetStopSuccess();
+    await activitiesStore.activities.registerInternetStopSuccess();
 
     return response.data;
   } catch (error) {

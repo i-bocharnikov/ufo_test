@@ -4,7 +4,7 @@ import { observable, action } from 'mobx';
 import { persist } from 'mobx-persist';
 
 import { getFromApi } from './../utils/api_deprecated';
-import logger, { codeTypes, severityTypes } from './../utils/userActionsLogger';
+import remoteLoggerService from '../utils/remoteLoggerService';
 
 class FaqCategory {
   @persist @observable reference = null;
@@ -26,7 +26,7 @@ class Faq {
 class SupportStore {
   @persist('list', FaqCategory) @observable faqCategories = [];
 
-  getFaq(faqCategoryReference, faqReference) {
+  async getFaq(faqCategoryReference, faqReference) {
     const category = this.faqCategories.find(
       item => item.reference === faqCategoryReference
     );
@@ -36,13 +36,11 @@ class SupportStore {
     }
 
     const faq = category.faqs.find(item => item.reference === faqReference);
-    logger(
-      severityTypes.INFO,
-      codeTypes.SUCCESS,
-      'open faq reference action',
-      `FAQ-${faq.reference}-${faq.title}`
+    await remoteLoggerService.info(
+      'getFaq',
+      `FAQ-${faq.reference}-${faq.title}`,
+      faq
     );
-
     return faq;
   }
 

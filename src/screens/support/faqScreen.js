@@ -15,6 +15,8 @@ import {
 } from './../../utils/global';
 import supportStore from './../../stores/supportStore';
 import UFOCard from './../../components/UFOCard';
+import { action, observable } from 'mobx';
+import { NavigationEvents } from 'react-navigation';
 
 const styles = StyleSheet.create({
   contentWrapper: {
@@ -25,16 +27,31 @@ const styles = StyleSheet.create({
 
 @observer
 class SupportFaqScreen extends Component {
-  render() {
+  @observable refreshing = false;
+  @observable faq = null;
+
+  componentWillMount() {
+    this.refresh();
+  }
+
+  @action
+  refresh = async () => {
+    this.refreshing = true;
+
     const { t, navigation } = this.props;
     const faqCategoryReference = navigation.getParam(
       navigationParams.SUPPORT_FAQ_CATEGORY
     );
     const faqReference = navigation.getParam(navigationParams.SUPPORT_FAQ);
-    const faq = supportStore.getFaq(faqCategoryReference, faqReference);
+    this.faq = await supportStore.getFaq(faqCategoryReference, faqReference);
+    this.refreshing = false;
+  };
 
+  render() {
+    const { t, navigation } = this.props;
     return (
       <UFOContainer image={screens.SUPPORT_FAQ.backgroundImage}>
+        <NavigationEvents onWillFocus={() => this.refresh()} />
         <UFOHeader
           t={t}
           navigation={navigation}
@@ -42,16 +59,22 @@ class SupportFaqScreen extends Component {
           currentScreen={screens.SUPPORT_FAQ}
         />
         <ScrollView contentContainerStyle={styles.contentWrapper}>
-          <UFOCard
-            title={faq.title}
-            text={faq.text}
-            imageSource={
-              supportStore.hasImage(faq) ? { uri: faq.media_url } : null
-            }
-            videoSource={
-              supportStore.hasVideo(faq) ? { uri: faq.media_url } : null
-            }
-          />
+          {this.faq && (
+            <UFOCard
+              title={this.faq.title}
+              text={this.faq.text}
+              imageSource={
+                supportStore.hasImage(this.faq)
+                  ? { uri: this.faq.media_url }
+                  : null
+              }
+              videoSource={
+                supportStore.hasVideo(this.faq)
+                  ? { uri: this.faq.media_url }
+                  : null
+              }
+            />
+          )}
           <View style={{ height: 100 }} />
         </ScrollView>
         <UFOActionBar actions={this.actions} />

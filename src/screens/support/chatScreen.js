@@ -52,25 +52,31 @@ class ChatScreen extends Component {
   render() {
     // for CHAT_TAWKTO
 
-    let contact = registerStore.user.last_name
-      ? `${registerStore.user.first_name} ${registerStore.user.last_name}`
-      : registerStore.user.reference;
+    let name = registerStore.user.last_name
+      ? `${registerStore.user.first_name} ${registerStore.user.last_name} - ${
+          registerStore.user.reference
+        }`
+      : `Anonymous - ${registerStore.user.reference}`;
+    let contact = name;
     if (registerStore.user.email) {
-      contact = contact + ` (${registerStore.user.email})`;
+      contact = contact + ` / ${registerStore.user.email}`;
+    }
+    if (registerStore.user.phone_number) {
+      contact = contact + ` / ${registerStore.user.phone_number}`;
     }
 
-    let params = `contact=${contact}`;
+    let params = `reference=${registerStore.user.reference}&contact=${contact}`;
 
     params =
       params +
-      `&app=${DeviceInfo.getSystemName()} (${configurations.UFO_APP_NAME}.${
+      `&app=${DeviceInfo.getSystemName()} / ${configurations.UFO_APP_NAME} / ${
         configurations.UFO_APP_VERSION
-      }.${configurations.UFO_APP_BUILD_NUMBER})`;
+      } / ${configurations.UFO_APP_BUILD_NUMBER}`;
 
     params =
       params +
       `&bookings=${driveStore.rentals.map(rental => {
-        return rental.reference + ` (${rental.status});`;
+        return rental.reference + ` (${rental.status}); `;
       })}`;
 
     if (
@@ -79,7 +85,7 @@ class ChatScreen extends Component {
     ) {
       params =
         params +
-        `&email=${registerStore.user.email}&hash=${
+        `&name=${name}&email=${registerStore.user.email}&hash=${
           registerStore.support_chat_identification_key
         }`;
     }
@@ -121,7 +127,7 @@ class ChatScreen extends Component {
               javaScriptEnabled={true}
               domStorageEnabled={true}
               useWebKit={false}
-              onLoadProgress={e => console.log(e.nativeEvent.progress)}
+              //onLoadProgress={e => console.log(e.nativeEvent.progress)}
             />
           )}
           <View style={{ height: 100 }} />

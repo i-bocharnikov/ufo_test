@@ -1,8 +1,5 @@
 import { observable, computed, action } from 'mobx';
-import userActionsLogger, {
-  codeTypes,
-  severityTypes
-} from '../utils/userActionsLogger';
+import remoteLoggerService from '../utils/remoteLoggerService';
 
 class Activities {
   @observable internetAccessPendingRequests = 0;
@@ -13,12 +10,10 @@ class Activities {
     this.internetAccessPendingRequests++;
   };
   @action
-  registerInternetStopSuccess = () => {
+  registerInternetStopSuccess = async () => {
     if (this.internetAccessFailure === true) {
-      userActionsLogger(
-        severityTypes.WARN,
-        codeTypes.SUCCESS,
-        'onInternetConnectionChanged',
+      await remoteLoggerService.info(
+        'internetConnectionChanged',
         `Internet connection back to success`
       );
     }
@@ -27,12 +22,10 @@ class Activities {
   };
 
   @action
-  registerInternetStopFailure = () => {
+  registerInternetStopFailure = async () => {
     if (this.internetAccessFailure === false) {
-      userActionsLogger(
-        severityTypes.WARN,
-        codeTypes.ERROR,
-        'onInternetConnectionChanged',
+      await remoteLoggerService.warn(
+        'internetConnectionChanged',
         `Internet connection failure`
       );
     }

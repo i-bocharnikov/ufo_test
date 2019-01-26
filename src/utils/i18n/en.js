@@ -40,9 +40,11 @@ export default {
     noKey: 'You currently have no key. Please ask support team to have one',
     stringNotMatch: 'Please type "I agree" to sign the contract.',
     unknown: 'Unknown Error',
-    nativeException: 'Native Exception',
+    nativeException:
+      'Oops, this was not supposed to happen. Apologises for the inconvenience',
     jsException: 'Warning from JS exception handler',
-    jsExceptionFatal: 'Fatal JS exception',
+    jsExceptionFatal:
+      'Oops, this was not supposed to happen. Apologises for the inconvenience',
     jsExceptionFatalReport:
       'We have reported this to our team. Please close the app and start again.',
     localPermissionNeeded:

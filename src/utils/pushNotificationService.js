@@ -32,7 +32,9 @@ class NotificationService {
       return false;
     }
 
-    const response = await putToApi('/register/devices/notification', { token: this.fcmToken });
+    const response = await putToApi('/register/devices/notification', {
+      token: this.fcmToken
+    });
 
     if (!response.isSuccess) {
       this.enabled = false;
@@ -52,28 +54,32 @@ class NotificationService {
     this.notificationListener();
   }
 
-  _onTokenRefreshListener = () => FCM.onTokenRefresh(async fcmToken => {
-    this.fcmToken = fcmToken;
-    const response = await putToApi('/register/devices/notification', { token: fcmToken });
+  _onTokenRefreshListener = () =>
+    FCM.onTokenRefresh(async fcmToken => {
+      this.fcmToken = fcmToken;
+      const response = await putToApi('/register/devices/notification', {
+        token: fcmToken
+      });
 
-    if (!response.isSuccess) {
-      this.enabled = false;
-    }
-  });
+      if (!response.isSuccess) {
+        this.enabled = false;
+      }
+    });
 
-  _onNotificationListener = () => FCN.onNotification(data => {
-    this.iosNotifBadge++;
-    const notification = new firebase.notifications.Notification()
-      .setNotificationId(data.notificationId)
-      .setTitle(data.title)
-      .setBody(data.body)
-      .setData(data.data)
-      .ios.setBadge(this.iosNotifBadge)
-      .android.setChannelId(this.androidDefaultChannelId)
-      .android.setDefaults(firebase.notifications.Android.Defaults.All);
+  _onNotificationListener = () =>
+    FCN.onNotification(data => {
+      this.iosNotifBadge++;
+      const notification = new firebase.notifications.Notification()
+        .setNotificationId(data.notificationId)
+        .setTitle(data.title)
+        .setBody(data.body)
+        .setData(data.data)
+        .ios.setBadge(this.iosNotifBadge)
+        .android.setChannelId(this.androidDefaultChannelId)
+        .android.setDefaults(firebase.notifications.Android.Defaults.All);
 
-    FCN.displayNotification(notification);
-  });
+      FCN.displayNotification(notification);
+    });
 }
 
 const notificationService = new NotificationService();

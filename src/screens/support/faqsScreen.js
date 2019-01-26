@@ -25,10 +25,8 @@ import {
 } from './../../utils/global';
 import supportStore from './../../stores/supportStore';
 import { driveStore } from './../../stores';
-import userActionsLogger, {
-  severityTypes,
-  codeTypes
-} from '../../utils/userActionsLogger';
+import registerStore from '../../stores/registerStore';
+import remoteLoggerService from '../../utils/remoteLoggerService';
 
 const SUPPORT_FAQ = navigationParams.SUPPORT_FAQ;
 const SUPPORT_FAQ_CATEGORY = navigationParams.SUPPORT_FAQ_CATEGORY;
@@ -191,13 +189,17 @@ class SupportFaqsScreen extends Component {
     );
   };
 
-  doOpenChat = () => {
-    userActionsLogger(
-      severityTypes.INFO,
-      codeTypes.SUCCESS,
+  doOpenChat = async () => {
+    await remoteLoggerService.info(
       'openChat',
-      '',
-      ''
+      `User ${
+        registerStore.user ? registerStore.user.reference : ''
+      } in state ${registerStore.user ? registerStore.user.status : ''}`,
+      {
+        support_chat_identification_key:
+          registerStore.support_chat_identification_key
+      },
+      registerStore.user
     );
     this.props.navigation.navigate(screens.SUPPORT_CHAT.name);
   };

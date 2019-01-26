@@ -28,11 +28,8 @@ import { keys as screenKeys } from './../../navigators/helpers';
 import { checkServerAvailability } from './../../utils/api';
 import styles from './styles';
 import { checkConnectivity, uploadToApi } from '../../utils/api_deprecated';
-import userActionsLogger, {
-  severityTypes,
-  codeTypes
-} from '../../utils/userActionsLogger';
 import pushNotificationService from './../../utils/pushNotificationService';
+import remoteLoggerService from '../../utils/remoteLoggerService';
 
 @observer
 class DriveScreen extends Component {
@@ -251,6 +248,7 @@ class DriveScreen extends Component {
     this.activityPending = true;
     if (await checkConnectivity()) {
       await appStore.register();
+      await remoteLoggerService.initialise();
     }
     await driveStore.reset();
     await this.doEnableAndSwitch();
@@ -275,22 +273,22 @@ class DriveScreen extends Component {
 
     if (!driveStore.inUse) {
       showToastError(this.props.t('error:rentalNotOpen'));
-      userActionsLogger(
-        severityTypes.ERROR,
-        codeTypes.ERROR,
-        'doEnableKey',
-        this.props.t('error:localPermissionNeeded')
+      await remoteLoggerService.error(
+        'enableKey',
+        this.props.t('error:localPermissionNeeded'),
+        {},
+        otaKeyStore.key
       );
       this.activityPending = false;
       return;
     }
     if (!driveStore.rental.key_id) {
       showToastError(this.props.t('error:rentalKeyMissing'));
-      userActionsLogger(
-        severityTypes.ERROR,
-        codeTypes.ERROR,
-        'doEnableKey',
-        this.props.t('error:rentalKeyMissing')
+      await remoteLoggerService.error(
+        'enableKey',
+        this.props.t('error:rentalKeyMissing'),
+        {},
+        otaKeyStore.key
       );
       this.activityPending = false;
       return;
@@ -317,11 +315,11 @@ class DriveScreen extends Component {
     const permission = await checkAndRequestLocationPermission();
     if (!permission) {
       showToastError(this.props.t('error:localPermissionNeeded'));
-      userActionsLogger(
-        severityTypes.ERROR,
-        codeTypes.ERROR,
-        'doUnlockCar',
-        this.props.t('error:localPermissionNeeded')
+      await remoteLoggerService.error(
+        'unlockCar',
+        this.props.t('error:localPermissionNeeded'),
+        {},
+        otaKeyStore.key
       );
       this.activityPending = false;
       return;
@@ -329,22 +327,22 @@ class DriveScreen extends Component {
 
     if (!driveStore.inUse) {
       showToastError(this.props.t('error:rentalNotOpen'));
-      userActionsLogger(
-        severityTypes.ERROR,
-        codeTypes.ERROR,
-        'doUnlockCar',
-        this.props.t('error:rentalNotOpen')
+      await remoteLoggerService.error(
+        'unlockCar',
+        this.props.t('error:rentalNotOpen'),
+        {},
+        otaKeyStore.key
       );
       this.activityPending = false;
       return;
     }
     if (!driveStore.rental.key_id) {
       showToastError(this.props.t('error:rentalKeyMissing'));
-      userActionsLogger(
-        severityTypes.ERROR,
-        codeTypes.ERROR,
-        'doUnlockCar',
-        this.props.t('error:rentalKeyMissing')
+      await remoteLoggerService.error(
+        'unlockCar',
+        this.props.t('error:rentalKeyMissing'),
+        {},
+        otaKeyStore.key
       );
       this.activityPending = false;
       return;
@@ -370,11 +368,11 @@ class DriveScreen extends Component {
     const permission = await checkAndRequestLocationPermission();
     if (!permission) {
       showToastError(this.props.t('error:localPermissionNeeded'));
-      userActionsLogger(
-        severityTypes.ERROR,
-        codeTypes.ERROR,
-        'doLockCar',
-        this.props.t('error:localPermissionNeede6')
+      await remoteLoggerService.error(
+        'lockCar',
+        this.props.t('error:localPermissionNeeded'),
+        {},
+        otaKeyStore.key
       );
       this.activityPending = false;
       return;
@@ -382,23 +380,24 @@ class DriveScreen extends Component {
 
     if (!driveStore.inUse) {
       showToastError(this.props.t('error:rentalNotOpen'));
-      userActionsLogger(
-        severityTypes.ERROR,
-        codeTypes.ERROR,
-        'doLockCar',
-        this.props.t('error:rentalNotOpen')
+      await remoteLoggerService.error(
+        'lockCar',
+        this.props.t('error:rentalNotOpen'),
+        {},
+        otaKeyStore.key
       );
       this.activityPending = false;
       return;
     }
     if (!driveStore.rental.key_id) {
       showToastError(this.props.t('error:rentalKeyMissing'));
-      userActionsLogger(
-        severityTypes.ERROR,
-        codeTypes.ERROR,
-        'doLockCar',
-        this.props.t('error:rentalKeyMissing')
+      await remoteLoggerService.error(
+        'lockCar',
+        this.props.t('error:rentalKeyMissing'),
+        {},
+        otaKeyStore.key
       );
+
       this.activityPending = false;
       return;
     }
