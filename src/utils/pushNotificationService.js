@@ -1,5 +1,9 @@
 import firebase from 'react-native-firebase';
 import { putToApi } from './api';
+import remoteLoggerService from './remoteLoggerService';
+import { checkConnectivity } from './api_deprecated';
+import appStore from '../stores/appStore';
+import { driveStore } from '../stores';
 
 const FCM = firebase.messaging();
 const FCN = firebase.notifications();
@@ -22,6 +26,7 @@ class NotificationService {
       this.enabled = await FCM.hasPermission();
 
       if (!this.enabled) {
+        remoteLoggerService.error("registerNotification", "notification permission has been declined");
         return false;
       }
     }
@@ -29,6 +34,7 @@ class NotificationService {
     this.fcmToken = await FCM.getToken();
 
     if (!this.fcmToken) {
+      remoteLoggerService.error("registerNotification", "FCM token missing");
       return false;
     }
 
@@ -56,6 +62,8 @@ class NotificationService {
 
   _onTokenRefreshListener = () =>
     FCM.onTokenRefresh(async fcmToken => {
+      remoteLoggerService.info("pushNotificationService.onTokenRefresh", "FCM token refreshed");
+
       this.fcmToken = fcmToken;
       const response = await putToApi('/register/devices/notification', {
         token: fcmToken
@@ -67,18 +75,37 @@ class NotificationService {
     });
 
   _onNotificationListener = () =>
-    FCN.onNotification(data => {
-      this.iosNotifBadge++;
-      const notification = new firebase.notifications.Notification()
-        .setNotificationId(data.notificationId)
-        .setTitle(data.title)
-        .setBody(data.body)
-        .setData(data.data)
-        .ios.setBadge(this.iosNotifBadge)
-        .android.setChannelId(this.androidDefaultChannelId)
-        .android.setDefaults(firebase.notifications.Android.Defaults.All);
+    FCN.onNotification(async data => {
+      remoteLoggerService.info("pushNotificationService.onNotification", "Notification received", data);
 
-      FCN.displayNotification(notification);
+      if (data && data.data && data.data.refreshApp === true) {
+        remoteLoggerService.info("pushNotificationService.onNotification", "refresh app", data);
+        if (await checkConnectivity()) {
+          await appStore.register();
+          await remoteLoggerService.initialise();
+        }
+        await driveStore.reset();
+      }
+
+      if (data && data.data && data.data.resetBadge === true) {
+        this.iosNotifBadge = 0;
+      } else {
+        this.iosNotifBadge++;
+      }
+
+      if (data && data.title && data.body) {
+        const notification = new firebase.notifications.Notification()
+          .setNotificationId(data.notificationId)
+          .setTitle(data.title)
+          .setBody(data.body)
+          .setData(data.data)
+          .ios.setBadge(this.iosNotifBadge)
+          .android.setChannelId(this.androidDefaultChannelId)
+          .android.setDefaults(firebase.notifications.Android.Defaults.All);
+
+        remoteLoggerService.info("pushNotificationService.onNotification", "show notification", data, notification);
+        FCN.displayNotification(notification);
+      }
     });
 }
 

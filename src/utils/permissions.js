@@ -50,8 +50,7 @@ async function checkAndRequestPermission(type) {
     const permRequest = await Permissions.request(type);
     await remoteLoggerService.info(
       'requestPermission',
-      `Permission for "${type}" return: "${result}".`,
-      permRequest
+      `Permission for "${type}" return: "${permRequest}".`
     );
 
     return permRequest === 'authorized';
