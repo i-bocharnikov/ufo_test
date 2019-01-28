@@ -41,6 +41,7 @@ class StepBookScreen extends Component {
     return (
       <BookingNavWrapper
         navBack={this.navBack}
+        navToFaq={this.navToFaq}
         currentStep={1}
         BottomActionPanel={this.renderBottomPanel()}
         ref={ref => (this.screenWrapper = ref)}
@@ -280,6 +281,13 @@ class StepBookScreen extends Component {
 
   navBack = () => {
     this.props.navigation.navigate(screenKeys.Home);
+  };
+
+  navToFaq = () => {
+    this.props.navigation.navigate(
+      screenKeys.SupportFaqs,
+      { PREVIOUS_SCREEN: screenKeys.Booking }
+    );
   };
 
   onDateTooltipLink = () => {

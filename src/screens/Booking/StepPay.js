@@ -69,6 +69,7 @@ class StepPayScreen extends Component {
     return (
       <BookingNavWrapper
         navBack={this.navBack}
+        navToFaq={this.navToFaq}
         navToFirstStep={this.navBack}
         currentStep={2}
         BottomActionPanel={this.renderBottomPanel()}
@@ -127,6 +128,7 @@ class StepPayScreen extends Component {
         actionSubTitle={this.props.t('stepPayNextSubTitle')}
         isAvailable={!!bookingStore.currentCreditCardRef && !isVoucherInvalid}
         isWaiting={bookingStore.isLoading}
+        openPriceInfo={this.openPriceInfo}
       />
     );
   };
@@ -315,6 +317,16 @@ class StepPayScreen extends Component {
   };
 
   /*
+   * To FAQ screen
+  */
+  navToFaq = () => {
+    this.props.navigation.navigate(
+      screenKeys.SupportFaqs,
+      { PREVIOUS_SCREEN: screenKeys.Booking }
+    );
+  };
+
+  /*
    * Handle payment and go to next step
   */
   handleToNextStep = async () => {
@@ -346,6 +358,20 @@ class StepPayScreen extends Component {
   */
   openTermsUrl = () => {
     Linking.openURL( this.props.t('common:termsUrl') );
+  };
+
+  /*
+   * Open order price description
+  */
+  openPriceInfo = () => {
+    const ref = _.get(bookingStore, 'order.price.pricingReference');
+
+    if (!ref) {
+      return;
+    }
+
+    bookingStore.priceInfoRef = ref;
+    this.props.navigation.navigate(screenKeys.BookingDetails);
   };
 }
 
