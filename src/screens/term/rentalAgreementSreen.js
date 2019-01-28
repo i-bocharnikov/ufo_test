@@ -85,9 +85,9 @@ class InspectScreen extends Component {
       if (str.toUpperCase().trim() === confirmKey.toUpperCase()) {
         await remoteLoggerService.info(
           'confirmContractSignature',
-          'confirmation accepted: `Input ${str} does match confirmKey ${confirmKey}`'
+          `confirmation accepted: Input ${str} does match confirmKey ${confirmKey}`
         );
-        this.doSign();
+        await this.doSign();
         this.activityPending = false;
         return;
       }
@@ -105,7 +105,7 @@ class InspectScreen extends Component {
     showPrompt(
       t('term:confirmContractTitle', { strKey: confirmKey }),
       t('term:confirmContractDescription'),
-      () => promptHandler,
+      promptHandler,
       () => (this.activityPending = false)
     );
   };
