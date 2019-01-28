@@ -12,6 +12,7 @@ import { screens, actionStyles, icons } from './../../utils/global';
 import { driveStore, termStore } from './../../stores';
 import { showPrompt, showToastError } from './../../utils/interaction';
 import { NavigationEvents } from 'react-navigation';
+import remoteLoggerService from '../../utils/remoteLoggerService';
 
 @observer
 class InspectScreen extends Component {
