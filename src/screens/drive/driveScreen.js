@@ -462,8 +462,11 @@ class DriveScreen extends Component {
       nextBtnLabel: t('faceRecognizing:validateBtnLabel'),
       handlingErrorMessage: t('faceRecognizing:handlingRentalError')
     };
-
-    navigation.navigate(screenKeys.FaceRecognizer, params);
+    if (!DeviceInfo.isEmulator()) {
+      navigation.navigate(screenKeys.FaceRecognizer, params);
+    } else {
+      navigation.navigate(screenKeys.RentalAgreement);
+    }
   };
 
   validateCapturedFace = async fileUri => {
