@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Platform, WebView } from 'react-native';
+import { View, StyleSheet, Platform, WebView, AppState } from 'react-native';
 import { translate } from 'react-i18next';
 import { observer } from 'mobx-react';
 import DeviceInfo from 'react-native-device-info';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 import UFOHeader from './../../components/header/UFOHeader';
-import { UFOContainer } from './../../components/common';
+import { UFOContainer, UFOLoader } from './../../components/common';
 import { screens } from './../../utils/global';
 import registerStore from './../../stores/registerStore';
 import configurations from '../../utils/configurations';
 import { driveStore } from '../../stores';
+import remoteLoggerService from '../../utils/remoteLoggerService';
 
 const CHAT_TAWKTO = true;
 
@@ -22,6 +23,14 @@ const styles = StyleSheet.create({
 
 @observer
 class ChatScreen extends Component {
+  componentDidMount() {
+    AppState.addEventListener('change', this._handleAppStateChange);
+  }
+
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this._handleAppStateChange);
+  }
+
   //form NOT CHAT_TAWKTO
   injectjs() {
     const userName = registerStore.user.last_name
@@ -47,6 +56,33 @@ class ChatScreen extends Component {
     const data = `{\"client_name\": \"${userName}\", \"email\": \"${userEmail}\", \"phone\": \"${userPhone}\",\"description\": \"${userDescription}\"}`;
 
     return `setTimeout(() => { window.jivo_api.${method}(${data}); }, 1000)`;
+  }
+
+  _handleAppStateChange = nextAppState => {
+    if (nextAppState === 'active') {
+      remoteLoggerService.warn(
+        'chatScreen.handleAppStateChange',
+        'App has come to the foreground. We refresh the chat',
+        {
+          isBrowserUndefined: this.browser === undefined,
+          isBrowserNull: this.browser === null
+        }
+      );
+      if (this.browser) {
+        this.browser.reload();
+      }
+    }
+  };
+
+  indicator() {
+    return (
+      <UFOLoader
+        fallbackToNative={true}
+        isVisible={true}
+        color="rgba(0,0,0,0.7)"
+        size="large"
+      />
+    );
   }
 
   render() {
@@ -102,6 +138,7 @@ class ChatScreen extends Component {
         <View style={styles.chatWrapper}>
           {CHAT_TAWKTO === false && (
             <WebView
+              ref={ref => (this.browser = ref)}
               source={{
                 uri:
                   Platform.OS === 'ios'
@@ -120,6 +157,7 @@ class ChatScreen extends Component {
           )}
           {CHAT_TAWKTO === true && (
             <WebView
+              ref={ref => (this.browser = ref)}
               source={{
                 uri: `https://resources.ufodrive.com/support/chat.html?${params}`
               }}
@@ -127,7 +165,8 @@ class ChatScreen extends Component {
               javaScriptEnabled={true}
               domStorageEnabled={true}
               useWebKit={false}
-              //onLoadProgress={e => console.log(e.nativeEvent.progress)}
+              renderLoading={this.indicator}
+              startInLoadingState={true}
             />
           )}
           <View style={{ height: 100 }} />
