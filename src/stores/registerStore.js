@@ -13,7 +13,8 @@ import {
   setAuthenticationUUIDInStore,
   setAuthenticationPasswordInStore,
   getAuthenticationPasswordFromStore,
-  setAuthenticationTokenInStore
+  setAuthenticationTokenInStore,
+  getAuthenticationTokenFromStore
 } from '../utils/authentications';
 import {
   useTokenInApi as useTokenInApi_deprecated,
@@ -112,6 +113,12 @@ class registerStore {
 
   isStatusValidated(status) {
     return status === STATUS_VALIDATED;
+  }
+
+  async reuseToken() {
+    let token = await getAuthenticationTokenFromStore();
+    await useTokenInApi_deprecated(token);
+    await setAuthTokenForApi(token);
   }
 
   @action

@@ -174,9 +174,10 @@ class AppStore {
     } else {
       await remoteLoggerService.info(
         'initialise',
-        `Without connectivity, we only add OTAlisterners`,
+        `Without connectivity, we reuse existing token (used if connectivity is back) and register OTAlisterners`,
         registerStore.user
       );
+      await registerStore.reuseToken();
       await OTAKeyStore.addListeners();
     }
     this.isAppReady = true;
