@@ -291,23 +291,21 @@ export default {
     skipBtn: 'skip'
   },
   faceRecognizing: {
-    incorrectDevicePosition: 'Please, hold phone upright',
+    incorrectDevicePosition: 'Please hold your phone vertically',
     resetBtn: 'Reset',
     nextBtn: 'Next',
     backBtn: 'Back',
     saveBtnLabel: 'Save',
     validateBtnLabel: 'Validate',
     captureBtn: 'Capture',
-    handlingDefaultError: 'Something went wrong. try again',
+    handlingDefaultError: 'Something went wrong. try again...',
     handlingRentalError:
-      "Identity wasn't validate, something went wrong, try again",
-    registerCaptureDescription:
-      'Please, capture your face to validate access in future',
-    rentalCaptureDescription:
-      'Please, capture your face to confirm your identity',
-    incorrectFacePosition: 'Please, place your face in the center',
-    incorrectFaceSize: 'Please, place your face closer to the camera',
-    incorrectFaceYaw: "Please, don't turn away"
+      "Identity wasn't validate, something went wrong, try again...",
+    registerCaptureDescription: 'Capture your face',
+    rentalCaptureDescription: 'Capture your face to confirm your identity',
+    incorrectFacePosition: 'Your face must be in the center of the screen',
+    incorrectFaceSize: 'Your face must be closer to the camera',
+    incorrectFaceYaw: 'Your face must be in front of the camera'
   },
   otaKeyNativeErrors
 };
