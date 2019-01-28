@@ -7,8 +7,8 @@ import OTAKeyStore from '../stores/otaKeyStore';
 import { checkConnectivity } from '../utils/api_deprecated';
 import { hydrate } from '../utils/store';
 import { confirm } from '../utils/interaction';
-import logger, { codeTypes, severityTypes } from '../utils/userActionsLogger';
 import otaKeyStore from '../stores/otaKeyStore';
+import remoteLoggerService from '../utils/remoteLoggerService';
 
 class AppStore {
   @observable isAppReady: boolean = false;
@@ -16,67 +16,50 @@ class AppStore {
   @action
   async register(): Promise<boolean> {
     try {
-      console.log('==> REGISTER START ');
-      console.log('- GET OTA DEVICE IDENTIFICATION ');
       let keyAccessDeviceIdentifier = await OTAKeyStore.getKeyAccessDeviceIdentifier();
-      console.log('- OPEN SESSION ON SERVER ');
       let keyAccessDeviceToken = await registerStore.registerDevice(
         keyAccessDeviceIdentifier
       );
       if (keyAccessDeviceToken) {
-        logger(
-          severityTypes.INFO,
-          codeTypes.SUCCESS,
+        await remoteLoggerService.info(
           'register',
           `registration success including keyAccessDeviceToken`,
-          JSON.stringify(registerStore.user)
+          registerStore.user
         );
-        console.log('- OPEN SESSION IN OTA ');
         await OTAKeyStore.openSession(keyAccessDeviceToken);
       } else {
-        logger(
-          severityTypes.WARN,
-          codeTypes.ERROR,
+        await remoteLoggerService.warn(
           'register',
           `registration done but without keyAccessDeviceToken so we force creating new one`,
-          JSON.stringify(registerStore.user)
+          registerStore.user
         );
         keyAccessDeviceIdentifier = await OTAKeyStore.getKeyAccessDeviceIdentifier(
           true
         );
-        console.log('- OPEN SESSION ON SERVER ');
         let keyAccessDeviceToken = await registerStore.registerDevice(
           keyAccessDeviceIdentifier
         );
         if (keyAccessDeviceToken) {
-          logger(
-            severityTypes.INFO,
-            codeTypes.SUCCESS,
+          await remoteLoggerService.success(
             'register',
             `registration success with new keyAccessDeviceToken`,
-            JSON.stringify(registerStore.user)
+            registerStore.user
           );
-          console.log('- OPEN SESSION IN OTA');
           await OTAKeyStore.openSession(keyAccessDeviceToken);
         } else {
-          logger(
-            severityTypes.ERROR,
-            codeTypes.ERROR,
+          await remoteLoggerService.error(
             'register',
             `registration success but doesn't include keyAccessDeviceToken for the second time after forcing new temp token. give up`,
-            JSON.stringify(registerStore.user)
+            registerStore.user
           );
         }
       }
-      console.log('<== REGISTER DONE ');
     } catch (error) {
-      console.log('<== REGISTER FAILED ', error);
-      logger(
-        severityTypes.ERROR,
-        codeTypes.ERROR,
+      await remoteLoggerService.error(
         'register',
         `exception: ${error.message}`,
-        JSON.stringify(error)
+        error,
+        registerStore.user
       );
       return false;
     }
@@ -86,17 +69,15 @@ class AppStore {
   @action
   async loadRemoteData(): Promise<boolean> {
     try {
-      console.log('==>  LOAD REMOTE DATA START ');
+      await remoteLoggerService.initialise();
       await driveStore.reset();
       await supportStore.reset();
-      console.log('<== LOAD REMOTE DATA DONE ');
     } catch (error) {
-      logger(
-        severityTypes.ERROR,
-        codeTypes.ERROR,
+      await remoteLoggerService.error(
         'initialiseRemoteDate',
         `Global exception: ${error.message}`,
-        JSON.stringify(error)
+        error,
+        registerStore.user
       );
       return false;
     }
@@ -105,54 +86,42 @@ class AppStore {
 
   @action
   async initialiseLocalStore() {
-    console.log('==>  INIT LOCAL STORE START ');
-
     try {
       await hydrate('registerStore', registerStore)
         .then(() =>
-          logger(
-            severityTypes.INFO,
-            codeTypes.SUCCESS,
+          remoteLoggerService.info(
             'initialiseLocalStore',
             `registerStore loaded`,
-            JSON.stringify(registerStore.user)
+            registerStore.user
           )
         )
         .catch(error => {
-          logger(
-            severityTypes.ERROR,
-            codeTypes.ERROR,
+          remoteLoggerService.error(
             'initialiseLocalStore',
             `registerStore exception: ${error.message}`,
-            JSON.stringify(error)
+            error
           );
         });
 
       await hydrate('driveStore', driveStore)
         .then(() =>
-          logger(
-            severityTypes.INFO,
-            codeTypes.SUCCESS,
+          remoteLoggerService.info(
             'initialiseLocalStore',
             `driveStore loaded`,
             driveStore.rentals ? driveStore.rentals.length : 0 + ' rentals'
           )
         )
         .catch(error => {
-          logger(
-            severityTypes.ERROR,
-            codeTypes.ERROR,
+          remoteLoggerService.error(
             'initialiseLocalStore',
             `driveStore exception: ${error.message}`,
-            JSON.stringify(error)
+            error
           );
         });
 
       await hydrate('supportStore', supportStore)
         .then(() =>
-          logger(
-            severityTypes.INFO,
-            codeTypes.SUCCESS,
+          remoteLoggerService.info(
             'initialiseLocalStore',
             `supportStore loaded`,
             supportStore.faqCategories
@@ -161,53 +130,41 @@ class AppStore {
           )
         )
         .catch(error => {
-          logger(
-            severityTypes.ERROR,
-            codeTypes.ERROR,
+          remoteLoggerService.error(
             'initialiseLocalStore',
             `supportStore exception: ${error.message}`,
-            JSON.stringify(error)
+            error
           );
         });
 
       await hydrate('otaKeyStore', otaKeyStore)
         .then(() =>
-          logger(
-            severityTypes.INFO,
-            codeTypes.SUCCESS,
+          remoteLoggerService.info(
             'initialiseLocalStore',
             `otaKeyStore loaded`,
-            JSON.stringify(otaKeyStore.key)
+            otaKeyStore.key
           )
         )
         .catch(error => {
-          logger(
-            severityTypes.ERROR,
-            codeTypes.ERROR,
+          remoteLoggerService.error(
             'initialiseLocalStore',
             `otaKeyStore exception: ${error.message}`,
-            JSON.stringify(error)
+            error
           );
         });
     } catch (error) {
-      logger(
-        severityTypes.ERROR,
-        codeTypes.ERROR,
+      remoteLoggerService.error(
         'initialiseLocalStore',
-        'Global exception',
-        JSON.stringify(error)
+        `Global exception: ${error.message}`,
+        error
       );
-      console.log('<== INIT Local STORE FAILED ', error);
       return false;
     }
-
-    console.log('<==  INIT LOCAL STORE DONE ');
     return true;
   }
 
   @action
   async initialise() {
-    console.log('==>  INITIALISE APPLICATION ');
     this.isAppReady = false;
     await this.initialiseLocalStore();
     if (await checkConnectivity()) {
@@ -215,17 +172,15 @@ class AppStore {
         await this.loadRemoteData();
       }
     } else {
-      logger(
-        severityTypes.INFO,
-        codeTypes.SUCCESS,
+      await remoteLoggerService.info(
         'initialise',
-        `Without connectivity, we only add OTAlisterners`
+        `Without connectivity, we reuse existing token (used if connectivity is back) and register OTAlisterners`,
+        registerStore.user
       );
-      console.log('- ADD OTA Listener ONLY ');
+      await registerStore.reuseToken();
       await OTAKeyStore.addListeners();
     }
     this.isAppReady = true;
-    console.log('<== INITIALISE DONE ');
   }
 
   @action
@@ -254,6 +209,11 @@ class AppStore {
         if (await checkConnectivity()) {
           registerStore.disconnect(t);
           await this.initialise();
+          await remoteLoggerService.info(
+            'disconnect',
+            `success`,
+            registerStore.user
+          );
         }
       }
     );

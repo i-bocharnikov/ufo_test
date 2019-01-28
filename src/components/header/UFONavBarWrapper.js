@@ -3,7 +3,7 @@ import { View, ScrollView, Text, Animated, TouchableOpacity } from 'react-native
 import PropTypes from 'prop-types';
 
 import { UFOIcon } from './../common';
-import styles, { HEADER_HEIGHT, TITLE_FONT_SIZE, BACK_ICON_SIZE } from './styles/navBarStyles';
+import styles, { HEADER_HEIGHT, TITLE_FONT_SIZE, ACTION_ICON_SIZE } from './styles/navBarStyles';
 import { values } from './../../utils/theme';
 
 export default class UFONavBarWrapper extends Component {
@@ -18,33 +18,38 @@ export default class UFONavBarWrapper extends Component {
       subtitle,
       SubtitleComponent,
       isCollapsible,
-      backBtnAction,
+      leftBtnAction,
+      leftBtnIcon,
+      rightBtnAction,
+      rightBtnIcon,
       backgroundWrapper,
       children
     } = this.props;
     const hasSubtitle = subtitle || SubtitleComponent;
 
     return (
-      <View style={[ styles.wrapper, backgroundWrapper && { backgroundColor: backgroundWrapper } ]}>
+      <View style={[
+        styles.wrapper,
+        backgroundWrapper && { backgroundColor: backgroundWrapper }
+      ]}>
         <View style={[ styles.headerContainer, styles.headerShadow ]}>
           <Animated.View style={[
             styles.header,
             { height: isCollapsible ? this.getHeaderHeight() : HEADER_HEIGHT }
-          ]}
-          >
-            {backBtnAction && (
+          ]}>
+            {leftBtnAction && (
               <TouchableOpacity
-                onPress={backBtnAction}
-                style={styles.backBtn}
+                onPress={leftBtnAction}
+                style={styles.leftBtn}
                 activeOpacity={values.BTN_OPACITY_DEFAULT}
               >
                 <UFOIcon
-                  name="keyboard-backspace"
+                  name={leftBtnIcon}
                   iconPack="MaterialCommunity"
                   animated={true}
                   style={[
-                    styles.backIcon,
-                    { fontSize: isCollapsible ? this.getBackIconSize() : BACK_ICON_SIZE }
+                    styles.actionIcon,
+                    { fontSize: isCollapsible ? this.getActionIconSize() : ACTION_ICON_SIZE }
                   ]}
                 />
               </TouchableOpacity>
@@ -52,10 +57,26 @@ export default class UFONavBarWrapper extends Component {
             <Animated.Text style={[
               styles.title,
               { fontSize: isCollapsible ? this.getHeaderTitleSize() : TITLE_FONT_SIZE }
-            ]}
-            >
+            ]}>
               {title}
             </Animated.Text>
+            {rightBtnAction && (
+              <TouchableOpacity
+                onPress={rightBtnAction}
+                style={styles.rightBtn}
+                activeOpacity={values.BTN_OPACITY_DEFAULT}
+              >
+                <UFOIcon
+                  name={rightBtnIcon}
+                  iconPack="MaterialCommunity"
+                  animated={true}
+                  style={[
+                    styles.actionIcon,
+                    { fontSize: isCollapsible ? this.getActionIconSize() : ACTION_ICON_SIZE }
+                  ]}
+                />
+              </TouchableOpacity>
+            )}
           </Animated.View>
           {hasSubtitle && (
             <View style={styles.subHeader}>
@@ -96,9 +117,9 @@ export default class UFONavBarWrapper extends Component {
     extrapolate: 'clamp'
   });
 
-  getBackIconSize = () => this.state.scrollY.interpolate({
+  getActionIconSize = () => this.state.scrollY.interpolate({
     inputRange: [ 0, HEADER_HEIGHT ],
-    outputRange: [ BACK_ICON_SIZE, 0 ],
+    outputRange: [ ACTION_ICON_SIZE, 0 ],
     extrapolate: 'clamp'
   });
 
@@ -109,7 +130,11 @@ export default class UFONavBarWrapper extends Component {
   }
 }
 
-UFONavBarWrapper.defaultProps = { isCollapsible: true };
+UFONavBarWrapper.defaultProps = {
+  isCollapsible: true,
+  leftBtnIcon: 'keyboard-backspace',
+  rightBtnIcon: 'help-circle-outline'
+};
 
 UFONavBarWrapper.propTypes = {
   children: PropTypes.node,
@@ -117,6 +142,9 @@ UFONavBarWrapper.propTypes = {
   subtitle: PropTypes.string,
   SubtitleComponent: PropTypes.node,
   isCollapsible: PropTypes.bool,
-  backBtnAction: PropTypes.func,
+  leftBtnAction: PropTypes.func,
+  leftBtnIcon: PropTypes.string,
+  rightBtnAction: PropTypes.func,
+  rightBtnIcon: PropTypes.string,
   backgroundWrapper: PropTypes.string
 };

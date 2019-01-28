@@ -12,7 +12,10 @@ import { persist } from 'mobx-persist';
 import { driveStore } from '.';
 import { actionStyles, icons } from './../utils/global';
 import { showToastError } from './../utils/interaction';
-import logger, { codeTypes, severityTypes } from './../utils/userActionsLogger';
+import remoteLoggerService, {
+  severityTypes,
+  codeTypes
+} from '../utils/remoteLoggerService';
 
 const { OTAKeyModule } = NativeModules;
 const PlatformEventEmitter =
@@ -60,22 +63,24 @@ class OTAKeyStore {
   @persist @observable energyCurrent = 0;
 
   otaKeyLogger = async options => {
-    const date = moment();
     const { severity, code, action, message, description } = options;
-    const logExtraData = {
-      context: {
-        keyAccessDeviceIdentifier: this.keyAccessDeviceIdentifier,
-        keyAccessDeviceToken: this.keyAccessDeviceToken,
-        listenersInPlace: this.listenersInPlace,
-        key: this.key,
-        doorsLocked: this.doorsLocked,
-        engineRunning: this.engineRunning,
-        energyCurrent: this.energyCurrent
-      },
-      momentDate: date
+    const context = {
+      keyAccessDeviceIdentifier: this.keyAccessDeviceIdentifier,
+      keyAccessDeviceToken: this.keyAccessDeviceToken,
+      listenersInPlace: this.listenersInPlace,
+      key: this.key,
+      doorsLocked: this.doorsLocked,
+      engineRunning: this.engineRunning,
+      energyCurrent: this.energyCurrent
     };
-
-    await logger(severity, code, action, message, description, logExtraData);
+    await remoteLoggerService.log(
+      severity,
+      code,
+      action,
+      message,
+      description,
+      context
+    );
   };
 
   computeActionEnableKey(keyId, actions, onPress) {
@@ -289,7 +294,7 @@ class OTAKeyStore {
     showError = true
   ): Promise<string> {
     try {
-      if (this.keyAccessDeviceIdentifier != null) {
+      if (this.keyAccessDeviceIdentifier != null && !force) {
         return this.keyAccessDeviceIdentifier;
       }
       await this.otaKeyLogger({

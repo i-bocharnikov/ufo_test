@@ -21,17 +21,23 @@ class HomeScreen extends Component {
 
     const actions = [
       {
-        style: driveStore.hasRentalConfirmedOrOngoing ? actionStyles.DONE : actionStyles.TODO,
+        style: driveStore.hasRentalConfirmedOrOngoing
+          ? actionStyles.DONE
+          : actionStyles.TODO,
         icon: icons.RESERVE,
         onPress: () => navigation.navigate(screens.RESERVE.name)
       },
       {
-        style: registerStore.isUserRegistered ? actionStyles.DONE : actionStyles.TODO,
+        style: registerStore.isUserRegistered
+          ? actionStyles.DONE
+          : actionStyles.TODO,
         icon: icons.REGISTER,
         onPress: () => navigation.navigate(screens.REGISTER.name)
       },
       {
-        style: driveStore.hasRentalOngoing ? actionStyles.TODO : actionStyles.ACTIVE,
+        style: driveStore.hasRentalOngoing
+          ? actionStyles.TODO
+          : actionStyles.ACTIVE,
         icon: icons.DRIVE,
         onPress: () => navigation.navigate(screens.DRIVE.name)
       }
@@ -47,41 +53,6 @@ class HomeScreen extends Component {
             navigation={navigation}
             currentScreen={screens.HOME}
           />
-          <View
-            style={{
-              flexDirection: 'column',
-              justifyContent: 'flex-start',
-              alignContent: 'center'
-            }}
-          >
-            <View style={{ paddingTop: '10%', paddingLeft: '10%', paddingRight: '10%' }}>
-              <UFOText
-                h2
-                inverted
-                center
-                style={{ paddingTop: 10 }}
-              >
-                {t('home:reserve', { user: registerStore.user })}
-              </UFOText>
-              <UFOText
-                h2
-                inverted
-                center
-                style={{ paddingTop: 5 }}
-              >
-                {t('home:register', { user: registerStore.user })}
-              </UFOText>
-              <UFOText
-                h2
-                inverted
-                center
-                style={{ paddingTop: 5 }}
-              >
-                {t('home:drive', { user: registerStore.user })}
-              </UFOText>
-              <View style={{ height: 100 }} />
-            </View>
-          </View>
         </ScrollView>
         <UFOActionBar actions={actions} />
       </UFOContainer>
@@ -90,10 +61,7 @@ class HomeScreen extends Component {
 
   get refreshControl() {
     return (
-      <RefreshControl
-        refreshing={this.refreshing}
-        onRefresh={this.refresh}
-      />
+      <RefreshControl refreshing={this.refreshing} onRefresh={this.refresh} />
     );
   }
 

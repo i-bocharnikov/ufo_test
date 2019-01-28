@@ -184,7 +184,7 @@ export default StyleSheet.create({
     fontSize: 18
   },
 
-  notAvailableCar: { opacity: 0.5 },
+  notAvailable: { opacity: 0.5 },
 
   opacityLabel: { opacity: 0.5 },
 
@@ -217,6 +217,12 @@ export default StyleSheet.create({
     justifyContent: 'space-around'
   },
 
+  bottomPanelInfoIcon: {
+    color: colors.MAIN_COLOR,
+    fontSize: 16,
+    marginRight: 8
+  },
+
   bottomPanelActionTitle: {
     ...textThemes.SP_BOLD,
     color: colors.TEXT_INVERT_COLOR,
@@ -238,15 +244,16 @@ export default StyleSheet.create({
   bottomPanelPriceLabel: {
     ...textThemes.SP_BOLD,
     color: colors.MAIN_COLOR,
-    fontSize: 13,
+    fontSize: 15,
     letterSpacing: 4,
     marginLeft: 26
   },
 
   bottomPanelPriceValue: {
-    ...textThemes.SP_REGULAR,
-    fontSize: 13,
-    letterSpacing: 1.3
+    ...textThemes.SP_BOLD,
+    color: colors.TEXT_DEFAULT_COLOR,
+    fontSize: 15,
+    letterSpacing: 1.5
   },
 
   bottomPanelOriginValue: {
@@ -256,14 +263,20 @@ export default StyleSheet.create({
   },
 
   bottomPanelMarketing: {
-    ...textThemes.SP_LIGHT,
-    color: colors.MAIN_LIGHT_COLOR,
-    fontSize: 14,
-    textAlign: 'right',
     position: 'absolute',
     top: 20,
     right: 0,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
     minWidth: 180
+  },
+
+  bottomPanelMarketingLabel: {
+    ...textThemes.SP_LIGHT,
+    color: colors.MAIN_LIGHT_COLOR,
+    fontSize: 14,
+    marginRight: 4
   },
 
   bottomPanelOverlap: {
@@ -370,7 +383,7 @@ export default StyleSheet.create({
     backgroundColor: colors.BG_INVERT_TINT,
     marginTop: 28,
     paddingTop: 16,
-    paddingBottom: 48
+    paddingBottom: 36
   },
 
   infoBlock: {
@@ -388,12 +401,15 @@ export default StyleSheet.create({
     height: 50
   },
 
+  infoBlockCarImgIndent: {
+    marginRight: 120
+  },
+
   infoText: {
     ...textThemes.SP_LIGHT,
     fontSize: 13,
     lineHeight: 19,
-    letterSpacing: 1.3,
-    marginRight: 120
+    letterSpacing: 1.3
   },
 
   infoTitle: {
@@ -535,5 +551,25 @@ export default StyleSheet.create({
     color: colors.TEXT_INVERT_COLOR,
     fontSize: 28,
     marginLeft: 8
+  },
+
+  termsLink: {
+    flexDirection: 'row',
+    marginHorizontal: SCREEN_HORIZONTAL_INDENTS,
+    alignItems: 'center',
+    marginTop: 20
+  },
+
+  termsLinkIcon: {
+    marginRight: 8,
+    marginLeft: 2,
+    color: colors.MAIN_LIGHT_COLOR,
+    fontSize: 16
+  },
+
+  termsLinkLabel: {
+    ...textThemes.SP_REGULAR,
+    color: colors.MAIN_LIGHT_COLOR,
+    fontSize: 14
   }
 });

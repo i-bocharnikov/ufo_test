@@ -1,7 +1,7 @@
 import { Platform } from 'react-native';
 import packageJson from './../../package.json';
 
-const localhost = 'loalhost';
+const localhost = 'localhost';
 
 const UFO_APP_NAME = packageJson.name;
 const UFO_APP_VERSION = packageJson.version;
@@ -44,7 +44,7 @@ const production = {
 
 //const configurations = { ...development, theme: 'UFO' };
 //const configurations = { ...production, theme: 'UFO' };
-const configurations = { ...production, theme: 'UFO' };
+const configurations = { ...uat, theme: 'UFO' };
 
 configurations.UFO_SERVER_PRIVATE_API_URL = `${
   configurations.UFO_SERVER_API_URL

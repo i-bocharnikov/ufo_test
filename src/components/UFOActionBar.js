@@ -1,27 +1,19 @@
 import React, { Component } from 'react';
-import {
-  View,
-  StyleSheet,
-  Keyboard,
-  Animated,
-  ProgressBarAndroid,
-  ActivityIndicator,
-  Platform,
-  Dimensions
-} from 'react-native';
+import { View, StyleSheet, Keyboard, Animated, Dimensions, Platform } from 'react-native';
 import PropTypes from 'prop-types';
 
 import UFOAction from './UFOAction';
-import { colors } from './../utils/theme';
+import { UFOLoader } from './common';
 
 const SCREEN_HEIGHT = Dimensions.get('screen').height;
+export const ACTION_BAR_HEIGHT = 80;
 
 const styles = StyleSheet.create({
   actionBarContainer: {
     position: 'absolute',
     left: 0,
     right: 0,
-    height: 80,
+    height: ACTION_BAR_HEIGHT,
     backgroundColor: 'transparent',
     flexDirection: 'column-reverse',
     justifyContent: 'flex-start'
@@ -32,10 +24,9 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     flex: 1
   },
-  progressBar: { height: 14 },
-  progressBarAndroid: { height: 24 },
-  loaderIOS: {
+  loader: {
     position: 'absolute',
+    zIndex: 999,
     bottom: SCREEN_HEIGHT / 2,
     alignSelf: 'center',
     transform: [{ translateY: 20 }]
@@ -88,9 +79,7 @@ export default class UFOActionBar extends Component {
       <Animated.View style={[
         styles.actionBarContainer,
         { bottom, opacity }
-      ]}
-      >
-        {activityPending && this.renderProgressView()}
+      ]}>
         <View style={styles.actionBar}>
           {actions.map((action, index) => (
             <UFOAction
@@ -101,27 +90,24 @@ export default class UFOActionBar extends Component {
             />
           ))}
         </View>
+        {this.renderLoader()}
       </Animated.View>
     );
   }
 
-  renderProgressView = () => {
-    return Platform.OS === 'ios' ? (
-      <ActivityIndicator
-        style={styles.loaderIOS}
-        animating={true}
-        size="large"
+  renderLoader = () => {
+    const isIOS = Platform.OS === 'ios';
+    const isVisible = !!this.props.activityPending;
+
+    return (
+      <UFOLoader
+        isVisible={isVisible}
+        isModal={!isIOS}
+        fallbackToNative={isIOS}
+        style={isIOS && styles.loader}
       />
-    ) : (
-      <View style={styles.progressBar}>
-        <ProgressBarAndroid
-          style={styles.progressBarAndroid}
-          styleAttr="Horizontal"
-          color={colors.SUCCESS_COLOR}
-        />
-      </View>
     );
-  };
+  }
 
   animateToShow = doLaunch => {
     const animation = Animated.timing(

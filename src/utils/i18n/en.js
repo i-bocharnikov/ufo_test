@@ -11,7 +11,9 @@ export default {
     calendarTitle: 'SELECT DATE',
     saveBtn: 'Save',
     scheduleFrom: 'from',
-    scheduleTo: 'to'
+    scheduleTo: 'to',
+    postponeBtn: 'Ask me later',
+    termsUrl: 'https://www.ufodrive.com/en/terms-and-conditions'
   },
   activities: {
     internetAccessFailure:
@@ -20,11 +22,6 @@ export default {
       'Unexpected bluetooth connectivity issues. Operating in offline/degraded mode',
     internetbluetoothAccessFailure:
       'Unexpected internet and bluetooth connectivity issues. Operating in offline/degraded mode'
-  },
-  home: {
-    reserve: '1. Reserve a car',
-    register: '2. Register your profile',
-    drive: '3. Drive your rented car'
   },
   global: {
     confirmationTitle: 'Confirmation needed',
@@ -43,9 +40,11 @@ export default {
     noKey: 'You currently have no key. Please ask support team to have one',
     stringNotMatch: 'Please type "I agree" to sign the contract.',
     unknown: 'Unknown Error',
-    nativeException: 'Native Exception',
+    nativeException:
+      'Oops, this was not supposed to happen. Apologises for the inconvenience',
     jsException: 'Warning from JS exception handler',
-    jsExceptionFatal: 'Fatal JS exception',
+    jsExceptionFatal:
+      'Oops, this was not supposed to happen. Apologises for the inconvenience',
     jsExceptionFatalReport:
       'We have reported this to our team. Please close the app and start again.',
     localPermissionNeeded:
@@ -76,8 +75,8 @@ export default {
     slideNext: 'Slide next',
     home: 'Home',
     continueLater: 'Continue later',
-    login: 'Connect',
-    logout: 'Disconnect',
+    login: 'Login',
+    logout: 'Logout',
     resendCode: 'Resend code',
     phone: 'Phone Number',
     email: 'Email',
@@ -150,7 +149,7 @@ export default {
     shareDialogTitle: 'Share referal code',
     referalBlock: 'Referal Code {{code}}',
     referalCodeMessage:
-      'You can use my UFODRIVE referral code {{code}} to get €30 off of your first ride, and drive to space!',
+      'You can use my UFODRIVE referral code {{code}} to get €30 off of your first ride',
     devicePermissionRestricted:
       'To use {{type}} activate it in the phone settings'
   },
@@ -233,6 +232,8 @@ export default {
     calendarViewBtn: 'open calendar view',
     locationInfoTitle: 'LOCATION',
     carInfoTitle: 'CAR',
+    priceInfoTitle: 'PRICE',
+    priceInfoSubTitle: 'PRICE DESCRIPTION',
     infoRange: 'RANGE',
     infoPeople: 'PEOPLE',
     address: 'Address',
@@ -260,17 +261,21 @@ export default {
     driveNextRegister: 'REGISTER',
     driveNextDrive: 'DRIVE YOUR CAR',
     dreveDescrRegisterP1:
-      'Before the rental,please register youself by scanning your ID and driver licence. If you want to know more about how it works, ',
+      'Before the rental, please register by scanning your ID and driver licence. If you want to know more about how it works, ',
     dreveDescrDriveP1:
       'Find your bookings in the drive section of the app. If you want to know more about how it works, ',
     dreveDescrGuideLink: 'Please consult the FAQ.',
     feedBackTitle: 'Just one question',
     confirmDialog: 'DONE',
-    feedBackInputPlaceholder: 'Your variant'
+    feedBackInputPlaceholder: 'Your variant',
+    ageConfirmation:
+      'By confirming, I certify that I have read and fully accepted the general terms and conditions and that I am at least 26 years old and in possession of a valid driver license.',
+    termsAlertBtn: 'Read terms',
+    termsLinkLabel: 'Terms and conditions'
   },
   launch: {
     launchTitle: 'Fast track\ncar rental',
-    slideOneTitle: 'Fully automated, app based',
+    slideOneTitle: 'The most advanced car rental',
     slideOneSubTitle: 'No key pick-up, no paperwork, no queues.',
     slideOneDescription:
       'This app will perform car inspection, activate your rental agreement and unlock your car',
@@ -282,8 +287,25 @@ export default {
     slideThreeSubTitle: 'Zero emissions, just electric cars',
     slideThreeDescription:
       "ev technology brings together the best of design and technology to produce a driving experience that's out of this world",
-    nextBtn: 'Reserve, register and drive',
+    nextBtn: 'Reserve, Register and Drive',
     skipBtn: 'skip'
+  },
+  faceRecognizing: {
+    incorrectDevicePosition: 'Please hold your phone vertically',
+    resetBtn: 'Reset',
+    nextBtn: 'Next',
+    backBtn: 'Back',
+    saveBtnLabel: 'Save',
+    validateBtnLabel: 'Validate',
+    captureBtn: 'Capture',
+    handlingDefaultError: 'Something went wrong. try again...',
+    handlingRentalError:
+      "Identity wasn't validate, something went wrong, try again...",
+    registerCaptureDescription: 'Capture your face',
+    rentalCaptureDescription: 'Capture your face to confirm your identity',
+    incorrectFacePosition: 'Your face must be in the center of the screen',
+    incorrectFaceSize: 'Your face must be closer to the camera',
+    incorrectFaceYaw: 'Your face must be in front of the camera'
   },
   otaKeyNativeErrors
 };

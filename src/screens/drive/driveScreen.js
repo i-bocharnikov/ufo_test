@@ -27,8 +27,9 @@ import { checkAndRequestLocationPermission } from './../../utils/permissions';
 import { keys as screenKeys } from './../../navigators/helpers';
 import { checkServerAvailability } from './../../utils/api';
 import styles from './styles';
-import { checkConnectivity } from '../../utils/api_deprecated';
-import DriverCardEditor from '../SignUp/DriverCardEditor';
+import { checkConnectivity, uploadToApi } from '../../utils/api_deprecated';
+import pushNotificationService from './../../utils/pushNotificationService';
+import remoteLoggerService from '../../utils/remoteLoggerService';
 
 @observer
 class DriveScreen extends Component {
@@ -42,6 +43,16 @@ class DriveScreen extends Component {
       await checkAndRequestLocationPermission();
       this.driveSelected = true;
     }
+
+    const isRegister = await pushNotificationService.register();
+
+    if (isRegister) {
+      pushNotificationService.addListeners();
+    }
+  }
+
+  componentWillUnmount() {
+    pushNotificationService.removeListeners();
   }
 
   async componentDidUpdate() {
@@ -68,21 +79,6 @@ class DriveScreen extends Component {
           currentScreen={screens.DRIVE}
         />
         <ScrollView refreshControl={this.refreshControl()}>
-          {!this.driveSelected && !driveStore.hasRentals && (
-            <View style={styles.content}>
-              <View style={styles.instructionContainer}>
-                <UFOText h1 bold center style={styles.instructionRow}>
-                  {t('home:reserve', { user: registerStore.user })}
-                </UFOText>
-                <UFOText h1 bold center style={styles.instructionRow}>
-                  {t('home:register', { user: registerStore.user })}
-                </UFOText>
-                <UFOText h1 bold center style={styles.instructionRow}>
-                  {t('home:drive', { user: registerStore.user })}
-                </UFOText>
-              </View>
-            </View>
-          )}
           {driveStore.hasRentals && driveStore.rental && (
             <View style={styles.rentalsWrapper}>
               <UFOSlider
@@ -137,7 +133,7 @@ class DriveScreen extends Component {
           ? actionStyles.DONE
           : actionStyles.TODO,
         icon: icons.RESERVE,
-        onPress: this.navToBooking
+        onPress: () => navigation.navigate(screenKeys.Booking)
       });
       actions.push({
         style: registerStore.isUserRegistered
@@ -189,8 +185,9 @@ class DriveScreen extends Component {
         driveStore.computeActionInitialInspect(actions, () =>
           this.props.navigation.navigate(screens.INSPECT.name)
         );
-        driveStore.computeActionStartContract(actions, () =>
-          this.props.navigation.navigate(screens.RENTAL_AGREEMENT.name)
+        driveStore.computeActionStartContract(
+          actions,
+          this.startContractSigning
         );
 
         if (driveStore.inUse) {
@@ -251,6 +248,7 @@ class DriveScreen extends Component {
     this.activityPending = true;
     if (await checkConnectivity()) {
       await appStore.register();
+      await remoteLoggerService.initialise();
     }
     await driveStore.reset();
     await this.doEnableAndSwitch();
@@ -275,11 +273,23 @@ class DriveScreen extends Component {
 
     if (!driveStore.inUse) {
       showToastError(this.props.t('error:rentalNotOpen'));
+      await remoteLoggerService.error(
+        'enableKey',
+        this.props.t('error:localPermissionNeeded'),
+        {},
+        otaKeyStore.key
+      );
       this.activityPending = false;
       return;
     }
     if (!driveStore.rental.key_id) {
       showToastError(this.props.t('error:rentalKeyMissing'));
+      await remoteLoggerService.error(
+        'enableKey',
+        this.props.t('error:rentalKeyMissing'),
+        {},
+        otaKeyStore.key
+      );
       this.activityPending = false;
       return;
     }
@@ -305,17 +315,35 @@ class DriveScreen extends Component {
     const permission = await checkAndRequestLocationPermission();
     if (!permission) {
       showToastError(this.props.t('error:localPermissionNeeded'));
+      await remoteLoggerService.error(
+        'unlockCar',
+        this.props.t('error:localPermissionNeeded'),
+        {},
+        otaKeyStore.key
+      );
       this.activityPending = false;
       return;
     }
 
     if (!driveStore.inUse) {
       showToastError(this.props.t('error:rentalNotOpen'));
+      await remoteLoggerService.error(
+        'unlockCar',
+        this.props.t('error:rentalNotOpen'),
+        {},
+        otaKeyStore.key
+      );
       this.activityPending = false;
       return;
     }
     if (!driveStore.rental.key_id) {
       showToastError(this.props.t('error:rentalKeyMissing'));
+      await remoteLoggerService.error(
+        'unlockCar',
+        this.props.t('error:rentalKeyMissing'),
+        {},
+        otaKeyStore.key
+      );
       this.activityPending = false;
       return;
     }
@@ -340,17 +368,36 @@ class DriveScreen extends Component {
     const permission = await checkAndRequestLocationPermission();
     if (!permission) {
       showToastError(this.props.t('error:localPermissionNeeded'));
+      await remoteLoggerService.error(
+        'lockCar',
+        this.props.t('error:localPermissionNeeded'),
+        {},
+        otaKeyStore.key
+      );
       this.activityPending = false;
       return;
     }
 
     if (!driveStore.inUse) {
       showToastError(this.props.t('error:rentalNotOpen'));
+      await remoteLoggerService.error(
+        'lockCar',
+        this.props.t('error:rentalNotOpen'),
+        {},
+        otaKeyStore.key
+      );
       this.activityPending = false;
       return;
     }
     if (!driveStore.rental.key_id) {
       showToastError(this.props.t('error:rentalKeyMissing'));
+      await remoteLoggerService.error(
+        'lockCar',
+        this.props.t('error:rentalKeyMissing'),
+        {},
+        otaKeyStore.key
+      );
+
       this.activityPending = false;
       return;
     }
@@ -403,6 +450,45 @@ class DriveScreen extends Component {
     }
 
     this.props.navigation.navigate(screenKeys.Booking);
+  };
+
+  startContractSigning = () => {
+    const { navigation, t } = this.props;
+    const params = {
+      actionNavNext: () => navigation.navigate(screenKeys.RentalAgreement),
+      actionNavBack: () => navigation.navigate(screenKeys.Drive),
+      actionHandleFileAsync: this.validateCapturedFace,
+      description: t('faceRecognizing:rentalCaptureDescription'),
+      nextBtnLabel: t('faceRecognizing:validateBtnLabel'),
+      handlingErrorMessage: t('faceRecognizing:handlingRentalError')
+    };
+    if (!DeviceInfo.isEmulator()) {
+      navigation.navigate(screenKeys.FaceRecognizer, params);
+    } else {
+      navigation.navigate(screenKeys.RentalAgreement);
+    }
+  };
+
+  validateCapturedFace = async fileUri => {
+    try {
+      const uploadedFace = await uploadToApi(
+        'identification',
+        'one_side',
+        'face_capture',
+        'front_side',
+        fileUri
+      );
+
+      if (_.has(uploadedFace, 'data.document.reference')) {
+        return await driveStore.rentalFaceValidation(
+          uploadedFace.data.document.reference
+        );
+      }
+
+      return false;
+    } catch (error) {
+      return false;
+    }
   };
 }
 

@@ -40,9 +40,10 @@ export default class BookingStore {
 
   @observable locationInfoRef = this._defaultStore.locationInfoRef;
   @observable carInfoRef = this._defaultStore.carInfoRef;
-  @observable locationInfoDescription = this._defaultStore
-    .locationInfoDescription;
+  @observable priceInfoRef = this._defaultStore.priceInfoRef;
+  @observable locationInfoDescription = this._defaultStore.locationInfoDescription;
   @observable carInfoDescription = this._defaultStore.carInfoDescription;
+  @observable priceInfoDescription = this._defaultStore.priceInfoDescription
 
   /* step pay & confirm */
   @observable stripeApiKey = this._defaultStore.stripeApiKey;
@@ -77,8 +78,10 @@ export default class BookingStore {
         .format(values.TIME_STRING_FORMAT),
       locationInfoRef: null,
       carInfoRef: null,
+      priceInfoRef: null,
       locationInfoDescription: {},
       carInfoDescription: {},
+      priceInfoDescription: {},
       stripeApiKey: null,
       userCreditCards: [],
       currentCreditCardRef: null,
@@ -107,7 +110,7 @@ export default class BookingStore {
     this.resetStore();
     this.isLoading = true;
 
-    const [receivedLocations, receivedCars] = await Promise.all([
+    const [ receivedLocations, receivedCars ] = await Promise.all([
       locations.getLocations(),
       cars.getCars()
     ]);
@@ -135,9 +138,10 @@ export default class BookingStore {
       this.cars = await cars.getCars();
     }
 
-    await Promise.all([this.getCarCalendar(), this.getOrderSimulation()]);
-
+    await this.getOrderSimulation();
     this.isLoading = false;
+    // fetch calendar in shadow mode
+    this.getCarCalendar();
   };
 
   /**
@@ -157,9 +161,10 @@ export default class BookingStore {
       this.locations = await locations.getLocations();
     }
 
-    await Promise.all([this.getCarCalendar(), this.getOrderSimulation()]);
-
+    await this.getOrderSimulation();
     this.isLoading = false;
+    // fetch calendar in shadow mode
+    this.getCarCalendar();
   };
 
   /**
@@ -180,6 +185,10 @@ export default class BookingStore {
 
     if (this.endRentalDate.isBefore(this.startRentalDate)) {
       this.endRentalDate = this.startRentalDate;
+    }
+
+    if (this.startRentalDate.diff(this.endRentalDate, 'days') === 0) {
+      this.correctSelectedTime();
     }
 
     this.isLoading = true;
@@ -207,9 +216,37 @@ export default class BookingStore {
       this.startRentalDate = this.endRentalDate;
     }
 
+    if (this.startRentalDate.diff(this.endRentalDate, 'days') === 0) {
+      this.correctSelectedTime();
+    }
+
     this.isLoading = true;
     await this.getOrderSimulation();
     this.isLoading = false;
+  };
+
+  /**
+   * @description Correct chosen time if was selected the same dates
+  */
+  @action
+  correctSelectedTime = () => {
+    let startIndex = this.rollPickerStartSelectedTimeItem;
+    let endIndex = this.rollPickerEndSelectedTimeItem;
+
+    if (startIndex < endIndex) {
+      return;
+    }
+
+    if (startIndex + 1 < this.rollPickersTimeItems.length) {
+      this.endRentalTime = this.rollPickersTimeItems[startIndex + 1].label;
+
+    } else if (endIndex > 0) {
+      this.startRentalTime = this.rollPickersTimeItems[endIndex - 1].label;
+
+    } else {
+      this.startRentalTime = this._defaultStore.startRentalTime;
+      this.endRentalTime = this._defaultStore.endRentalTime;
+    }
   };
 
   /**
@@ -221,6 +258,10 @@ export default class BookingStore {
   selectCalendarDates = async (dateMomentStart, dateMomentEnd) => {
     this.startRentalDate = dateMomentStart;
     this.endRentalDate = dateMomentEnd;
+
+    if (this.startRentalDate.diff(this.endRentalDate, 'days') === 0) {
+      this.correctSelectedTime();
+    }
 
     this.isLoading = true;
     await this.getOrderSimulation();
@@ -238,8 +279,8 @@ export default class BookingStore {
       return;
     }
 
-    const isOneDayRental =
-      this.startRentalDate.diff(this.endRentalDate, 'days') === 0;
+    const isOneDayRental = this.startRentalDate.diff(this.endRentalDate, 'days') === 0;
+
     if (isOneDayRental && itemIndex + 1 >= this.rollPickersTimeItems.length) {
       // forbid to choose last time-item of day as start
       this.startRentalTime = this.rollPickersTimeItems[itemIndex - 1].label;
@@ -247,7 +288,7 @@ export default class BookingStore {
       this.startRentalTime = timeStr;
     }
 
-    if (this.rollPickerEndSelectedTimeItem <= itemIndex) {
+    if (isOneDayRental && this.rollPickerEndSelectedTimeItem <= itemIndex) {
       const nextIndex =
         this.rollPickersTimeItems.length > itemIndex + 1
           ? itemIndex + 1
@@ -270,8 +311,8 @@ export default class BookingStore {
       return;
     }
 
-    const isOneDayRental =
-      this.startRentalDate.diff(this.endRentalDate, 'days') === 0;
+    const isOneDayRental = this.startRentalDate.diff(this.endRentalDate, 'days') === 0;
+
     if (isOneDayRental && itemIndex === 0) {
       // forbid to choose first time-item of day as end
       this.endRentalTime = this.rollPickersTimeItems[itemIndex + 1].label;
@@ -279,7 +320,7 @@ export default class BookingStore {
       this.endRentalTime = timeStr;
     }
 
-    if (this.rollPickerStartSelectedTimeItem >= itemIndex) {
+    if (isOneDayRental && this.rollPickerStartSelectedTimeItem >= itemIndex) {
       const prevIndex = itemIndex - 1 >= 0 ? itemIndex - 1 : itemIndex;
       this.startRentalTime = this.rollPickersTimeItems[prevIndex].label;
     }
@@ -300,9 +341,7 @@ export default class BookingStore {
       this.locationInfoRef &&
       this.locationInfoRef !== this.locationInfoDescription.reference
     ) {
-      this.locationInfoDescription = await locations.getDescription(
-        this.locationInfoRef
-      );
+      this.locationInfoDescription = await locations.getDescription(this.locationInfoRef);
     }
 
     if (
@@ -310,6 +349,13 @@ export default class BookingStore {
       this.carInfoRef !== this.carInfoDescription.reference
     ) {
       this.carInfoDescription = await cars.getDescription(this.carInfoRef);
+    }
+
+    if (
+      this.priceInfoRef &&
+      this.priceInfoRef !== this.priceInfoDescription.reference
+    ) {
+      this.priceInfoDescription = await order.getPriceDescription(this.priceInfoRef);
     }
 
     this.isLoading = false;
@@ -335,7 +381,7 @@ export default class BookingStore {
     this.loyaltyProgramInfo = data.loyaltyProgram.message;
 
     this.userCreditCards = data.userCreditCards;
-    const defaultCard = _.find(this.userCreditCards, ['default', true]);
+    const defaultCard = _.find(this.userCreditCards, [ 'default', true ]);
     this.currentCreditCardRef = defaultCard ? defaultCard.reference : null;
 
     this.isLoading = false;
@@ -677,6 +723,13 @@ export default class BookingStore {
       return { isCar: true, ...this.carInfoDescription };
     }
 
+    if (
+      this.priceInfoRef &&
+      this.priceInfoRef === this.priceInfoDescription.reference
+    ) {
+      return { isPrice: true, ...this.priceInfoDescription };
+    }
+
     return {};
   }
 
@@ -758,9 +811,7 @@ export default class BookingStore {
    * @description Get description how will looking the order
    */
   getOrderSimulation = async (requestHandling = true) => {
-    const location = _.find(this.locations, {
-      reference: this.selectedLocationRef
-    });
+    const location = _.find(this.locations, { reference: this.selectedLocationRef });
 
     if (!this.selectedLocationRef || !this.selectedCarRef || !location) {
       if (requestHandling) {

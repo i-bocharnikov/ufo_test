@@ -3,7 +3,7 @@ import { textThemes, colors } from './../../../utils/theme';
 
 export const HEADER_HEIGHT = 60;
 export const TITLE_FONT_SIZE = 30;
-export const BACK_ICON_SIZE = 26;
+export const ACTION_ICON_SIZE = 26;
 const SUBHEADER_HEIGHT = 50;
 const HEADER_TOP_PADDING = 18;
 
@@ -41,7 +41,8 @@ export default StyleSheet.create({
   title: {
     ...textThemes.SP_BOLD,
     paddingTop: HEADER_TOP_PADDING,
-    color: colors.TEXT_INVERT_COLOR
+    color: colors.TEXT_INVERT_COLOR,
+    lineHeight: TITLE_FONT_SIZE
   },
 
   subHeader: {
@@ -62,11 +63,17 @@ export default StyleSheet.create({
     textAlign: 'center'
   },
 
-  backBtn: {
+  actionIcon: { color: colors.TEXT_INVERT_COLOR },
+
+  leftBtn: {
     position: 'absolute',
     left: 0,
     paddingTop: HEADER_TOP_PADDING
   },
 
-  backIcon: { color: colors.TEXT_INVERT_COLOR }
+  rightBtn: {
+    position: 'absolute',
+    right: 0,
+    paddingTop: HEADER_TOP_PADDING
+  }
 });

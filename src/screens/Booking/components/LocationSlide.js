@@ -32,14 +32,16 @@ export default class LocationSlide extends PureComponent {
         )}
         <UFOImage
           source={{ uri: location.imageUrl }}
-          style={styles.locSlideImg}
+          style={[ styles.locSlideImg, !location.available && styles.notAvailable ]}
         />
-        <View style={[
-          styles.locSlideLabelWrapper,
-          isSelected && styles.choosenLocation
-        ]}
-        >
-          <Text style={styles.locSlideLabel} numberOfLines={3}>
+        <View style={[ styles.locSlideLabelWrapper, isSelected && styles.choosenLocation ]}>
+          <Text
+            style={[
+              styles.locSlideLabel,
+              !location.available && styles.notAvailable
+            ]}
+            numberOfLines={3}
+          >
             {location.name.toUpperCase()}
           </Text>
           <TouchableOpacity

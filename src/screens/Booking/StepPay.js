@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, Platform, processColor } from 'react-native';
+import { View, Text, TouchableOpacity, Platform, Linking, processColor } from 'react-native';
 import { translate } from 'react-i18next';
 import { observer } from 'mobx-react';
 import { CardIOModule, CardIOUtilities } from 'react-native-awesome-card-io';
@@ -11,7 +11,7 @@ import { keys as screenKeys } from './../../navigators/helpers';
 import {
   UFOContainer,
   UFOIcon,
-  UFOModalLoader,
+  UFOLoader,
   UFOImage,
   UFOTextInput,
   UFOGradientView
@@ -22,6 +22,7 @@ import BottomActionPanel from './components/BottomActionPanel';
 import styles from './styles';
 import { values, colors } from './../../utils/theme';
 import { checkAndRequestCameraPermission } from './../../utils/permissions';
+import { confirm } from './../../utils/interaction';
 
 const CREDIT_CARD_DEFAULT_IMG = 'https://resources.ufodrive.com/images/userCreditCards/unknown.png';
 
@@ -36,6 +37,7 @@ class StepPayScreen extends Component {
       usePaypalActionbarIcon: false
     };
     this.handleInputVoucher = _.debounce(this.validateAndApplyVoucher, 300);
+    this.agreementConfirmed = false;
     this.state = {
       showVoucherTooltip: false,
       isVoucherValid: null,
@@ -67,6 +69,7 @@ class StepPayScreen extends Component {
     return (
       <BookingNavWrapper
         navBack={this.navBack}
+        navToFaq={this.navToFaq}
         navToFirstStep={this.navBack}
         currentStep={2}
         BottomActionPanel={this.renderBottomPanel()}
@@ -106,7 +109,7 @@ class StepPayScreen extends Component {
           {this.renderLoyaltyBlock()}
           {this.renderBookingInfoSection()}
           {this.renderVoucherTooltip()}
-          <UFOModalLoader
+          <UFOLoader
             isVisible={bookingStore.isLoading}
             stealthMode={true}
           />
@@ -125,6 +128,7 @@ class StepPayScreen extends Component {
         actionSubTitle={this.props.t('stepPayNextSubTitle')}
         isAvailable={!!bookingStore.currentCreditCardRef && !isVoucherInvalid}
         isWaiting={bookingStore.isLoading}
+        openPriceInfo={this.openPriceInfo}
       />
     );
   };
@@ -212,13 +216,13 @@ class StepPayScreen extends Component {
             source={{ uri: bookingStore.order.carModel.imageUrl }}
             resizeMode="contain"
           />
-          <Text style={styles.infoTitle}>
+          <Text style={[ styles.infoTitle, styles.infoBlockCarImgIndent ]}>
             {t('subTitleStep3')} : {bookingStore.orderPrice}
           </Text>
-          <Text style={styles.infoText}>
+          <Text style={[ styles.infoText, styles.infoBlockCarImgIndent ]}>
             {bookingStore.order.location.name}
           </Text>
-          <Text style={styles.infoText}>
+          <Text style={[ styles.infoText, styles.infoBlockCarImgIndent ]}>
             {bookingStore.order.carModel.name}
           </Text>
           <Text style={styles.infoText}>
@@ -237,6 +241,17 @@ class StepPayScreen extends Component {
             </Text>
           </View>
         </View>
+        <TouchableOpacity
+          style={styles.termsLink}
+          activeOpacity={values.BTN_OPACITY_DEFAULT}
+          onPress={this.openTermsUrl}
+        >
+          <UFOIcon
+            name="md-open"
+            style={styles.termsLinkIcon}
+          />
+          <Text style={styles.termsLinkLabel}>{t('termsLinkLabel')}</Text>
+        </TouchableOpacity>
       </View>
     );
   };
@@ -302,15 +317,61 @@ class StepPayScreen extends Component {
   };
 
   /*
+   * To FAQ screen
+  */
+  navToFaq = () => {
+    this.props.navigation.navigate(
+      screenKeys.SupportFaqs,
+      { PREVIOUS_SCREEN: screenKeys.Booking }
+    );
+  };
+
+  /*
    * Handle payment and go to next step
   */
   handleToNextStep = async () => {
+    if (!this.agreementConfirmed) {
+      const confirmAction = () => { this.agreementConfirmed = true; };
+      await confirm(
+        null,
+        this.props.t('ageConfirmation'),
+        confirmAction,
+        this.openTermsUrl,
+        { neutral: this.props.t('termsAlertBtn') }
+      );
+    }
+
+    if (!this.agreementConfirmed) {
+      return;
+    }
+
     await bookingStore.confirmBooking();
 
     if (bookingStore.bookingConfirmation) {
       await driveStore.reset();
       this.props.navigation.replace(screenKeys.BookingStepDrive);
     }
+  };
+
+  /*
+   * Open external url with terms
+  */
+  openTermsUrl = () => {
+    Linking.openURL( this.props.t('common:termsUrl') );
+  };
+
+  /*
+   * Open order price description
+  */
+  openPriceInfo = () => {
+    const ref = _.get(bookingStore, 'order.price.pricingReference');
+
+    if (!ref) {
+      return;
+    }
+
+    bookingStore.priceInfoRef = ref;
+    this.props.navigation.navigate(screenKeys.BookingDetails);
   };
 }
 

@@ -7,14 +7,11 @@ import { translate } from 'react-i18next';
 import { keys as screenKeys } from './../../navigators/helpers';
 import appStore from './../../stores/appStore';
 import registerStore from './../../stores/registerStore';
-import {
-  UFOContainer,
-  UFOModalLoader,
-  UFOImage
-} from './../../components/common';
+import { UFOContainer, UFOLoader, UFOImage } from './../../components/common';
 import UFOSlider from './../../components/UFOSlider';
 import styles from './styles';
 import { images, values } from './../../utils/theme';
+import { driveStore } from '../../stores';
 
 const SCREEN_WIDTH = Dimensions.get('screen').width;
 
@@ -52,7 +49,7 @@ class LaunchScreen extends Component {
     SplashController.hide();
     await appStore.initialise();
 
-    if (registerStore.isUserRegistered) {
+    if (registerStore.isUserRegistered && driveStore.hasRentals) {
       this.navToApp();
     }
   }
@@ -64,7 +61,7 @@ class LaunchScreen extends Component {
         image={appStore.isAppReady ? images.BG_HOME002 : images.BG_LAUNCH}
       >
         {appStore.isAppReady && this.renderSlider()}
-        <UFOModalLoader isVisible={!appStore.isAppReady} />
+        <UFOLoader isVisible={!appStore.isAppReady} />
       </UFOContainer>
     );
   }

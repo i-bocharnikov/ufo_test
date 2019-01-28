@@ -4,12 +4,11 @@ import { ufoInputStyles } from './UFOTextInput/styles';
 import UFOIcon from './UFOIcon';
 import UFOImage from './UFOImage';
 import UFOVideo from './UFOVideo';
-import UFOModalLoader from './UFOModalLoader';
+import UFOLoader from './UFOLoader';
 import UFOGradientView from './UFOGradientView';
 import UFOCheckBoxItem from './UFOCheckBoxItem';
 
 import UFOText from './UFOText_old';
-import UFOTextInput_old from './UFOTextInput_old';
 import UFOIcon_old from './UFOIcon_old';
 
 export {
@@ -19,11 +18,10 @@ export {
   UFOIcon,
   UFOImage,
   UFOVideo,
-  UFOModalLoader,
+  UFOLoader,
   UFOGradientView,
   UFOCheckBoxItem,
   // deprecated components, will be replaced with redesigning
   UFOText,
-  UFOTextInput_old,
   UFOIcon_old
 };

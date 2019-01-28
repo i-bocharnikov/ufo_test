@@ -27,7 +27,8 @@ class DriveCard extends Component {
     }
 
     return (
-      <View style={{
+      <View
+        style={{
           flex: 1,
           flexDirection: 'column',
           justifyContent: 'center',
@@ -43,17 +44,11 @@ class DriveCard extends Component {
           style={{ width: DRIVE_CARD_WIDTH, height: DRIVE_CARD_HEIGHT }}
           resizeMode={'contain'}
         />
-        <UFOText
-          h3
-          bold
-        >
+        <UFOText h3 bold>
           {t('drive:rentalCarModel', { rental })}
         </UFOText>
-        <UFOText
-          h3
-          bold
-        >
-          {t('drive:rentalCar', { rental })}
+        <UFOText h3 bold>
+          {!driveStore.isOngoing ? '' : t('drive:rentalCar', { rental })}
         </UFOText>
         <UFOText h4>
           {!driveStore.inUse
@@ -69,24 +64,18 @@ class DriveCard extends Component {
             ? t('drive:locked')
             : t('drive:unlocked')}
         </UFOText>
-        <UFOText
-          h4
-          bold
-          style={{ marginTop: 10 }}
-        >
-          {t('drive:rentalStartAt', { start_at: driveStore.format(rental.start_at, dateFormats.DRIVE) })}
+        <UFOText h4 bold style={{ marginTop: 10 }}>
+          {t('drive:rentalStartAt', {
+            start_at: driveStore.format(rental.start_at, dateFormats.DRIVE)
+          })}
         </UFOText>
-        <UFOText
-          h4
-          upper
-        >
+        <UFOText h4 upper>
           {t('drive:rentalLocation', { rental: rental })}
         </UFOText>
-        <UFOText
-          h4
-          bold
-        >
-          {t('drive:rentalEndAt', { end_at: driveStore.format(rental.end_at, dateFormats.DRIVE) })}
+        <UFOText h4 bold>
+          {t('drive:rentalEndAt', {
+            end_at: driveStore.format(rental.end_at, dateFormats.DRIVE)
+          })}
         </UFOText>
       </View>
     );

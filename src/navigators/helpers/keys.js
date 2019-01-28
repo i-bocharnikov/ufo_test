@@ -32,5 +32,7 @@ export default {
 
   Find: 'Find',
   Return: 'Return',
-  RentalAgreement: 'RentalAgreement'
+  RentalAgreement: 'RentalAgreement',
+
+  FaceRecognizer: 'FaceRecognizer'
 };

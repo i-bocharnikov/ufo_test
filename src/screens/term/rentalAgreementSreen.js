@@ -12,6 +12,7 @@ import { screens, actionStyles, icons } from './../../utils/global';
 import { driveStore, termStore } from './../../stores';
 import { showPrompt, showToastError } from './../../utils/interaction';
 import { NavigationEvents } from 'react-navigation';
+import remoteLoggerService from '../../utils/remoteLoggerService';
 
 @observer
 class InspectScreen extends Component {
@@ -75,17 +76,27 @@ class InspectScreen extends Component {
     }
   };
 
-  confirmContractSignature = () => {
+  confirmContractSignature = async () => {
     this.activityPending = true;
     const t = this.props.t;
     const confirmKey = t('term:confirmContractKeyString');
 
-    const promptHandler = str => {
-      if (str.toUpperCase() === confirmKey.toUpperCase()) {
-        this.doSign();
+    const promptHandler = async str => {
+      if (str.toUpperCase().trim() === confirmKey.toUpperCase()) {
+        await remoteLoggerService.info(
+          'confirmContractSignature',
+          `confirmation accepted: Input ${str} does match confirmKey ${confirmKey}`
+        );
+        await this.doSign();
         this.activityPending = false;
         return;
       }
+      await remoteLoggerService.error(
+        'confirmContractSignature',
+        `${t(
+          'error:stringNotMatch'
+        )}: Input ${str} does not match confirmKey ${confirmKey}`
+      );
 
       showToastError(t('error:stringNotMatch'), 160);
       this.activityPending = false;

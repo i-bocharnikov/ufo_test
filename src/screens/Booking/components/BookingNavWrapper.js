@@ -10,14 +10,15 @@ import navBarStyles from './../../../components/header/styles/navBarStyles';
 
 class BookingNavWrapper extends Component {
   render() {
-    const { t, navBack, BottomActionPanel } = this.props;
+    const { t, navBack, navToFaq, BottomActionPanel } = this.props;
 
     return (
       <View style={[ styles.screenWrapper, BottomActionPanel && styles.wrapperBottomPadding ]}>
         <UFONavBarWrapper
           title={t('booking:screenTitle')}
           SubtitleComponent={this.getSubTitleComponent()}
-          backBtnAction={navBack}
+          leftBtnAction={navBack}
+          rightBtnAction={navToFaq}
           ref={ref => (this.navBarWrapper = ref)}
         >
           {this.props.children}
@@ -46,7 +47,7 @@ class BookingNavWrapper extends Component {
           name="chevron-thin-right"
           iconPack="Entypo"
           style={[
-            navBarStyles.subTitle,,
+            navBarStyles.subTitle,
             styles.headerSubtitleIcon,
             currentStep < 2 && styles.headerFutureStep
           ]}
@@ -90,6 +91,7 @@ class BookingNavWrapper extends Component {
 
 BookingNavWrapper.propTypes = {
   navBack: PropTypes.func,
+  navToFaq: PropTypes.func,
   navToFirstStep: PropTypes.func,
   currentStep: PropTypes.number,
   BottomActionPanel: PropTypes.node

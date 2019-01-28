@@ -19,7 +19,7 @@ export default StyleSheet.create({
 
   rowLabel: {
     ...textThemes.SP_LIGHT,
-    color: colors.TEXT_LIGHT_COLOR,
+    color: colors.MAIN_COLOR,
     letterSpacing: 1.4,
     fontSize: 12
   },

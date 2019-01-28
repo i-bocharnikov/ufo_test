@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Image, ActivityIndicator, StyleSheet } from 'react-native';
+import { Image, StyleSheet } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import PropTypes from 'prop-types';
 
+import { UFOLoader } from './';
 import { SAVE_TOKEN } from './../../utils/api_deprecated';
 import configurations from './../../utils/configurations';
 
@@ -38,7 +39,14 @@ export default class UFOImage extends Component {
         }}
         {...restProps}
       >
-        {isLoading ? <ActivityIndicator animating={true} /> : children}
+        {isLoading ? (
+          <UFOLoader
+            fallbackToNative={true}
+            isVisible={true}
+            size="small"
+            color="rgba(0,0,0,0.1)"
+          />
+        ) : children}
       </FastImage>
     ) : (
       <Image source={this.getSafeSource} style={style} {...restProps} />

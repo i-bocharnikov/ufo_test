@@ -25,6 +25,8 @@ import {
 } from './../../utils/global';
 import supportStore from './../../stores/supportStore';
 import { driveStore } from './../../stores';
+import registerStore from '../../stores/registerStore';
+import remoteLoggerService from '../../utils/remoteLoggerService';
 
 const SUPPORT_FAQ = navigationParams.SUPPORT_FAQ;
 const SUPPORT_FAQ_CATEGORY = navigationParams.SUPPORT_FAQ_CATEGORY;
@@ -73,7 +75,7 @@ class SupportFaqsScreen extends Component {
     actions.push({
       style: actionStyles.ACTIVE,
       icon: icons.BACK,
-      onPress: () => this.doBack(navigation)
+      onPress: this.doBack
     });
 
     if (driveStore.emergencyNumber) {
@@ -181,13 +183,24 @@ class SupportFaqsScreen extends Component {
     return await supportStore.list();
   };
 
-  doBack = async navigation => {
-    this.props.navigation.navigate(
-      navigation.getParam(navigationParams.PREVIOUS_SCREEN, screens.HOME).name
-    );
+  doBack = () => {
+    const { navigation } = this.props;
+    const prevScreen = navigation.getParam(navigationParams.PREVIOUS_SCREEN, screens.HOME);
+    navigation.navigate(prevScreen.name || prevScreen);
   };
 
-  doOpenChat = () => {
+  doOpenChat = async () => {
+    await remoteLoggerService.info(
+      'openChat',
+      `User ${
+        registerStore.user ? registerStore.user.reference : ''
+      } in state ${registerStore.user ? registerStore.user.status : ''}`,
+      {
+        support_chat_identification_key:
+          registerStore.support_chat_identification_key
+      },
+      registerStore.user
+    );
     this.props.navigation.navigate(screens.SUPPORT_CHAT.name);
   };
 

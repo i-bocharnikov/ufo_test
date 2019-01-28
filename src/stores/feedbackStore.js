@@ -74,6 +74,10 @@ export default class FeedbackStore {
     const response = await postToApi('/feedbacks?context=reserve', this.reserveFeedBack, true);
     this.isLoading = false;
 
+    if (response.isSuccess) {
+      this.reserveFeedBack = null;
+    }
+
     return response.isSuccess;
   };
 }

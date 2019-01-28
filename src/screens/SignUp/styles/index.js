@@ -1,14 +1,17 @@
 import { StyleSheet } from 'react-native';
 
 import { colors, textThemes } from './../../../utils/theme';
+import { ACTION_BAR_HEIGHT } from './../../../components/UFOActionBar';
 
 const GAP_BETWEEN = 9;
 
 export default StyleSheet.create({
+  scrollWrapper: { flex: 1 },
+
   bodyWrapper: {
-    flex: 1,
     paddingHorizontal: 24,
-    marginTop: 32
+    paddingTop: 32,
+    paddingBottom: ACTION_BAR_HEIGHT
   },
 
   inputBlock: { marginBottom: GAP_BETWEEN },

@@ -59,6 +59,10 @@ export default StyleSheet.create({
 
   sliderDotActive: { backgroundColor: colors.MAIN_LIGHT_COLOR },
 
+  sliderBlock: {
+    marginBottom: 32
+  },
+
   separateLine: {
     height: 1,
     backgroundColor: colors.BORDER_COLOR,
@@ -77,7 +81,6 @@ export default StyleSheet.create({
 
   descriptionTitle: {
     textAlign: 'center',
-    marginTop: 32,
     marginHorizontal: SCREEN_HORIZONTAL_INDENTS
   },
 
