@@ -73,7 +73,7 @@ class SupportFaqsScreen extends Component {
     actions.push({
       style: actionStyles.ACTIVE,
       icon: icons.BACK,
-      onPress: () => this.doBack(navigation)
+      onPress: this.doBack
     });
 
     if (driveStore.emergencyNumber) {
@@ -181,10 +181,10 @@ class SupportFaqsScreen extends Component {
     return await supportStore.list();
   };
 
-  doBack = async navigation => {
-    this.props.navigation.navigate(
-      navigation.getParam(navigationParams.PREVIOUS_SCREEN, screens.HOME).name
-    );
+  doBack = () => {
+    const { navigation } = this.props;
+    const prevScreen = navigation.getParam(navigationParams.PREVIOUS_SCREEN, screens.HOME);
+    navigation.navigate(prevScreen.name || prevScreen);
   };
 
   doOpenChat = () => {

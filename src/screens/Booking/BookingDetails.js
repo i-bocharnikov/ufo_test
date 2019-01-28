@@ -5,6 +5,7 @@ import { observer } from 'mobx-react';
 import { MarkdownView } from 'react-native-markdown-view';
 
 import { bookingStore } from './../../stores';
+import { keys as screenKeys } from './../../navigators/helpers';
 import UFONavBarWrapper from './../../components/header/UFONavBarWrapper';
 import UFOSlider from './../../components/UFOSlider';
 import { UFOContainer, UFOLoader, UFOImage, UFOIcon } from './../../components/common';
@@ -28,7 +29,8 @@ class BookingDetailsScreen extends Component {
   render() {
     return (
       <UFONavBarWrapper
-        backBtnAction={this.navBack}
+        leftBtnAction={this.navBack}
+        rightBtnAction={this.navToFaq}
         title={this.getTitle()}
         subtitle={this.getSubTitle()}
         backgroundWrapper={colors.BG_INVERT}
@@ -254,6 +256,13 @@ class BookingDetailsScreen extends Component {
     bookingStore.carInfoRef = null;
     bookingStore.locationInfoRef = null;
     bookingStore.priceInfoRef = null;
+  };
+
+  navToFaq = () => {
+    this.props.navigation.navigate(
+      screenKeys.SupportFaqs,
+      { PREVIOUS_SCREEN: screenKeys.Booking }
+    );
   };
 }
 
