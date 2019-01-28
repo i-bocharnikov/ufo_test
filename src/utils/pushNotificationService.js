@@ -26,7 +26,10 @@ class NotificationService {
       this.enabled = await FCM.hasPermission();
 
       if (!this.enabled) {
-        remoteLoggerService.error("registerNotification", "notification permission has been declined");
+        remoteLoggerService.error(
+          'registerNotification',
+          'notification permission has been declined'
+        );
         return false;
       }
     }
@@ -34,7 +37,7 @@ class NotificationService {
     this.fcmToken = await FCM.getToken();
 
     if (!this.fcmToken) {
-      remoteLoggerService.error("registerNotification", "FCM token missing");
+      remoteLoggerService.error('registerNotification', 'FCM token missing');
       return false;
     }
 
@@ -62,7 +65,10 @@ class NotificationService {
 
   _onTokenRefreshListener = () =>
     FCM.onTokenRefresh(async fcmToken => {
-      remoteLoggerService.info("pushNotificationService.onTokenRefresh", "FCM token refreshed");
+      remoteLoggerService.info(
+        'pushNotificationService.onTokenRefresh',
+        'FCM token refreshed'
+      );
 
       this.fcmToken = fcmToken;
       const response = await putToApi('/register/devices/notification', {
@@ -74,12 +80,61 @@ class NotificationService {
       }
     });
 
-  _onNotificationListener = () =>
-    FCN.onNotification(async data => {
-      remoteLoggerService.info("pushNotificationService.onNotification", "Notification received", data);
+  _onNotificationListener = () => {
+    FCM.onMessage(async data => {
+      remoteLoggerService.info(
+        'pushNotificationService.onMessage',
+        'Message received',
+        {
+          title: data.title,
+          body: data.body,
+          badge: this.iosNotifBadge,
+          data: data.data
+        }
+      );
 
       if (data && data.data && data.data.refreshApp === true) {
-        remoteLoggerService.info("pushNotificationService.onNotification", "refresh app", data);
+        remoteLoggerService.info(
+          'pushNotificationService.onMessage',
+          'refresh app',
+          {
+            title: data.title,
+            body: data.body,
+            badge: this.iosNotifBadge,
+            data: data.data
+          }
+        );
+        if (await checkConnectivity()) {
+          await appStore.register();
+          await remoteLoggerService.initialise();
+        }
+        await driveStore.reset();
+      }
+    });
+
+    FCN.onNotification(async data => {
+      remoteLoggerService.info(
+        'pushNotificationService.onNotification',
+        'Notification received',
+        {
+          title: data.title,
+          body: data.body,
+          badge: this.iosNotifBadge,
+          data: data.data
+        }
+      );
+
+      if (data && data.data && data.data.refreshApp === 'true') {
+        remoteLoggerService.info(
+          'pushNotificationService.onNotification',
+          'refresh app',
+          {
+            title: data.title,
+            body: data.body,
+            badge: this.iosNotifBadge,
+            data: data.data
+          }
+        );
         if (await checkConnectivity()) {
           await appStore.register();
           await remoteLoggerService.initialise();
@@ -87,7 +142,7 @@ class NotificationService {
         await driveStore.reset();
       }
 
-      if (data && data.data && data.data.resetBadge === true) {
+      if (data && data.data && data.data.resetBadge === 'true') {
         this.iosNotifBadge = 0;
       } else {
         this.iosNotifBadge++;
@@ -103,10 +158,52 @@ class NotificationService {
           .android.setChannelId(this.androidDefaultChannelId)
           .android.setDefaults(firebase.notifications.Android.Defaults.All);
 
-        remoteLoggerService.info("pushNotificationService.onNotification", "show notification", data, notification);
+        remoteLoggerService.info(
+          'pushNotificationService.onNotification',
+          'show notification',
+          {
+            title: data.title,
+            body: data.body,
+            badge: this.iosNotifBadge,
+            data: data.data
+          }
+        );
         FCN.displayNotification(notification);
       }
     });
+
+    FCN.onNotificationDisplayed(async data => {
+      remoteLoggerService.info(
+        'pushNotificationService.onNotificationDisplayed',
+        'Notification received',
+        {
+          title: data.title,
+          body: data.body,
+          badge: this.iosNotifBadge,
+          data: data.data
+        }
+      );
+    });
+
+    FCN.onNotificationOpened(async data => {
+      remoteLoggerService.info(
+        'pushNotificationService.onNotificationOpened',
+        'Notification received',
+        {
+          title: data.title,
+          body: data.body,
+          badge: this.iosNotifBadge,
+          data: data.data
+        }
+      );
+      this.iosNotifBadge--;
+    });
+
+    remoteLoggerService.info(
+      'pushNotificationService.onNotificationListener',
+      'Notifications registration done'
+    );
+  };
 }
 
 const notificationService = new NotificationService();
