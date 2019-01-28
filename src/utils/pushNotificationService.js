@@ -81,27 +81,27 @@ class NotificationService {
     });
 
   _onNotificationListener = () => {
-    FCM.onMessage(async data => {
+    FCM.onMessage(async message => {
       remoteLoggerService.info(
         'pushNotificationService.onMessage',
         'Message received',
         {
-          title: data.title,
-          body: data.body,
+          title: message.title,
+          body: message.body,
           badge: this.iosNotifBadge,
-          data: data.data
+          data: message.data
         }
       );
 
-      if (data && data.data && data.data.refreshApp === true) {
+      if (message && message.data && message.data.refreshApp === 'true') {
         remoteLoggerService.info(
           'pushNotificationService.onMessage',
           'refresh app',
           {
-            title: data.title,
-            body: data.body,
+            title: message.title,
+            body: notimessagefication.body,
             badge: this.iosNotifBadge,
-            data: data.data
+            data: message.data
           }
         );
         if (await checkConnectivity()) {
@@ -110,29 +110,39 @@ class NotificationService {
         }
         await driveStore.reset();
       }
+
+      if (message && message.data && message.data.resetBadge === 'true') {
+        this.iosNotifBadge = 0;
+      } else {
+        this.iosNotifBadge++;
+      }
     });
 
-    FCN.onNotification(async data => {
+    FCN.onNotification(async notification => {
       remoteLoggerService.info(
         'pushNotificationService.onNotification',
         'Notification received',
         {
-          title: data.title,
-          body: data.body,
+          title: notification.title,
+          body: notification.body,
           badge: this.iosNotifBadge,
-          data: data.data
+          data: notification.data
         }
       );
 
-      if (data && data.data && data.data.refreshApp === 'true') {
+      if (
+        notification &&
+        notification.data &&
+        notification.data.refreshApp === 'true'
+      ) {
         remoteLoggerService.info(
           'pushNotificationService.onNotification',
           'refresh app',
           {
-            title: data.title,
-            body: data.body,
+            title: notification.title,
+            body: notification.body,
             badge: this.iosNotifBadge,
-            data: data.data
+            data: notification.data
           }
         );
         if (await checkConnectivity()) {
@@ -142,18 +152,22 @@ class NotificationService {
         await driveStore.reset();
       }
 
-      if (data && data.data && data.data.resetBadge === 'true') {
+      if (
+        notification &&
+        notification.data &&
+        notification.data.resetBadge === 'true'
+      ) {
         this.iosNotifBadge = 0;
       } else {
         this.iosNotifBadge++;
       }
 
-      if (data && data.title && data.body) {
-        const notification = new firebase.notifications.Notification()
-          .setNotificationId(data.notificationId)
-          .setTitle(data.title)
-          .setBody(data.body)
-          .setData(data.data)
+      if (notification && notification.title && notification.body) {
+        const visualNotification = new firebase.notifications.Notification()
+          .setNotificationId(notification.notificationId)
+          .setTitle(notification.title)
+          .setBody(notification.body)
+          .setData(notification.data)
           .ios.setBadge(this.iosNotifBadge)
           .android.setChannelId(this.androidDefaultChannelId)
           .android.setDefaults(firebase.notifications.Android.Defaults.All);
@@ -162,41 +176,64 @@ class NotificationService {
           'pushNotificationService.onNotification',
           'show notification',
           {
-            title: data.title,
-            body: data.body,
+            title: notification.title,
+            body: notification.body,
             badge: this.iosNotifBadge,
-            data: data.data
+            data: notification.data
           }
         );
-        FCN.displayNotification(notification);
+        FCN.displayNotification(visualNotification);
       }
     });
 
-    FCN.onNotificationDisplayed(async data => {
+    FCN.onNotificationDisplayed(async notification => {
       remoteLoggerService.info(
         'pushNotificationService.onNotificationDisplayed',
         'Notification received',
         {
-          title: data.title,
-          body: data.body,
+          title: notification.title,
+          body: notification.body,
           badge: this.iosNotifBadge,
-          data: data.data
+          data: notification.data
         }
       );
     });
 
-    FCN.onNotificationOpened(async data => {
+    FCN.onNotificationOpened(async notificationOpen => {
+      const action = notificationOpen.action;
+      const notification = notificationOpen.notification;
       remoteLoggerService.info(
         'pushNotificationService.onNotificationOpened',
-        'Notification received',
+        'Notification ' + action + ' received',
         {
-          title: data.title,
-          body: data.body,
+          title: notification.title,
+          body: notification.body,
           badge: this.iosNotifBadge,
-          data: data.data
+          data: notification.data
         }
       );
       this.iosNotifBadge--;
+    });
+
+    FCN.getInitialNotification().then(async notificationOpen => {
+      if (notificationOpen) {
+        // App was opened by a notification
+        // Get the action triggered by the notification being opened
+        const action = notificationOpen.action;
+        // Get information about the notification that was opened
+        const notification = notificationOpen.notification;
+        await remoteLoggerService.info(
+          'pushNotificationService.getInitialNotification',
+          'Notification ' + action + ' received',
+          {
+            title: notification.title,
+            body: notification.body,
+            badge: this.iosNotifBadge,
+            data: notification.data
+          }
+        );
+        this.iosNotifBadge = 0;
+      }
     });
 
     remoteLoggerService.info(
