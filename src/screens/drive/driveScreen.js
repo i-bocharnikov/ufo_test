@@ -471,6 +471,7 @@ class DriveScreen extends Component {
       let isEnabled = await BluetoothStatus.state();
 
       if (Platform.OS === 'android') {
+        /* available android only, ios should be enabled manually */
         isEnabled = await BluetoothStatus.enable();
       }
 
