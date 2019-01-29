@@ -22,6 +22,7 @@ import org.devio.rn.splashscreen.SplashScreenReactPackage;
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
 import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
+import com.solinor.bluetoothstatus.RNBluetoothManagerPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -54,7 +55,8 @@ public class MainApplication extends OtaKeysApplication implements ReactApplicat
           new SplashScreenReactPackage(),
           new RNFirebasePackage(),
           new RNFirebaseMessagingPackage(),
-          new RNFirebaseNotificationsPackage()
+          new RNFirebaseNotificationsPackage(),
+          new RNBluetoothManagerPackage()
       );
     }
 
