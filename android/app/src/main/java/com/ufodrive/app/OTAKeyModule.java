@@ -360,16 +360,16 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
     public void switchToKey( String otaKeyId, final Promise promise  ) {
 
         try {
-            OtaKey usedKey =  getOtaSdk().getCore().getUsedKey();   
+            OtaKey usedKey =  LAST_ENABLED_KEY;   
             if(usedKey == null){
-                usedKey = LAST_ENABLED_KEY;
+                usedKey = getOtaSdk().getCore().getUsedKey();
             }
             if(usedKey == null){
-                promise.reject("Input Invalid", "otaKeyId ["+otaKeyId+"] is not used");
+                promise.reject("Input Invalid: otaKeyId ["+otaKeyId+"] is not used", "otaKeyId ["+otaKeyId+"] is not used");
                 return;
             }
             if(Long.parseLong(otaKeyId) != usedKey.getOtaId()){
-                promise.reject("Input Invalid", "otaKeyId ["+otaKeyId+"] is not the one currently used ["+usedKey.getOtaId()+"]");
+                promise.reject("Input Invalid: otaKeyId ["+otaKeyId+"] is not the one currently used ["+usedKey.getOtaId()+"]", "otaKeyId ["+otaKeyId+"] is not the one currently used ["+usedKey.getOtaId()+"]");
                 return;
             }
             getOtaSdk().getCore().switchToKey(usedKey, new SwitchToKeyCallback() {
