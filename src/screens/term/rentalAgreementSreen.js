@@ -68,16 +68,18 @@ class InspectScreen extends Component {
 
   @action
   doSign = async () => {
+    this.activityPending = true;
     const isSign = await termStore.signRentalAgreement();
 
     if (isSign) {
       await driveStore.refreshRental();
       this.props.navigation.navigate(screens.DRIVE.name);
     }
+
+    this.activityPending = false;
   };
 
   confirmContractSignature = async () => {
-    this.activityPending = true;
     const t = this.props.t;
     const confirmKey = t('term:confirmContractKeyString');
 
