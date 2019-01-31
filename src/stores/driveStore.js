@@ -71,6 +71,9 @@ class Rental {
   @persist @observable message_for_driver = null;
   @persist @observable start_at = null;
   @persist @observable end_at = null;
+  @persist @observable face_capture_required = false;
+  @persist @observable carbon_footprint = null;
+
   @persist('object', Location) @observable location = new Location();
   @persist('object', Car) @observable car = new Car();
   @persist('object', Term) @observable rental_agreement = new Term();

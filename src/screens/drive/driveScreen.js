@@ -31,8 +31,6 @@ import pushNotificationService from './../../utils/pushNotificationService';
 import { keys as screenKeys } from './../../navigators/helpers';
 import { checkServerAvailability } from './../../utils/api';
 import styles from './styles';
-import { checkConnectivity, uploadToApi } from '../../utils/api_deprecated';
-import pushNotificationService from './../../utils/pushNotificationService';
 import remoteLoggerService from '../../utils/remoteLoggerService';
 
 @observer
@@ -512,7 +510,7 @@ class DriveScreen extends Component {
       nextBtnLabel: t('faceRecognizing:validateBtnLabel'),
       handlingErrorMessage: t('faceRecognizing:handlingRentalError')
     };
-    if (!DeviceInfo.isEmulator()) {
+    if (driveStore.rental.face_capture_required && !DeviceInfo.isEmulator()) {
       navigation.navigate(screenKeys.FaceRecognizer, params);
     } else {
       navigation.navigate(screenKeys.RentalAgreement);
