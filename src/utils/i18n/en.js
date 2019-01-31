@@ -56,7 +56,8 @@ export default {
     connectionIsRequired: 'Internet connectivity is required',
     rentalKeyMissing:
       'The key is missing, please contact UFODRIVE if the problem persist.',
-    rentalNotOpen: 'The rental is not yet started, please wait...'
+    rentalNotOpen: 'The rental is not yet started, please wait...',
+    bluetoothNeeded: 'Please enable bluetooth on device and try again'
   },
   icon: {
     reserve: 'Reserve',

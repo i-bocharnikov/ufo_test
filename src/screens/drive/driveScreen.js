@@ -1,29 +1,33 @@
 import React, { Component } from 'react';
-import { View, RefreshControl, ScrollView } from 'react-native';
+import { View, RefreshControl, ScrollView, Platform } from 'react-native';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 import { translate } from 'react-i18next';
 import DeviceInfo from 'react-native-device-info';
+import { BluetoothStatus } from 'react-native-bluetooth-status';
 import _ from 'lodash';
+
+import { driveStore } from './../../stores';
+import appStore from './../../stores/appStore';
+import otaKeyStore from './../../stores/otaKeyStore';
+import registerStore from './../../stores/registerStore';
 import UFOHeader from './../../components/header/UFOHeader';
 import UFOActionBar from './../../components/UFOActionBar';
 import { UFOContainer, UFOText } from './../../components/common';
+import UFOCard from './../../components/UFOCard';
+import UFOSlider from './../../components/UFOSlider';
+import UFOPopover from './../../components/UFOPopover';
+import DriveCard from './driveCard';
 import {
   screens,
   actionStyles,
   icons,
   backgrounds
 } from './../../utils/global';
-import appStore from './../../stores/appStore';
-import { driveStore } from './../../stores';
-import otaKeyStore from './../../stores/otaKeyStore';
-import registerStore from './../../stores/registerStore';
-import UFOCard from './../../components/UFOCard';
-import UFOSlider from './../../components/UFOSlider';
-import UFOPopover from './../../components/UFOPopover';
-import DriveCard from './driveCard';
 import { confirm, showToastError } from './../../utils/interaction';
 import { checkAndRequestLocationPermission } from './../../utils/permissions';
+import { checkConnectivity, uploadToApi } from '../../utils/api_deprecated';
+import pushNotificationService from './../../utils/pushNotificationService';
 import { keys as screenKeys } from './../../navigators/helpers';
 import { checkServerAvailability } from './../../utils/api';
 import styles from './styles';
@@ -257,10 +261,12 @@ class DriveScreen extends Component {
 
   doCloseRental = async () => {
     this.activityPending = true;
+
     if (driveStore.rental && driveStore.rental.key_id) {
       await otaKeyStore.lockDoors(false, false);
       await otaKeyStore.endKey(driveStore.rental.key_id);
     }
+
     await driveStore.closeRental();
     this.returnSelected = false;
     this.driveSelected = false;
@@ -282,6 +288,20 @@ class DriveScreen extends Component {
       this.activityPending = false;
       return;
     }
+
+    const isBleEnabled = await this.checkBluetoothState();
+    if (!isBleEnabled) {
+      showToastError(this.props.t('error:bluetoothNeeded'));
+      await remoteLoggerService.error(
+        'enableKey',
+        this.props.t('error:bluetoothNeeded'),
+        {},
+        otaKeyStore.key
+      );
+      this.activityPending = false;
+      return;
+    }
+
     if (!driveStore.rental.key_id) {
       showToastError(this.props.t('error:rentalKeyMissing'));
       await remoteLoggerService.error(
@@ -325,6 +345,19 @@ class DriveScreen extends Component {
       return;
     }
 
+    const isBleEnabled = await this.checkBluetoothState();
+    if (!isBleEnabled) {
+      showToastError(this.props.t('error:bluetoothNeeded'));
+      await remoteLoggerService.error(
+        'unlockCar',
+        this.props.t('error:bluetoothNeeded'),
+        {},
+        otaKeyStore.key
+      );
+      this.activityPending = false;
+      return;
+    }
+
     if (!driveStore.inUse) {
       showToastError(this.props.t('error:rentalNotOpen'));
       await remoteLoggerService.error(
@@ -348,7 +381,9 @@ class DriveScreen extends Component {
       return;
     }
 
-    if (await checkConnectivity()) await this.doEnableAndSwitch();
+    if (await checkConnectivity()) {
+      await this.doEnableAndSwitch();
+    }
 
     if (!DeviceInfo.isEmulator() && !otaKeyStore.isConnected) {
       await otaKeyStore.connect(
@@ -378,6 +413,19 @@ class DriveScreen extends Component {
       return;
     }
 
+    const isBleEnabled = await this.checkBluetoothState();
+    if (!isBleEnabled) {
+      showToastError(this.props.t('error:bluetoothNeeded'));
+      await remoteLoggerService.error(
+        'lockCar',
+        this.props.t('error:bluetoothNeeded'),
+        {},
+        otaKeyStore.key
+      );
+      this.activityPending = false;
+      return;
+    }
+
     if (!driveStore.inUse) {
       showToastError(this.props.t('error:rentalNotOpen'));
       await remoteLoggerService.error(
@@ -402,7 +450,9 @@ class DriveScreen extends Component {
       return;
     }
 
-    if (await checkConnectivity()) await this.doEnableAndSwitch();
+    if (await checkConnectivity()) {
+      await this.doEnableAndSwitch();
+    }
 
     if (!DeviceInfo.isEmulator() && !otaKeyStore.isConnected) {
       await otaKeyStore.connect(
@@ -486,6 +536,21 @@ class DriveScreen extends Component {
       }
 
       return false;
+    } catch (error) {
+      return false;
+    }
+  };
+
+  checkBluetoothState = async () => {
+    try {
+      let isEnabled = await BluetoothStatus.state();
+
+      if (Platform.OS === 'android') {
+        /* available android only, ios should be enabled manually */
+        isEnabled = await BluetoothStatus.enable();
+      }
+
+      return isEnabled;
     } catch (error) {
       return false;
     }
