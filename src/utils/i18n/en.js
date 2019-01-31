@@ -67,7 +67,7 @@ export default {
     found: 'Car found',
     inspect: 'Inspect',
     return: 'Return',
-    where: 'Where',
+    where: 'Direction',
     rentalAgreement: 'Start rental',
     back: 'Back',
     next: 'Next',
