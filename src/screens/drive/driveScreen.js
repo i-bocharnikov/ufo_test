@@ -28,12 +28,10 @@ import { confirm, showToastError } from './../../utils/interaction';
 import { checkAndRequestLocationPermission } from './../../utils/permissions';
 import { checkConnectivity, uploadToApi } from '../../utils/api_deprecated';
 import pushNotificationService from './../../utils/pushNotificationService';
+import remoteLoggerService from '../../utils/remoteLoggerService';
 import { keys as screenKeys } from './../../navigators/helpers';
 import { checkServerAvailability } from './../../utils/api';
 import styles from './styles';
-import { checkConnectivity, uploadToApi } from '../../utils/api_deprecated';
-import pushNotificationService from './../../utils/pushNotificationService';
-import remoteLoggerService from '../../utils/remoteLoggerService';
 
 @observer
 class DriveScreen extends Component {
