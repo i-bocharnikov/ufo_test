@@ -7,11 +7,11 @@ import { translate } from 'react-i18next';
 import { keys as screenKeys } from './../../navigators/helpers';
 import appStore from './../../stores/appStore';
 import registerStore from './../../stores/registerStore';
-import { UFOContainer, UFOLoader, UFOImage } from './../../components/common';
+import { driveStore } from './../../stores';
+import { UFOContainer, UFOImage } from './../../components/common';
 import UFOSlider from './../../components/UFOSlider';
 import styles from './styles';
 import { images, values } from './../../utils/theme';
-import { driveStore } from '../../stores';
 
 const SCREEN_WIDTH = Dimensions.get('screen').width;
 
@@ -58,18 +58,15 @@ class LaunchScreen extends Component {
     return (
       <UFOContainer
         style={styles.container}
-        image={appStore.isAppReady ? images.BG_HOME002 : images.BG_LAUNCH}
+        image={appStore.isAppReady ? images.BG_HOME002 : null}
       >
         {appStore.isAppReady && this.renderSlider()}
-        <UFOLoader isVisible={!appStore.isAppReady} />
       </UFOContainer>
     );
   }
 
   renderSlider = () => {
-    const { showSkipBtn, showNextBtn } = this.slidesData[
-      this.state.activeSlideIndex
-    ];
+    const { showSkipBtn, showNextBtn } = this.slidesData[this.state.activeSlideIndex];
 
     return (
       <View style={styles.sliderWrapper}>

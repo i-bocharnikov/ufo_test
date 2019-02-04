@@ -6,7 +6,8 @@ export default StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    backgroundColor: colors.BG_INVERT
   },
 
   sliderWrapper: {
