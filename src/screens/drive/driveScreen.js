@@ -32,6 +32,7 @@ import remoteLoggerService from '../../utils/remoteLoggerService';
 import { keys as screenKeys } from './../../navigators/helpers';
 import { checkServerAvailability } from './../../utils/api';
 import styles from './styles';
+import { videos } from './../../utils/theme';
 
 @observer
 class DriveScreen extends Component {
@@ -72,7 +73,10 @@ class DriveScreen extends Component {
       : backgrounds.HOME002;
 
     return (
-      <UFOContainer image={background}>
+      <UFOContainer
+        video={videos.landscapeHD}
+        image={background}
+       >
         <UFOHeader
           transparent={true}
           logo={true}
