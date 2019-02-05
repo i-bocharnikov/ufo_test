@@ -60,5 +60,6 @@ buck-out/
 */fastlane/Preview.html
 */fastlane/screenshots
 
+# Local data like notes and guidance about project
 _api
-/src/components/UFODatePickerModalV2
+_mate_data
