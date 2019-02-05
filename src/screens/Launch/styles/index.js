@@ -3,6 +3,10 @@ import { StyleSheet } from 'react-native';
 import { colors, textThemes } from './../../../utils/theme';
 
 export default StyleSheet.create({
+  screenWraper: {
+    flex: 1
+  },
+
   container: {
     flex: 1,
     alignItems: 'center',

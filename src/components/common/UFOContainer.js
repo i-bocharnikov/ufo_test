@@ -23,7 +23,23 @@ const styles = StyleSheet.create({
 export default class UFOContainer extends Component {
   constructor() {
     super();
-    this.state = { videoBgFailure: false };
+    this.state = {
+      videoBgFailure: false,
+      hideVideo: false
+    };
+  }
+
+  componentDidUpdate(prevProps) {
+    const video = this.props.video;
+    const prevVideo = prevProps.video;
+
+    /* fix for issue, when video changes to new source, videoView saves previous sides ratio */
+    if (video && prevVideo && video !== prevVideo) {
+      this.setState(
+        { hideVideo: true },
+        () => this.setState({ hideVideo: false })
+      );
+    }
   }
 
   render() {
@@ -62,6 +78,10 @@ export default class UFOContainer extends Component {
 
   get containerVideoBg() {
     const { video, image, children, style, shadowVideo } = this.props;
+
+    if (this.state.hideVideo) {
+      return this.containerDefault;
+    }
 
     if (this.state.videoBgFailure) {
       return image ? this.containerImageBg : this.containerDefault;

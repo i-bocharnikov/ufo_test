@@ -26,7 +26,7 @@ import { StyleProvider } from 'native-base';
 import getTheme from './../native-base-theme/components';
 
 /* Handling some errors */
-YellowBox.ignoreWarnings(['Module RNI18n requires main queue setup']);
+YellowBox.ignoreWarnings([ 'Module RNI18n requires main queue setup' ]);
 
 const errorHandler = (error, isFatal) => {
   if (isFatal) {
@@ -44,7 +44,6 @@ const errorHandler = (error, isFatal) => {
       { text: i18n.t('common:closeBtn') }
     ]);
   } else {
-    const message = i18n.t('error:jsException');
     remoteLoggerService
       .warn(
         'errorHandler',
@@ -60,12 +59,9 @@ const errorHandler = (error, isFatal) => {
 setJSExceptionHandler(errorHandler);
 
 setNativeExceptionHandler(exceptionStr => {
-  const message = i18n.t('error:nativeException');
   remoteLoggerService
-    .error('NativeExceptionHandler', 'Fatal Native Exception', {
-      message: exceptionStr
-    })
-    .catch(error => {});
+    .error('NativeExceptionHandler', 'Fatal Native Exception', { message: exceptionStr })
+    .catch(error => null);
 });
 
 /* Root App component */
@@ -123,14 +119,14 @@ class App extends Component {
       transform: [
         {
           scale: this.loadingProgress.interpolate({
-            inputRange: [0, 100],
-            outputRange: [1, 32]
+            inputRange: [ 0, 100 ],
+            outputRange: [ 1, 32 ]
           })
         }
       ],
       opacity: this.loadingProgress.interpolate({
-        inputRange: [0, 50, 100],
-        outputRange: [1, 0.8, 0]
+        inputRange: [ 0, 50, 100 ],
+        outputRange: [ 1, 0.8, 0 ]
       })
     };
   }
@@ -143,7 +139,7 @@ class App extends Component {
       duration: 1200,
       easing: Easing.ease
     }
-  ).start(() => ( this.animationDone = false ));
+  ).start(() => ( this.animationDone = true ));
 }
 
 export default App;
