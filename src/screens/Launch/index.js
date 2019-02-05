@@ -36,7 +36,7 @@ class LaunchScreen extends Component {
         showSkipBtn: true,
         showNextBtn: false,
         image: null,
-        video: videos.portrait
+        video: videos.test_portrait
       },
       {
         title: props.t('slideThreeTitle'),
@@ -45,7 +45,7 @@ class LaunchScreen extends Component {
         showSkipBtn: false,
         showNextBtn: true,
         image: null,
-        video: videos.portraitHD
+        video: videos.test_portraitHD
       }
     ];
     this.state = { activeSlideIndex: 0 };
@@ -58,7 +58,7 @@ class LaunchScreen extends Component {
     await appStore.initialise();
 
     if (registerStore.isUserRegistered && driveStore.hasRentals) {
-      //this.navToApp();
+      this.navToApp();
     }
   }
 

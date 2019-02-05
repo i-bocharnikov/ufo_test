@@ -74,7 +74,7 @@ class DriveScreen extends Component {
 
     return (
       <UFOContainer
-        video={videos.landscapeHD}
+        video={videos.test_landscapeHD}
         image={background}
        >
         <UFOHeader
