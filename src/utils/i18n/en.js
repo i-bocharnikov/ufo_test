@@ -144,7 +144,7 @@ export default {
     devicePermissionTitle: 'Permission to use {{type}}',
     cameraPermissionMessage:
       "We need your permission to use your phone's camera",
-    disconnectConfirmationMessage: 'Are you sure you want to disconnect?',
+    disconnectConfirmationMessage: 'Are you sure you want to logout?',
     idCardPickerLabel: 'Passport\nor ID card',
     driveCardPickerLabel: 'Driving\nLicense',
     shareDialogTitle: 'Share referal code',

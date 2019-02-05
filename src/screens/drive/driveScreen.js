@@ -510,7 +510,7 @@ class DriveScreen extends Component {
       nextBtnLabel: t('faceRecognizing:validateBtnLabel'),
       handlingErrorMessage: t('faceRecognizing:handlingRentalError')
     };
-    if (!DeviceInfo.isEmulator()) {
+    if (driveStore.rental.face_capture_required && !DeviceInfo.isEmulator()) {
       navigation.navigate(screenKeys.FaceRecognizer, params);
     } else {
       navigation.navigate(screenKeys.RentalAgreement);
