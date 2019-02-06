@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { translate } from 'react-i18next';
-import { Dimensions, View, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { observer } from 'mobx-react';
 import { observable, action } from 'mobx';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { Body } from 'native-base';
 
 import UFOCamera from './../../components/UFOCamera';
 import UFOHeader from '../../components/header/UFOHeader';
@@ -12,11 +13,6 @@ import { UFOContainer, UFOImage } from '../../components/common';
 import { screens, actionStyles, icons, dims } from '../../utils/global';
 import { inspectStore } from '../../stores';
 import UFOCard from '../../components/UFOCard';
-import { Body } from 'native-base';
-import { checkAndRequestCameraPermission } from '../../utils/permissions';
-
-const DEVICE_WIDTH = Dimensions.get('window').width;
-const DEVICE_HEIGHT = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
   container: {
@@ -26,12 +22,18 @@ const styles = StyleSheet.create({
     bottom: 0,
     right: 0
   },
-  preview: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    bottom: 0,
-    right: 0
+  bodyCheckContent: {
+    paddingTop: 10,
+    paddingHorizontal: dims.CONTENT_PADDING_HORIZONTAL,
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignContent: 'center'
+  },
+  bodyCheckImage: {
+    width: dims.DEVICE_WIDTH * 0.7,
+    height: dims.DEVICE_HEIGHT * 0.5,
+    alignSelf: 'center'
   }
 });
 
@@ -40,11 +42,6 @@ class CaptureDamageScreen extends Component {
   @observable documentUri = null;
   @observable activityPending = false;
   @observable isCameraAllowed = false;
-
-  async componentDidMount() {
-    this.documentUri = null;
-    //this.isCameraAllowed = await checkAndRequestCameraPermission()
-  }
 
   @action
   doCapture = async () => {
@@ -101,25 +98,12 @@ class CaptureDamageScreen extends Component {
           currentScreen={screens.INSPECT_CAPTURE}
           logo
         />
-        <View
-          style={{
-            paddingTop: 10,
-            paddingHorizontal: dims.CONTENT_PADDING_HORIZONTAL,
-            flex: 1,
-            flexDirection: 'column',
-            justifyContent: 'flex-start',
-            alignContent: 'center'
-          }}
-        >
+        <View style={styles.bodyCheckContent}>
           <UFOCard title={t('inspect:captureCheckGuidance')}>
             <Body>
               <UFOImage
                 source={{ uri: this.documentUri }}
-                style={{
-                  width: dims.DEVICE_WIDTH * 0.7,
-                  height: dims.DEVICE_HEIGHT * 0.5,
-                  alignSelf: 'center'
-                }}
+                style={styles.bodyCheckImage}
               />
             </Body>
           </UFOCard>
@@ -175,4 +159,4 @@ class CaptureDamageScreen extends Component {
   }
 }
 
-export default translate('translations')(CaptureDamageScreen);
+export default translate()(CaptureDamageScreen);
