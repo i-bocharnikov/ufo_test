@@ -77,7 +77,6 @@ class InspectScreen extends Component {
   };
 
   confirmContractSignature = async () => {
-    this.activityPending = true;
     const t = this.props.t;
     const confirmKey = t('term:confirmContractKeyString');
 
@@ -87,6 +86,7 @@ class InspectScreen extends Component {
           'confirmContractSignature',
           `confirmation accepted: Input ${str} does match confirmKey ${confirmKey}`
         );
+        this.activityPending = true;
         await this.doSign();
         this.activityPending = false;
         return;
