@@ -4,6 +4,7 @@ import { RNCamera } from 'react-native-camera';
 import ImageRotate from 'react-native-image-rotate';
 import PropTypes from 'prop-types';
 import i18n from 'i18next';
+import { withNavigationFocus } from 'react-navigation';
 
 import { showWarning } from './../utils/interaction';
 import { checkAndRequestCameraPermission } from './../utils/permissions';
@@ -59,7 +60,7 @@ const styles = StyleSheet.create({
   }
 });
 
-export default class UFOCamera extends React.Component {
+class UFOCamera extends React.Component {
   constructor() {
     super();
     this.camera = null;
@@ -80,10 +81,10 @@ export default class UFOCamera extends React.Component {
   }
 
   render() {
-    const { showTorchBtn, torchBtnTopIndent, ...restCameraProps } = this.props;
+    const { showTorchBtn, torchBtnTopIndent, isFocused, ...restCameraProps } = this.props;
     const { hasPermit, flashMode } = this.state;
 
-    return hasPermit ? (
+    return hasPermit && isFocused ? (
       <RNCamera
         style={styles.preview}
         type={RNCAMERA_CONSTANTS.Type.back}
@@ -177,5 +178,9 @@ UFOCamera.propTypes = {
   forbiddenCallback: PropTypes.func,
   torchBtnTopIndent: PropTypes.number,
   showTorchBtn: PropTypes.bool,
+  /* taken from withNavigationFocus HOC */
+  isFocused: PropTypes.bool,
   ...RNCamera.propTypes
 };
+
+export default withNavigationFocus(UFOCamera);

@@ -26,7 +26,6 @@ const SCREEN_AREA = SCREEN_WIDTH * SCREEN_HEIGHT;
 @observer
 class FaceRecognizer extends Component {
   @observable isCameraAllowed = false;
-  @observable isScreenFocused = true;
 
   @observable detectedFaces = [];
   @observable capturedImgUri = null;
@@ -45,13 +44,7 @@ class FaceRecognizer extends Component {
   minValidFaceArea = 0.12;
 
   componentDidMount() {
-    /* exist bug of RNCamera when screen is blur in navigator */
-    this.props.navigation.addListener('willFocus', () => {
-      this.isScreenFocused = true;
-    });
-
     this.props.navigation.addListener('willBlur', () => {
-      this.isScreenFocused = false;
       this.handlingWasFailure = false;
     });
   }
@@ -72,17 +65,15 @@ class FaceRecognizer extends Component {
           />
         ) : (
           <Fragment>
-            {this.isScreenFocused && (
-              <UFOCamera
-                ref={ref => (this.cameraRef = ref)}
-                onCameraReady={this.onCameraReady}
-                onFacesDetected={this.onFacesDetected}
-                onFaceDetectionError={this.onFaceDetectionError}
-                showTorchBtn={false}
-                defaultVideoQuality={RNCAMERA_CONSTANTS.VideoQuality['720p']}
-                type={RNCAMERA_CONSTANTS.Type.front}
-              />
-            )}
+            <UFOCamera
+              ref={ref => (this.cameraRef = ref)}
+              onCameraReady={this.onCameraReady}
+              onFacesDetected={this.onFacesDetected}
+              onFaceDetectionError={this.onFaceDetectionError}
+              showTorchBtn={false}
+              defaultVideoQuality={RNCAMERA_CONSTANTS.VideoQuality['720p']}
+              type={RNCAMERA_CONSTANTS.Type.front}
+            />
             {!this.isPending && this.detectedFaces.map(face => (
               <View
                 key={face.faceID}
@@ -319,7 +310,7 @@ class FaceRecognizer extends Component {
    * capture and handle image
   */
   captureFace = async () => {
-    if (!this.isCameraAllowed || !this.cameraRef || !this.isScreenFocused) {
+    if (!this.isCameraAllowed || !this.cameraRef) {
       return;
     }
 
