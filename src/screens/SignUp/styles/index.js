@@ -119,7 +119,5 @@ export default StyleSheet.create({
     textShadowRadius: 4
   },
 
-  cardCameraBackground: { opacity: 0.6 },
-
   inputMiles: { marginTop: GAP_BETWEEN }
 });

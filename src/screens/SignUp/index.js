@@ -12,6 +12,7 @@ import {
 import { observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { translate } from 'react-i18next';
+import DeviceInfo from 'react-native-device-info';
 
 import { keys as screenKeys } from './../../navigators/helpers';
 import registerStore from './../../stores/registerStore';
@@ -27,7 +28,6 @@ import {
 } from './../../components/common';
 import { screens, images, actionStyles, icons } from './../../utils/global';
 import styles from './styles';
-import DeviceInfo from 'react-native-device-info';
 
 @observer
 class SignUpScreen extends Component {
