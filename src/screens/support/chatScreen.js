@@ -13,7 +13,7 @@ import configurations from '../../utils/configurations';
 import { driveStore } from '../../stores';
 import remoteLoggerService from '../../utils/remoteLoggerService';
 
-const CHAT_TAWKTO = true;
+const CHAT_TAWKTO = false;
 
 const styles = StyleSheet.create({
   header: {},
@@ -87,44 +87,70 @@ class ChatScreen extends Component {
 
   render() {
     // for CHAT_TAWKTO
+    if (CHAT_TAWKTO === true) {
+      let name = registerStore.user.last_name
+        ? `${registerStore.user.first_name} ${registerStore.user.last_name} - ${
+            registerStore.user.reference
+          }`
+        : `Anonymous - ${registerStore.user.reference}`;
+      let contact = name;
+      if (registerStore.user.email) {
+        contact = contact + ` - ${registerStore.user.email}`;
+      }
+      if (registerStore.user.phone_number) {
+        contact = contact + ` - ${registerStore.user.phone_number}`;
+      }
 
-    let name = registerStore.user.last_name
-      ? `${registerStore.user.first_name} ${registerStore.user.last_name} - ${
-          registerStore.user.reference
-        }`
-      : `Anonymous - ${registerStore.user.reference}`;
-    let contact = name;
-    if (registerStore.user.email) {
-      contact = contact + ` / ${registerStore.user.email}`;
-    }
-    if (registerStore.user.phone_number) {
-      contact = contact + ` / ${registerStore.user.phone_number}`;
-    }
+      let params = `reference=${
+        registerStore.user.reference
+      }&contact=${contact}`;
 
-    let params = `reference=${registerStore.user.reference}&contact=${contact}`;
-
-    params =
-      params +
-      `&app=${DeviceInfo.getSystemName()} / ${configurations.UFO_APP_NAME} / ${
-        configurations.UFO_APP_VERSION
-      } / ${configurations.UFO_APP_BUILD_NUMBER}`;
-
-    params =
-      params +
-      `&bookings=${driveStore.rentals.map(rental => {
-        return rental.reference + ` (${rental.status}); `;
-      })}`;
-
-    if (
-      registerStore.user.email &&
-      registerStore.support_chat_identification_key
-    ) {
       params =
         params +
-        `&name=${name}&email=${registerStore.user.email}&hash=${
-          registerStore.support_chat_identification_key
+        `&app=${DeviceInfo.getSystemName()} - ${
+          configurations.UFO_APP_NAME
+        } - ${configurations.UFO_APP_VERSION} - ${
+          configurations.UFO_APP_BUILD_NUMBER
         }`;
+
+      params =
+        params +
+        `&bookings=${driveStore.rentals.map(rental => {
+          return rental.reference + ` (${rental.status}); `;
+        })}`;
+
+      if (
+        registerStore.user.email &&
+        registerStore.support_chat_identification_key
+      ) {
+        params =
+          params +
+          `&name=${name}&email=${registerStore.user.email}&hash=${
+            registerStore.support_chat_identification_key
+          }`;
+      }
+
+      remoteLoggerService.info(
+        'chatScreen.openChat',
+        `TAWK.TO for User ${
+          registerStore.user ? registerStore.user.reference : ''
+        } in state ${registerStore.user ? registerStore.user.status : ''}`,
+        {
+          params: params
+        },
+        registerStore.user
+      );
+    } else {
+      remoteLoggerService.info(
+        'chatScreen.openChat',
+        `JIVO CHAT for User ${
+          registerStore.user ? registerStore.user.reference : ''
+        } in state ${registerStore.user ? registerStore.user.status : ''}`,
+        {},
+        registerStore.user
+      );
     }
+
     return (
       <UFOContainer style={{ backgroundColor: 'white' }}>
         <UFOHeader
@@ -151,6 +177,7 @@ class ChatScreen extends Component {
               domStorageEnabled={true}
               startInLoadingState={true}
               style={styles.chat}
+              renderLoading={this.indicator}
               useWebKit={true}
               bounces={false}
             />
@@ -159,7 +186,9 @@ class ChatScreen extends Component {
             <WebView
               ref={ref => (this.browser = ref)}
               source={{
-                uri: `https://resources.ufodrive.com/support/chat.html?${params}`
+                uri: `https://resources.ufodrive.com/support/chat.html?${encodeURIComponent(
+                  params
+                )}`
               }}
               originWhitelist={['*']}
               javaScriptEnabled={true}
