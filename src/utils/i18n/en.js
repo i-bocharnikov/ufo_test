@@ -56,7 +56,8 @@ export default {
     connectionIsRequired: 'Internet connectivity is required',
     rentalKeyMissing:
       'The key is missing, please contact UFODRIVE if the problem persist.',
-    rentalNotOpen: 'The rental is not yet started, please wait...'
+    rentalNotOpen: 'The rental is not yet started, please wait...',
+    bluetoothNeeded: 'Please enable bluetooth on device and try again'
   },
   icon: {
     reserve: 'Reserve',
@@ -67,7 +68,7 @@ export default {
     found: 'Car found',
     inspect: 'Inspect',
     return: 'Return',
-    where: 'Where',
+    where: 'Direction',
     rentalAgreement: 'Start rental',
     back: 'Back',
     next: 'Next',
@@ -143,7 +144,7 @@ export default {
     devicePermissionTitle: 'Permission to use {{type}}',
     cameraPermissionMessage:
       "We need your permission to use your phone's camera",
-    disconnectConfirmationMessage: 'Are you sure you want to disconnect?',
+    disconnectConfirmationMessage: 'Are you sure you want to logout?',
     idCardPickerLabel: 'Passport\nor ID card',
     driveCardPickerLabel: 'Driving\nLicense',
     shareDialogTitle: 'Share referal code',

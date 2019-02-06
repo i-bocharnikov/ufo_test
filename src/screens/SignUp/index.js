@@ -25,17 +25,12 @@ import {
   UFOImage,
   UFOIcon_old
 } from './../../components/common';
-import {
-  screens,
-  images,
-  actionStyles,
-  icons
-} from './../../utils/global';
+import { screens, images, actionStyles, icons } from './../../utils/global';
 import styles from './styles';
+import DeviceInfo from 'react-native-device-info';
 
 @observer
 class SignUpScreen extends Component {
-
   @observable refreshing = false;
 
   async componentDidMount() {
@@ -51,13 +46,15 @@ class SignUpScreen extends Component {
     return (
       <UFOIcon_old
         icon={icons.VALIDATE}
-        style={[ styles.inputIcon, extraStyles ]}
+        style={[styles.inputIcon, extraStyles]}
       />
     );
   }
 
   renderIdCardBlock() {
-    const isFilled = registerStore.identificationFrontDocument && registerStore.identificationBackDocument;
+    const isFilled =
+      registerStore.identificationFrontDocument &&
+      registerStore.identificationBackDocument;
 
     return isFilled ? (
       <Fragment>
@@ -72,16 +69,14 @@ class SignUpScreen extends Component {
         {this.renderIcon(styles.cardIcon)}
       </Fragment>
     ) : (
-      <Image
-        source={images.photoPicker}
-        style={styles.cardPickerImg}
-      />
+      <Image source={images.photoPicker} style={styles.cardPickerImg} />
     );
   }
 
   renderDriverCardBlock() {
-    const isFilled = registerStore.driverLicenceFrontDocument
-      && registerStore.driverLicenceBackDocument;
+    const isFilled =
+      registerStore.driverLicenceFrontDocument &&
+      registerStore.driverLicenceBackDocument;
 
     return isFilled ? (
       <Fragment>
@@ -96,10 +91,7 @@ class SignUpScreen extends Component {
         {this.renderIcon(styles.cardIcon)}
       </Fragment>
     ) : (
-      <Image
-        source={images.photoPicker}
-        style={styles.cardPickerImg}
-      />
+      <Image source={images.photoPicker} style={styles.cardPickerImg} />
     );
   }
 
@@ -163,7 +155,7 @@ class SignUpScreen extends Component {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[ styles.cardWrapper, styles.leftGap ]}
+              style={[styles.cardWrapper, styles.leftGap]}
               onPress={this.navToDriverCardScreen}
               activeOpacity={0.8}
             >
@@ -175,17 +167,14 @@ class SignUpScreen extends Component {
           </View>
           {hasReferalCode && (
             <TouchableOpacity
-              style={[ styles.referalBlock, styles.topGap ]}
+              style={[styles.referalBlock, styles.topGap]}
               onPress={this.shareRefCode}
               activeOpacity={0.8}
             >
               <Text style={styles.referalLabel}>
                 {t('register:referalBlock', { code: refCode })}
               </Text>
-              <Image
-                source={images.shareRef}
-                style={styles.referalImg}
-              />
+              <Image source={images.shareRef} style={styles.referalImg} />
             </TouchableOpacity>
           )}
           {registerStore.isUserRegistered && (
@@ -222,14 +211,17 @@ class SignUpScreen extends Component {
       });
 
       actions.push({
-        style: registerStore.isConnected ? actionStyles.TODO : actionStyles.DISABLE,
+        style: registerStore.isConnected
+          ? actionStyles.TODO
+          : actionStyles.DISABLE,
         icon: icons.DONE,
         onPress: () => navigation.navigate(screens.HOME.name)
       });
-
     } else {
       actions.push({
-        style: registerStore.isCurrentPhoneValid ? actionStyles.TODO : actionStyles.ACTIVE,
+        style: registerStore.isCurrentPhoneValid
+          ? actionStyles.TODO
+          : actionStyles.ACTIVE,
         icon: icons.LOGIN,
         onPress: async () => navigation.navigate(screens.REGISTER_PHONE.name)
       });
@@ -259,18 +251,21 @@ class SignUpScreen extends Component {
       description: t('faceRecognizing:registerCaptureDescription'),
       autohandling: true
     };
-
-    navigation.navigate(screenKeys.FaceRecognizer, params);
+    if (registerStore.user.face_capture_required && !DeviceInfo.isEmulator()) {
+      navigation.navigate(screenKeys.FaceRecognizer, params);
+    } else {
+      this.props.navigation.navigate(screens.REGISTER_IDENTIFICATION.name, {
+        frontImageUrl: registerStore.identificationFrontDocument,
+        backImageUrl: registerStore.identificationBackDocument
+      });
+    }
   };
 
   navToDriverCardScreen = () => {
-    this.props.navigation.navigate(
-      screens.REGISTER_DRIVER_LICENCE.name,
-      {
-        frontImageUrl: registerStore.driverLicenceFrontDocument,
-        backImageUrl: registerStore.driverLicenceBackDocument
-      }
-    );
+    this.props.navigation.navigate(screens.REGISTER_DRIVER_LICENCE.name, {
+      frontImageUrl: registerStore.driverLicenceFrontDocument,
+      backImageUrl: registerStore.driverLicenceBackDocument
+    });
   };
 
   navToMilesScreen = () => {
@@ -295,13 +290,12 @@ class SignUpScreen extends Component {
     /* handle id card front */
     registerStore.user.identificationFrontDocument = 'loading';
     if (registerStore.user.identification_scan_front_side) {
-
-      const imgRef = registerStore.user.identification_scan_front_side.reference;
+      const imgRef =
+        registerStore.user.identification_scan_front_side.reference;
       const imgData = await registerStore.downloadDocument(imgRef);
       registerStore.identificationFrontDocument = imgData
         ? `data:image/png;base64,${imgData}`
         : null;
-
     } else {
       registerStore.identificationFrontDocument = null;
     }
@@ -309,13 +303,11 @@ class SignUpScreen extends Component {
     /* handle id card back */
     registerStore.user.identificationBackDocument = 'loading';
     if (registerStore.user.identification_scan_back_side) {
-
       const imgRef = registerStore.user.identification_scan_back_side.reference;
       const imgData = await registerStore.downloadDocument(imgRef);
       registerStore.identificationBackDocument = imgData
         ? `data:image/png;base64,${imgData}`
         : null;
-
     } else {
       registerStore.identificationBackDocument = null;
     }
@@ -323,12 +315,12 @@ class SignUpScreen extends Component {
     /* handle drive card front */
     registerStore.user.driverLicenceFrontDocument = 'loading';
     if (registerStore.user.driver_licence_scan_front_side) {
-      const imgRef = registerStore.user.driver_licence_scan_front_side.reference;
+      const imgRef =
+        registerStore.user.driver_licence_scan_front_side.reference;
       const imgData = await registerStore.downloadDocument(imgRef);
       registerStore.driverLicenceFrontDocument = imgData
         ? `data:image/png;base64,${imgData}`
         : null;
-
     } else {
       registerStore.driverLicenceFrontDocument = null;
     }
@@ -341,7 +333,6 @@ class SignUpScreen extends Component {
       registerStore.driverLicenceBackDocument = imgData
         ? `data:image/png;base64,${imgData}`
         : null;
-
     } else {
       registerStore.driverLicenceBackDocument = null;
     }
@@ -370,7 +361,7 @@ class SignUpScreen extends Component {
 
       return isSuccess;
     } catch (error) {
-      return false
+      return false;
     }
   };
 }

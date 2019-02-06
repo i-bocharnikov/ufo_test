@@ -62,6 +62,7 @@
 		F576CEE321AEEA0700D02887 /* SofiaProSemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F576CEB021AEEA0700D02887 /* SofiaProSemiBold.ttf */; };
 		F57C17FF21B0318700C77524 /* libTPSStripe.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F57C17FE21B0316F00C77524 /* libTPSStripe.a */; };
 		F5B4E9B321D37267003E8F41 /* libReactNativeExceptionHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5D48253218991E900943D6B /* libReactNativeExceptionHandler.a */; };
+		F5B674C7220068EE00468141 /* libRNBluetoothManager.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5B674BD220068D600468141 /* libRNBluetoothManager.a */; };
 		F5CBC2DF21F9C19200754700 /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5CBC2DE21F9C16100754700 /* libRNFirebase.a */; };
 		F5CD80AC21AEAD84005F86F6 /* libRNCardIO.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5CD80A521AEAD65005F86F6 /* libRNCardIO.a */; };
 		F5D4833E2189AFAD00943D6B /* libRNImageRotate.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5D4833D2189AE7800943D6B /* libRNImageRotate.a */; };
@@ -363,6 +364,13 @@
 			remoteGlobalIDString = 3A3A7F1A1DC27B520030F9DC;
 			remoteInfo = TPSStripe;
 		};
+		F5B674BC220068D600468141 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5B6748B220068D600468141 /* RNBluetoothManager.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNBluetoothManager;
+		};
 		F5CBC2DD21F9C16100754700 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F5CBC2D921F9C16000754700 /* RNFirebase.xcodeproj */;
@@ -530,6 +538,7 @@
 		F54D9A922194815400FE4741 /* LRDRCTSimpleToast.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LRDRCTSimpleToast.xcodeproj; path = "../node_modules/react-native-simple-toast/ios/LRDRCTSimpleToast.xcodeproj"; sourceTree = "<group>"; };
 		F576CEB021AEEA0700D02887 /* SofiaProSemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = SofiaProSemiBold.ttf; path = ../src/assets/fonts/SofiaProSemiBold.ttf; sourceTree = "<group>"; };
 		F57C17C521B0316F00C77524 /* TPSStripe.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TPSStripe.xcodeproj; path = "../node_modules/tipsi-stripe/ios/TPSStripe.xcodeproj"; sourceTree = "<group>"; };
+		F5B6748B220068D600468141 /* RNBluetoothManager.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNBluetoothManager.xcodeproj; path = "../node_modules/react-native-bluetooth-status/ios/RNBluetoothManager.xcodeproj"; sourceTree = "<group>"; };
 		F5CBC2D921F9C16000754700 /* RNFirebase.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNFirebase.xcodeproj; path = "../node_modules/react-native-firebase/ios/RNFirebase.xcodeproj"; sourceTree = "<group>"; };
 		F5CD807521AEAD65005F86F6 /* RNCardIO.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNCardIO.xcodeproj; path = "../node_modules/react-native-awesome-card-io/ios/RNCardIO.xcodeproj"; sourceTree = "<group>"; };
 		F5D4830A2189AE7800943D6B /* RNImageRotate.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNImageRotate.xcodeproj; path = "../node_modules/react-native-image-rotate/RNImageRotate.xcodeproj"; sourceTree = "<group>"; };
@@ -560,6 +569,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F5B674C7220068EE00468141 /* libRNBluetoothManager.a in Frameworks */,
 				F5CBC2DF21F9C19200754700 /* libRNFirebase.a in Frameworks */,
 				F5B4E9B321D37267003E8F41 /* libReactNativeExceptionHandler.a in Frameworks */,
 				F5E37C9E21CE4F2D0065F910 /* libSplashScreen.a in Frameworks */,
@@ -800,6 +810,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				F5B6748B220068D600468141 /* RNBluetoothManager.xcodeproj */,
 				F5CBC2D921F9C16000754700 /* RNFirebase.xcodeproj */,
 				F5E37C9821CE4F160065F910 /* SplashScreen.xcodeproj */,
 				F57C17C521B0316F00C77524 /* TPSStripe.xcodeproj */,
@@ -897,6 +908,14 @@
 			isa = PBXGroup;
 			children = (
 				F57C17FE21B0316F00C77524 /* libTPSStripe.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F5B6748C220068D600468141 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F5B674BD220068D600468141 /* libRNBluetoothManager.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1199,6 +1218,10 @@
 				{
 					ProductGroup = F5D4824F218991E900943D6B /* Products */;
 					ProjectRef = 1E24D8E0907740728C8DF729 /* ReactNativeExceptionHandler.xcodeproj */;
+				},
+				{
+					ProductGroup = F5B6748C220068D600468141 /* Products */;
+					ProjectRef = F5B6748B220068D600468141 /* RNBluetoothManager.xcodeproj */;
 				},
 				{
 					ProductGroup = FBEED2492144836E000F2874 /* Products */;
@@ -1515,6 +1538,13 @@
 			fileType = archive.ar;
 			path = libTPSStripe.a;
 			remoteRef = F57C17FD21B0316F00C77524 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5B674BD220068D600468141 /* libRNBluetoothManager.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNBluetoothManager.a;
+			remoteRef = F5B674BC220068D600468141 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		F5CBC2DE21F9C16100754700 /* libRNFirebase.a */ = {

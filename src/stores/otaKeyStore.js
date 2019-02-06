@@ -520,7 +520,7 @@ class OTAKeyStore {
         severity: severityTypes.ERROR,
         action: 'otakeystore.switchToKey',
         code: error.code && !isNaN(error.code) ? error.code : codeTypes.ERROR,
-        message: `<- this.ota.switchToKey(${JSON.stringify(this.key)}, ${String(
+        message: `<- this.ota.switchToKey(${keyId}, ${String(
           showError
         )}) failed: ${
           error.code
