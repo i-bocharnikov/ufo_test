@@ -223,7 +223,6 @@ class DriverLicenceScreen extends Component {
 
   @action
   doSave = async () => {
-    const t = this.props.t;
     this.activityPending = true;
     const type = this.frontImageUrl && this.backImageUrl ? 'two_side' : 'one_side';
 
@@ -274,7 +273,6 @@ class DriverLicenceScreen extends Component {
   };
 
   compileActions = () => {
-    const { t, navigation } = this.props;
     const actions = [];
 
     actions.push({

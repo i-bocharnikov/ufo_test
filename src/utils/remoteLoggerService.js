@@ -129,8 +129,8 @@ class RemoteLoggerService {
   };
 
   postLog = async payload => {
-    logToApi('/user_experiences', payload).catch(error => {
-      this.persistLog(payload).catch(error => {});
+    logToApi('/user_experiences', payload).catch(() => {
+      this.persistLog(payload).catch();
     });
   };
 

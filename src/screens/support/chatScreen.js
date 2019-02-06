@@ -87,8 +87,7 @@ class ChatScreen extends Component {
 
   render() {
     // for CHAT_TAWKTO
-
-    let name = registerStore.user.last_name
+    const name = registerStore.user.last_name
       ? `${registerStore.user.first_name} ${registerStore.user.last_name} - ${
           registerStore.user.reference
         }`
@@ -112,14 +111,16 @@ class ChatScreen extends Component {
     params =
       params +
       `&bookings=${driveStore.rentals.map(rental => {
-        if (rental.status === 'ongoing' && rental.car && rental.car.car_model)
+        if (rental.status === 'ongoing' && rental.car && rental.car.car_model) {
           return (
             rental.reference +
             ` (${rental.status} with ${rental.car.car_model.manufacturer} ${
               rental.car.car_model.name
             } - ${rental.car.reference}); `
           );
-        else return rental.reference + ` (${rental.status}); `;
+        } else {
+          return rental.reference + ` (${rental.status}); `;
+        }
       })}`;
 
     if (

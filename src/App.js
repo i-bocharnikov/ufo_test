@@ -38,7 +38,7 @@ const errorHandler = (error, isFatal) => {
         { root: `${error.name} : ${error.message}` },
         error
       )
-      .catch(error => {});
+      .catch();
 
     Alert.alert(message, `${i18n.t('error:jsExceptionFatalReport')}`, [
       { text: i18n.t('common:closeBtn') }
@@ -51,7 +51,7 @@ const errorHandler = (error, isFatal) => {
         { root: `${error.name} : ${error.message}` },
         error
       )
-      .catch(error => {});
+      .catch();
   }
 };
 
@@ -61,7 +61,7 @@ setJSExceptionHandler(errorHandler);
 setNativeExceptionHandler(exceptionStr => {
   remoteLoggerService
     .error('NativeExceptionHandler', 'Fatal Native Exception', { message: exceptionStr })
-    .catch(error => null);
+    .catch();
 });
 
 /* Root App component */

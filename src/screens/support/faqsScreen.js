@@ -179,9 +179,7 @@ class SupportFaqsScreen extends Component {
     });
   };
 
-  doRefresh = async () => {
-    return await supportStore.list();
-  };
+  doRefresh = async () => await supportStore.list();
 
   doBack = () => {
     const { navigation } = this.props;

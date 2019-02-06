@@ -58,7 +58,7 @@ class User {
   @persist @observable face_capture_required = false;
 }
 
-class registerStore {
+class RegisterStore {
   @persist('object', User) @observable user = new User();
   @persist support_chat_identification_key = null;
 
@@ -117,7 +117,7 @@ class registerStore {
   }
 
   async reuseToken() {
-    let token = await getAuthenticationTokenFromStore();
+    const token = await getAuthenticationTokenFromStore();
     await useTokenInApi_deprecated(token);
     await setAuthTokenForApi(token);
   }
@@ -268,4 +268,6 @@ class registerStore {
   };
 }
 
-export default (registerStore = new registerStore());
+const registerStore = new RegisterStore();
+
+export default registerStore;

@@ -95,7 +95,6 @@ class FindScreen extends Component {
           title={t('guide:findTitle', { rental: driveStore.rental })}
         />
         <KeyboardAwareScrollView refreshControl={_RefreshControl}>
-          
           <View style={{ paddingTop: dims.CONTENT_PADDING_TOP }}>
             <UFOSlider
               data={guides}
