@@ -19,7 +19,7 @@ export default StyleSheet.create({
   sample: {
     width: CARD_WIDTH,
     height: CARD_HEIGHT,
-    opacity: 0.4
+    opacity: 0.32
   },
 
   verticalOverlap: {
@@ -54,6 +54,6 @@ export default StyleSheet.create({
   },
 
   blurMask: {
-    backgroundColor: 'rgba(255,255,255,0.4)'
+    backgroundColor: 'rgba(0,0,0,0.82)'
   }
 });
