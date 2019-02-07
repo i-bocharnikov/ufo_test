@@ -4,17 +4,22 @@ import i18n from './i18n';
 import configs from './../utils/configurations';
 import { showToastError } from './interaction';
 
-const ufoServerPrivateApi = axios.create({
-  headers: { 'Accept-Language': i18n.language },
-  baseURL: `${configs.UFO_SERVER_PRIVATE_API_URL}${configs.UFO_SERVER_API_VERSION}/`,
-  timeout: 30000
-});
+const ufoServerPrivateApi = createApi(false, configs.UFO_SERVER_API_VERSION);
 
-const ufoServerPublicApi = axios.create({
-  headers: { 'Accept-Language': i18n.language },
-  baseURL: `${configs.UFO_SERVER_PUBLIC_API_URL}${configs.UFO_SERVER_API_VERSION}/`,
-  timeout: 30000
-});
+const ufoServerPublicApi = createApi(true, configs.UFO_SERVER_API_VERSION);
+
+/**
+  * @param {String} apiType
+  * @param {String} apiVersion
+  * @description Show toast as default api error handler
+  */
+function createApi(isPublicApi, apiVersion) {
+  return axios.create({
+    headers: { 'Accept-Language': i18n.language },
+    baseURL: `${isPublicApi ? configs.UFO_SERVER_PUBLIC_API_URL : configs.UFO_SERVER_PRIVATE_API_URL}${apiVersion}/`,
+    timeout: 30000
+  });
+}
 
 /**
   * @param {Object} error
@@ -110,11 +115,17 @@ export async function postToApi(path, body, errorHandling = false, usePublicApi 
   }
 }
 
-export async function putToApi(path, body, errorHandling = false, usePublicApi = false) {
+export async function putToApi(path, body, errorHandling = false, usePublicApi = false, apiVersion) {
   try {
-    const api = usePublicApi ? ufoServerPublicApi : ufoServerPrivateApi;
-    const response = await api.put(path, body);
+    let api;
 
+    if (apiVersion) {
+      api = createApi(usePublicApi, apiVersion);
+    } else {
+      api = usePublicApi ? ufoServerPublicApi : ufoServerPrivateApi;
+    }
+
+    const response = await api.put(path, body);
     return formatResponse(response);
   } catch (error) {
     if (errorHandling) {

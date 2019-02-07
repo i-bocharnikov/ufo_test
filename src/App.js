@@ -65,7 +65,7 @@ setNativeExceptionHandler(exceptionStr => {
 });
 
 /* Root App component */
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('screen');
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 const STATUS_BAR_HEIGHT = StatusBar.currentHeight || 0;
 
 const styles = StyleSheet.create({
@@ -75,9 +75,9 @@ const styles = StyleSheet.create({
   },
   imageMask: {
     position: 'absolute',
-    top: 0 - STATUS_BAR_HEIGHT / 2,
+    top: 0,
     width: SCREEN_WIDTH,
-    height: SCREEN_HEIGHT,
+    height: SCREEN_HEIGHT - STATUS_BAR_HEIGHT,
     alignSelf: 'center'
   }
 });
