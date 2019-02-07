@@ -103,7 +103,6 @@ export default class UFOCamera extends Component {
         {...restCameraProps}
         ref={ref => (this.camera = ref)}
       >
-        {cameraMask}
         {showTorchBtn && (
           <TouchableOpacity
             onPress={this.changeFlashMode}
@@ -121,6 +120,7 @@ export default class UFOCamera extends Component {
             </Text>
           </TouchableOpacity>
         )}
+        {cameraMask}
       </RNCamera>
     );
   };
