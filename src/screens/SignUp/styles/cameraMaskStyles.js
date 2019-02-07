@@ -1,4 +1,5 @@
 import { StyleSheet, Dimensions } from 'react-native';
+import { colors, textThemes } from './../../../utils/theme';
 
 export const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -18,7 +19,7 @@ export default StyleSheet.create({
   sample: {
     width: CARD_WIDTH,
     height: CARD_HEIGHT,
-    opacity: 0.5
+    opacity: 0.4
   },
 
   verticalOverlap: {
@@ -31,17 +32,28 @@ export default StyleSheet.create({
     height: CARD_HEIGHT
   },
 
-  blurMask: {
-    backgroundColor: 'rgba(0,200,0,0.2)'
-  },
-
   labelArea: {
     position: 'absolute',
-    top: PADDING_HEIGHT,
-    left: PADDING_WIDTH,
-    bottom: PADDING_HEIGHT,
-    right: PADDING_WIDTH,
-    justifyContent: 'center',
+    left: 20,
+    right: 20,
+    bottom: PADDING_HEIGHT + CARD_HEIGHT,
+    justifyContent: 'flex-end',
     alignContent: 'center'
+  },
+
+  cardCameraLabel: {
+    ...textThemes.SP_SEMIBOLD,
+    fontSize: 20,
+    textAlign: 'center',
+    color: colors.TEXT_INVERT_COLOR,
+    paddingHorizontal: 10,
+    lineHeight: 24,
+    textShadowColor: 'rgba(0,0,0,0.2)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 4
+  },
+
+  blurMask: {
+    backgroundColor: 'rgba(255,255,255,0.4)'
   }
 });

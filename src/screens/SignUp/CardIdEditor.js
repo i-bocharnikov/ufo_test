@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { Image, View, ScrollView, Text, ImageEditor } from 'react-native';
 import { observer } from 'mobx-react';
 import { observable, action } from 'mobx';
@@ -83,14 +83,12 @@ class IdentificationScreen extends Component {
           </ScrollView>
         )}
         {showCamera && (
-          <Fragment>
-            <UFOCamera
-              onCameraReady={() => (this.isCameraAllowed = true)}
-              ref={ref => (this.cameraRef = ref)}
-              forbiddenCallback={navigation.goBack}
-            />
-            {this.renderCameraMask()}
-          </Fragment>
+          <UFOCamera
+            onCameraReady={() => (this.isCameraAllowed = true)}
+            ref={ref => (this.cameraRef = ref)}
+            forbiddenCallback={navigation.goBack}
+            cameraMask={this.renderCameraMask()}
+          />
         )}
         <UFOActionBar
           actions={this.compileActions()}
@@ -120,10 +118,7 @@ class IdentificationScreen extends Component {
         <View style={[ cameraMaskStyles.horizontalOverlap, cameraMaskStyles.blurMask ]} />
         <View style={[ cameraMaskStyles.verticalOverlap, cameraMaskStyles.blurMask ]} />
         <View style={cameraMaskStyles.labelArea}>
-          <Text style={[
-            styles.cardCameraLabel,
-            this.activityPending && styles.cardCameraBackground
-          ]}>
+          <Text style={cameraMaskStyles.cardCameraLabel}>
             {captureHint.toUpperCase()}
           </Text>
         </View>

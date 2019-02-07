@@ -88,7 +88,7 @@ export default class UFOCamera extends Component {
   }
 
   renderCameraView = () => {
-    const { showTorchBtn, torchBtnTopIndent, ...restCameraProps } = this.props;
+    const { showTorchBtn, torchBtnTopIndent, cameraMask, ...restCameraProps } = this.props;
     const { hasPermit, flashMode, isFocused } = this.state;
 
     if (!hasPermit || !isFocused) {
@@ -103,6 +103,7 @@ export default class UFOCamera extends Component {
         {...restCameraProps}
         ref={ref => (this.camera = ref)}
       >
+        {cameraMask}
         {showTorchBtn && (
           <TouchableOpacity
             onPress={this.changeFlashMode}
@@ -197,5 +198,6 @@ UFOCamera.propTypes = {
   forbiddenCallback: PropTypes.func,
   torchBtnTopIndent: PropTypes.number,
   showTorchBtn: PropTypes.bool,
+  cameraMask: PropTypes.node,
   ...RNCamera.propTypes
 };
