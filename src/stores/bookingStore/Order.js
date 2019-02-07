@@ -95,11 +95,7 @@ export default class Order {
     const path = `/reserve/validation/${locationRef}/${carRef}/${startDate}/${code}`;
     const response = await getFromApi(path);
 
-    if (response.isSuccess) {
-      return true;
-    } else {
-      return false;
-    }
+    return response.isSuccess;
   }
 
   /**

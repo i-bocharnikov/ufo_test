@@ -3,10 +3,15 @@ import { StyleSheet } from 'react-native';
 import { colors, textThemes } from './../../../utils/theme';
 
 export default StyleSheet.create({
+  screenWraper: {
+    flex: 1
+  },
+
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    backgroundColor: colors.BG_INVERT
   },
 
   sliderWrapper: {

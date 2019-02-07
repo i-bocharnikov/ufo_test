@@ -143,15 +143,11 @@ export default class DriveStore {
   }
 
   @computed get hasRentalConfirmed() {
-    return this.rentals.find(rental => {
-      return rental.status === RENTAL_STATUS.CONFIRMED;
-    });
+    return this.rentals.find(rental => rental.status === RENTAL_STATUS.CONFIRMED);
   }
 
   @computed get hasRentalOngoing() {
-    return this.rentals.find(rental => {
-      return rental.status === RENTAL_STATUS.ONGOING;
-    });
+    return this.rentals.find(rental => rental.status === RENTAL_STATUS.ONGOING);
   }
 
   @computed get isOngoing() {

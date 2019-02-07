@@ -38,7 +38,7 @@ class SupportFaqScreen extends Component {
   refresh = async () => {
     this.refreshing = true;
 
-    const { t, navigation } = this.props;
+    const { navigation } = this.props;
     const faqCategoryReference = navigation.getParam(
       navigationParams.SUPPORT_FAQ_CATEGORY
     );

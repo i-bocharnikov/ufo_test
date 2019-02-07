@@ -3,6 +3,7 @@
         <item name="android:windowIsTranslucent">false</item>
     </style>
     <style name="SplashScreenTheme" parent="SplashScreen_SplashTheme">
+        <item name="android:windowBackground">@color/ufoLaunch</item>
         <item name="colorPrimaryDark">@color/ufo</item>
     </style>
 </resources>

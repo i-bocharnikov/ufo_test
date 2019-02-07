@@ -8,7 +8,7 @@ import { driveStore } from '../stores';
 const FCM = firebase.messaging();
 const FCN = firebase.notifications();
 
-class NotificationService {
+class PushNotificationService {
   constructor() {
     this.enabled = false;
     this.fcmToken = null;
@@ -243,6 +243,6 @@ class NotificationService {
   };
 }
 
-const notificationService = new NotificationService();
+const pushNotificationService = new PushNotificationService();
 
-export default notificationService;
+export default pushNotificationService;

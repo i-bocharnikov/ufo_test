@@ -206,8 +206,8 @@ export default class BookingStore {
       return;
     }
 
-    if (dateMoment.isBefore(TOMORROW)) {
-      this.endRentalDate = TOMORROW;
+    if (dateMoment.isBefore(TODAY)) {
+      this.endRentalDate = TODAY;
     } else {
       this.endRentalDate = dateMoment;
     }
@@ -230,8 +230,8 @@ export default class BookingStore {
   */
   @action
   correctSelectedTime = () => {
-    let startIndex = this.rollPickerStartSelectedTimeItem;
-    let endIndex = this.rollPickerEndSelectedTimeItem;
+    const startIndex = this.rollPickerStartSelectedTimeItem;
+    const endIndex = this.rollPickerEndSelectedTimeItem;
 
     if (startIndex < endIndex) {
       return;

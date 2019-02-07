@@ -57,7 +57,6 @@
 		F540751321984D5000BB787A /* SofiaProRegular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F54075112198486800BB787A /* SofiaProRegular.ttf */; };
 		F540751421984D5300BB787A /* SofiaProLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F54075102198486800BB787A /* SofiaProLight.ttf */; };
 		F540751521984D5500BB787A /* SofiaProBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F54075122198486800BB787A /* SofiaProBold.ttf */; };
-		F5485D2721F098CF0001EA35 /* OTASDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5485CF221F098CF0001EA35 /* OTASDK.framework */; };
 		F54D9AC82194816900FE4741 /* libLRDRCTSimpleToast.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F54D9A982194815500FE4741 /* libLRDRCTSimpleToast.a */; };
 		F576CEE321AEEA0700D02887 /* SofiaProSemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F576CEB021AEEA0700D02887 /* SofiaProSemiBold.ttf */; };
 		F57C17FF21B0318700C77524 /* libTPSStripe.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F57C17FE21B0316F00C77524 /* libTPSStripe.a */; };
@@ -67,6 +66,7 @@
 		F5CD80AC21AEAD84005F86F6 /* libRNCardIO.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5CD80A521AEAD65005F86F6 /* libRNCardIO.a */; };
 		F5D4833E2189AFAD00943D6B /* libRNImageRotate.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5D4833D2189AE7800943D6B /* libRNImageRotate.a */; };
 		F5D483882189B1B700943D6B /* libFastImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5D483582189B1A600943D6B /* libFastImage.a */; };
+		F5D8E33A220891CF00C0FD78 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = F5D8E302220891CF00C0FD78 /* LaunchScreen.xib */; };
 		F5E37C9E21CE4F2D0065F910 /* libSplashScreen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5E37C9D21CE4F160065F910 /* libSplashScreen.a */; };
 		F5E380A521AFD4F8000C4486 /* libBVLinearGradient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5E3807021AFD360000C4486 /* libBVLinearGradient.a */; };
 		F5E5A91021F7296A00754B0D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F5E5A90F21F7296A00754B0D /* GoogleService-Info.plist */; };
@@ -543,6 +543,7 @@
 		F5CD807521AEAD65005F86F6 /* RNCardIO.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNCardIO.xcodeproj; path = "../node_modules/react-native-awesome-card-io/ios/RNCardIO.xcodeproj"; sourceTree = "<group>"; };
 		F5D4830A2189AE7800943D6B /* RNImageRotate.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNImageRotate.xcodeproj; path = "../node_modules/react-native-image-rotate/RNImageRotate.xcodeproj"; sourceTree = "<group>"; };
 		F5D483522189B1A600943D6B /* FastImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FastImage.xcodeproj; path = "../node_modules/react-native-fast-image/ios/FastImage.xcodeproj"; sourceTree = "<group>"; };
+		F5D8E303220891CF00C0FD78 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = driverApp/Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		F5D9C35821F5CBD100A2BFCE /* driverApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = driverApp.entitlements; path = driverApp/driverApp.entitlements; sourceTree = "<group>"; };
 		F5E37C9821CE4F160065F910 /* SplashScreen.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SplashScreen.xcodeproj; path = "../node_modules/react-native-splash-screen/ios/SplashScreen.xcodeproj"; sourceTree = "<group>"; };
 		F5E3806A21AFD35F000C4486 /* BVLinearGradient.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BVLinearGradient.xcodeproj; path = "../node_modules/react-native-linear-gradient/BVLinearGradient.xcodeproj"; sourceTree = "<group>"; };
@@ -588,7 +589,6 @@
 				5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */,
 				00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */,
 				00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */,
-				F5485D2721F098CF0001EA35 /* OTASDK.framework in Frameworks */,
 				00C302E81ABCBA2D00DB3ED1 /* libRCTImage.a in Frameworks */,
 				133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */,
 				00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */,
@@ -708,6 +708,7 @@
 		13B07FAE1A68108700A75B9A /* driverApp */ = {
 			isa = PBXGroup;
 			children = (
+				F5D8E302220891CF00C0FD78 /* LaunchScreen.xib */,
 				F5D9C35821F5CBD100A2BFCE /* driverApp.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -1052,8 +1053,8 @@
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				EE8EB25D63AD419A45263342 /* [CP] Copy Pods Resources */,
-				C0FB88EF7F36B5FE5F9530DC /* [CP] Embed Pods Frameworks */,
 				F5E5AA7821F7439800754B0D /* Embed Frameworks */,
+				6E31173681A16C6295803A9A /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1674,6 +1675,7 @@
 				F540751321984D5000BB787A /* SofiaProRegular.ttf in Resources */,
 				215599F6038B4BDE9782787C /* MaterialIcons.ttf in Resources */,
 				99600D69E89C42F09292A9E0 /* Octicons.ttf in Resources */,
+				F5D8E33A220891CF00C0FD78 /* LaunchScreen.xib in Resources */,
 				DEB4D7FF58154F57B1C178C0 /* Roboto_medium.ttf in Resources */,
 				68762648BA1449A39A9ACB40 /* Roboto.ttf in Resources */,
 				911A4AB8CB2649A78DAB93F0 /* rubicon-icon-font.ttf in Resources */,
@@ -1730,7 +1732,7 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
-		C0FB88EF7F36B5FE5F9530DC /* [CP] Embed Pods Frameworks */ = {
+		6E31173681A16C6295803A9A /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1853,6 +1855,17 @@
 		};
 /* End PBXTargetDependency section */
 
+/* Begin PBXVariantGroup section */
+		F5D8E302220891CF00C0FD78 /* LaunchScreen.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F5D8E303220891CF00C0FD78 /* Base */,
+			);
+			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -1930,7 +1943,6 @@
 			baseConfigurationReference = 115E76EA62619648B8EA881A /* Pods-driverApp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = driverApp/driverApp.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
@@ -1974,7 +1986,6 @@
 			baseConfigurationReference = 4F97DD303F2E9806A83D736F /* Pods-driverApp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = driverApp/driverApp.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;

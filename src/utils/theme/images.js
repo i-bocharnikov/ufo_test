@@ -12,5 +12,5 @@ export default {
   markerImage: require('./../../assets/images/marker.png'),
   /* screen backgrounds */
   BG_HOME002: require('./../../assets/images/background/UFOBGHOME002.png'),
-  BG_LAUNCH: require('./../../assets/images/background/UFOBGLAUNCH001.png')
+  BG_LAUNCH: require('./../../assets/images/background/UFO_LAUNCH.png')
 };

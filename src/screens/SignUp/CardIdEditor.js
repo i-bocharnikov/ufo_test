@@ -265,7 +265,6 @@ class IdentificationScreen extends Component {
   };
 
   compileActions = () => {
-    const { t, navigation } = this.props;
     const actions = [];
 
     actions.push({

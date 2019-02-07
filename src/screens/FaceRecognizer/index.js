@@ -199,7 +199,7 @@ class FaceRecognizer extends Component {
     }
 
     const position = this.getFacePosition(faceData);
-    const styles = StyleSheet.create({
+    const faceAreaStyles = StyleSheet.create({
       area: {
         top: position.top,
         left: position.left,
@@ -208,7 +208,7 @@ class FaceRecognizer extends Component {
       }
     });
 
-    return styles.area;
+    return faceAreaStyles.area;
   };
 
   /*
@@ -376,7 +376,7 @@ class FaceRecognizer extends Component {
 
         this.isPending = false;
       },
-      error => {
+      () => {
         this.capturedImgUri = cameraUri;
         this.isPending = false;
       }
@@ -400,9 +400,9 @@ class FaceRecognizer extends Component {
 
         return false;
       }
-
-      return true;
     }
+
+    return true;
   }
 
   /*

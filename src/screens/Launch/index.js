@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, Dimensions, Animated, Easing } from 'react-native';
 import SplashController from 'react-native-splash-screen';
 import { observer } from 'mobx-react';
 import { translate } from 'react-i18next';
@@ -7,11 +7,11 @@ import { translate } from 'react-i18next';
 import { keys as screenKeys } from './../../navigators/helpers';
 import appStore from './../../stores/appStore';
 import registerStore from './../../stores/registerStore';
-import { UFOContainer, UFOLoader, UFOImage } from './../../components/common';
+import { driveStore } from './../../stores';
+import { UFOContainer, UFOImage } from './../../components/common';
 import UFOSlider from './../../components/UFOSlider';
 import styles from './styles';
-import { images, values } from './../../utils/theme';
-import { driveStore } from '../../stores';
+import { images, values, videos } from './../../utils/theme';
 
 const SCREEN_WIDTH = Dimensions.get('screen').width;
 
@@ -25,24 +25,32 @@ class LaunchScreen extends Component {
         subTitle: props.t('slideOneSubTitle'),
         text: props.t('slideOneDescription'),
         showSkipBtn: true,
-        showNextBtn: false
+        showNextBtn: false,
+        image: null,
+        video: null
       },
       {
         title: props.t('slideTwoTitle'),
         subTitle: props.t('slideTwoSubTitle'),
         text: props.t('slideTwoDescription'),
         showSkipBtn: true,
-        showNextBtn: false
+        showNextBtn: false,
+        image: null,
+        video: videos.test_portrait
       },
       {
         title: props.t('slideThreeTitle'),
         subTitle: props.t('slideThreeSubTitle'),
         text: props.t('slideThreeDescription'),
         showSkipBtn: false,
-        showNextBtn: true
+        showNextBtn: true,
+        image: null,
+        video: videos.test_portraitHD
       }
     ];
     this.state = { activeSlideIndex: 0 };
+    this.screenOpacity = new Animated.Value(1);
+    this.animationDuration = 360;
   }
 
   async componentDidMount() {
@@ -55,26 +63,34 @@ class LaunchScreen extends Component {
   }
 
   render() {
+    const bgImage = appStore.isAppReady
+      ? ( this.slidesData[this.state.activeSlideIndex].image || images.BG_HOME002 )
+      : null;
+    const bgVideo = appStore.isAppReady
+      ? this.slidesData[this.state.activeSlideIndex].video
+      : null;
+
     return (
-      <UFOContainer
-        style={styles.container}
-        image={appStore.isAppReady ? images.BG_HOME002 : images.BG_LAUNCH}
-      >
-        {appStore.isAppReady && this.renderSlider()}
-        <UFOLoader isVisible={!appStore.isAppReady} />
-      </UFOContainer>
+      <Animated.View style={[ styles.screenWraper, {opacity: this.screenOpacity} ]}>
+        <UFOContainer
+          style={styles.container}
+          image={bgImage}
+          video={bgVideo}
+        >
+          {appStore.isAppReady && this.renderSlider()}
+        </UFOContainer>
+      </Animated.View>
     );
   }
 
   renderSlider = () => {
-    const { showSkipBtn, showNextBtn } = this.slidesData[
-      this.state.activeSlideIndex
-    ];
+    const { showSkipBtn, showNextBtn } = this.slidesData[this.state.activeSlideIndex];
 
     return (
       <View style={styles.sliderWrapper}>
         <UFOImage source={images.ufoLogoTiny} style={styles.logoSmallImg} />
         <UFOSlider
+          firstItem={this.state.activeSlideIndex}
           data={this.slidesData}
           renderItem={this.renderSlide}
           sliderWidth={SCREEN_WIDTH}
@@ -127,7 +143,30 @@ class LaunchScreen extends Component {
     );
   };
 
-  onSnapToItem = i => this.setState({ activeSlideIndex: i });
+  onSnapToItem = i => {
+    /* to have smooth transition between slides - hide screen with background at switching */
+    const showSlider = () => {
+      Animated.timing(
+        this.screenOpacity,
+        {
+          toValue: 1,
+          duration: this.animationDuration,
+          easing: Easing.linear
+        }
+      ).start();
+    };
+
+    Animated.timing(
+      this.screenOpacity,
+      {
+        toValue: 0,
+        duration: this.animationDuration,
+        easing: Easing.linear
+      }
+    ).start(() => {
+      this.setState({ activeSlideIndex: i }, showSlider);
+    });
+  };
 
   navToApp = () => {
     this.props.navigation.navigate(screenKeys.App);

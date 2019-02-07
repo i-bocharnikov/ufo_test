@@ -88,13 +88,13 @@ class FindScreen extends Component {
     return (
       <UFOContainer image={backgrounds.DRIVE001}>
         <NavigationEvents onWillFocus={() => this.refresh()} />
+        <UFOHeader
+          t={t}
+          navigation={navigation}
+          currentScreen={screens.DRIVE}
+          title={t('guide:findTitle', { rental: driveStore.rental })}
+        />
         <KeyboardAwareScrollView refreshControl={_RefreshControl}>
-          <UFOHeader
-            t={t}
-            navigation={navigation}
-            currentScreen={screens.DRIVE}
-            title={t('guide:findTitle', { rental: driveStore.rental })}
-          />
           <View style={{ paddingTop: dims.CONTENT_PADDING_TOP }}>
             <UFOSlider
               data={guides}
