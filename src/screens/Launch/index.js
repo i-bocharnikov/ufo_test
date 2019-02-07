@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, Dimensions, Animated, Easing } from 'react-native';
+import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
 import SplashController from 'react-native-splash-screen';
 import { observer } from 'mobx-react';
 import { translate } from 'react-i18next';
@@ -25,32 +25,24 @@ class LaunchScreen extends Component {
         subTitle: props.t('slideOneSubTitle'),
         text: props.t('slideOneDescription'),
         showSkipBtn: true,
-        showNextBtn: false,
-        image: null,
-        video: null
+        showNextBtn: false
       },
       {
         title: props.t('slideTwoTitle'),
         subTitle: props.t('slideTwoSubTitle'),
         text: props.t('slideTwoDescription'),
         showSkipBtn: true,
-        showNextBtn: false,
-        image: null,
-        video: videos.test_portrait
+        showNextBtn: false
       },
       {
         title: props.t('slideThreeTitle'),
         subTitle: props.t('slideThreeSubTitle'),
         text: props.t('slideThreeDescription'),
         showSkipBtn: false,
-        showNextBtn: true,
-        image: null,
-        video: videos.test_portraitHD
+        showNextBtn: true
       }
     ];
     this.state = { activeSlideIndex: 0 };
-    this.screenOpacity = new Animated.Value(1);
-    this.animationDuration = 360;
   }
 
   async componentDidMount() {
@@ -63,23 +55,14 @@ class LaunchScreen extends Component {
   }
 
   render() {
-    const bgImage = appStore.isAppReady
-      ? ( this.slidesData[this.state.activeSlideIndex].image || images.BG_HOME002 )
-      : null;
-    const bgVideo = appStore.isAppReady
-      ? this.slidesData[this.state.activeSlideIndex].video
-      : null;
-
     return (
-      <Animated.View style={[ styles.screenWraper, {opacity: this.screenOpacity} ]}>
-        <UFOContainer
-          style={styles.container}
-          image={bgImage}
-          video={bgVideo}
-        >
-          {appStore.isAppReady && this.renderSlider()}
-        </UFOContainer>
-      </Animated.View>
+      <UFOContainer
+        style={styles.container}
+        image={appStore.isAppReady ? images.BG_HOME002 : null}
+        video={appStore.isAppReady ? videos.launchScreenBg : null}
+      >
+        {appStore.isAppReady && this.renderSlider()}
+      </UFOContainer>
     );
   }
 
@@ -88,7 +71,10 @@ class LaunchScreen extends Component {
 
     return (
       <View style={styles.sliderWrapper}>
-        <UFOImage source={images.ufoLogoTiny} style={styles.logoSmallImg} />
+        <UFOImage
+          source={images.ufoLogoTiny}
+          style={styles.logoSmallImg}
+        />
         <UFOSlider
           firstItem={this.state.activeSlideIndex}
           data={this.slidesData}
@@ -143,30 +129,7 @@ class LaunchScreen extends Component {
     );
   };
 
-  onSnapToItem = i => {
-    /* to have smooth transition between slides - hide screen with background at switching */
-    const showSlider = () => {
-      Animated.timing(
-        this.screenOpacity,
-        {
-          toValue: 1,
-          duration: this.animationDuration,
-          easing: Easing.linear
-        }
-      ).start();
-    };
-
-    Animated.timing(
-      this.screenOpacity,
-      {
-        toValue: 0,
-        duration: this.animationDuration,
-        easing: Easing.linear
-      }
-    ).start(() => {
-      this.setState({ activeSlideIndex: i }, showSlider);
-    });
-  };
+  onSnapToItem = i => this.setState({ activeSlideIndex: i });
 
   navToApp = () => {
     this.props.navigation.navigate(screenKeys.App);

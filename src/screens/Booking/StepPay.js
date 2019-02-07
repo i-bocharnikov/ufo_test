@@ -171,11 +171,13 @@ class StepPayScreen extends Component {
   };
 
   renderLoyaltyBlock = () => {
+    const isActive = bookingStore.allowReferralAmountUse;
+
     return !bookingStore.loyaltyProgramInfo ? null : (
       <TouchableOpacity
-        style={[ styles.actionBtnDark, styles.loyalityBtn ]}
-        onPress={bookingStore.switchReferralUsing}
-        activeOpacity={values.BTN_OPACITY_DEFAULT}
+        style={[ styles.actionBtnDark, styles.loyalityBtn, !isActive && { opacity: 0.85 } ]}
+        onPress={isActive ? bookingStore.switchReferralUsing : null}
+        activeOpacity={isActive ? values.BTN_OPACITY_DEFAULT : 0.85}
       >
         <TouchableOpacity
           onPress={() => this.setState({ showVoucherTooltip: true })}
