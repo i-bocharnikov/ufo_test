@@ -40,7 +40,7 @@ class AppStore {
           keyAccessDeviceIdentifier
         );
         if (keyAccessDeviceToken) {
-          await remoteLoggerService.success(
+          await remoteLoggerService.info(
             'register',
             `registration success with new keyAccessDeviceToken`,
             registerStore.user
