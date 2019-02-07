@@ -183,22 +183,14 @@ class SupportFaqsScreen extends Component {
 
   doBack = () => {
     const { navigation } = this.props;
-    const prevScreen = navigation.getParam(navigationParams.PREVIOUS_SCREEN, screens.HOME);
+    const prevScreen = navigation.getParam(
+      navigationParams.PREVIOUS_SCREEN,
+      screens.HOME
+    );
     navigation.navigate(prevScreen.name || prevScreen);
   };
 
   doOpenChat = async () => {
-    await remoteLoggerService.info(
-      'openChat',
-      `User ${
-        registerStore.user ? registerStore.user.reference : ''
-      } in state ${registerStore.user ? registerStore.user.status : ''}`,
-      {
-        support_chat_identification_key:
-          registerStore.support_chat_identification_key
-      },
-      registerStore.user
-    );
     this.props.navigation.navigate(screens.SUPPORT_CHAT.name);
   };
 
