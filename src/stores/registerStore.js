@@ -67,6 +67,7 @@ class RegisterStore {
   @observable driverLicenceFrontDocument = 'loading';
   @observable driverLicenceBackDocument = 'loading';
 
+  startupMessage = null;
   acknowledge_uri = '';
 
   @computed get isAdmin() {
@@ -127,6 +128,7 @@ class RegisterStore {
     let device_uuid = await getAuthenticationUUIDFromStore();
     let device_pwd = await getAuthenticationPasswordFromStore();
     let isNew = false;
+
     if (!device_uuid) {
       device_uuid = uuid.v4();
       device_pwd = device_uuid;
@@ -159,17 +161,18 @@ class RegisterStore {
       response.data.token &&
       response.data.user
     ) {
-      if (DEBUG) {
-        console.info('registerStore.registerDevice:', response.data);
-      }
+
+      DEBUG && console.info('registerStore.registerDevice:', response.data);
+
       await setAuthenticationUUIDInStore(device_uuid);
       await setAuthenticationPasswordInStore(device_pwd);
       await setAuthenticationTokenInStore(response.data.token);
       await useTokenInApi_deprecated(response.data.token);
       await setAuthTokenForApi(response.data.token);
+
       this.user = response.data.user;
-      this.support_chat_identification_key =
-        response.data.support_chat_identification_key;
+      this.support_chat_identification_key = response.data.support_chat_identification_key;
+      this.startupMessage = response.data.message;
       return response.data.key_access_device_token;
     }
     return null;

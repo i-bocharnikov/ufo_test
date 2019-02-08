@@ -9,7 +9,6 @@ import { hydrate } from './../utils/store';
 import { confirm } from './../utils/interaction';
 import remoteLoggerService from './../utils/remoteLoggerService';
 import { showAlertInfo } from './../utils/interaction';
-import { putToApi } from './../utils/api';
 
 class AppStore {
   @observable isAppReady = false;
@@ -172,12 +171,13 @@ class AppStore {
 
       if (isRegistered) {
         await this.loadRemoteData();
-        await this.showStartUpMessage();
       }
+
+      await this.showStartUpMessage();
     } else {
       await remoteLoggerService.info(
         'initialise',
-        `Without connectivity, we reuse existing token (used if connectivity is back) and register OTAlisterners`,
+        'Without connectivity, we reuse existing token (used if connectivity is back) and register OTAlisterners',
         registerStore.user
       );
       await registerStore.reuseToken();
@@ -215,7 +215,7 @@ class AppStore {
           await this.initialise();
           await remoteLoggerService.info(
             'disconnect',
-            `success`,
+            'success',
             registerStore.user
           );
         }
@@ -224,20 +224,8 @@ class AppStore {
   }
 
   async showStartUpMessage() {
-    if (!this.keyAccessDeviceToken) {
-      return;
-    }
-
-    const response = await putToApi(
-      `/users/devices/${this.keyAccessDeviceToken}`,
-      null,
-      false,
-      true,
-      'v1'
-    );
-
-    if (response.isSuccess && response.data.message) {
-      await showAlertInfo(null, response.data.message);
+    if (registerStore.startupMessage) {
+      await showAlertInfo(null, registerStore.startupMessage);
     }
   }
 }
