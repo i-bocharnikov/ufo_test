@@ -984,6 +984,21 @@ class OTAKeyStore {
     }
   }
 
+  @action
+  async closeSession() {
+    try {
+      await this.ota.closeSession();
+    } catch (error) {
+      await this.otaKeyLogger({
+        severity: severityTypes.ERROR,
+        action: 'otakeystore.closeSession',
+        code: error.code,
+        message: `<- this.ota.closeSession failed: ${error}`,
+        description: error
+      });
+    }
+  }
+
   handleOTAAPIError = (error, showError) => {
     const { code, message } = error;
     if (!showError) {
@@ -993,14 +1008,14 @@ class OTAKeyStore {
     this.showNativeOTAError(code, message);
   };
 
-  handleOTABLEError(error, showError) {
+  handleOTABLEError = (error, showError) => {
     const { code, message } = error;
     if (!showError || code === 'ALREADY_CONNECTED') {
       return;
     }
 
     this.showNativeOTAError(code, message);
-  }
+  };
 
   showNativeOTAError = (errorCode, errorMessage) => {
     const defaultCode = 'notFound';

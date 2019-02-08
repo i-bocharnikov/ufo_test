@@ -210,14 +210,11 @@ class AppStore {
       t('global:confirmationTitle'),
       t('register:disconnectConfirmationMessage'),
       async () => {
-        if (await checkConnectivity()) {
+        if ( await checkConnectivity() ) {
           registerStore.disconnect(t);
+          otaKeyStore.closeSession();
           await this.initialise();
-          await remoteLoggerService.info(
-            'disconnect',
-            'success',
-            registerStore.user
-          );
+          await remoteLoggerService.info('disconnect', 'success', registerStore.user);
         }
       }
     );

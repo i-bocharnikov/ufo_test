@@ -516,4 +516,20 @@ RCT_REMAP_METHOD(disableEngine,
   }
 }
 
+// closeSession
+RCT_REMAP_METHOD(closeSession,
+                 closeSessionResolver:(RCTPromiseResolveBlock)resolve
+                 closeSessionRejecter:(RCTPromiseRejectBlock)reject)
+{
+  @try
+  {
+    [[OTAManager instance] closeSession];
+    resolve(@YES);
+  }
+  @catch (NSError *error)
+  {
+    reject(UNEXPECTED_ERROR_CODE, @"closeSession", error);
+  }
+}
+
 @end
