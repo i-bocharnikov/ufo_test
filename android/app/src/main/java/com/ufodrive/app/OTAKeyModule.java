@@ -237,6 +237,20 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
     }
 
     /**
+     * Close SDK session
+     * @param promise
+    */
+    @ReactMethod
+    public void closeSession(final Promise promise) {
+        try {
+            getOtaSdk().getCore().closeSession();
+            promise.resolve(true);
+        } catch(Exception e) {
+            silentException(e);
+        }
+    }
+
+    /**
      * Get a key
      *
      * @param otaKeyId the ota key created by ufodrive to control the vehicle

@@ -107,19 +107,5 @@ export default StyleSheet.create({
     justifyContent: 'center'
   },
 
-  cardCameraLabel: {
-    ...textThemes.SP_SEMIBOLD,
-    fontSize: 20,
-    textAlign: 'center',
-    color: colors.TEXT_INVERT_COLOR,
-    paddingHorizontal: 10,
-    lineHeight: 24,
-    textShadowColor: 'rgba(0,0,0,0.2)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 4
-  },
-
-  cardCameraBackground: { opacity: 0.6 },
-
   inputMiles: { marginTop: GAP_BETWEEN }
 });

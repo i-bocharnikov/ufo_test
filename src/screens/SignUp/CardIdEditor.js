@@ -1,13 +1,5 @@
-import React, { Component, Fragment } from 'react';
-import {
-  ImageBackground,
-  View,
-  ScrollView,
-  Text,
-  ImageEditor,
-  Dimensions,
-  StyleSheet
-} from 'react-native';
+import React, { Component } from 'react';
+import { Image, View, ScrollView, Text, ImageEditor } from 'react-native';
 import { observer } from 'mobx-react';
 import { observable, action } from 'mobx';
 import { translate } from 'react-i18next';
@@ -22,14 +14,14 @@ import registerStore from './../../stores/registerStore';
 import { screens, actionStyles, icons, images } from './../../utils/global';
 import { showWarning } from './../../utils/interaction';
 import styles from './styles';
-
-const { width: DEVICE_WIDTH, height: DEVICE_HEIGHT } = Dimensions.get('window');
-
-const CARD_RATIO = 1024 / 639;
-const CARD_WIDTH = DEVICE_WIDTH - 80;
-const CARD_HEIGHT = CARD_WIDTH / CARD_RATIO;
-const PADDING_WIDTH = (DEVICE_WIDTH - CARD_WIDTH) / 2;
-const PADDING_HEIGHT = (DEVICE_HEIGHT - CARD_HEIGHT) / 2;
+import cameraMaskStyles, {
+  SCREEN_WIDTH,
+  SCREEN_HEIGHT,
+  CARD_WIDTH,
+  CARD_HEIGHT,
+  PADDING_WIDTH,
+  PADDING_HEIGHT
+} from './styles/cameraMaskStyles';
 
 const captureStates = {
   PREVIEW: 'PREVIEW',
@@ -37,20 +29,6 @@ const captureStates = {
   CAPTURE_BACK: 'CAPTURE_BACK',
   VALIDATE: 'VALIDATE'
 };
-
-const bgImageStyles = StyleSheet.create({
-  bgArea: {
-    position: 'absolute',
-    top: PADDING_HEIGHT,
-    left: PADDING_WIDTH,
-    bottom: PADDING_HEIGHT,
-    right: PADDING_WIDTH,
-    width: CARD_WIDTH,
-    height: CARD_HEIGHT,
-    alignItems: 'center',
-    justifyContent: 'center'
-  }
-});
 
 @observer
 class IdentificationScreen extends Component {
@@ -64,25 +42,13 @@ class IdentificationScreen extends Component {
     const { t, navigation } = this.props;
 
     if (this.captureState === null) {
-
-      this.captureState =
-        !this.frontImageUrl || this.frontImageUrl === 'loading'
-          ? captureStates.CAPTURE_FRONT
-          : this.captureState = captureStates.PREVIEW;
+      this.captureState = !this.frontImageUrl || this.frontImageUrl === 'loading'
+        ? captureStates.CAPTURE_FRONT
+        : this.captureState = captureStates.PREVIEW;
     }
-
-    const inputLabel =
-      this.captureState === captureStates.CAPTURE_FRONT
-        ? 'register:identificationFrontInputLabel'
-        : 'register:identificationBackInputLabel';
 
     const showCamera =
       this.captureState !== captureStates.VALIDATE && this.captureState !== captureStates.PREVIEW;
-
-    const sample =
-      this.captureState === captureStates.CAPTURE_FRONT
-        ? images.captureCardIdFront
-        : images.captureCardIdBack;
 
     return (
       <UFOContainer image={screens.REGISTER_OVERVIEW.backgroundImage}>
@@ -117,27 +83,12 @@ class IdentificationScreen extends Component {
           </ScrollView>
         )}
         {showCamera && (
-          <Fragment>
-            <UFOCamera
-              onCameraReady={() => (this.isCameraAllowed = true)}
-              ref={ref => (this.cameraRef = ref)}
-              forbiddenCallback={navigation.goBack}
-            />
-            <ImageBackground
-              source={sample}
-              style={[ bgImageStyles.bgArea, styles.cardCameraBackground ]}
-            />
-            <View style={bgImageStyles.bgArea}>
-              <Text
-                style={[
-                  styles.cardCameraLabel,
-                  this.activityPending && styles.cardCameraBackground
-                ]}
-              >
-                {t(inputLabel).toUpperCase()}
-              </Text>
-            </View>
-          </Fragment>
+          <UFOCamera
+            onCameraReady={() => (this.isCameraAllowed = true)}
+            ref={ref => (this.cameraRef = ref)}
+            forbiddenCallback={navigation.goBack}
+            cameraMask={this.renderCameraMask()}
+          />
         )}
         <UFOActionBar
           actions={this.compileActions()}
@@ -146,6 +97,34 @@ class IdentificationScreen extends Component {
       </UFOContainer>
     );
   }
+
+  renderCameraMask = () => {
+    const sample = this.captureState === captureStates.CAPTURE_FRONT
+      ? images.captureCardIdFront
+      : images.captureCardIdBack;
+
+    const captureHint = this.captureState === captureStates.CAPTURE_FRONT
+        ? this.props.t('register:identificationFrontInputLabel')
+        : this.props.t('register:identificationBackInputLabel');
+
+    return (
+      <View style={cameraMaskStyles.wrapper}>
+        <View style={[ cameraMaskStyles.verticalOverlap, cameraMaskStyles.blurMask ]} />
+        <View style={[ cameraMaskStyles.horizontalOverlap, cameraMaskStyles.blurMask ]} />
+        <Image
+          source={sample}
+          style={cameraMaskStyles.sample}
+        />
+        <View style={[ cameraMaskStyles.horizontalOverlap, cameraMaskStyles.blurMask ]} />
+        <View style={[ cameraMaskStyles.verticalOverlap, cameraMaskStyles.blurMask ]} />
+        <View style={cameraMaskStyles.labelArea}>
+          <Text style={cameraMaskStyles.cardCameraLabel}>
+            {captureHint.toUpperCase()}
+          </Text>
+        </View>
+      </View>
+    );
+  };
 
   @action
   doCancel = async () => {
@@ -171,8 +150,8 @@ class IdentificationScreen extends Component {
     }
     const { uri, width, height } = imageData;
     // Crop Image
-    const ratioX = width / DEVICE_WIDTH;
-    const ratioy = height / DEVICE_HEIGHT;
+    const ratioX = width / SCREEN_WIDTH;
+    const ratioy = height / SCREEN_HEIGHT;
     const cropData = {
       offset: {
         x: PADDING_WIDTH * ratioX,

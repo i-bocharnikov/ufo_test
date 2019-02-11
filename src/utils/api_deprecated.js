@@ -250,29 +250,3 @@ function formatApiError(error) {
 
   return { key: key, message: message };
 }
-
-/* TEMPORARY */
-
-const ufodrive_server_api_v2 = axios.create({
-  baseURL: `${configurations.UFO_SERVER_API_URL}api/v2/`,
-  timeout: 30000
-});
-
-export async function getFromApi_v2(
-  path,
-  suppressToastBox = false,
-  usePublicApi = false
-) {
-  try {
-    const api = usePublicApi
-      ? ufodrive_server_public_api
-      : ufodrive_server_api_v2;
-    await activitiesStore.activities.registerInternetStart();
-    const response = await api.get(path);
-    await activitiesStore.activities.registerInternetStopSuccess();
-
-    return response.data;
-  } catch (error) {
-    handleError(error, suppressToastBox);
-  }
-}

@@ -53,6 +53,7 @@ export default class BookingStore {
   @observable voucherCode = this._defaultStore.voucherCode;
   @observable loyaltyProgramInfo = this._defaultStore.loyaltyProgramInfo;
   @observable useRefferalAmount = this._defaultStore.useRefferalAmount;
+  @observable allowReferralAmountUse = this._defaultStore.allowReferralAmountUse;
 
   @observable bookingConfirmation = this._defaultStore.bookingConfirmation;
 
@@ -87,6 +88,7 @@ export default class BookingStore {
       currentCreditCardRef: null,
       voucherCode: '',
       loyaltyProgramInfo: '',
+      allowReferralAmountUse: false,
       useRefferalAmount: false,
       bookingConfirmation: null
     };
@@ -379,6 +381,7 @@ export default class BookingStore {
     const data = await order.getPaymentOptions(this.selectedLocationRef);
     this.stripeApiKey = data.paymentPublicApi;
     this.loyaltyProgramInfo = data.loyaltyProgram.message;
+    this.allowReferralAmountUse = data.loyaltyProgram.referralAmountAvaialable;
 
     this.userCreditCards = data.userCreditCards;
     const defaultCard = _.find(this.userCreditCards, [ 'default', true ]);

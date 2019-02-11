@@ -1,51 +1,48 @@
 import { observable, action } from 'mobx';
 
-import supportStore from '../stores/supportStore';
-import registerStore from '../stores/registerStore';
-import { driveStore } from '../stores';
-import OTAKeyStore from '../stores/otaKeyStore';
-import { checkConnectivity } from '../utils/api_deprecated';
-import { hydrate } from '../utils/store';
-import { confirm } from '../utils/interaction';
-import otaKeyStore from '../stores/otaKeyStore';
-import remoteLoggerService from '../utils/remoteLoggerService';
+import supportStore from './../stores/supportStore';
+import registerStore from './../stores/registerStore';
+import { driveStore } from './../stores';
+import otaKeyStore from './../stores/otaKeyStore';
+import { checkConnectivity } from './../utils/api_deprecated';
+import { hydrate } from './../utils/store';
+import { confirm } from './../utils/interaction';
+import remoteLoggerService from './../utils/remoteLoggerService';
+import { showAlertInfo } from './../utils/interaction';
 
 class AppStore {
-  @observable isAppReady: boolean = false;
+  @observable isAppReady = false;
+  keyAccessDeviceToken = null;
 
   @action
-  async register(): Promise<boolean> {
+  async register() {
     try {
-      let keyAccessDeviceIdentifier = await OTAKeyStore.getKeyAccessDeviceIdentifier();
-      let keyAccessDeviceToken = await registerStore.registerDevice(
-        keyAccessDeviceIdentifier
-      );
-      if (keyAccessDeviceToken) {
+      let keyAccessDeviceIdentifier = await otaKeyStore.getKeyAccessDeviceIdentifier();
+      this.keyAccessDeviceToken = await registerStore.registerDevice(keyAccessDeviceIdentifier);
+
+      if (this.keyAccessDeviceToken) {
         await remoteLoggerService.info(
           'register',
           `registration success including keyAccessDeviceToken`,
           registerStore.user
         );
-        await OTAKeyStore.openSession(keyAccessDeviceToken);
+        await otaKeyStore.openSession(this.keyAccessDeviceToken);
       } else {
         await remoteLoggerService.warn(
           'register',
           `registration done but without keyAccessDeviceToken so we force creating new one`,
           registerStore.user
         );
-        keyAccessDeviceIdentifier = await OTAKeyStore.getKeyAccessDeviceIdentifier(
-          true
-        );
-        let keyAccessDeviceToken = await registerStore.registerDevice(
-          keyAccessDeviceIdentifier
-        );
-        if (keyAccessDeviceToken) {
+        keyAccessDeviceIdentifier = await otaKeyStore.getKeyAccessDeviceIdentifier(true);
+        this.keyAccessDeviceToken = await registerStore.registerDevice(keyAccessDeviceIdentifier);
+
+        if (this.keyAccessDeviceToken) {
           await remoteLoggerService.info(
             'register',
             `registration success with new keyAccessDeviceToken`,
             registerStore.user
           );
-          await OTAKeyStore.openSession(keyAccessDeviceToken);
+          await otaKeyStore.openSession(this.keyAccessDeviceToken);
         } else {
           await remoteLoggerService.error(
             'register',
@@ -67,7 +64,7 @@ class AppStore {
   }
 
   @action
-  async loadRemoteData(): Promise<boolean> {
+  async loadRemoteData() {
     try {
       await remoteLoggerService.initialise();
       await driveStore.reset();
@@ -167,24 +164,31 @@ class AppStore {
   async initialise() {
     this.isAppReady = false;
     await this.initialiseLocalStore();
-    if (await checkConnectivity()) {
-      if (await this.register()) {
+    const canBeConnected = await checkConnectivity();
+
+    if (canBeConnected) {
+      const isRegistered = await this.register();
+
+      if (isRegistered) {
         await this.loadRemoteData();
       }
+
+      await this.showStartUpMessage();
     } else {
       await remoteLoggerService.info(
         'initialise',
-        `Without connectivity, we reuse existing token (used if connectivity is back) and register OTAlisterners`,
+        'Without connectivity, we reuse existing token (used if connectivity is back) and register OTAlisterners',
         registerStore.user
       );
       await registerStore.reuseToken();
-      await OTAKeyStore.addListeners();
+      await otaKeyStore.addListeners();
     }
+
     this.isAppReady = true;
   }
 
   @action
-  async connect(t, code): Promise<boolean> {
+  async connect(t, code) {
     if (await checkConnectivity()) {
       if (
         !(await registerStore.connect(
@@ -201,22 +205,25 @@ class AppStore {
   }
 
   @action
-  async disconnect(t): Promise<boolean> {
+  async disconnect(t) {
     confirm(
       t('global:confirmationTitle'),
       t('register:disconnectConfirmationMessage'),
       async () => {
-        if (await checkConnectivity()) {
+        if ( await checkConnectivity() ) {
           registerStore.disconnect(t);
+          otaKeyStore.closeSession();
           await this.initialise();
-          await remoteLoggerService.info(
-            'disconnect',
-            `success`,
-            registerStore.user
-          );
+          await remoteLoggerService.info('disconnect', 'success', registerStore.user);
         }
       }
     );
+  }
+
+  async showStartUpMessage() {
+    if (registerStore.startupMessage) {
+      await showAlertInfo(null, registerStore.startupMessage);
+    }
   }
 }
 

@@ -1,5 +1,4 @@
-import { createBottomTabNavigator, createStackNavigator } from 'react-navigation';
-
+import createBottomTabNavigator from './utils/createAnimatedBottomTabNavigator';
 import { keys, screens } from './helpers';
 import BookingStackNavigator from './BookingStackNavigator';
 import InspectStackNavigator from './InspectStackNavigator';
