@@ -199,10 +199,7 @@ export default class BookingStore {
       this.endRentalDate = this.startRentalDate;
     }
 
-    if (this.startRentalDate.diff(this.endRentalDate, 'days') === 0) {
-      this.correctSelectedTime();
-    }
-
+    this.correctSelectedTime();
     this.isLoading = true;
     await this.getOrderSimulation();
     this.isLoading = false;
@@ -228,10 +225,7 @@ export default class BookingStore {
       this.startRentalDate = this.endRentalDate;
     }
 
-    if (this.startRentalDate.diff(this.endRentalDate, 'days') === 0) {
-      this.correctSelectedTime();
-    }
-
+    this.correctSelectedTime();
     this.isLoading = true;
     await this.getOrderSimulation();
     this.isLoading = false;
@@ -242,10 +236,24 @@ export default class BookingStore {
   */
   @action
   correctSelectedTime = () => {
+    /* handle case for ongoign rental */
+    if (
+      this.isOngoing
+      && TODAY.diff(this.endRentalDate, 'days') === 0
+      && moment(this.endRentalTime, values.TIME_STRING_FORMAT).isBefore( Date.now() )
+    ) {
+      this.endRentalTime = moment()
+        .startOf('hour')
+        .add(60, 'minutes')
+        .format(values.TIME_STRING_FORMAT);
+      return;
+    }
+
+    /* handle cases for other rentals */
     const startIndex = this.rollPickerStartSelectedTimeItem;
     const endIndex = this.rollPickerEndSelectedTimeItem;
 
-    if (startIndex < endIndex) {
+    if (this.startRentalDate.diff(this.endRentalDate, 'days') !== 0 || startIndex < endIndex) {
       return;
     }
 
@@ -270,11 +278,7 @@ export default class BookingStore {
   selectCalendarDates = async (dateMomentStart, dateMomentEnd) => {
     this.startRentalDate = dateMomentStart;
     this.endRentalDate = dateMomentEnd;
-
-    if (this.startRentalDate.diff(this.endRentalDate, 'days') === 0) {
-      this.correctSelectedTime();
-    }
-
+    this.correctSelectedTime();
     this.isLoading = true;
     await this.getOrderSimulation();
     this.isLoading = false;
@@ -332,9 +336,13 @@ export default class BookingStore {
       this.endRentalTime = timeStr;
     }
 
-    if (isOneDayRental && this.rollPickerStartSelectedTimeItem >= itemIndex) {
+    if (!this.isOngoing && isOneDayRental && this.rollPickerStartSelectedTimeItem >= itemIndex) {
       const prevIndex = itemIndex - 1 >= 0 ? itemIndex - 1 : itemIndex;
       this.startRentalTime = this.rollPickersTimeItems[prevIndex].label;
+    }
+
+    if (this.isOngoing) {
+      this.correctSelectedTime();
     }
 
     this.isLoading = true;
@@ -359,17 +367,18 @@ export default class BookingStore {
       /* if rental didn't start, check and set chosen dates to min allowed values */
       this.startRentalDate = startDate.isBefore(TODAY) ? TODAY : startDate;
       this.endRentalDate = endDate.isBefore(this.startRentalDate) ? TOMORROW : endDate;
+      this.correctSelectedTime();
 
-      if (this.startRentalDate.diff(this.endRentalDate, 'days') === 0) {
-        this.correctSelectedTime();
-      }
     } else {
       /* if rental is ongoing, set start as constant value and end date as min allowed value */
       this.startRentalDate = startDate;
 
       if (momentEndBooking.isBefore( Date.now() )) {
         this.endRentalDate = TODAY;
-        this.endRentalTime = moment().endOf('hour').add(60, 'minutes');
+        this.endRentalTime = moment()
+          .startOf('hour')
+          .add(60, 'minutes')
+          .format(values.TIME_STRING_FORMAT);
       } else {
         this.endRentalDate = endDate;
       }
@@ -580,10 +589,13 @@ export default class BookingStore {
     const momentStartAlt = moment.utc(startAlt).tz(this.order.schedule.timezone);
     const momentEndAlt = moment.utc(endAlt).tz(this.order.schedule.timezone);
 
-    this.startRentalTime = momentStartAlt.format(values.TIME_STRING_FORMAT);
     this.endRentalTime = momentEndAlt.format(values.TIME_STRING_FORMAT);
-    this.startRentalDate = momentStartAlt.startOf('day');
     this.endRentalDate = momentEndAlt.startOf('day');
+
+    if (!this.isOngoing) {
+      this.startRentalTime = momentStartAlt.format(values.TIME_STRING_FORMAT);
+      this.startRentalDate = momentStartAlt.startOf('day');
+    }
 
     this.isLoading = true;
     await this.getOrderSimulation();
@@ -619,10 +631,27 @@ export default class BookingStore {
   }
 
   /**
+   * @description Get locked data for roll picker about start date
+   */
+  @computed
+  get rollPickerOngoingStartDate() {
+    const dateString = this.startRentalDate.format(values.DATE_ROLLPICKER_FORMAT);
+    return [{
+      label: dateString,
+      id: dateString,
+      available: true
+    }];
+  }
+
+  /**
    * @description Get selected row into picker for start date
    */
   @computed
   get rollPickerStartSelectedIndex() {
+    if (this.isOngoing) {
+      return 0;
+    }
+
     return this.startRentalDate.diff(TODAY, 'days');
   }
 
@@ -683,6 +712,10 @@ export default class BookingStore {
    */
   @computed
   get rollPickerStartSelectedTimeItem() {
+    if (this.isOngoing) {
+      return 0;
+    }
+
     const index = _.findIndex(
       this.rollPickersTimeItems,
       item => item.label === this.startRentalTime
@@ -702,6 +735,18 @@ export default class BookingStore {
     );
 
     return index === -1 ? 0 : index;
+  }
+
+  /**
+   * @description Get locked time for roll picker about start time
+   */
+  @computed
+  get rollPickerOngoingStartTime() {
+    console.log('GETTER', this.startRentalTime);
+    return [{
+      label: this.startRentalTime,
+      id: this.startRentalTime
+    }];
   }
 
   /**

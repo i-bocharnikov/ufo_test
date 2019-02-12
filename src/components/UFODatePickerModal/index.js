@@ -134,6 +134,16 @@ export default class UFODatePickerModal extends PureComponent {
     */
   handleDayPress = dateString => {
     const { startPickedDate } = this.state;
+    const { onlyEndDate, startRental } = this.props;
+
+    if (onlyEndDate) {
+      this.setState({
+        startPickedDate: startRental || moment().format(values.DATE_STRING_FORMAT),
+        endPickedDate: dateString
+      });
+
+      return;
+    }
 
     if (startPickedDate && dateString === startPickedDate) {
       this.setState({
@@ -217,5 +227,6 @@ UFODatePickerModal.propTypes = {
     PropTypes.object
   ]),
   startRental: PropTypes.string,
-  endRental: PropTypes.string
+  endRental: PropTypes.string,
+  onlyEndDate: PropTypes.bool
 };
