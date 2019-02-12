@@ -57,6 +57,10 @@ export default class BookingStore {
 
   @observable bookingConfirmation = this._defaultStore.bookingConfirmation;
 
+  /* modify existing booking */
+  @observable isEditing = this._defaultStore.isEditing;
+  @observable isOngoing = this._defaultStore.isOngoing;
+
   /**
    * @description Default data for store
    */
@@ -90,7 +94,9 @@ export default class BookingStore {
       loyaltyProgramInfo: '',
       allowReferralAmountUse: false,
       useRefferalAmount: false,
-      bookingConfirmation: null
+      bookingConfirmation: null,
+      isEditing: false,
+      isOngoing: false
     };
   }
 
@@ -109,7 +115,11 @@ export default class BookingStore {
    */
   @action
   getInitialData = async () => {
-    this.resetStore();
+    if (!this.isEditing) {
+      /* in case of editing booking the reset makes before attach editing data */
+      this.resetStore();
+    }
+
     this.isLoading = true;
 
     const [ receivedLocations, receivedCars ] = await Promise.all([

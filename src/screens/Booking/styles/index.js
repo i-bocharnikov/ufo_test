@@ -571,5 +571,9 @@ export default StyleSheet.create({
     ...textThemes.SP_REGULAR,
     color: colors.MAIN_LIGHT_COLOR,
     fontSize: 14
+  },
+
+  undoBookingBtn: {
+    marginTop: 28
   }
 });

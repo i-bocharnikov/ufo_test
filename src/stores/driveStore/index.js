@@ -1,20 +1,14 @@
-import { Platform } from 'react-native';
 import moment from 'moment';
 import 'moment-timezone';
 import { observable, action, computed } from 'mobx';
 import { persist } from 'mobx-persist';
 import _ from 'lodash';
 
-import { getFromApi, putToApi } from '../utils/api_deprecated';
-import { dateFormats, actionStyles, icons } from '../utils/global';
+import { getFromApi, putToApi } from './../../utils/api_deprecated';
+import { actionStyles, icons } from './../../utils/global';
+import RENTAL_STATUS from './rentalStatuses';
 
 const DEBUG = false;
-
-const RENTAL_STATUS = {
-  CONFIRMED: 'confirmed',
-  ONGOING: 'ongoing',
-  CLOSED: 'closed'
-};
 
 class Location {
   @persist @observable reference = null;

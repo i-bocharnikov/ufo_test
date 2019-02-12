@@ -13,7 +13,7 @@ import otaKeyStore from './../../stores/otaKeyStore';
 import registerStore from './../../stores/registerStore';
 import UFOHeader from './../../components/header/UFOHeader';
 import UFOActionBar from './../../components/UFOActionBar';
-import { UFOContainer, UFOText } from './../../components/common';
+import { UFOContainer } from './../../components/common';
 import UFOCard from './../../components/UFOCard';
 import UFOSlider from './../../components/UFOSlider';
 import UFOPopover from './../../components/UFOPopover';
@@ -76,7 +76,7 @@ class DriveScreen extends Component {
       <UFOContainer
         video={videos.homeScreenBg}
         image={background}
-       >
+      >
         <UFOHeader
           transparent={true}
           logo={true}
@@ -113,20 +113,19 @@ class DriveScreen extends Component {
     );
   }
 
+  renderRental = ({ item }) => !item ? null : (
+    <DriveCard
+      rental={item}
+      navigation={this.props.navigation}
+    />
+  );
+
   refreshControl = () => (
     <RefreshControl
       refreshing={this.refreshing}
       onRefresh={this.refreshRental}
     />
   );
-
-  renderRental({ item }) {
-    if (item) {
-      return <DriveCard rental={item} />;
-    } else {
-      return null;
-    }
-  }
 
   compileActions = () => {
     const { t, navigation } = this.props;

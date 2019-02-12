@@ -43,6 +43,7 @@ class StepBookScreen extends Component {
         navBack={this.navBack}
         navToFaq={this.navToFaq}
         currentStep={1}
+        isEditing={bookingStore.isEditing}
         BottomActionPanel={this.renderBottomPanel()}
         ref={ref => (this.screenWrapper = ref)}
       >
@@ -157,6 +158,20 @@ class StepBookScreen extends Component {
               wrapperStyles={styles.rollPicker}
             />
           </View>
+          {bookingStore.isEditing && !bookingStore.isOngoing && (
+            <TouchableOpacity
+              onPress={this.undoEditingBooking}
+              activeOpacity={values.BTN_OPACITY_DEFAULT}
+              style={[styles.actionBtnDark, styles.undoBookingBtn]}
+            >
+              <Text
+                style={styles.actionBtnDarkLabel}
+                numberOfLines={1}
+              >
+                {t('booking:undoBooking')}
+              </Text>
+            </TouchableOpacity>
+          )}
           <UFODatePickerModal
             isVisible={this.state.showModalCalendar}
             onClose={() => this.setState({ showModalCalendar: false })}
@@ -280,6 +295,10 @@ class StepBookScreen extends Component {
   };
 
   navBack = () => {
+    if (bookingStore.isEditing) {
+      bookingStore.resetStore();
+    }
+
     this.props.navigation.navigate(screenKeys.Home);
   };
 
@@ -341,6 +360,10 @@ class StepBookScreen extends Component {
     }
 
     this.props.navigation.navigate(screenKeys.BookingStepPay);
+  };
+
+  undoEditingBooking = () => {
+    // method from booking store
   };
 }
 

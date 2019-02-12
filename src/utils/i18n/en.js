@@ -200,7 +200,8 @@ export default {
     connecting: '...Connecting...',
     locked: 'Doors locked',
     unlocked: 'Doors unlocked',
-    noData: '...'
+    noData: '...',
+    editBooking: 'Edit'
   },
   guide: {
     findTitle: 'Where is the car',
@@ -215,6 +216,7 @@ export default {
   },
   booking: {
     screenTitle: 'Book your car',
+    screenTitleEdit: 'Update booking',
     subTitleStep1: 'BOOK',
     subTitleStep2: 'PAY & CONFIRM',
     subTitleStep3: 'DRIVE',
@@ -272,7 +274,8 @@ export default {
     ageConfirmation:
       'By confirming, I certify that I have read and fully accepted the general terms and conditions and that I am at least 26 years old and in possession of a valid driver license.',
     termsAlertBtn: 'Read terms',
-    termsLinkLabel: 'Terms and conditions'
+    termsLinkLabel: 'Terms and conditions',
+    undoBooking: 'Cancel booking (fees may apply)'
   },
   launch: {
     launchTitle: 'Fast track\ncar rental',

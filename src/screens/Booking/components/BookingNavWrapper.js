@@ -10,12 +10,12 @@ import navBarStyles from './../../../components/header/styles/navBarStyles';
 
 class BookingNavWrapper extends Component {
   render() {
-    const { t, navBack, navToFaq, BottomActionPanel } = this.props;
+    const { t, navBack, navToFaq, BottomActionPanel, isEditing } = this.props;
 
     return (
       <View style={[ styles.screenWrapper, BottomActionPanel && styles.wrapperBottomPadding ]}>
         <UFONavBarWrapper
-          title={t('booking:screenTitle')}
+          title={t(isEditing ? 'screenTitleEdit': 'screenTitle')}
           SubtitleComponent={this.getSubTitleComponent()}
           leftBtnAction={navBack}
           rightBtnAction={navToFaq}
@@ -41,7 +41,7 @@ class BookingNavWrapper extends Component {
             currentStep > 1 && styles.headerPastStep
           ]}
         >
-          1. {t('booking:subTitleStep1')}
+          1. {t('subTitleStep1')}
         </Text>
         <UFOIcon
           name="chevron-thin-right"
@@ -59,7 +59,7 @@ class BookingNavWrapper extends Component {
           currentStep > 2 && styles.headerPastStep
         ]}
         >
-          2. {t('booking:subTitleStep2')}
+          2. {t('subTitleStep2')}
         </Text>
         <UFOIcon
           name="chevron-thin-right"
@@ -76,7 +76,7 @@ class BookingNavWrapper extends Component {
           currentStep < 3 && styles.headerFutureStep
         ]}
         >
-          3. {t('booking:subTitleStep3')}
+          3. {t('subTitleStep3')}
         </Text>
       </Fragment>
     );
@@ -94,7 +94,8 @@ BookingNavWrapper.propTypes = {
   navToFaq: PropTypes.func,
   navToFirstStep: PropTypes.func,
   currentStep: PropTypes.number,
-  BottomActionPanel: PropTypes.node
+  BottomActionPanel: PropTypes.node,
+  isEditing: PropTypes.bool
 };
 
-export default translate('', { withRef: true })(BookingNavWrapper);
+export default translate('booking', { withRef: true })(BookingNavWrapper);

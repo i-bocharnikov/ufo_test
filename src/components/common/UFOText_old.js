@@ -1,109 +1,128 @@
-import React from 'react';
-import { Text } from 'react-native';
+import React, { PureComponent } from 'react';
+import { Text, StyleSheet } from 'react-native';
+import _ from 'lodash';
 
 import { colors, fonts } from './../../utils/global';
 
-export default class UFOText_old extends React.Component {
+export default class UFOText_old extends PureComponent {
   render() {
-    const style = this.props.style ? { ...this.props.style } : {};
+    return (
+      <Text { ...this.props } style={this.computedStyles}>
+        {this.text}
+      </Text>
+    );
+  }
 
-    if (!style.color) {
-      style.color = this.props.inverted ? colors.INVERTED_TEXT.string() : colors.TEXT.string();
-    }
-    if (!style.fontFamily) {
-      style.fontFamily = fonts.LIGHT;
-    }
-    if (!style.fontSize) {
-      style.fontSize = 14;
-    }
-    if (this.props.color) {
-      style.color = this.props.color.string();
-    }
-    if (this.props.bold) {
-      style.fontWeight = 'bold';
-    }
-    if (this.props.italic) {
-      style.fontStyle = 'italic';
-    }
-    if (this.props.h1) {
-      style.fontSize = 20;
-    }
-    if (this.props.h2) {
-      style.fontSize = 19;
-    }
-    if (this.props.h3) {
-      style.fontSize = 18;
-    }
-    if (this.props.h4) {
-      style.fontSize = 17;
-    }
-    if (this.props.h5) {
-      style.fontSize = 16;
-    }
-    if (this.props.h6) {
-      style.fontSize = 15;
-    }
-    if (this.props.h7) {
-      style.fontSize = 14;
-    }
-    if (this.props.h8) {
-      style.fontSize = 13;
-    }
-    if (this.props.h9) {
-      style.fontSize = 12;
-    }
-    if (this.props.h10) {
-      style.fontSize = 11;
-    }
-    if (this.props.h11) {
-      style.fontSize = 10;
-    }
-    if (this.props.h12) {
-      style.fontSize = 9;
-    }
-    if (this.props.h13) {
-      style.fontSize = 8;
-    }
-    if (this.props.h14) {
-      style.fontSize = 7;
-    }
-    if (this.props.link) {
-      style.textDecorationLine = 'underline';
-    }
-    if (this.props.note) {
-      style.color = this.props.inverted
-        ? colors.DISABLE.string()
-        : colors.TRANSITION_BACKGROUND.string();
-    }
-    if (this.props.log) {
-      style.fontSize = 10;
-    }
-    if (this.props.center) {
-      style.textAlign = 'center';
-    }
-    if (this.props.underline) {
-      style.borderColor = colors.ACTIVE.string();
-      style.borderWidth = 1;
-    }
-
-    let text = this.props.children ? this.props.children : '';
+  get text() {
+    let text = this.props.children || '';
 
     if (this.props.upper) {
       text = text.toUpperCase();
     }
 
-    return (
-      <Text
-        style={style}
-        onPress={this.props.onPress}
-      >
-        {text}
-      </Text>
-    );
+    return text;
+  }
+
+  get computedStyles() {
+    const optionStyles = StyleSheet.create({
+      text: {
+        ...this.colorStyle,
+        ...this.fontSizeStyle,
+        ...this.underlineStyle,
+        ...this.alignStyle,
+        ...this.fontFamilyStyle
+      }
+    });
+
+    return [ optionStyles.text, this.props.style ];
+  }
+
+  get colorStyle() {
+    const { color, note, inverted } = this.props;
+    let computedColor = null;
+
+    if (note) {
+      computedColor = inverted ? colors.DISABLE : colors.TRANSITION_BACKGROUND;
+    } else if (color) {
+      computedColor = color;
+    } else {
+      computedColor = inverted ? colors.INVERTED_TEXT : colors.TEXT;
+    }
+
+    if (computedColor && _.isFunction(computedColor.string)) {
+      computedColor = computedColor.string();
+    }
+
+    return computedColor ? { color: computedColor } : {};
+  }
+
+  get fontSizeStyle() {
+    switch(true) {
+      case !!this.props.log:
+        return { fontSize: 10 };
+      case !!this.props.h14:
+        return { fontSize: 7 };
+      case !!this.props.h13:
+        return { fontSize: 8 };
+      case !!this.props.h12:
+        return { fontSize: 9 };
+      case !!this.props.h11:
+        return { fontSize: 10 };
+      case !!this.props.h10:
+        return { fontSize: 11 };
+      case !!this.props.h9:
+        return { fontSize: 12 };
+      case !!this.props.h8:
+        return { fontSize: 13 };
+      case !!this.props.h7:
+        return { fontSize: 14 };
+      case !!this.props.h6:
+        return { fontSize: 15 };
+      case !!this.props.h5:
+        return { fontSize: 16 };
+      case !!this.props.h4:
+        return { fontSize: 17 };
+      case !!this.props.h3:
+        return { fontSize: 18 };
+      case !!this.props.h2:
+        return { fontSize: 19 };
+      case !!this.props.h1:
+        return { fontSize: 20 };
+      default:
+        return { fontSize: 14 };
+    }
+  }
+
+  get underlineStyle() {
+    const style = {};
+
+    if (this.props.link) {
+      style.textDecorationLine = 'underline';
+    }
+
+    if (this.props.underline) {
+      style.borderColor = colors.ACTIVE.string();
+      style.borderWidth = 1;
+    }
+
+    return style;
+  }
+
+  get alignStyle() {
+    return this.props.center ? { textAlign: 'center' } : {};
+  }
+
+  get fontFamilyStyle() {
+    const style = { fontFamily: fonts.LIGHT };
+
+    if (this.props.bold) {
+      style.fontWeight = 'bold';
+    }
+
+    if (this.props.italic) {
+      style.fontStyle = 'italic';
+    }
+
+    return style;
   }
 }
-
-/*
- * use instead it default Text or create new UFOText component
- * because it will not work when 'style' passed as StyleSheet.create object
- */
