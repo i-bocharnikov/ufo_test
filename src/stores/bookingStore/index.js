@@ -342,6 +342,44 @@ export default class BookingStore {
     this.isLoading = false;
   };
 
+  /*
+   * @param {Object} momentStartBooking
+   * @param {Object} momentEndBooking
+   * @param {boolean} isOngoing
+   * @description Set origin start/end dates and time for editing booking
+  */
+  @action
+  setEditingPeriod = async (momentStartBooking, momentEndBooking, isOngoing) => {
+    const startDate = moment(momentStartBooking).startOf('day');
+    const endDate = moment(momentEndBooking).startOf('day');
+    this.startRentalTime = momentStartBooking.format(values.TIME_STRING_FORMAT);
+    this.endRentalTime = momentEndBooking.format(values.TIME_STRING_FORMAT);
+
+    if (!isOngoing) {
+      /* if rental didn't start, check and set chosen dates to min allowed values */
+      this.startRentalDate = startDate.isBefore(TODAY) ? TODAY : startDate;
+      this.endRentalDate = endDate.isBefore(this.startRentalDate) ? TOMORROW : endDate;
+
+      if (this.startRentalDate.diff(this.endRentalDate, 'days') === 0) {
+        this.correctSelectedTime();
+      }
+    } else {
+      /* if rental is ongoing, set start as constant value and end date as min allowed value */
+      this.startRentalDate = startDate;
+
+      if (momentEndBooking.isBefore( Date.now() )) {
+        this.endRentalDate = TODAY;
+        this.endRentalTime = moment().endOf('hour').add(60, 'minutes');
+      } else {
+        this.endRentalDate = endDate;
+      }
+    }
+
+    this.isLoading = true;
+    await this.getOrderSimulation();
+    this.isLoading = false;
+  };
+
   /**
    * @description Get description for location or car
    */
@@ -539,9 +577,7 @@ export default class BookingStore {
       return;
     }
 
-    const momentStartAlt = moment
-      .utc(startAlt)
-      .tz(this.order.schedule.timezone);
+    const momentStartAlt = moment.utc(startAlt).tz(this.order.schedule.timezone);
     const momentEndAlt = moment.utc(endAlt).tz(this.order.schedule.timezone);
 
     this.startRentalTime = momentStartAlt.format(values.TIME_STRING_FORMAT);
@@ -552,6 +588,18 @@ export default class BookingStore {
     this.isLoading = true;
     await this.getOrderSimulation();
     this.isLoading = false;
+  };
+
+  /*
+   * @description Undo booking (for editing existing rentals)
+  */
+  @action
+  undoBooking = async () => {
+    this.isLoading = true;
+    const isSuccess = await order.undoBooking();
+    this.isLoading = false;
+
+    return isSuccess;
   };
 
   /**

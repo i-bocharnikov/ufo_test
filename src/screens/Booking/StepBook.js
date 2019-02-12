@@ -362,8 +362,12 @@ class StepBookScreen extends Component {
     this.props.navigation.navigate(screenKeys.BookingStepPay);
   };
 
-  undoEditingBooking = () => {
-    // method from booking store
+  undoEditingBooking = async () => {
+    const isSuccess = await bookingStore.undoBooking();
+
+    if (isSuccess) {
+      this.props.navigation.navigate(screenKeys.BookingStepPay);
+    }
   };
 }
 

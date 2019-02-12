@@ -112,4 +112,9 @@ export default class Order {
       return this.fallbackPriceDescription;
     }
   }
+
+  static async undoBooking() {
+    // todo: add api, add params, return response result
+    return false;
+  }
 }

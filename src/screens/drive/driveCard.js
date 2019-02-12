@@ -1,21 +1,24 @@
 import React, { Component } from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { translate } from 'react-i18next';
+import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import moment from 'moment';
+import moment from 'moment-timezone';
 
 import { keys as screenKeys } from './../../navigators/helpers';
 import otaKeyStore from './../../stores/otaKeyStore';
 import { driveStore, bookingStore } from './../../stores';
 import rentalStatuses from './../../stores/driveStore/rentalStatuses';
-import { UFOText, UFOImage, UFOIcon } from './../../components/common';
+import { UFOText, UFOImage, UFOIcon, UFOLoader } from './../../components/common';
 import { values } from './../../utils/theme';
 import styles from './styles';
 
 @observer
 class DriveCard extends Component {
+  @observable isWaiting = false;
+
   render() {
     const { t, rental } = this.props;
     const { location, car, status } = _.pick(rental, [ 'location', 'car', 'status' ]);
@@ -72,6 +75,7 @@ class DriveCard extends Component {
             />
           </TouchableOpacity>
         )}
+        {this.isWaiting && <UFOLoader isVisible={true} />}
       </View>
     );
   }
@@ -102,25 +106,23 @@ class DriveCard extends Component {
   }
 
   startEditBooking = async () => {
+    this.isWaiting = true;
+
     const rental = this.props.rental;
     const locationRef = rental.location.reference;
     const carRef = rental.car.car_model.reference;
     const isOngoing = rental.status === rentalStatuses.ONGOING;
-    const startDate = moment(rental.start_at);
-    const endDate = moment(rental.end_at);
+    const startDate = moment.utc(rental.start_at).tz(rental.location.timezone);
+    const endDate = moment.utc(rental.end_at).tz(rental.location.timezone);
 
     bookingStore.resetStore();
     bookingStore.isEditing = true;
     bookingStore.isOngoing = isOngoing;
     bookingStore.selectLocation(locationRef);
     bookingStore.selectCar(carRef);
+    await bookingStore.setEditingPeriod(startDate, endDate, isOngoing);
 
-    if (!startDate.isBefore( Date.now() )) {
-      // todo: add fix for ongoing rental (expired start time)
-      // also add separate time setter (or separate handler for bookongStore)
-      await bookingStore.selectCalendarDates(startDate, endDate);
-    }
-
+    this.isWaiting = false;
     this.props.navigation.navigate(screenKeys.Booking);
   };
 }
