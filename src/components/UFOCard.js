@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet } from 'react-native';
-import { Card, CardItem, Body, Left } from 'native-base';
+import { StyleSheet, View } from 'react-native';
 import PropTypes from 'prop-types';
 
 import { UFOImage, UFOText, UFOVideo } from './common';
@@ -16,23 +15,56 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: CARD_RADIUS,
     borderBottomRightRadius: CARD_RADIUS
   },
-  singleContainer: {
-    borderTopLeftRadius: CARD_RADIUS,
-    borderTopRightRadius: CARD_RADIUS,
-    borderBottomLeftRadius: CARD_RADIUS,
-    borderBottomRightRadius: CARD_RADIUS
-  },
+  singleContainer: { borderRadius: CARD_RADIUS },
   media: {
     flex: 1,
+    height: 250,
     borderTopLeftRadius: CARD_RADIUS,
-    borderTopRightRadius: CARD_RADIUS,
-    height: 250
+    borderTopRightRadius: CARD_RADIUS
   },
-  cardContainer: { backgroundColor: 'transparent' }
+  cardContainer: {
+    flexWrap: 'nowrap',
+    marginVertical: 5,
+    marginHorizontal: 2,
+    borderWidth: 0.5,
+    borderColor: 'transparent',
+    borderRadius: 8,
+    shadowColor: 'black',
+    shadowOffset: { height: 2, width: 0 },
+    shadowOpacity: 0.1,
+    shadowRadius: 1.5,
+    elevation: 3
+  },
+  cardItem: {
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    borderRadius: 2,
+    flexDirection: 'row',
+    paddingBottom: 12,
+    paddingLeft: 17,
+    paddingRight: 17,
+    paddingTop: 12
+  },
+  cardItemBody: {
+    paddingBottom: -5,
+    paddingLeft: -5,
+    paddingRight: -5,
+    paddingTop: -5,
+  },
+  left: {
+    flexDirection: "row",
+    alignItems:"flex-start",
+    alignSelf:"center",
+    flex:1
+  },
+  body: {
+    alignSelf: "center",
+    flex: 1,
+    marginLeft: 10,
+    alignItems: null,
+  },
+  title: { marginBottom: 8 }
 });
-
-/* used for old UFOText which accept only raw styles object */
-const stylesDepreated = { title: { marginBottom: 8 } };
 
 export default class UFOCard extends Component {
   render() {
@@ -79,11 +111,10 @@ export default class UFOCard extends Component {
       : styles.singleContainer;
 
     return (
-      <Card style={styles.cardContainer}>
+      <View style={styles.cardContainer}>
         {hasMedia && (
-          <CardItem
-            cardBody
-            style={mediaStyles}
+          <View
+            style={[styles.cardItem, styles.cardItemBody, mediaStyles]}
           >
             {imageSource && (
               <UFOImage
@@ -99,16 +130,16 @@ export default class UFOCard extends Component {
                 resizeMode={imageResizeMode}
               />
             )}
-          </CardItem>
+          </View>
         )}
         {hasText && (
-          <CardItem style={textStyles}>
-            <Left>
-              <Body>
+          <View style={[styles.cardItem, textStyles]}>
+            <View style={styles.left}>
+              <View style={styles.body}>
                 <UFOText
                   h5
                   upper
-                  style={stylesDepreated.title}
+                  style={styles.title}
                 >
                   {title}
                 </UFOText>
@@ -116,28 +147,28 @@ export default class UFOCard extends Component {
                   key={index}
                   note
                 >{item}</UFOText>)}
-              </Body>
-            </Left>
-          </CardItem>
+              </View>
+            </View>
+          </View>
         )}
         {children && (
-          <CardItem style={childrenStyles}>
+          <View style={[styles.cardItem, childrenStyles]}>
             {children}
-          </CardItem>
+          </View>
         )}
         {message && (
-          <CardItem style={messageStyles}>
-            <Left>
-              <Body>
+          <View style={[styles.cardItem, messageStyles]}>
+            <View style={styles.left}>
+              <View style={styles.body}>
                 <UFOText
                   h5
                   note
                 >{message}</UFOText>
-              </Body>
-            </Left>
-          </CardItem>
+              </View>
+            </View>
+          </View>
         )}
-      </Card>
+      </View>
     );
   }
 }

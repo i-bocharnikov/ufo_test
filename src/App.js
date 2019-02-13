@@ -21,9 +21,6 @@ import appStore from './stores/appStore';
 import RootStack from './navigators/RootNavigator';
 import { colors, images } from './utils/theme';
 import remoteLoggerService from './utils/remoteLoggerService';
-/* deprecated for using, will remove later */
-import { StyleProvider } from 'native-base';
-import getTheme from './../native-base-theme/components';
 
 /* Handling some errors */
 YellowBox.ignoreWarnings([ 'Module RNI18n requires main queue setup' ]);
@@ -101,9 +98,7 @@ class App extends Component {
           backgroundColor={colors.BG_TRANSITION_COLOR}
           barStyle="light-content"
         />
-        <StyleProvider style={getTheme()}>
-          <RootStack />
-        </StyleProvider>
+        <RootStack />
         {!this.animationDone && (
           <Animated.Image
             source={images.BG_LAUNCH}
