@@ -4,7 +4,6 @@ import {
   SafeAreaView,
   StatusBar,
   Alert,
-  YellowBox,
   Animated,
   Dimensions,
   Easing
@@ -22,9 +21,7 @@ import RootStack from './navigators/RootNavigator';
 import { colors, images } from './utils/theme';
 import remoteLoggerService from './utils/remoteLoggerService';
 
-/* Handling some errors */
-YellowBox.ignoreWarnings([ 'Module RNI18n requires main queue setup' ]);
-
+/* Handling app global errors */
 const errorHandler = (error, isFatal) => {
   if (isFatal) {
     const message = i18n.t('error:jsExceptionFatal');

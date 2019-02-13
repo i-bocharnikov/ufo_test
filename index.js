@@ -3,7 +3,12 @@ import initializerDefineProperty from '@babel/runtime/helpers/esm/initializerDef
 
 Object.assign(babelHelpers, {
   applyDecoratedDescriptor,
-  initializerDefineProperty,
+  initializerDefineProperty
 });
+
+if (__DEV__) {
+  const { consoleWarnFilter } = require('./src/utils/consoleWarnFilter');
+  consoleWarnFilter();
+}
 
 require('./src');
