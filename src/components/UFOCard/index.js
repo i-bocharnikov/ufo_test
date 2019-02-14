@@ -55,13 +55,13 @@ export default class UFOCard extends Component {
       return null;
     }
 
-    const textStyles = this.hasMedia
-      ? children || message
-        ? null
-        : styles.bottomContainer
-      : children || message
-        ? styles.topContainer
-        : styles.singleContainer;
+    let textStyles;
+
+    if (this.hasMedia) {
+      textStyles = children || message ? null : styles.bottomContainer;
+    } else {
+      textStyles = children || message ? styles.topContainer : styles.singleContainer;
+    }
 
     return (
       <View style={[ styles.cardItem, textStyles ]}>
@@ -86,13 +86,13 @@ export default class UFOCard extends Component {
       return null;
     }
 
-    const childrenStyles = this.hasMedia || this.hasText
-      ? message
-        ? null
-        : styles.bottomContainer
-      : message
-        ? styles.topContainer
-        : styles.singleContainer;
+    let childrenStyles;
+
+    if (this.hasMedia || this.hasText) {
+      childrenStyles = message ? null : styles.bottomContainer;
+    } else {
+      childrenStyles = message ? styles.topContainer : styles.singleContainer;
+    }
 
     return (
       <View style={[ styles.cardItem, childrenStyles ]}>
