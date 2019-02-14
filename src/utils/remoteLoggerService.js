@@ -125,7 +125,7 @@ class RemoteLoggerService {
       context: { ...context }
     };
 
-    return await this.postLog(payload);
+    await this.postLog(payload);
   };
 
   postLog = async payload => {

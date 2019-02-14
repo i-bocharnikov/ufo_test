@@ -1,9 +1,4 @@
-import {
-  NativeModules,
-  DeviceEventEmitter,
-  NativeEventEmitter,
-  Platform
-} from 'react-native';
+import { NativeModules, DeviceEventEmitter, NativeEventEmitter, Platform } from 'react-native';
 import { observable, action, computed } from 'mobx';
 import moment from 'moment';
 import i18n from 'i18next';
@@ -12,10 +7,7 @@ import { persist } from 'mobx-persist';
 import { driveStore } from '.';
 import { actionStyles, icons } from './../utils/global';
 import { showToastError } from './../utils/interaction';
-import remoteLoggerService, {
-  severityTypes,
-  codeTypes
-} from '../utils/remoteLoggerService';
+import remoteLoggerService, { severityTypes, codeTypes } from '../utils/remoteLoggerService';
 
 const { OTAKeyModule } = NativeModules;
 const PlatformEventEmitter =
@@ -100,10 +92,9 @@ export default class OTAKeyStore {
       return;
     }
     actions.push({
-      style:
-        this.isConnecting || this.isConnected
-          ? actionStyles.DISABLE
-          : actionStyles.TODO,
+      style: this.isConnecting || this.isConnected
+        ? actionStyles.DISABLE
+        : actionStyles.TODO,
       icon: icons.CONNECT,
       onPress
     });
@@ -504,7 +495,7 @@ export default class OTAKeyStore {
         code: codeTypes.SUCCESS,
         message: `-> this.ota.switchToKey(${keyId}, ${String(showError)}) start`
       });
-      let result = await this.ota.switchToKey(keyId);
+      const result = await this.ota.switchToKey(keyId);
       await this.otaKeyLogger({
         severity: result ? severityTypes.INFO : severityTypes.ERROR,
         action: 'otakeystore.switchToKey',

@@ -35,10 +35,10 @@ export default class GuideStore {
     if (this.guidePacks === null || !driveStore.rental) {
       return [];
     }
-    const guidePack = this.guidePacks.find(guidePack => {
+    const guidePack = this.guidePacks.find(guide => {
       return (
-        guidePack.type === GUIDE_TYPE.FIND &&
-        guidePack.locationReference === driveStore.rental.location.reference
+        guide.type === GUIDE_TYPE.FIND &&
+        guide.locationReference === driveStore.rental.location.reference
       );
     });
 
@@ -53,10 +53,10 @@ export default class GuideStore {
     if (this.guidePacks === null || !driveStore.rental) {
       return [];
     }
-    const guidePack = this.guidePacks.find(guidePack => {
+    const guidePack = this.guidePacks.find(guide => {
       return (
-        guidePack.type === GUIDE_TYPE.RETURN &&
-        guidePack.locationReference === driveStore.rental.location.reference
+        guide.type === GUIDE_TYPE.RETURN &&
+        guide.locationReference === driveStore.rental.location.reference
       );
     });
     if (!guidePack) {
@@ -94,8 +94,8 @@ export default class GuideStore {
     const response = await getFromApi(`/guides/${guideType}/${locationReference}`);
 
     if (response && response.status === 'success') {
-      const guidePackIndex = this.guidePacks.findIndex(guidePack =>
-        guidePack.type === guideType && guidePack.locationReference === locationReference
+      const guidePackIndex = this.guidePacks.findIndex(guide =>
+        guide.type === guideType && guide.locationReference === locationReference
       );
 
       if (guidePackIndex >= 0) {

@@ -215,7 +215,7 @@ export default class RegisterStore {
 
   @action
   async disconnect() {
-    //TODO add logout service on server so we can unmap device and user in place of recreating new device
+    // NOTE: add logout service on server so we can unmap device and user in place of recreating new device
     await clearAuthenticationsFromStore();
     this.identificationFrontDocument = null;
     this.identificationBackDocument = null;
