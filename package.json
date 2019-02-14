@@ -40,7 +40,6 @@
     "moment": "^2.22.2",
     "moment-range": "^4.0.1",
     "moment-timezone": "^0.5.23",
-    "native-base": "^2.8.0",
     "prop-types": "^15.6.2",
     "react": "16.5.2",
     "react-i18next": "^7.13.0",
