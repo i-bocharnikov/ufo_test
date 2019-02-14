@@ -11,7 +11,7 @@ class Term {
   @persist @observable html = null;
 }
 
-export default class termStore {
+export default class TermStore {
   @observable term = new Term();
 
   @action
