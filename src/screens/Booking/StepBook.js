@@ -218,7 +218,7 @@ class StepBookScreen extends Component {
             }}
           >
             <UFOIcon
-              name="ios-calendar-outline"
+              name="ios-calendar"
               style={styles.rollPickerSeparatorIcon}
             />
           </TouchableOpacity>
@@ -260,7 +260,7 @@ class StepBookScreen extends Component {
         <View style={styles.rollPickerSeparatorWrapper}>
           <View style={styles.rollPickerSeparator} />
           <UFOIcon
-            name="ios-clock-outline"
+            name="md-time"
             style={[ styles.rollPickerSeparatorBtn, styles.rollPickerSeparatorIcon ]}
           />
         </View>
