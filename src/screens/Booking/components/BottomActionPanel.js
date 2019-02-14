@@ -59,7 +59,7 @@ class BottomActionPanel extends Component {
               {actionSubTitle}
             </Text>
           )}
-          {isWaiting && this.renderActionOverlap()}
+          {this.renderActionOverlap()}
         </TouchableOpacity>
       </View>
     );
@@ -98,6 +98,10 @@ class BottomActionPanel extends Component {
   };
 
   renderActionOverlap = () => {
+    if (!this.props.isWaiting) {
+      return null;
+    }
+
     return (
       <View style={styles.bottomPanelActionOverlap}>
         <UFOLoader

@@ -238,7 +238,7 @@ class DriveScreen extends Component {
 
   doEnableAndSwitch = async () => {
     if (driveStore.inUse && driveStore.rental.key_id) {
-      let keyId = driveStore.rental.key_id;
+      const keyId = driveStore.rental.key_id;
       if (keyId !== otaKeyStore.key.keyId || !otaKeyStore.isKeyEnabled) {
         await otaKeyStore.enableKey(keyId, false);
         await otaKeyStore.switchToKey(keyId, false);

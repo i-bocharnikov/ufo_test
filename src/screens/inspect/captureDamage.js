@@ -126,7 +126,11 @@ class CaptureDamageScreen extends Component {
           : actionStyles.DISABLE,
         icon: this.documentUri ? icons.NEW_CAPTURE : icons.CAPTURE,
         onPress: async () => {
-          this.documentUri ? (this.documentUri = null) : this.doCapture();
+          if (this.documentUri) {
+            this.documentUri = null;
+          } else {
+            this.doCapture();
+          }
         }
       }
     ];

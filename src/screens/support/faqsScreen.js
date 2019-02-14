@@ -1,20 +1,14 @@
 import React, { Component } from 'react';
-import { SectionList, View, Text, StyleSheet } from 'react-native';
+import { SectionList, View, StyleSheet } from 'react-native';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 import { translate } from 'react-i18next';
-import { NavigationEvents } from 'react-navigation';
 import Touchable from 'react-native-platform-touchable';
 import call from 'react-native-phone-call';
 
 import UFOHeader from './../../components/header/UFOHeader';
 import UFOActionBar from './../../components/UFOActionBar';
-import {
-  UFOContainer,
-  UFOText,
-  UFOIcon_old,
-  UFOImage
-} from './../../components/common';
+import { UFOContainer, UFOText, UFOIcon_old } from './../../components/common';
 import {
   actionStyles,
   icons,
@@ -23,11 +17,7 @@ import {
   navigationParams,
   screens
 } from './../../utils/global';
-import { driveStore, registerStore, supportStore } from './../../stores';
-import remoteLoggerService from '../../utils/remoteLoggerService';
-
-const SUPPORT_FAQ = navigationParams.SUPPORT_FAQ;
-const SUPPORT_FAQ_CATEGORY = navigationParams.SUPPORT_FAQ_CATEGORY;
+import { driveStore, supportStore } from './../../stores';
 
 const styles = StyleSheet.create({
   faqList: {
@@ -102,7 +92,6 @@ class SupportFaqsScreen extends Component {
 
     return (
       <UFOContainer image={screens.SUPPORT_FAQS.backgroundImage}>
-        <NavigationEvents onWillFocus={this.onLoad} />
         <UFOHeader
           t={t}
           navigation={navigation}
@@ -154,13 +143,6 @@ class SupportFaqsScreen extends Component {
       </View>
     </Touchable>
   );
-
-  onLoad = async payload => {
-    if (payload && payload.state && payload.state.routeName !== 'SupportFaqs') {
-      return;
-    }
-    //await this.doRefresh();
-  };
 
   onPressSection = reference => {
     if (this.section === reference) {

@@ -44,7 +44,7 @@ class IdentificationScreen extends Component {
     if (this.captureState === null) {
       this.captureState = !this.frontImageUrl || this.frontImageUrl === 'loading'
         ? captureStates.CAPTURE_FRONT
-        : this.captureState = captureStates.PREVIEW;
+        : (this.captureState = captureStates.PREVIEW);
     }
 
     const showCamera =
