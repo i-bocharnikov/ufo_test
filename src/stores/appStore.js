@@ -1,16 +1,13 @@
 import { observable, action } from 'mobx';
 
-import supportStore from './../stores/supportStore';
-import registerStore from './../stores/registerStore';
-import { driveStore } from './../stores';
-import otaKeyStore from './../stores/otaKeyStore';
+import { driveStore, otaKeyStore, registerStore, supportStore } from './../stores';
 import { checkConnectivity } from './../utils/api_deprecated';
 import { hydrate } from './../utils/store';
 import { confirm } from './../utils/interaction';
 import remoteLoggerService from './../utils/remoteLoggerService';
 import { showAlertInfo } from './../utils/interaction';
 
-class AppStore {
+export default class AppStore {
   @observable isAppReady = false;
   keyAccessDeviceToken = null;
 
@@ -23,14 +20,14 @@ class AppStore {
       if (this.keyAccessDeviceToken) {
         await remoteLoggerService.info(
           'register',
-          `registration success including keyAccessDeviceToken`,
+          'registration success including keyAccessDeviceToken',
           registerStore.user
         );
         await otaKeyStore.openSession(this.keyAccessDeviceToken);
       } else {
         await remoteLoggerService.warn(
           'register',
-          `registration done but without keyAccessDeviceToken so we force creating new one`,
+          'registration done but without keyAccessDeviceToken so we force creating new one',
           registerStore.user
         );
         keyAccessDeviceIdentifier = await otaKeyStore.getKeyAccessDeviceIdentifier(true);
@@ -39,14 +36,14 @@ class AppStore {
         if (this.keyAccessDeviceToken) {
           await remoteLoggerService.info(
             'register',
-            `registration success with new keyAccessDeviceToken`,
+            'registration success with new keyAccessDeviceToken',
             registerStore.user
           );
           await otaKeyStore.openSession(this.keyAccessDeviceToken);
         } else {
           await remoteLoggerService.error(
             'register',
-            `registration success but doesn't include keyAccessDeviceToken for the second time after forcing new temp token. give up`,
+            'registration success but doesn\'t include keyAccessDeviceToken for the second time after forcing new temp token. give up',
             registerStore.user
           );
         }
@@ -88,7 +85,7 @@ class AppStore {
         .then(() =>
           remoteLoggerService.info(
             'initialiseLocalStore',
-            `registerStore loaded`,
+            'registerStore loaded',
             registerStore.user
           )
         )
@@ -104,7 +101,7 @@ class AppStore {
         .then(() =>
           remoteLoggerService.info(
             'initialiseLocalStore',
-            `driveStore loaded`,
+            'driveStore loaded',
             driveStore.rentals ? driveStore.rentals.length : 0 + ' rentals'
           )
         )
@@ -120,7 +117,7 @@ class AppStore {
         .then(() =>
           remoteLoggerService.info(
             'initialiseLocalStore',
-            `supportStore loaded`,
+            'supportStore loaded',
             supportStore.faqCategories
               ? supportStore.faqCategories.length
               : 0 + ' faqCategories'
@@ -138,7 +135,7 @@ class AppStore {
         .then(() =>
           remoteLoggerService.info(
             'initialiseLocalStore',
-            `otaKeyStore loaded`,
+            'otaKeyStore loaded',
             otaKeyStore.key
           )
         )
@@ -226,6 +223,3 @@ class AppStore {
     }
   }
 }
-
-const appStore = new AppStore();
-export default appStore;

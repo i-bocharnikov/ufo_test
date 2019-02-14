@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { UFOText, UFOImage } from './../common';
 import { colors, icons, actionStyles, screens, sizes, logos } from './../../utils/global';
 import UFOAction from './../UFOAction';
-import activitiesStore from './../../stores/activitiesStore';
+import { activitiesStore } from './../../stores';
 import styles from './styles';
 
 @observer

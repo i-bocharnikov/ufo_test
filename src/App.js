@@ -16,7 +16,7 @@ import i18n from 'i18next';
 import { observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 
-import appStore from './stores/appStore';
+import { appStore } from './stores';
 import RootStack from './navigators/RootNavigator';
 import { colors, images } from './utils/theme';
 import remoteLoggerService from './utils/remoteLoggerService';

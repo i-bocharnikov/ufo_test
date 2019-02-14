@@ -5,9 +5,7 @@ import { observer } from 'mobx-react';
 import { translate } from 'react-i18next';
 
 import { keys as screenKeys } from './../../navigators/helpers';
-import appStore from './../../stores/appStore';
-import registerStore from './../../stores/registerStore';
-import { driveStore } from './../../stores';
+import { appStore, driveStore, registerStore } from './../../stores';
 import { UFOContainer, UFOImage } from './../../components/common';
 import UFOSlider from './../../components/UFOSlider';
 import styles from './styles';

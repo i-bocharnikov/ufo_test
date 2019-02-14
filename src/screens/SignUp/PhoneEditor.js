@@ -16,8 +16,7 @@ import {
   ufoInputStyles
 } from './../../components/common';
 import { screens, actionStyles, icons } from './../../utils/global';
-import appStore from './../../stores/appStore';
-import registerStore from './../../stores/registerStore';
+import { appStore, registerStore } from './../../stores';
 import styles from './styles';
 
 const REGEX_CODE_VALIDATION = /^([0-9]{3}-?[0-9]{3})$/;

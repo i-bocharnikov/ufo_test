@@ -8,7 +8,7 @@ import UFOHeader from './../../components/header/UFOHeader';
 import UFOActionBar from './../../components/UFOActionBar';
 import { UFOContainer, UFOTextInput } from './../../components/common';
 import { screens, actionStyles, icons } from '../../utils/global';
-import registerStore from './../../stores/registerStore';
+import { registerStore } from './../../stores';
 import styles from './styles';
 
 const REGEX_EMAIL_VALIDATION = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

@@ -7,10 +7,7 @@ import DeviceInfo from 'react-native-device-info';
 import { BluetoothStatus } from 'react-native-bluetooth-status';
 import _ from 'lodash';
 
-import { driveStore } from './../../stores';
-import appStore from './../../stores/appStore';
-import otaKeyStore from './../../stores/otaKeyStore';
-import registerStore from './../../stores/registerStore';
+import { appStore, driveStore, registerStore, otaKeyStore } from './../../stores';
 import UFOHeader from './../../components/header/UFOHeader';
 import UFOActionBar from './../../components/UFOActionBar';
 import { UFOContainer } from './../../components/common';

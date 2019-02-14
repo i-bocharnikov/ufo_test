@@ -8,9 +8,8 @@ import _ from 'lodash';
 import moment from 'moment-timezone';
 
 import { keys as screenKeys } from './../../navigators/helpers';
-import otaKeyStore from './../../stores/otaKeyStore';
-import { driveStore, bookingStore } from './../../stores';
-import rentalStatuses from './../../stores/driveStore/rentalStatuses';
+import { driveStore, bookingStore, otaKeyStore } from './../../stores';
+import rentalStatuses from './../../stores/DriveStore/rentalStatuses';
 import { UFOText, UFOImage, UFOIcon, UFOLoader } from './../../components/common';
 import { values } from './../../utils/theme';
 import styles from './styles';

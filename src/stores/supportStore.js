@@ -23,7 +23,7 @@ class Faq {
   @persist @observable priority = null;
 }
 
-class SupportStore {
+export default class SupportStore {
   @persist('list', FaqCategory) @observable faqCategories = [];
 
   async getFaq(faqCategoryReference, faqReference) {
@@ -66,6 +66,3 @@ class SupportStore {
     return false;
   }
 }
-
-const supportStore = new SupportStore();
-export default supportStore;

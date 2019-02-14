@@ -15,8 +15,7 @@ import { translate } from 'react-i18next';
 import DeviceInfo from 'react-native-device-info';
 
 import { keys as screenKeys } from './../../navigators/helpers';
-import registerStore from './../../stores/registerStore';
-import appStore from './../../stores/appStore';
+import { appStore, registerStore } from './../../stores';
 import UFOHeader from './../../components/header/UFOHeader';
 import UFOActionBar from './../../components/UFOActionBar';
 import UFOPopover from './../../components/UFOPopover';

@@ -3,7 +3,7 @@ import RNFetchBlob from 'rn-fetch-blob';
 
 import configurations from '../utils/configurations';
 import { errors, UFOError } from '../utils/global';
-import activitiesStore from '../stores/activitiesStore';
+import { activitiesStore } from '../stores';
 import { showToastError } from './interaction';
 
 export let SAVE_TOKEN = null;

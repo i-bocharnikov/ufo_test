@@ -45,7 +45,7 @@ class Key {
   @observable keySensitiveArgs;
 }
 
-class OTAKeyStore {
+export default class OTAKeyStore {
   ota = OTAKeyModule;
   @persist keyAccessDeviceRegistrationNumber = 9706753;
 
@@ -1032,5 +1032,3 @@ class OTAKeyStore {
     showToastError(message);
   };
 }
-
-export default new OTAKeyStore();

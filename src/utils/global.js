@@ -11,7 +11,7 @@ const THEME = configurations.theme;
 export const backgrounds = {
   HOME001:
     THEME === THEME_UFO
-      ? require('../assets/images/background/UFOBGHOME001.png')
+      ? require('../assets/images/background/UFOBGDRIVE001.png')
       : require('../assets/images/background/ACLBGHOME001.png'),
   HOME002:
     THEME === THEME_UFO

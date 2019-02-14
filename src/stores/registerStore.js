@@ -58,7 +58,7 @@ class User {
   @persist @observable face_capture_required = false;
 }
 
-class RegisterStore {
+export default class RegisterStore {
   @persist('object', User) @observable user = new User();
   @persist support_chat_identification_key = null;
 
@@ -270,7 +270,3 @@ class RegisterStore {
     return false;
   };
 }
-
-const registerStore = new RegisterStore();
-
-export default registerStore;

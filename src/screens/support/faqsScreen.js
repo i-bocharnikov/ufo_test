@@ -23,9 +23,7 @@ import {
   navigationParams,
   screens
 } from './../../utils/global';
-import supportStore from './../../stores/supportStore';
-import { driveStore } from './../../stores';
-import registerStore from '../../stores/registerStore';
+import { driveStore, registerStore, supportStore } from './../../stores';
 import remoteLoggerService from '../../utils/remoteLoggerService';
 
 const SUPPORT_FAQ = navigationParams.SUPPORT_FAQ;

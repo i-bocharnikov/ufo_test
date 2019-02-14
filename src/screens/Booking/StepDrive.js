@@ -12,8 +12,7 @@ import { observer } from 'mobx-react';
 import _ from 'lodash';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import { bookingStore, feedbackStore } from './../../stores';
-import registerStore from './../../stores/registerStore';
+import { bookingStore, feedbackStore, registerStore } from './../../stores';
 import { keys as screenKeys } from './../../navigators/helpers';
 import {
   UFOContainer,

@@ -1,10 +1,11 @@
+/* Deprecated! Use RN Text and textThemes instead */
 import React, { PureComponent } from 'react';
 import { Text, StyleSheet } from 'react-native';
 import _ from 'lodash';
 
 import { colors, fonts } from './../../utils/global';
 
-export default class UFOText_old extends PureComponent {
+export default class UFOText extends PureComponent {
   render() {
     return (
       <Text { ...this.props } style={this.computedStyles}>
@@ -60,12 +61,6 @@ export default class UFOText_old extends PureComponent {
     switch(true) {
       case !!this.props.log:
         return { fontSize: 10 };
-      case !!this.props.h14:
-        return { fontSize: 7 };
-      case !!this.props.h13:
-        return { fontSize: 8 };
-      case !!this.props.h12:
-        return { fontSize: 9 };
       case !!this.props.h11:
         return { fontSize: 10 };
       case !!this.props.h10:

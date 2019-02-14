@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-
 import { View, StyleSheet, ScrollView } from 'react-native';
 import Touchable from 'react-native-platform-touchable';
-import otaKeyStore from '../stores/otaKeyStore';
+
+import { otaKeyStore } from './../stores';
 import { UFOText } from './common';
 
 const styles = StyleSheet.create({
@@ -26,7 +26,11 @@ const styles = StyleSheet.create({
     alignContent: 'flex-start',
     backgroundColor: 'black'
   },
-  menu: { flexDirection: 'row', justifyContent: 'space-evenly', alignContent: 'center' },
+  menu: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    alignContent: 'center'
+  },
   menuItem: {
     flex: 1,
     flexDirection: 'row',
@@ -39,29 +43,49 @@ const styles = StyleSheet.create({
   menuItemText: {
     fontSize: 20,
     color: 'white'
-  }
+  },
+  scrollWrapper: { maxHeight: 500 }
 });
 
 @observer
 class UFOAdminMenu extends Component {
-  static displayName = 'UFOAdminMenu';
-
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.state = { visible: false };
   }
 
-  showDeveloperMenu = () => {
-    this.setState({ isVisible: true });
-  };
+  render() {
+    if (!__DEV__) {
+      return null;
+    }
 
-  clearLogs = async () => {
-    otaKeyStore.otaLog = ' ';
-  };
+    if (!this.state.isVisible) {
+      return (
+        <Touchable
+          style={styles.circle}
+          onPress={this.showDeveloperMenu}
+        />
+      );
+    }
 
-  closeMenu = () => {
-    this.setState({ isVisible: false });
-  };
+    const buttons = [
+      this.renderMenuItem('Clear', this.clearLogs),
+      this.renderMenuItem('Close', this.closeMenu)
+    ];
+
+    return (
+      <View style={styles.container}>
+        <View style={styles.menu}>
+          {buttons}
+        </View>
+        <ScrollView style={styles.scrollWrapper}>
+          <UFOText inverted log>
+            {otaKeyStore.otaLog}
+          </UFOText>
+        </ScrollView>
+      </View>
+    );
+  }
 
   renderMenuItem(text, onPress) {
     return (
@@ -80,42 +104,17 @@ class UFOAdminMenu extends Component {
     );
   }
 
-  render() {
-    if (!__DEV__) {
-      return null;
-    }
+  showDeveloperMenu = () => {
+    this.setState({ isVisible: true });
+  };
 
-    if (!this.state.isVisible) {
-      return (
-        <Touchable
-          style={styles.circle}
-          onPress={this.showDeveloperMenu}
-        >
-          <View />
-        </Touchable>
-      );
-    }
+  clearLogs = async () => {
+    otaKeyStore.otaLog = ' ';
+  };
 
-    const buttons = [
-      this.renderMenuItem('Clear', this.clearLogs),
-      this.renderMenuItem('Close', this.closeMenu)
-    ];
-
-    return (
-      <View style={styles.container}>
-        <View style={styles.menu}>{buttons}</View>
-        <ScrollView style={{ maxHeight: 500 }}>
-          <UFOText
-            inverted
-            log
-            disable={true}
-          >
-            {otaKeyStore.otaLog}
-          </UFOText>
-        </ScrollView>
-      </View>
-    );
-  }
+  closeMenu = () => {
+    this.setState({ isVisible: false });
+  };
 }
 
 export default UFOAdminMenu;
