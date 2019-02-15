@@ -57,7 +57,8 @@ export default {
     rentalKeyMissing:
       'The key is missing, please contact UFODRIVE if the problem persist.',
     rentalNotOpen: 'The rental is not yet started, please wait...',
-    bluetoothNeeded: 'Please enable bluetooth on device and try again'
+    bluetoothNeeded: 'Please enable bluetooth on device and try again',
+    connectivityIssue: 'Connectivity Issue, please try again'
   },
   icon: {
     reserve: 'Reserve',
