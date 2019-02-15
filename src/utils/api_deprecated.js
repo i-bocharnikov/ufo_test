@@ -3,8 +3,9 @@ import RNFetchBlob from 'rn-fetch-blob';
 
 import configurations from '../utils/configurations';
 import { errors, UFOError } from '../utils/global';
-import activitiesStore from '../stores/activitiesStore';
+import { activitiesStore } from '../stores';
 import { showToastError } from './interaction';
+import i18n from './i18n';
 
 export let SAVE_TOKEN = null;
 
@@ -245,7 +246,10 @@ function formatApiError(error) {
   }
 
   if (message === 'Network Error') {
-    return { key: 'error:internetConnectionRequired', message: message };
+    return {
+      key: 'error:internetConnectionRequired',
+      message: i18n.t('error:connectivityIssue')
+    };
   }
 
   return { key: key, message: message };

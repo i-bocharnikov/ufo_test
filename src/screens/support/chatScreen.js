@@ -8,7 +8,7 @@ import KeyboardSpacer from 'react-native-keyboard-spacer';
 import UFOHeader from './../../components/header/UFOHeader';
 import { UFOContainer, UFOLoader } from './../../components/common';
 import { screens } from './../../utils/global';
-import registerStore from './../../stores/registerStore';
+import { registerStore } from './../../stores';
 import remoteLoggerService from '../../utils/remoteLoggerService';
 
 const styles = StyleSheet.create({

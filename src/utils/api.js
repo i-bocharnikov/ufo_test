@@ -50,6 +50,11 @@ function formatResponse(axiosRes, isSuccess = true) {
 export function getErrorMessage(errorObj) {
   let errorMsg = null;
 
+  // axios error about connectivity
+  if (errorObj.message === 'Network Error') {
+    return i18n.t('error:connectivityIssue');
+  }
+
   if (
     errorObj.response
     && errorObj.response.data

@@ -7,13 +7,10 @@ import DeviceInfo from 'react-native-device-info';
 import { BluetoothStatus } from 'react-native-bluetooth-status';
 import _ from 'lodash';
 
-import { driveStore } from './../../stores';
-import appStore from './../../stores/appStore';
-import otaKeyStore from './../../stores/otaKeyStore';
-import registerStore from './../../stores/registerStore';
+import { appStore, driveStore, registerStore, otaKeyStore } from './../../stores';
 import UFOHeader from './../../components/header/UFOHeader';
 import UFOActionBar from './../../components/UFOActionBar';
-import { UFOContainer, UFOText } from './../../components/common';
+import { UFOContainer } from './../../components/common';
 import UFOCard from './../../components/UFOCard';
 import UFOSlider from './../../components/UFOSlider';
 import UFOPopover from './../../components/UFOPopover';
@@ -76,7 +73,7 @@ class DriveScreen extends Component {
       <UFOContainer
         video={videos.homeScreenBg}
         image={background}
-       >
+      >
         <UFOHeader
           transparent={true}
           logo={true}
@@ -113,20 +110,19 @@ class DriveScreen extends Component {
     );
   }
 
+  renderRental = ({ item }) => !item ? null : (
+    <DriveCard
+      rental={item}
+      navigation={this.props.navigation}
+    />
+  );
+
   refreshControl = () => (
     <RefreshControl
       refreshing={this.refreshing}
       onRefresh={this.refreshRental}
     />
   );
-
-  renderRental({ item }) {
-    if (item) {
-      return <DriveCard rental={item} />;
-    } else {
-      return null;
-    }
-  }
 
   compileActions = () => {
     const { t, navigation } = this.props;
@@ -139,7 +135,7 @@ class DriveScreen extends Component {
           ? actionStyles.DONE
           : actionStyles.TODO,
         icon: icons.RESERVE,
-        onPress: () => navigation.navigate(screenKeys.Booking)
+        onPress: this.navToBooking
       });
       actions.push({
         style: registerStore.isUserRegistered
@@ -242,7 +238,7 @@ class DriveScreen extends Component {
 
   doEnableAndSwitch = async () => {
     if (driveStore.inUse && driveStore.rental.key_id) {
-      let keyId = driveStore.rental.key_id;
+      const keyId = driveStore.rental.key_id;
       if (keyId !== otaKeyStore.key.keyId || !otaKeyStore.isKeyEnabled) {
         await otaKeyStore.enableKey(keyId, false);
         await otaKeyStore.switchToKey(keyId, false);

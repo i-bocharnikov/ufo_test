@@ -23,6 +23,7 @@ import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
 import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
 import com.solinor.bluetoothstatus.RNBluetoothManagerPackage;
+import com.oblador.vectoricons.VectorIconsPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -56,7 +57,8 @@ public class MainApplication extends OtaKeysApplication implements ReactApplicat
           new RNFirebasePackage(),
           new RNFirebaseMessagingPackage(),
           new RNFirebaseNotificationsPackage(),
-          new RNBluetoothManagerPackage()
+          new RNBluetoothManagerPackage(),
+          new VectorIconsPackage()
       );
     }
 

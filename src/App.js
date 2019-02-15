@@ -4,7 +4,6 @@ import {
   SafeAreaView,
   StatusBar,
   Alert,
-  YellowBox,
   Animated,
   Dimensions,
   Easing
@@ -17,17 +16,12 @@ import i18n from 'i18next';
 import { observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 
-import appStore from './stores/appStore';
+import { appStore } from './stores';
 import RootStack from './navigators/RootNavigator';
 import { colors, images } from './utils/theme';
 import remoteLoggerService from './utils/remoteLoggerService';
-/* deprecated for using, will remove later */
-import { StyleProvider } from 'native-base';
-import getTheme from './../native-base-theme/components';
 
-/* Handling some errors */
-YellowBox.ignoreWarnings([ 'Module RNI18n requires main queue setup' ]);
-
+/* Handling app global errors */
 const errorHandler = (error, isFatal) => {
   if (isFatal) {
     const message = i18n.t('error:jsExceptionFatal');
@@ -101,9 +95,7 @@ class App extends Component {
           backgroundColor={colors.BG_TRANSITION_COLOR}
           barStyle="light-content"
         />
-        <StyleProvider style={getTheme()}>
-          <RootStack />
-        </StyleProvider>
+        <RootStack />
         {!this.animationDone && (
           <Animated.Image
             source={images.BG_LAUNCH}

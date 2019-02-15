@@ -4,15 +4,14 @@ import { View, StyleSheet } from 'react-native';
 import { observer } from 'mobx-react';
 import { observable, action } from 'mobx';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { Body } from 'native-base';
 
+import { inspectStore } from './../../stores';
 import UFOCamera from './../../components/UFOCamera';
-import UFOHeader from '../../components/header/UFOHeader';
-import UFOActionBar from '../../components/UFOActionBar';
-import { UFOContainer, UFOImage } from '../../components/common';
-import { screens, actionStyles, icons, dims } from '../../utils/global';
-import { inspectStore } from '../../stores';
-import UFOCard from '../../components/UFOCard';
+import UFOHeader from './../../components/header/UFOHeader';
+import UFOActionBar from './../../components/UFOActionBar';
+import { UFOContainer, UFOImage } from './../../components/common';
+import UFOCard from './../../components/UFOCard';
+import { screens, actionStyles, icons, dims } from './../../utils/global';
 
 const styles = StyleSheet.create({
   container: {
@@ -34,6 +33,11 @@ const styles = StyleSheet.create({
     width: dims.DEVICE_WIDTH * 0.7,
     height: dims.DEVICE_HEIGHT * 0.5,
     alignSelf: 'center'
+  },
+  imageWrapper: {
+    flex: 1,
+    alignItems: 'flex-start',
+    alignSelf: 'stretch'
   }
 });
 
@@ -43,33 +47,21 @@ class CaptureDamageScreen extends Component {
   @observable activityPending = false;
   @observable isCameraAllowed = false;
 
-  @action
-  doCapture = async () => {
-    this.activityPending = true;
-    const imageData = await this.cameraRef.takePicture();
-    this.documentUri = imageData.uri;
-    this.activityPending = false;
-  };
+  render() {
+    return (
+      <UFOContainer image={screens.INSPECT_CAPTURE.backgroundImage}>
+        {this.documentUri ? this.renderBodyCheck() : this.renderBodyCapture()}
+        <UFOActionBar
+          actions={this.getComputedActions()}
+          activityPending={this.activityPending}
+        />
+      </UFOContainer>
+    );
+  }
 
-  @action
-  doSave = async () => {
-    this.activityPending = true;
-    if (this.documentUri) {
-      inspectStore.documentUri = this.documentUri;
-      if (await inspectStore.uploadDamageDocument()) {
-        this.props.navigation.navigate(screens.INSPECT_COMMENT.name);
-      }
-    }
-    this.activityPending = false;
-  };
+  renderBodyCapture = () => {
+    const { t, navigation } = this.props;
 
-  renderBody = (t, navigation) => {
-    return this.documentUri
-      ? this.renderBodyCheck(t, navigation)
-      : this.renderBodyCapture(t, navigation);
-  };
-
-  renderBodyCapture = (t, navigation) => {
     return (
       <View style={styles.container}>
         <UFOHeader
@@ -88,7 +80,9 @@ class CaptureDamageScreen extends Component {
     );
   };
 
-  renderBodyCheck = (t, navigation) => {
+  renderBodyCheck = () => {
+    const { t, navigation } = this.props;
+
     return (
       <KeyboardAwareScrollView>
         <UFOHeader
@@ -100,21 +94,19 @@ class CaptureDamageScreen extends Component {
         />
         <View style={styles.bodyCheckContent}>
           <UFOCard title={t('inspect:captureCheckGuidance')}>
-            <Body>
+            <View style={styles.imageWrapper}>
               <UFOImage
                 source={{ uri: this.documentUri }}
                 style={styles.bodyCheckImage}
               />
-            </Body>
+            </View>
           </UFOCard>
         </View>
       </KeyboardAwareScrollView>
     );
   };
 
-  render() {
-    const { t, navigation } = this.props;
-
+  getComputedActions = () => {
     const actions = [
       {
         style: actionStyles.ACTIVE,
@@ -134,7 +126,11 @@ class CaptureDamageScreen extends Component {
           : actionStyles.DISABLE,
         icon: this.documentUri ? icons.NEW_CAPTURE : icons.CAPTURE,
         onPress: async () => {
-          this.documentUri ? (this.documentUri = null) : this.doCapture(t);
+          if (this.documentUri) {
+            this.documentUri = null;
+          } else {
+            this.doCapture();
+          }
         }
       }
     ];
@@ -147,16 +143,31 @@ class CaptureDamageScreen extends Component {
       });
     }
 
-    return (
-      <UFOContainer image={screens.INSPECT_CAPTURE.backgroundImage}>
-        {this.renderBody(t, navigation)}
-        <UFOActionBar
-          actions={actions}
-          activityPending={this.activityPending}
-        />
-      </UFOContainer>
-    );
-  }
+    return actions;
+  };
+
+  @action
+  doCapture = async () => {
+    this.activityPending = true;
+    const imageData = await this.cameraRef.takePicture();
+    this.documentUri = imageData.uri;
+    this.activityPending = false;
+  };
+
+  @action
+  doSave = async () => {
+    this.activityPending = true;
+
+    if (this.documentUri) {
+      inspectStore.documentUri = this.documentUri;
+
+      if (await inspectStore.uploadDamageDocument()) {
+        this.props.navigation.navigate(screens.INSPECT_COMMENT.name);
+      }
+    }
+
+    this.activityPending = false;
+  };
 }
 
 export default translate()(CaptureDamageScreen);

@@ -54,7 +54,10 @@ export async function confirm(
       actions.unshift({
         text: btnLabels.confirm || i18n.t('common:okBtn'),
         style: IS_IOS ? 'default' : 'positive',
-        onPress: () => { confirmAction(); resolve(); }
+        onPress: () => {
+          confirmAction();
+          resolve();
+        }
       });
     }
 
@@ -62,7 +65,10 @@ export async function confirm(
       actions.unshift({
         text: btnLabels.neutral || i18n.t('common:postponeBtn'),
         style: IS_IOS ? 'default' : 'neutral',
-        onPress: () => { neutralAction(); resolve(); }
+        onPress: () => {
+          neutralAction();
+          resolve();
+        }
       });
     }
 

@@ -8,7 +8,7 @@ import UFOLoader from './UFOLoader';
 import UFOGradientView from './UFOGradientView';
 import UFOCheckBoxItem from './UFOCheckBoxItem';
 
-import UFOText from './UFOText_old';
+import UFOText from './UFOText';
 import UFOIcon_old from './UFOIcon_old';
 
 export {

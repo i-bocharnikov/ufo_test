@@ -1,15 +1,37 @@
-import DriveStore from './driveStore';
-import InspectStore from './inspectStore';
-import GuideStore from './guideStore';
-import TermStore from './termStore';
-import BookingStore from './bookingStore';
-import FeedbackStore from './feedbackStore';
-import RegisterStore from './registerStore';
+import AppStore from './AppStore';
+import DriveStore from './DriveStore';
+import BookingStore from './BookingStore';
+import RegisterStore from './RegisterStore';
+import InspectStore from './InspectStore';
+import GuideStore from './GuideStore';
+import TermStore from './TermStore';
+import FeedbackStore from './FeedbackStore';
+import ActivitiesStore from './ActivitiesStore';
+import OTAKeyStore from './OTAKeyStore';
+import SupportStore from './SupportStore';
 
-export const registerStore = RegisterStore;
-export const driveStore = new DriveStore();
-export const inspectStore = new InspectStore();
-export const guideStore = new GuideStore();
-export const termStore = new TermStore();
-export const bookingStore = new BookingStore();
-export const feedbackStore = new FeedbackStore();
+const appStore = new AppStore();
+const registerStore = new RegisterStore();
+const driveStore = new DriveStore();
+const inspectStore = new InspectStore();
+const guideStore = new GuideStore();
+const termStore = new TermStore();
+const bookingStore = new BookingStore();
+const feedbackStore = new FeedbackStore();
+const activitiesStore = new ActivitiesStore();
+const supportStore = new SupportStore();
+const otaKeyStore = new OTAKeyStore();
+
+export {
+  appStore,
+  registerStore,
+  driveStore,
+  inspectStore,
+  guideStore,
+  termStore,
+  bookingStore,
+  feedbackStore,
+  activitiesStore,
+  supportStore,
+  otaKeyStore
+};

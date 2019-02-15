@@ -15,7 +15,7 @@ import {
   icons,
   colors
 } from './../../utils/global';
-import registerStore from './../../stores/registerStore';
+import { registerStore } from './../../stores';
 import { GOOGLE_API_KEY } from './../../utils/configurations';
 import styles from './styles';
 

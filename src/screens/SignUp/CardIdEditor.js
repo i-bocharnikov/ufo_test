@@ -10,7 +10,7 @@ import UFOHeader from './../../components/header/UFOHeader';
 import UFOActionBar from './../../components/UFOActionBar';
 import UFOCard from './../../components/UFOCard';
 import { UFOImage, UFOContainer } from './../../components/common';
-import registerStore from './../../stores/registerStore';
+import { registerStore } from './../../stores';
 import { screens, actionStyles, icons, images } from './../../utils/global';
 import { showWarning } from './../../utils/interaction';
 import styles from './styles';
@@ -44,7 +44,7 @@ class IdentificationScreen extends Component {
     if (this.captureState === null) {
       this.captureState = !this.frontImageUrl || this.frontImageUrl === 'loading'
         ? captureStates.CAPTURE_FRONT
-        : this.captureState = captureStates.PREVIEW;
+        : (this.captureState = captureStates.PREVIEW);
     }
 
     const showCamera =

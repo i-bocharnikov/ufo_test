@@ -72,6 +72,7 @@ class StepPayScreen extends Component {
         navToFaq={this.navToFaq}
         navToFirstStep={this.navBack}
         currentStep={2}
+        isEditing={bookingStore.isEditing}
         BottomActionPanel={this.renderBottomPanel()}
       >
         <UFOContainer style={styles.screenPaymentContainer}>
