@@ -27,7 +27,7 @@ export default class UFORollPicker extends Component {
 
   componentDidMount() {
     if (this.props.selectTo && this.props.selectTo !== this.lastSelectedIndex) {
-      this.selectToItem(this.props.selectTo);
+      this.selectToItem(this.props.selectTo, true);
     }
   }
 
@@ -244,22 +244,27 @@ export default class UFORollPicker extends Component {
     * @param {number} i
     * @description move to item which was selected optional
     */
-  selectToItem = i => {
+  selectToItem = (i, isMounting) => {
+    const scrollAction = () => {
+      this.listView._component.scrollToIndex({ index: this.lastSelectedIndex });
+    };
+
+    this.lastSelectedIndex = i;
+
     if (this.state.page * this.perPage < i) {
       const neededPage = Math.ceil(i / this.perPage);
-      this.setState({ page: neededPage }, () => this.selectToItem(i));
+      this.setState({ page: neededPage }, scrollAction);
 
       return;
     }
-
-    const { data } = this.props;
-    this.lastSelectedIndex = i;
 
     /*
      * possibility jumping to next item if current unavailable
      * was commented to save this feature, because not need now
      * first part of logic is into `onScrollEnd`
      *
+    const { data } = this.props;
+
     if (data[this.lastSelectedIndex] && data[this.lastSelectedIndex].available === false) {
       data.length - 1 > this.lastSelectedIndex
         ? this.lastSelectedIndex++
@@ -268,8 +273,12 @@ export default class UFORollPicker extends Component {
     }
     */
 
-    // setTimeout needed because on android scroll is missing at component mounting
-    setTimeout(() => this.listView._component.scrollToIndex({ index: this.lastSelectedIndex }), 10);
+    if (isMounting) {
+      // setTimeout needed because on android scroll is missing at component mounting
+      setTimeout(scrollAction, 10);
+    } else {
+      scrollAction();
+    }
   };
 
   /**
