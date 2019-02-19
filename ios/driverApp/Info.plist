@@ -97,5 +97,7 @@
 	<false/>
 	<key>kTCCServiceMediaLibrary</key>
 	<string>UFODrive needs access</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Enabling Face ID allows quick and secure confirm your identity</string>
 </dict>
 </plist>
