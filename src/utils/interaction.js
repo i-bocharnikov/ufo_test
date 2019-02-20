@@ -136,7 +136,7 @@ export const biometricConfirm = IS_IOS ? biometricConfirmIOS : biometricConfirmA
 async function biometricConfirmAndroid(confirmAction, fallback) {
   try {
     try {
-      await TouchID.isSupported({passcodeFallback: true});
+      await TouchID.isSupported({ passcodeFallback: true });
     } catch (error) {
       /* if biometric is not supported next handling pass to fallback */
       if (typeof fallback === 'function') {
@@ -151,8 +151,8 @@ async function biometricConfirmAndroid(confirmAction, fallback) {
       imageErrorColor: colors.ATTENTION_COLOR,
       title: i18n.t('global:confirmationTitle'),
       cancelText: i18n.t('global:confirmationCancel'),
-      sensorDescription: 'Touch sensor',
-      sensorErrorDescription: 'Failed'
+      sensorDescription: i18n.t('global:biomerticConfirmTitle'),
+      sensorErrorDescription: i18n.t('global:biomerticConfirmFailed')
     };
     const result = await TouchID.authenticate(null, config);
 
