@@ -1,7 +1,7 @@
 {
   "name": "driverApp",
-  "version": "2.1.2",
-  "build": "22",
+  "version": "2.2.0-RC1",
+  "build": "23",
   "private": true,
   "scripts": {
     "start": "react-native start",
