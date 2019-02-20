@@ -7,7 +7,12 @@ import DeviceInfo from 'react-native-device-info';
 import { BluetoothStatus } from 'react-native-bluetooth-status';
 import _ from 'lodash';
 
-import { appStore, driveStore, registerStore, otaKeyStore } from './../../stores';
+import {
+  appStore,
+  driveStore,
+  registerStore,
+  otaKeyStore
+} from './../../stores';
 import UFOHeader from './../../components/header/UFOHeader';
 import UFOActionBar from './../../components/UFOActionBar';
 import { UFOContainer } from './../../components/common';
@@ -70,10 +75,7 @@ class DriveScreen extends Component {
       : backgrounds.HOME002;
 
     return (
-      <UFOContainer
-        video={videos.homeScreenBg}
-        image={background}
-      >
+      <UFOContainer video={videos.homeScreenBg} image={background}>
         <UFOHeader
           transparent={true}
           logo={true}
@@ -110,12 +112,10 @@ class DriveScreen extends Component {
     );
   }
 
-  renderRental = ({ item }) => !item ? null : (
-    <DriveCard
-      rental={item}
-      navigation={this.props.navigation}
-    />
-  );
+  renderRental = ({ item }) =>
+    !item ? null : (
+      <DriveCard rental={item} navigation={this.props.navigation} />
+    );
 
   refreshControl = () => (
     <RefreshControl
@@ -315,9 +315,7 @@ class DriveScreen extends Component {
     await this.doEnableAndSwitch();
 
     await otaKeyStore.syncVehicleData(false);
-    await otaKeyStore.isConnectedToVehicle(false);
-
-    if (!DeviceInfo.isEmulator() && !otaKeyStore.isConnected) {
+    if (!DeviceInfo.isEmulator() && !otaKeyStore.isConnectedToVehicle(true)) {
       await otaKeyStore.connect(
         false,
         false
@@ -383,7 +381,7 @@ class DriveScreen extends Component {
       await this.doEnableAndSwitch();
     }
 
-    if (!DeviceInfo.isEmulator() && !otaKeyStore.isConnected) {
+    if (!DeviceInfo.isEmulator() && !otaKeyStore.isConnectedToVehicle(true)) {
       await otaKeyStore.connect(
         false,
         false
@@ -452,7 +450,7 @@ class DriveScreen extends Component {
       await this.doEnableAndSwitch();
     }
 
-    if (!DeviceInfo.isEmulator() && !otaKeyStore.isConnected) {
+    if (!DeviceInfo.isEmulator() && !otaKeyStore.isConnectedToVehicle(true)) {
       await otaKeyStore.connect(
         false,
         false

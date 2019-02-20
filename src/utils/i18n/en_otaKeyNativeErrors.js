@@ -123,7 +123,7 @@ export default Platform.select({
     DEVICE_NOT_FOUND: 'Vehicle has not been found after 10s searching',
     BLUETOOTH_OFF: 'Bluetooth is OFF, switch it ON',
     NOT_CONNECTED: 'Vehicle is not reachable',
-    'TIME_OUT_CONNECTION ': 'Vehicle is visible, but is too far to connect to',
+    TIME_OUT_CONNECTION: 'Vehicle is visible, but is too far to connect to',
     TIME_OUT_ACTION:
       'Action has not been performed, or no response has been received',
     TIME_OUT_VEHICLE_DATA: 'Reading vehicle data has not been successful',
@@ -133,7 +133,7 @@ export default Platform.select({
       'This action is not possible because, the vehicle does not support it or is deactivated',
     ALREADY_CONNECTED:
       'No need to connect again, already connected to the vehicle',
-    'KEY_INVALID ': 'The key is invalid, please ask support to get one',
+    KEY_INVALID: 'The key is invalid, please ask support to get one',
     BAD_VIN:
       'Vin from token is not matching with the vehicle one, bad configuration backend side, vehicle need a reconfiguration',
     KEY_INCORRECT_MILEAGE:
@@ -142,7 +142,7 @@ export default Platform.select({
       'You are trying to use a key which is in the future, wait for the start date given to be reached',
     KEY_TOO_LATE:
       'You are trying to use a key with is in the past, please ask support to get one',
-    'KEY_DEPRECATED ':
+    KEY_DEPRECATED:
       'The action performed was time limited, and is now not active anymore',
     KEY_INVALIDATED:
       'This key is not valid anymore as another key has been with the vehicle, please ask support to get one',
