@@ -124,109 +124,125 @@ class DriveScreen extends Component {
     />
   );
 
-  compileActions = () => {
-    const { t, navigation } = this.props;
-    const actions = [];
-
-    if (!this.driveSelected) {
-      /* initial home screen */
-      actions.push({
+  get actionsHomeScreen() {
+    return [
+      {
         style: driveStore.hasRentalConfirmedOrOngoing
           ? actionStyles.DONE
           : actionStyles.TODO,
         icon: icons.RESERVE,
         onPress: this.navToBooking
-      });
-      actions.push({
-        style: registerStore.isUserRegistered
+      },
+      {
+        style: registerStore.isUserRegistered || !driveStore.hasRentalConfirmedOrOngoing
           ? actionStyles.DONE
           : actionStyles.TODO,
         icon: registerStore.isUserRegistered
           ? icons.MY_DETAILS
           : icons.REGISTER,
-        onPress: () => navigation.navigate(screens.REGISTER.name)
-      });
-      actions.push({
+        onPress: () => this.props.navigation.navigate(screens.REGISTER.name)
+      },
+      {
         style: driveStore.hasRentalOngoing
           ? actionStyles.TODO
           : actionStyles.ACTIVE,
         icon: icons.DRIVE,
-        onPress: () => (this.driveSelected = true)
-      });
-    } else if (this.driveSelected && !this.returnSelected) {
-      /* back btn on drive screen */
-      actions.push({
-        style: actionStyles.ACTIVE,
-        icon: icons.BACK,
-        onPress: () => (this.driveSelected = false)
-      });
-
-      if (!driveStore.hasRentals) {
-        /* we see this when rentals list is empty */
-        actions.push({
-          style: actionStyles.DISABLE,
-          icon: icons.FIND,
-          onPress: () => null
-        });
-        actions.push({
-          style: actionStyles.DISABLE,
-          icon: icons.INSPECT,
-          onPress: () => null
-        });
-        actions.push({
-          style: actionStyles.DISABLE,
-          icon: icons.RENTAL_AGREEMENT,
-          onPress: () => null
-        });
-      } else {
-        /* we add mixins to actions into stores */
-        /* it's really a bad approach and it block should be rewritten */
-        driveStore.computeActionFind(actions, () =>
-          this.props.navigation.navigate(screens.FIND.name)
-        );
-        driveStore.computeActionInitialInspect(actions, () =>
-          this.props.navigation.navigate(screens.INSPECT.name)
-        );
-        driveStore.computeActionStartContract(
-          actions,
-          this.startContractSigning
-        );
-
-        if (driveStore.inUse) {
-          otaKeyStore.computeActionEnableKey(
-            driveStore.rental ? driveStore.rental.key_id : null,
-            actions,
-            this.doEnableKey
-          );
-          otaKeyStore.computeActionUnlock(actions, this.doUnlockCar);
-          otaKeyStore.computeActionLock(actions, this.doLockCar);
-          /* return btn */
-          actions.push({
-            style: actionStyles.ACTIVE,
-            icon: icons.RETURN,
-            onPress: () => (this.returnSelected = true)
-          });
-        }
+        onPress: () => { this.driveSelected = true; }
       }
-    } else {
-      /* we see this after press "return" btn */
+    ];
+  }
+
+  get actionsDriveScreen() {
+    const actions = [];
+
+    actions.push({
+      style: actionStyles.ACTIVE,
+      icon: icons.BACK,
+      onPress: () => { this.driveSelected = false; }
+    });
+
+    if (!driveStore.hasRentals) {
+      /* we see this when rentals list is empty */
       actions.push({
-        style: actionStyles.ACTIVE,
-        icon: icons.BACK,
-        onPress: () => (this.returnSelected = false)
+        style: actionStyles.DISABLE,
+        icon: icons.FIND,
+        onPress: () => null
       });
-      driveStore.computeActionReturn(actions, () =>
-        this.props.navigation.navigate(screens.RETURN.name)
+      actions.push({
+        style: actionStyles.DISABLE,
+        icon: icons.INSPECT,
+        onPress: () => null
+      });
+      actions.push({
+        style: actionStyles.DISABLE,
+        icon: icons.RENTAL_AGREEMENT,
+        onPress: () => null
+      });
+    } else {
+      /* we add mixins to actions into stores */
+      /* it's really a bad approach and it block should be rewritten */
+      driveStore.computeActionFind(actions, () =>
+        this.props.navigation.navigate(screens.FIND.name)
       );
-      driveStore.computeActionFinalInspect(actions, () =>
+      driveStore.computeActionInitialInspect(actions, () =>
         this.props.navigation.navigate(screens.INSPECT.name)
       );
-      driveStore.computeActionCloseRental(actions, () =>
-        this.confirmCloseRental(t)
+      driveStore.computeActionStartContract(
+        actions,
+        this.startContractSigning
       );
+
+      if (driveStore.inUse) {
+        otaKeyStore.computeActionEnableKey(
+          driveStore.rental ? driveStore.rental.key_id : null,
+          actions,
+          this.doEnableKey
+        );
+        otaKeyStore.computeActionUnlock(actions, this.doUnlockCar);
+        otaKeyStore.computeActionLock(actions, this.doLockCar);
+        /* return btn */
+        actions.push({
+          style: actionStyles.ACTIVE,
+          icon: icons.RETURN,
+          onPress: () => { this.returnSelected = true; }
+        });
+      }
     }
 
     return actions;
+  }
+
+  get actionsReturnScreen() {
+    const actions = [];
+
+    actions.push({
+      style: actionStyles.ACTIVE,
+      icon: icons.BACK,
+      onPress: () => { this.returnSelected = false; }
+    });
+    driveStore.computeActionReturn(actions, () =>
+      this.props.navigation.navigate(screens.RETURN.name)
+    );
+    driveStore.computeActionFinalInspect(actions, () =>
+      this.props.navigation.navigate(screens.INSPECT.name)
+    );
+    driveStore.computeActionCloseRental(actions, () =>
+      this.confirmCloseRental(this.props.t)
+    );
+
+    return actions;
+  }
+
+  compileActions = () => {
+    if (!this.driveSelected) {
+      return this.actionsHomeScreen;
+
+    } else if (this.driveSelected && !this.returnSelected) {
+      return this.actionsDriveScreen;
+
+    } else {
+      return this.actionsReturnScreen;
+    }
   };
 
   selectRental = async index => {
