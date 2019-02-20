@@ -16,10 +16,15 @@ import remoteLoggerService from './../../utils/remoteLoggerService';
 @observer
 class InspectScreen extends Component {
   @observable activityPending = false;
+  screenFocusListener = null;
 
   componentDidMount() {
     this.refresh();
-    this.props.navigation.addListener('didFocus', this.refresh);
+    this.screenFocusListener = this.props.navigation.addListener('didFocus', this.refresh);
+  }
+
+  componentWillUnmount() {
+    this.screenFocusListener.remove();
   }
 
   render() {
