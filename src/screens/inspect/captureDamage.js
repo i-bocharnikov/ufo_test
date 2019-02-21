@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
 import { translate } from 'react-i18next';
-import { View, StyleSheet } from 'react-native';
+import { View, ScrollView, StyleSheet } from 'react-native';
 import { observer } from 'mobx-react';
 import { observable, action } from 'mobx';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import _ from 'lodash';
 
 import { inspectStore } from './../../stores';
 import UFOCamera from './../../components/UFOCamera';
 import UFOHeader from './../../components/header/UFOHeader';
 import UFOActionBar from './../../components/UFOActionBar';
-import { UFOContainer, UFOImage } from './../../components/common';
+import { UFOContainer, UFOImage, UFOProgressLine } from './../../components/common';
 import UFOCard from './../../components/UFOCard';
 import { screens, actionStyles, icons, dims } from './../../utils/global';
+import { uploadToApiWithProgress } from './../../utils/api';
 
 const styles = StyleSheet.create({
   container: {
@@ -38,6 +39,10 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'flex-start',
     alignSelf: 'stretch'
+  },
+  progressBar: {
+    position: 'absolute',
+    bottom: 0
   }
 });
 
@@ -46,6 +51,7 @@ class CaptureDamageScreen extends Component {
   @observable documentUri = null;
   @observable activityPending = false;
   @observable isCameraAllowed = false;
+  @observable loadingProgress = 0;
 
   render() {
     return (
@@ -55,6 +61,12 @@ class CaptureDamageScreen extends Component {
           actions={this.getComputedActions()}
           activityPending={this.activityPending}
         />
+        {!!this.loadingProgress && (
+          <UFOProgressLine
+            style={styles.progressBar}
+            progress={this.loadingProgress}
+          />
+        )}
       </UFOContainer>
     );
   }
@@ -84,7 +96,7 @@ class CaptureDamageScreen extends Component {
     const { t, navigation } = this.props;
 
     return (
-      <KeyboardAwareScrollView>
+      <ScrollView>
         <UFOHeader
           transparent
           t={t}
@@ -102,7 +114,7 @@ class CaptureDamageScreen extends Component {
             </View>
           </UFOCard>
         </View>
-      </KeyboardAwareScrollView>
+      </ScrollView>
     );
   };
 
@@ -111,12 +123,12 @@ class CaptureDamageScreen extends Component {
       {
         style: actionStyles.ACTIVE,
         icon: icons.CANCEL,
-        onPress: () => this.props.navigation.popToTop()
+        onPress: this.doCancel
       },
       {
         style: actionStyles.ACTIVE,
         icon: icons.BACK,
-        onPress: () => this.props.navigation.pop()
+        onPress: this.doBack
       },
       {
         style: this.isCameraAllowed
@@ -125,13 +137,7 @@ class CaptureDamageScreen extends Component {
             : actionStyles.TODO
           : actionStyles.DISABLE,
         icon: this.documentUri ? icons.NEW_CAPTURE : icons.CAPTURE,
-        onPress: async () => {
-          if (this.documentUri) {
-            this.documentUri = null;
-          } else {
-            this.doCapture();
-          }
-        }
+        onPress: this.documentUri ? this.resetCapture : this.doCapture
       }
     ];
 
@@ -139,7 +145,7 @@ class CaptureDamageScreen extends Component {
       actions.push({
         style: this.documentUri ? actionStyles.TODO : actionStyles.DISABLE,
         icon: icons.NEXT,
-        onPress: () => this.doSave()
+        onPress: this.doSave
       });
     }
 
@@ -149,24 +155,63 @@ class CaptureDamageScreen extends Component {
   @action
   doCapture = async () => {
     this.activityPending = true;
-    const imageData = await this.cameraRef.takePicture();
+    const imageData = await this.cameraRef.takePicture({ width: 1920 });
     this.documentUri = imageData.uri;
     this.activityPending = false;
   };
 
   @action
+  resetCapture = () => {
+    this.loadingProgress = 0;
+    this.documentUri = null;
+    inspectStore.documentReference = null;
+  };
+
+  @action
   doSave = async () => {
-    this.activityPending = true;
-
-    if (this.documentUri) {
-      inspectStore.documentUri = this.documentUri;
-
-      if (await inspectStore.uploadDamageDocument()) {
-        this.props.navigation.navigate(screens.INSPECT_COMMENT.name);
-      }
+    if (!this.documentUri) {
+      return;
     }
 
+    if (inspectStore.documentReference) {
+      this.props.navigation.navigate(screens.INSPECT_COMMENT.name);
+      return;
+    }
+
+    this.activityPending = true;
+    const response = await uploadToApiWithProgress(
+      this.documentUri,
+      this.progressListener,
+      {
+        domain: 'car_damage',
+        format: 'one_side',
+        type: 'car_damage',
+        sub_type: 'front_side'
+      },
+      true
+    );
     this.activityPending = false;
+
+    if (response.isSuccess && _.has(response, 'data.document.reference')) {
+      inspectStore.documentReference = response.data.document.reference;
+      this.props.navigation.navigate(screens.INSPECT_COMMENT.name);
+    }
+  };
+
+  @action
+  doCancel = () => {
+    this.resetCapture();
+    this.props.navigation.popToTop();
+  };
+
+  @action
+  doBack = () => {
+    this.resetCapture();
+    this.props.navigation.pop();
+  };
+
+  progressListener = percent => {
+    this.loadingProgress = percent;
   };
 }
 

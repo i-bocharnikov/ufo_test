@@ -164,12 +164,8 @@ class BookingDetailsScreen extends Component {
   };
 
   getSubTitle = () => {
-    if (bookingStore.infoDescription.isPrice) {
-      return this.props.t('booking:priceInfoSubTitle');
-    }
-
-    if (bookingStore.infoDescription.name) {
-      return bookingStore.infoDescription.name.toUpperCase();
+    if (bookingStore.infoDescription.descriptionTitle) {
+      return bookingStore.infoDescription.descriptionTitle.toUpperCase();
     }
 
     return '';
