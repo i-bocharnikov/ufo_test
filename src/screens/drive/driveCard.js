@@ -115,7 +115,7 @@ class DriveCard extends Component {
     const endDate = moment.utc(rental.end_at).tz(rental.location.timezone);
 
     bookingStore.resetStore();
-    bookingStore.isEditing = true;
+    bookingStore.editableOrderRef = rental.reference;
     bookingStore.isOngoing = isOngoing;
     bookingStore.selectLocation(locationRef);
     bookingStore.selectCar(carRef);

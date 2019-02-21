@@ -429,6 +429,15 @@ export default StyleSheet.create({
     textAlign: 'right'
   },
 
+  infoTitleNewPrice: {
+    ...textThemes.SP_BOLD,
+    fontSize: 11,
+    letterSpacing: 2.6,
+    color: colors.MAIN_COLOR,
+    marginTop: 24,
+    marginBottom: 8
+  },
+
   separateLine: {
     height: 1.6,
     backgroundColor: colors.MAIN_COLOR

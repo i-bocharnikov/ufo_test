@@ -46,7 +46,7 @@ export default class UFONavBarWrapper extends Component {
             <View style={styles.subHeader}>
               {SubtitleComponent
                 ? SubtitleComponent
-                : <Text style={[ styles.subTitle, styles.subTitleCenter ]}>{subtitle}</Text>
+                : <Text style={[ styles.subTitle, styles.subTitleCenter ]} numberOfLines={1}>{subtitle}</Text>
               }
             </View>
           )}

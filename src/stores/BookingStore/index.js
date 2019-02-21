@@ -58,7 +58,7 @@ export default class BookingStore {
   @observable bookingConfirmation = this._defaultStore.bookingConfirmation;
 
   /* modify existing booking */
-  @observable isEditing = this._defaultStore.isEditing;
+  @observable editableOrderRef = this._defaultStore.editableOrderRef;
   @observable isOngoing = this._defaultStore.isOngoing;
 
   /**
@@ -95,7 +95,7 @@ export default class BookingStore {
       allowReferralAmountUse: false,
       useRefferalAmount: false,
       bookingConfirmation: null,
-      isEditing: false,
+      editableOrderRef: null,
       isOngoing: false
     };
   }
@@ -115,7 +115,7 @@ export default class BookingStore {
    */
   @action
   getInitialData = async () => {
-    if (!this.isEditing) {
+    if (!this.editableOrderRef) {
       /* in case of editing booking the reset makes before attach editing data */
       this.resetStore();
     }
@@ -568,7 +568,10 @@ export default class BookingStore {
     }
 
     const payload = { ...this.order, payment };
-    this.bookingConfirmation = await order.confirmOrder(payload);
+    this.bookingConfirmation = this.editableOrderRef
+      ? await order.updateOrder(this.editableOrderRef, payload)
+      : await order.confirmOrder(payload);
+
     this.isLoading = false;
 
     return false;
@@ -668,8 +671,17 @@ export default class BookingStore {
    */
   @computed
   get orderPrice() {
-    if (!_.has(this.order, 'price.amount')) {
-      return '-';
+    const unknownPrice = '-';
+    const price = _.get(this.order, 'price.amount', unknownPrice);
+
+    if (price === unknownPrice) {
+      return price;
+    }
+
+    if (this.editableOrderRef && price) {
+      return `${price > 0 ? '+' : ''}${price}€`
+    } else if (this.editableOrderRef) {
+      return `${price}€`;
     }
 
     return `€${this.order.price.amount}`;
@@ -685,6 +697,14 @@ export default class BookingStore {
     }
 
     return `€${this.order.price.amountOrigin}`;
+  }
+
+  /**
+   * @description Get formated string for price of changed order
+   */
+  @computed
+  get orderNewPrice() {
+    return _.get(this.order, 'newPrice.amount', '') + '€';
   }
 
   /**
@@ -742,7 +762,6 @@ export default class BookingStore {
    */
   @computed
   get rollPickerOngoingStartTime() {
-    console.log('GETTER', this.startRentalTime);
     return [{
       label: this.startRentalTime,
       id: this.startRentalTime
@@ -955,7 +974,8 @@ export default class BookingStore {
       endRental.utc().format(values.TIME_STRING_FORMAT),
       {
         voucherCode: this.voucherCode,
-        useRefferal: this.useRefferalAmount
+        useRefferal: this.useRefferalAmount,
+        editableOrder: this.editableOrderRef
       }
     );
 

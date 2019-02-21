@@ -84,7 +84,7 @@ class BottomActionPanel extends Component {
   };
 
   renderMarketingLabel = () => {
-    if (!bookingStore.priceMarketingLabel) {
+    if (!bookingStore.priceMarketingLabel || bookingStore.editableOrderRef) {
       return null;
     }
 
@@ -113,7 +113,11 @@ class BottomActionPanel extends Component {
   };
 
   get priceLabel() {
-    if (bookingStore.orderOriginPrice && bookingStore.orderOriginPrice !== bookingStore.orderPrice) {
+    if (
+      bookingStore.orderOriginPrice
+      && bookingStore.orderOriginPrice !== bookingStore.orderPrice
+      && !bookingStore.editableOrderRef
+    ) {
       return (
         <Fragment>
           <Text style={styles.bottomPanelOriginValue}>
