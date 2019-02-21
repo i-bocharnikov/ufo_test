@@ -155,6 +155,7 @@ configurations.all {
 }
 
 dependencies {
+    implementation project(':react-native-touch-id')
     implementation project(':react-native-vector-icons')
     implementation project(':react-native-bluetooth-status')
     implementation 'com.google.firebase:firebase-messaging:17.1.0'

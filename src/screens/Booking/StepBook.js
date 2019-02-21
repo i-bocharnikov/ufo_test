@@ -28,6 +28,8 @@ class StepBookScreen extends Component {
       showDateTooltip: false,
       showModalCalendar: false
     };
+    this.onSelectEndRollDateDebounce = _.debounce(this.onSelectEndRollDate, 100);
+    this.onSelectStartRollDateDebounce = _.debounce(this.onSelectStartRollDate, 100);
   }
 
   async componentDidMount() {
@@ -200,7 +202,7 @@ class StepBookScreen extends Component {
             ? bookingStore.rollPickerOngoingStartDate
             : bookingStore.rollPickersData
           }
-          onRowChange={this.onSelectStartRollDate}
+          onRowChange={this.onSelectStartRollDateDebounce}
           selectTo={bookingStore.rollPickerStartSelectedIndex}
           wrapperStyles={styles.rollPicker}
         />
@@ -225,7 +227,7 @@ class StepBookScreen extends Component {
         </View>
         <UFORollPicker
           data={bookingStore.rollPickersData}
-          onRowChange={this.onSelectEndRollDate}
+          onRowChange={this.onSelectEndRollDateDebounce}
           selectTo={bookingStore.rollPickerEndSelectedIndex}
           wrapperStyles={styles.rollPicker}
         />
@@ -335,7 +337,7 @@ class StepBookScreen extends Component {
   };
 
   onSelectStartRollDate = async index => {
-    if (!bookingStore.isOngoing) {
+    if (!bookingStore.isOngoing && bookingStore.rollPickerStartSelectedIndex != index) {
       const item = bookingStore.rollPickersData[index];
       const selectedDate = moment(item.label, values.DATE_ROLLPICKER_FORMAT).startOf('day');
       await bookingStore.selectStartDate(selectedDate);
@@ -343,12 +345,11 @@ class StepBookScreen extends Component {
   };
 
   onSelectEndRollDate = async index => {
-    const item = bookingStore.rollPickersData[index];
-    const selectedDate = moment(
-      item.label,
-      values.DATE_ROLLPICKER_FORMAT
-    ).startOf('day');
-    await bookingStore.selectEndDate(selectedDate);
+    if (bookingStore.rollPickerEndSelectedIndex != index) {
+      const item = bookingStore.rollPickersData[index];
+      const selectedDate = moment(item.label, values.DATE_ROLLPICKER_FORMAT).startOf('day');
+      await bookingStore.selectEndDate(selectedDate);
+    }
   };
 
   onSelectCalendarDates = async (dateStart, dateEnd) => {

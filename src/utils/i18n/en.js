@@ -27,7 +27,9 @@ export default {
     confirmationTitle: 'Confirmation needed',
     confirmationOk: 'OK',
     confirmationCancel: 'Cancel',
-    willRestart: 'Application will be restarted'
+    willRestart: 'Application will be restarted',
+    biomerticConfirmTitle: 'Touch sensor to confirm',
+    biomerticConfirmFailed: 'Not match, please try again'
   },
   error: {
     error: 'Error',

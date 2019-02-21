@@ -2,9 +2,19 @@ import { Platform, Alert, Vibration, ToastAndroid } from 'react-native';
 import prompt from 'react-native-prompt-android';
 import Toast from 'react-native-simple-toast';
 import i18n from 'i18next';
+import TouchID from 'react-native-touch-id';
+import PasscodeAuth from 'react-native-passcode-auth';
+
+import { colors } from './theme';
 
 const IS_IOS = Platform.OS === 'ios';
 
+/*
+ * Show cross platform toast alert with vibration
+ * @param {string} errorMessage
+ * @param {number} yOffset
+ * @param {number} xOffset
+*/
 export function showToastError(errorMessage, yOffset = 0, xOffset = 0) {
   const message = typeof errorMessage === 'string' ? errorMessage : i18n.t('error:unknown');
   Vibration.vibrate();
@@ -23,6 +33,11 @@ export function showToastError(errorMessage, yOffset = 0, xOffset = 0) {
       );
 }
 
+/*
+ * Show awaiting native alert popup
+ * @param {string} title
+ * @param {string} message
+*/
 export async function showAlertInfo(title = '', message = '') {
   return new Promise(resolve => {
     Alert.alert(
@@ -35,6 +50,14 @@ export async function showAlertInfo(title = '', message = '') {
   });
 }
 
+/*
+ * Show awaiting confirmation popup
+ * @param {string} title
+ * @param {string} message
+ * @param {Function} confirmAction
+ * @param {Function} neutralAction
+ * @param {Object} btnLabels
+*/
 export async function confirm(
   title = '',
   message = '',
@@ -76,6 +99,14 @@ export async function confirm(
   });
 }
 
+/*
+ * Show prompt popup
+ * @param {string} title
+ * @param {string} descr
+ * @param {Function} action
+ * @param {Function} cancelAction
+ * @param {Object} options
+*/
 export function showPrompt(title = '', descr = '', action, cancelAction, options = {}) {
   const cancelFn = typeof cancelAction === 'function' ? cancelAction : () => null;
   const actions = [
@@ -92,4 +123,70 @@ export function showPrompt(title = '', descr = '', action, cancelAction, options
   }
 
   prompt(title, descr, actions, options);
+}
+
+/*
+ * Show biometric system confirmation
+ * @param {Function} confirmAction
+ * @param {Function} fallback
+ * @return {boolean}
+*/
+export const biometricConfirm = IS_IOS ? biometricConfirmIOS : biometricConfirmAndroid;
+
+async function biometricConfirmAndroid(confirmAction, fallback) {
+  try {
+    try {
+      await TouchID.isSupported({ passcodeFallback: true });
+    } catch (error) {
+      /* if biometric is not supported next handling pass to fallback */
+      if (typeof fallback === 'function') {
+        fallback();
+      }
+
+      return false;
+    }
+
+    const config = {
+      imageColor: colors.MAIN_LIGHT_COLOR,
+      imageErrorColor: colors.ATTENTION_COLOR,
+      title: i18n.t('global:confirmationTitle'),
+      cancelText: i18n.t('global:confirmationCancel'),
+      sensorDescription: i18n.t('global:biomerticConfirmTitle'),
+      sensorErrorDescription: i18n.t('global:biomerticConfirmFailed')
+    };
+    const result = await TouchID.authenticate(null, config);
+
+    if (result && typeof confirmAction === 'function') {
+      confirmAction();
+    }
+
+    return result;
+  } catch (error) {
+    return false;
+  }
+}
+
+async function biometricConfirmIOS(confirmAction, fallback) {
+  try {
+    try {
+      await PasscodeAuth.isSupported();
+    } catch (error) {
+      /* if biometric is not supported next handling pass to fallback */
+      if (typeof fallback === 'function') {
+        fallback();
+      }
+
+      return false;
+    }
+
+    const result = await PasscodeAuth.authenticate();
+
+    if (result && typeof confirmAction === 'function') {
+      confirmAction();
+    }
+
+    return result;
+  } catch (error) {
+    return false;
+  }
 }
