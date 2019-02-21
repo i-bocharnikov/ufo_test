@@ -72,7 +72,7 @@ class StepPayScreen extends Component {
         navToFaq={this.navToFaq}
         navToFirstStep={this.navBack}
         currentStep={2}
-        isEditing={bookingStore.isEditing}
+        isEditing={!!bookingStore.editableOrderRef}
         BottomActionPanel={this.renderBottomPanel()}
       >
         <UFOContainer style={styles.screenPaymentContainer}>
@@ -90,23 +90,28 @@ class StepPayScreen extends Component {
             </Text>
           </TouchableOpacity>
           <Text style={[ styles.sectionTitle, styles.sectionTitleIndents ]}>
-            {t('loyalityProgramtitle')}
+            {t(bookingStore.editableOrderRef
+              ? 'loyalityProgramEditTitle'
+              : 'loyalityProgramTitle'
+            )}
           </Text>
-          <UFOTextInput
-            containerStyle={styles.screenHorizIndents}
-            wrapperStyle={[
-              styles.voucherInput,
-              styles.blockShadow,
-              Platform.OS === 'android' && styles.blockShadowAndroidFix
-            ]}
-            placeholder={t('voucherPlaceholder')}
-            autoCapitalize="characters"
-            onChangeText={this.handleInputVoucher}
-            defaultValye={bookingStore.voucherCode}
-            invalidStatus={_.isBoolean(isVoucherValid) && !isVoucherValid}
-            successStatus={_.isBoolean(isVoucherValid) && isVoucherValid}
-            alertMessage={voucherInvalidError}
-          />
+          {!bookingStore.editableOrderRef && (
+            <UFOTextInput
+              containerStyle={styles.screenHorizIndents}
+              wrapperStyle={[
+                styles.voucherInput,
+                styles.blockShadow,
+                Platform.OS === 'android' && styles.blockShadowAndroidFix
+              ]}
+              placeholder={t('voucherPlaceholder')}
+              autoCapitalize="characters"
+              onChangeText={this.handleInputVoucher}
+              defaultValye={bookingStore.voucherCode}
+              invalidStatus={_.isBoolean(isVoucherValid) && !isVoucherValid}
+              successStatus={_.isBoolean(isVoucherValid) && isVoucherValid}
+              alertMessage={voucherInvalidError}
+            />
+          )}
           {this.renderLoyaltyBlock()}
           {this.renderBookingInfoSection()}
           {this.renderVoucherTooltip()}
@@ -234,6 +239,11 @@ class StepPayScreen extends Component {
           <Text style={styles.infoText}>
             {t('common:scheduleTo')} {bookingStore.rentalScheduleEnd}
           </Text>
+          {!!bookingStore.editableOrderRef && (
+            <Text style={styles.infoTitleNewPrice}>
+              {t('bookingEditResult')} {bookingStore.editableOrderRef} : {bookingStore.orderNewPrice}
+            </Text>
+          )}
           <View style={[ styles.separateLine, styles.separateLineInfoBlock ]} />
           <View style={styles.row}>
             <Text style={styles.infoTitle}>
@@ -330,9 +340,14 @@ class StepPayScreen extends Component {
   };
 
   /*
-   * Handle payment and go to next step
+   * Confirm agreements before payment for booking
   */
-  handleToNextStep = async () => {
+  confirmAgreements = async () => {
+    if (bookingStore.editableOrderRef) {
+      this.agreementConfirmed = true;
+      return;
+    }
+
     if (!this.agreementConfirmed) {
       const confirmAction = () => { this.agreementConfirmed = true; };
       await confirm(
@@ -343,6 +358,13 @@ class StepPayScreen extends Component {
         { neutral: this.props.t('termsAlertBtn') }
       );
     }
+  };
+
+  /*
+   * Handle payment and go to next step
+  */
+  handleToNextStep = async () => {
+    await this.confirmAgreements();
 
     if (!this.agreementConfirmed) {
       return;
@@ -367,7 +389,10 @@ class StepPayScreen extends Component {
    * Open order price description
   */
   openPriceInfo = () => {
-    const ref = _.get(bookingStore, 'order.price.pricingReference');
+    const ref = _.get(
+      bookingStore,
+      `order.${bookingStore.editableOrderRef ? 'newPrice' : 'price'}.pricingReference`
+    );
 
     if (!ref) {
       return;

@@ -248,7 +248,8 @@ export default {
     stepPayNextTitle: 'CONFIRM',
     stepPayNextSubTitle: 'Go to step 3',
     creditCardTitle: 'CREDIT CARD INFO',
-    loyalityProgramtitle: 'VOUCHER & LOYALTY PROGRAM',
+    loyalityProgramTitle: 'VOUCHER & LOYALTY PROGRAM',
+    loyalityProgramEditTitle: 'LOYALTY PROGRAM',
     infoAtPaymentTitle: 'BOOKING INFORMATION',
     totalPricePayment: 'TOTAL - ALL INCLUDED',
     voucherPlaceholder: 'Voucher / referral code',
@@ -263,13 +264,13 @@ export default {
     highDemandColor: 'high demand',
     calendarColorsNotes: 'Select multiple dates to see discounts',
     driveTitle: 'Booking completed!',
+    driveUpdateTitle: 'Booking updated!',
     driveSubTitle: 'Enjoy your trip…',
     driveNextRegister: 'REGISTER',
     driveNextDrive: 'DRIVE YOUR CAR',
-    dreveDescrRegisterP1:
-      'Before the rental, please register by scanning your ID and driver licence. If you want to know more about how it works, ',
-    dreveDescrDriveP1:
-      'Find your bookings in the drive section of the app. If you want to know more about how it works, ',
+    dreveDescrRegisterP1: 'Before the rental, please register by scanning your ID and driver licence.',
+    dreveDescrDriveP1: 'Find your bookings in the drive section of the app.',
+    dreveDescrP2: ' If you want to know more about how it works, ',
     dreveDescrGuideLink: 'Please consult the FAQ.',
     feedBackTitle: 'Just one question',
     confirmDialog: 'DONE',
@@ -278,7 +279,8 @@ export default {
       'By confirming, I certify that I have read and fully accepted the general terms and conditions and that I am at least 26 years old and in possession of a valid driver license.',
     termsAlertBtn: 'Read terms',
     termsLinkLabel: 'Terms and conditions',
-    undoBooking: 'Cancel booking (fees may apply)'
+    undoBooking: 'Cancel booking (fees may apply)',
+    bookingEditResult: 'BOOKING'
   },
   launch: {
     launchTitle: 'Fast track\ncar rental',

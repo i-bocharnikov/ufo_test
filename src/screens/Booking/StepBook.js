@@ -43,7 +43,7 @@ class StepBookScreen extends Component {
         navBack={this.navBack}
         navToFaq={this.navToFaq}
         currentStep={1}
-        isEditing={bookingStore.isEditing}
+        isEditing={!!bookingStore.editableOrderRef}
         BottomActionPanel={this.renderBottomPanel()}
         ref={ref => (this.screenWrapper = ref)}
       >
@@ -51,7 +51,7 @@ class StepBookScreen extends Component {
           {this.renderCarsOptionsBlock()}
           {this.renderDatesOptionsBlock()}
           {this.renderTimeOptionsBlock()}
-          {bookingStore.isEditing && !bookingStore.isOngoing && (
+          {!!bookingStore.editableOrderRef && !bookingStore.isOngoing && (
             <TouchableOpacity
               onPress={this.undoEditingBooking}
               activeOpacity={values.BTN_OPACITY_DEFAULT}
@@ -309,7 +309,10 @@ class StepBookScreen extends Component {
   };
 
   openPriceInfo = () => {
-    const ref = _.get(bookingStore, 'order.price.pricingReference');
+    const ref = _.get(
+      bookingStore,
+      `order.${bookingStore.editableOrderRef ? 'newPrice' : 'price'}.pricingReference`
+    );
 
     if (ref) {
       bookingStore.priceInfoRef = ref;
@@ -318,7 +321,7 @@ class StepBookScreen extends Component {
   };
 
   navBack = () => {
-    if (bookingStore.isEditing) {
+    if (bookingStore.editableOrderRef) {
       bookingStore.resetStore();
     }
 

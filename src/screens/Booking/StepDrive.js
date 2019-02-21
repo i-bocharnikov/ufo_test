@@ -73,16 +73,19 @@ class StepDriveScreen extends Component {
     return (
       <Fragment>
         <Text style={[ styles.headerTitle, styles.textShadow ]}>
-          {t('driveTitle')}
+          {t(bookingStore.editableOrderRef ? 'driveUpdateTitle' : 'driveTitle')}
         </Text>
         <Text style={[ styles.headerSubTitle, styles.textShadow ]}>
           {t('driveSubTitle')}
         </Text>
         <Text style={[ styles.descriptionText, styles.textShadow ]}>
           {t(isRegistered ? 'dreveDescrDriveP1' : 'dreveDescrRegisterP1')}
-          <Text style={styles.linkedText} onPress={this.navToGuide}>
-            {t('dreveDescrGuideLink')}
-          </Text>
+          {!bookingStore.editableOrderRef && t('dreveDescrP2')}
+          {!bookingStore.editableOrderRef && (
+            <Text style={styles.linkedText} onPress={this.navToGuide}>
+              {t('dreveDescrGuideLink')}
+            </Text>
+          )}
         </Text>
         <TouchableHighlight
           onPress={this.navNext}
@@ -98,6 +101,10 @@ class StepDriveScreen extends Component {
   };
 
   renderFeedBackDialog = () => {
+    if (bookingStore.editableOrderRef) {
+      return null;
+    }
+
     const showDialog = this.state.showFeedBackDialog && !feedbackStore.isLoading;
     const feedback = feedbackStore.reserveFeedBack;
 

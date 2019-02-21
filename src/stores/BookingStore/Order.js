@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import { getFromApi, postToApi } from './../../utils/api';
+import { getFromApi, postToApi, putToApi } from './../../utils/api';
 
 /**
   * @class
@@ -29,10 +29,13 @@ export default class Order {
     const {
       currency = 'EUR',
       voucherCode,
-      useRefferal
+      useRefferal,
+      editableOrder
     } = options;
 
-    let path = `/reserve/bookings/${location}/${car}/${startDate}T${startTime}/${endDate}T${endTime}/${currency}`;
+    let path = `/reserve/bookings/${
+      editableOrder ? editableOrder + '/' : ''
+    }${location}/${car}/${startDate}T${startTime}/${endDate}T${endTime}/${currency}`;
 
     if (voucherCode) {
       path = `${path}?voucherOrReferralCode=${voucherCode}`;
@@ -43,9 +46,10 @@ export default class Order {
     }
 
     const response = await getFromApi(path, true);
+    const data = _.get(response, editableOrder ? 'data.updatedBooking' : 'data.booking');
 
-    if (response.isSuccess && _.has(response, 'data.booking')) {
-      return response.data.booking;
+    if (response.isSuccess && data) {
+      return data;
     } else {
       return this.fallbackOrder;
     }
@@ -113,8 +117,26 @@ export default class Order {
     }
   }
 
+  /**
+   * @param {string} editableOrderRef
+   * @param {Object} payload
+   * @returns {Object}
+   * @description Update current order
+  */
+  static async updateOrder(editableOrderRef, payload) {
+    const response = await putToApi(`/reserve/bookings/${editableOrderRef}`, payload, true);
+
+    if (response.isSuccess && _.has(response, 'data.updatedBooking')) {
+      return response.data.updatedBooking;
+    } else {
+      return this.fallbackOrderConfirmation;
+    }
+  }
+
+  /*
+   * todo: implement in future
+   */
   static async undoBooking() {
-    // todo: add api, add params, return response result
     return false;
   }
 }
