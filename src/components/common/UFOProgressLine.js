@@ -52,11 +52,7 @@ export default class UFOProgressLine extends PureComponent {
   get progress() {
     const { progress } = this.props;
 
-    if (!progress || typeof progress !== 'number') {
-      return 0;
-    }
-
-    if (progress < 0) {
+    if (!progress || typeof progress !== 'number' || progress < 0) {
       return 0;
     }
 
