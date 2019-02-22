@@ -72,7 +72,7 @@ class FaceRecognizer extends Component {
               onFaceDetectionError={this.onFaceDetectionError}
               showTorchBtn={false}
               defaultVideoQuality={RNCAMERA_CONSTANTS.VideoQuality['720p']}
-              //type={RNCAMERA_CONSTANTS.Type.front}
+              type={RNCAMERA_CONSTANTS.Type.front}
             />
             {!this.isPending && this.detectedFaces.map(face => (
               <View
