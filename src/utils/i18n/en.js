@@ -59,7 +59,7 @@ export default {
     rentalKeyMissing:
       'The key is missing, please contact UFODRIVE if the problem persist.',
     rentalNotOpen: 'The rental is not yet started, please wait...',
-    bluetoothNeeded: 'Please enable bluetooth on device and try again',
+    bluetoothNeeded: 'Please enable bluetooth on your phone and try again',
     connectivityIssue: 'Connectivity Issue, please try again'
   },
   icon: {
@@ -268,7 +268,8 @@ export default {
     driveSubTitle: 'Enjoy your trip…',
     driveNextRegister: 'REGISTER',
     driveNextDrive: 'DRIVE YOUR CAR',
-    dreveDescrRegisterP1: 'Before the rental, please register by scanning your ID and driver licence.',
+    dreveDescrRegisterP1:
+      'Before the rental, please register by scanning your ID and driver licence.',
     dreveDescrDriveP1: 'Find your bookings in the drive section of the app.',
     dreveDescrP2: ' If you want to know more about how it works, ',
     dreveDescrGuideLink: 'Please consult the FAQ.',
