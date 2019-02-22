@@ -2,8 +2,43 @@ import { StyleSheet } from 'react-native';
 
 import { colors, textThemes } from './../../../utils/theme';
 import { ACTION_BAR_HEIGHT } from './../../../components/UFOActionBar';
+import { ufoInputStyles } from './../../../components/common';
 
 const GAP_BETWEEN = 9;
+
+export const googleInputStyles = StyleSheet.create({
+  container: {
+    flex: 0,
+    marginLeft: 24,
+    marginRight: 24
+  },
+
+  textInputContainer: {
+    height: 'auto',
+    backgroundColor: 'transparent',
+    marginLeft: 0,
+    marginRight: 0,
+    marginTop: 32,
+    borderTopWidth: 0
+  },
+
+  textInput: {
+    ...ufoInputStyles,
+    marginLeft: 0,
+    marginRight: 0,
+    borderRadius: 0,
+    paddingLeft: 20,
+    paddingRight: 12
+  },
+
+  separator: { backgroundColor: 'transparent' },
+
+  row: {
+    backgroundColor: colors.BG_INVERT,
+    marginLeft: 0,
+    marginRight: 0
+  }
+});
 
 export default StyleSheet.create({
   scrollWrapper: { flex: 1 },
@@ -107,5 +142,10 @@ export default StyleSheet.create({
     justifyContent: 'center'
   },
 
-  inputMiles: { marginTop: GAP_BETWEEN }
+  inputMiles: { marginTop: GAP_BETWEEN },
+
+  invoiceInputsWrapper: {
+    paddingHorizontal: 24,
+    paddingBottom: ACTION_BAR_HEIGHT
+  }
 });

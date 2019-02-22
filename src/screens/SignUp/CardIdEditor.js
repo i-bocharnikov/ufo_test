@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
 import { Image, View, ScrollView, Text, ImageEditor } from 'react-native';
 import { observer } from 'mobx-react';
-import { observable, action } from 'mobx';
+import { observable } from 'mobx';
 import { translate } from 'react-i18next';
 import _ from 'lodash';
 
-import UFOCamera, { RNCAMERA_CONSTANTS } from './../../components/UFOCamera';
+import UFOCamera from './../../components/UFOCamera';
 import UFOHeader from './../../components/header/UFOHeader';
 import UFOActionBar from './../../components/UFOActionBar';
 import UFOCard from './../../components/UFOCard';
 import { UFOImage, UFOContainer } from './../../components/common';
 import { registerStore } from './../../stores';
+import { keys as screenKeys } from './../../navigators/helpers';
 import { screens, actionStyles, icons, images } from './../../utils/global';
 import { showWarning } from './../../utils/interaction';
 import styles from './styles';
@@ -126,19 +127,63 @@ class IdentificationScreen extends Component {
     );
   };
 
-  @action
-  doCancel = async () => {
-    this.props.navigation.popToTop();
+  compileActions = () => {
+    const initRegistration = this.props.navigation.getParam('initRegistration', false);
+    const actions = [];
+
+    actions.push({
+      style: actionStyles.ACTIVE,
+      icon: initRegistration ? icons.CONTINUE_LATER : icons.CANCEL,
+      onPress: this.doCancel
+    });
+
+    if (
+      this.captureState === captureStates.VALIDATE ||
+      this.captureState === captureStates.PREVIEW
+    ) {
+      actions.push({
+        style: actionStyles.ACTIVE,
+        icon: icons.NEW_CAPTURE,
+        onPress: this.doReset
+      });
+    }
+
+    if (this.captureState === captureStates.VALIDATE) {
+      const isNewCapture = _.isEmpty(registerStore.user.identification_front_side_reference);
+      actions.push({
+        style: isNewCapture ? actionStyles.TODO : actionStyles.DISABLE,
+        icon: icons.SAVE,
+        onPress: this.doSave
+      });
+    }
+
+    if (
+      this.captureState === captureStates.CAPTURE_FRONT ||
+      this.captureState === captureStates.CAPTURE_BACK
+    ) {
+      actions.push({
+        style: this.isCameraAllowed ? actionStyles.TODO : actionStyles.DISABLE,
+        icon: icons.CAPTURE,
+        onPress: this.doCapture
+      });
+    }
+
+    return actions;
   };
 
-  @action
-  doReset = async () => {
+  doCancel = () => {
+    const initRegistration = this.props.navigation.getParam('initRegistration', false);
+    initRegistration
+      ? this.props.navigation.navigate(screenKeys.Home)
+      : this.props.navigation.popToTop();
+  };
+
+  doReset = () => {
     this.frontImageUrl = null;
     this.backImageUrl = null;
     this.captureState = captureStates.CAPTURE_FRONT;
   };
 
-  @action
   doCapture = async () => {
     const t = this.props.t;
     this.activityPending = true;
@@ -188,13 +233,6 @@ class IdentificationScreen extends Component {
     );
   };
 
-  @action
-  doskip = async () => {
-    this.backImageUrl = null;
-    this.captureState = captureStates.VALIDATE;
-  };
-
-  @action
   doSave = async () => {
     this.activityPending = true;
     const type = this.frontImageUrl && this.backImageUrl ? 'two_side' : 'one_side';
@@ -235,56 +273,16 @@ class IdentificationScreen extends Component {
       }
     }
 
-    if (await registerStore.save()) {
-      this.props.navigation.popToTop();
-      this.activityPending = false;
+    const isSaved = await registerStore.save();
+    this.activityPending = false;
 
-      return;
+    if (isSaved) {
+      const initRegistration = this.props.navigation.getParam('initRegistration', false);
+      initRegistration
+        ? this.props.navigation.navigate(screenKeys.DriverLicence)
+        : this.props.navigation.pop();
     }
-  };
-
-  compileActions = () => {
-    const actions = [];
-
-    actions.push({
-      style: actionStyles.ACTIVE,
-      icon: icons.CANCEL,
-      onPress: this.doCancel
-    });
-
-    if (
-      this.captureState === captureStates.VALIDATE ||
-      this.captureState === captureStates.PREVIEW
-    ) {
-      actions.push({
-        style: actionStyles.ACTIVE,
-        icon: icons.NEW_CAPTURE,
-        onPress: this.doReset
-      });
-    }
-
-    if (this.captureState === captureStates.VALIDATE) {
-      const isNewCapture = _.isEmpty(registerStore.user.identification_front_side_reference);
-      actions.push({
-        style: isNewCapture ? actionStyles.TODO : actionStyles.DISABLE,
-        icon: icons.SAVE,
-        onPress: this.doSave
-      });
-    }
-
-    if (
-      this.captureState === captureStates.CAPTURE_FRONT ||
-      this.captureState === captureStates.CAPTURE_BACK
-    ) {
-      actions.push({
-        style: this.isCameraAllowed ? actionStyles.TODO : actionStyles.DISABLE,
-        icon: icons.CAPTURE,
-        onPress: this.doCapture
-      });
-    }
-
-    return actions;
   };
 }
 
-export default translate('translations')(IdentificationScreen);
+export default translate()(IdentificationScreen);

@@ -155,7 +155,9 @@ export default {
     referalCodeMessage:
       'You can use my UFODRIVE referral code {{code}} to get €30 off of your first ride',
     devicePermissionRestricted:
-      'To use {{type}} activate it in the phone settings'
+      'To use {{type}} activate it in the phone settings',
+    companyInputPlaceholder: 'Company name (optional)',
+    vatInputPlaceholder: 'VAT number (optional)',
   },
   inspect: {
     initialInspectionTitle: 'Initial inspection',

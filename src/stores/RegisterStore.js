@@ -56,6 +56,7 @@ class User {
   @persist @observable driver_licence_back_side_reference = null;
   @persist @observable miles_and_more = null;
   @persist @observable face_capture_required = false;
+  @persist @observable vat_number = null;
 }
 
 export default class RegisterStore {
@@ -200,16 +201,14 @@ export default class RegisterStore {
   }
 
   @action
-  async connect(code: string): Promise<boolean> {
-    const response = await postToApi('/' + this.acknowledge_uri, {
-      validation_code: code
-    });
+  async connect(code) {
+    const response = await postToApi(`/${this.acknowledge_uri}`, { validation_code: code });
+
     if (response && response.status === 'success') {
-      if (DEBUG) {
-        console.info('registerStore.connect:', response.data);
-      }
+      DEBUG && console.info('registerStore.connect:', response.data);
       return true;
     }
+
     return false;
   }
 
@@ -268,5 +267,26 @@ export default class RegisterStore {
     }
 
     return false;
+  };
+
+  @action
+  uploadFaceCapture = async fileUri => {
+    try {
+      const uploadedFace = await this.uploadDocument(
+        'identification',
+        'one_side',
+        'face_capture',
+        'front_side',
+        fileUri
+      );
+
+      const isSuccess = await this.save({
+        identification_face_capture_reference: uploadedFace.reference
+      });
+
+      return isSuccess;
+    } catch (error) {
+      return false;
+    }
   };
 }
