@@ -55,12 +55,12 @@ export default class OTAKeyStore {
 
   @persist('object', Key) @observable key = new Key();
 
-  @persist @observable isConnecting = false;
-  @persist @observable isConnected = false;
+  @observable isConnecting = false;
+  @observable isConnected = false;
 
-  @persist @observable engineRunning = false;
-  @persist @observable doorsLocked = true;
-  @persist @observable energyCurrent = 0;
+  @observable engineRunning = false;
+  @observable doorsLocked = true;
+  @observable energyCurrent = 0;
 
   otaKeyLogger = async options => {
     const { severity, code, action, message, description } = options;
@@ -727,7 +727,7 @@ export default class OTAKeyStore {
   async connect(showNotification = false, showError = true): Promise<boolean> {
     try {
       await this.otaKeyLogger({
-        severity: severityTypes.DEBUG,
+        severity: severityTypes.INFO,
         action: 'otakeystore.connectToVehicle',
         code: codeTypes.SUCCESS,
         message: `-> this.ota.connect(${String(showNotification)}, ${String(
@@ -1001,6 +1001,14 @@ export default class OTAKeyStore {
 
   handleOTAAPIError = (error, showError) => {
     const { code, message } = error;
+
+    this.isConnecting = false;
+    this.isConnected = false;
+
+    this.engineRunning = false;
+    this.doorsLocked = true;
+    this.energyCurrent = 0;
+
     if (!showError || code === '38') {
       return;
     }
@@ -1010,6 +1018,14 @@ export default class OTAKeyStore {
 
   handleOTABLEError = (error, showError) => {
     const { code, message } = error;
+
+    this.isConnecting = false;
+    this.isConnected = false;
+
+    this.engineRunning = false;
+    this.doorsLocked = true;
+    this.energyCurrent = 0;
+
     if (!showError || code === 'ALREADY_CONNECTED') {
       return;
     }
