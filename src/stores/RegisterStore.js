@@ -56,6 +56,7 @@ class User {
   @persist @observable driver_licence_back_side_reference = null;
   @persist @observable miles_and_more = null;
   @persist @observable face_capture_required = false;
+  @persist @observable vat_number = null;
 }
 
 export default class RegisterStore {
