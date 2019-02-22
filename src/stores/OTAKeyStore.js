@@ -234,6 +234,13 @@ export default class OTAKeyStore {
       return false;
     }
 
+    this.isConnecting = false;
+    this.isConnected = false;
+
+    this.engineRunning = false;
+    this.doorsLocked = true;
+    this.energyCurrent = 0;
+
     try {
       await this.otaKeyLogger({
         severity: severityTypes.DEBUG,
