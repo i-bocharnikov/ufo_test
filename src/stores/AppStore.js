@@ -185,19 +185,16 @@ export default class AppStore {
   }
 
   @action
-  async connect(t, code) {
+  async connect(code) {
     if (await checkConnectivity()) {
-      if (
-        !(await registerStore.connect(
-          t,
-          code
-        ))
-      ) {
+      if ( !(await registerStore.connect(code)) ) {
         return false;
       }
+
       (await this.register()) && (await this.loadRemoteData());
       return true;
     }
+
     return false;
   }
 

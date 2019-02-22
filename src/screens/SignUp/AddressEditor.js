@@ -1,23 +1,19 @@
 import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
 import { observer } from 'mobx-react';
-import { observable, action } from 'mobx';
+import { observable } from 'mobx';
 import { translate } from 'react-i18next';
 import _ from 'lodash';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import DeviceInfo from 'react-native-device-info';
 
 import UFOHeader from './../../components/header/UFOHeader';
 import UFOActionBar from './../../components/UFOActionBar';
 import { UFOContainer, ufoInputStyles } from './../../components/common';
-import {
-  screens,
-  actionStyles,
-  icons,
-  colors
-} from './../../utils/global';
+import { keys as screenKeys } from './../../navigators/helpers';
+import { screens, actionStyles, icons, colors } from './../../utils/global';
 import { registerStore } from './../../stores';
 import { GOOGLE_API_KEY } from './../../utils/configurations';
-import styles from './styles';
 
 const googleInputStyles = StyleSheet.create({
   container: {
@@ -49,7 +45,6 @@ const googleInputStyles = StyleSheet.create({
 
 @observer
 class AddressScreen extends Component {
-
   @observable addressValue = registerStore.user.address;
 
   render() {
@@ -93,48 +88,66 @@ class AddressScreen extends Component {
     );
   }
 
-  @action
-  doCancel = async isInWizzard => {
-    isInWizzard
-      ? this.props.navigation.navigate(screens.HOME.name)
-      : this.props.navigation.popToTop();
-  };
-
-  @action
-  doSave = async isInWizzard => {
-    registerStore.user.address = this.addressValue;
-
-    if (await registerStore.save()) {
-      if (isInWizzard) {
-        this.props.navigation.navigate(screens.REGISTER_IDENTIFICATION.name, { isInWizzard });
-        return;
-      }
-
-      this.props.navigation.pop();
-      return;
-    }
-  };
-
   compileActions = () => {
-    const isInWizzard = this.props.navigation.getParam('isInWizzard', false);
+    const initRegistration = this.props.navigation.getParam('initRegistration', false);
     const actions = [
       {
         style: actionStyles.ACTIVE,
-        icon: isInWizzard ? icons.CONTINUE_LATER : icons.CANCEL,
-        onPress: async () => await this.doCancel(isInWizzard)
+        icon: initRegistration ? icons.CONTINUE_LATER : icons.CANCEL,
+        onPress: this.doCancel
       },
-
       {
         style: !_.isEmpty(this.addressValue) && this.addressValue !== registerStore.user.address
           ? actionStyles.TODO
           : actionStyles.DISABLE,
-        icon: isInWizzard ? icons.NEXT : icons.SAVE,
-        onPress: async () => await this.doSave(isInWizzard)
+        icon: initRegistration ? icons.NEXT : icons.SAVE,
+        onPress: this.doSave
       }
     ];
 
     return actions;
   };
+
+  doCancel = () => {
+    const initRegistration = this.props.navigation.getParam('initRegistration', false);
+    initRegistration
+      ? this.props.navigation.navigate(screenKeys.Home)
+      : this.props.navigation.popToTop();
+  };
+
+  doSave = async () => {
+    const initRegistration = this.props.navigation.getParam('initRegistration', false);
+    registerStore.user.address = this.addressValue;
+    const isSaved = await registerStore.save();
+
+    if (isSaved) {
+      initRegistration
+        ? this.navToNextRegisterStep()
+        : this.props.navigation.pop();
+    }
+  };
+
+  navToNextRegisterStep = () => {
+    const { navigation, t } = this.props;
+    const navNext = () => navigation.navigate(
+      screenKeys.Identification,
+      { initRegistration: true }
+    );
+
+    const params = {
+      actionNavNext: navNext,
+      actionNavBack: () => navigation.navigate(screenKeys.Home),
+      actionHandleFileAsync: registerStore.uploadFaceCapture,
+      description: t('faceRecognizing:registerCaptureDescription'),
+      autohandling: true
+    };
+
+    if (registerStore.user.face_capture_required && !DeviceInfo.isEmulator()) {
+      navigation.navigate(screenKeys.FaceRecognizer, params);
+    } else {
+      navNext();
+    }
+  };
 }
 
-export default translate('translations')(AddressScreen);
+export default translate()(AddressScreen);

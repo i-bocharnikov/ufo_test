@@ -198,7 +198,7 @@ class SignUpScreen extends Component {
       {
         style: actionStyles.ACTIVE,
         icon: icons.HOME,
-        onPress: () => navigation.navigate(screens.HOME.name)
+        onPress: () => navigation.navigate(screenKeys.Home)
       }
     ];
 
@@ -214,7 +214,7 @@ class SignUpScreen extends Component {
           ? actionStyles.TODO
           : actionStyles.DISABLE,
         icon: icons.DONE,
-        onPress: () => navigation.navigate(screens.HOME.name)
+        onPress: () => navigation.navigate(screenKeys.Home)
       });
     } else {
       actions.push({
@@ -222,7 +222,7 @@ class SignUpScreen extends Component {
           ? actionStyles.TODO
           : actionStyles.ACTIVE,
         icon: icons.LOGIN,
-        onPress: async () => navigation.navigate(screens.REGISTER_PHONE.name)
+        onPress: this.navToPhoneScreen
       });
     }
 
@@ -230,15 +230,15 @@ class SignUpScreen extends Component {
   };
 
   navToPhoneScreen = () => {
-    this.props.navigation.navigate(screens.REGISTER_PHONE.name);
+    this.props.navigation.navigate(screenKeys.Phone);
   };
 
   navToEmailScreen = () => {
-    this.props.navigation.navigate(screens.REGISTER_EMAIL.name);
+    this.props.navigation.navigate(screenKeys.Email);
   };
 
   navToAddressScreen = () => {
-    this.props.navigation.navigate(screens.REGISTER_ADDRESS.name);
+    this.props.navigation.navigate(screenKeys.Address);
   };
 
   navToIdCardScreen = () => {
@@ -246,14 +246,14 @@ class SignUpScreen extends Component {
     const params = {
       actionNavNext: () => navigation.navigate(screenKeys.Identification),
       actionNavBack: () => navigation.navigate(screenKeys.SignUp),
-      actionHandleFileAsync: this.uploadFaceCapture,
+      actionHandleFileAsync: registerStore.uploadFaceCapture,
       description: t('faceRecognizing:registerCaptureDescription'),
       autohandling: true
     };
     if (registerStore.user.face_capture_required && !DeviceInfo.isEmulator()) {
       navigation.navigate(screenKeys.FaceRecognizer, params);
     } else {
-      this.props.navigation.navigate(screens.REGISTER_IDENTIFICATION.name, {
+      this.props.navigation.navigate(screenKeys.Identification, {
         frontImageUrl: registerStore.identificationFrontDocument,
         backImageUrl: registerStore.identificationBackDocument
       });
@@ -261,14 +261,14 @@ class SignUpScreen extends Component {
   };
 
   navToDriverCardScreen = () => {
-    this.props.navigation.navigate(screens.REGISTER_DRIVER_LICENCE.name, {
+    this.props.navigation.navigate(screenKeys.DriverLicence, {
       frontImageUrl: registerStore.driverLicenceFrontDocument,
       backImageUrl: registerStore.driverLicenceBackDocument
     });
   };
 
   navToMilesScreen = () => {
-    this.props.navigation.navigate(screens.REGISTER_MILES.name);
+    this.props.navigation.navigate(screenKeys.Miles);
   };
 
   shareRefCode = () => {
@@ -343,33 +343,6 @@ class SignUpScreen extends Component {
     await this.initLoad();
     this.refreshing = false;
   };
-
-  uploadFaceCapture = async fileUri => {
-    try {
-      const uploadedFace = await registerStore.uploadDocument(
-        'identification',
-        'one_side',
-        'face_capture',
-        'front_side',
-        fileUri
-      );
-
-      const isSuccess = await registerStore.save({
-        identification_face_capture_reference: uploadedFace.reference
-      });
-
-      return isSuccess;
-    } catch (error) {
-      return false;
-    }
-  };
 }
 
-export default translate('translations')(SignUpScreen);
-
-/*
-  didn't replace (refactor) in render:
-  UFOHeader
-  UFOActionBar
-  UFOImage
-*/
+export default translate()(SignUpScreen);

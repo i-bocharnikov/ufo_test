@@ -140,7 +140,7 @@ class DriveScreen extends Component {
         icon: registerStore.isUserRegistered
           ? icons.MY_DETAILS
           : icons.REGISTER,
-        onPress: () => this.props.navigation.navigate(screens.REGISTER.name)
+        onPress: this.navToRegister
       },
       {
         style: driveStore.hasRentalOngoing
@@ -514,6 +514,14 @@ class DriveScreen extends Component {
     }
 
     this.props.navigation.navigate(screenKeys.Booking);
+  };
+
+  navToRegister = () => {
+    if (registerStore.isConnected) {
+      this.props.navigation.navigate(screenKeys.Register);
+    } else {
+      this.props.navigation.navigate(screenKeys.Phone);
+    }
   };
 
   startContractSigning = () => {
