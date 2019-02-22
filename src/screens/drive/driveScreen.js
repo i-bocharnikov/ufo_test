@@ -75,7 +75,10 @@ class DriveScreen extends Component {
       : backgrounds.HOME002;
 
     return (
-      <UFOContainer video={videos.homeScreenBg} image={background}>
+      <UFOContainer
+        video={driveStore.hasRentals ? null : videos.homeScreenBg}
+        image={background}
+      >
         <UFOHeader
           transparent={true}
           logo={true}
@@ -134,9 +137,11 @@ class DriveScreen extends Component {
         onPress: this.navToBooking
       },
       {
-        style: registerStore.isUserRegistered || !driveStore.hasRentalConfirmedOrOngoing
-          ? actionStyles.DONE
-          : actionStyles.TODO,
+        style:
+          registerStore.isUserRegistered ||
+          !driveStore.hasRentalConfirmedOrOngoing
+            ? actionStyles.DONE
+            : actionStyles.TODO,
         icon: registerStore.isUserRegistered
           ? icons.MY_DETAILS
           : icons.REGISTER,
@@ -147,7 +152,9 @@ class DriveScreen extends Component {
           ? actionStyles.TODO
           : actionStyles.ACTIVE,
         icon: icons.DRIVE,
-        onPress: () => { this.driveSelected = true; }
+        onPress: () => {
+          this.driveSelected = true;
+        }
       }
     ];
   }
@@ -158,7 +165,9 @@ class DriveScreen extends Component {
     actions.push({
       style: actionStyles.ACTIVE,
       icon: icons.BACK,
-      onPress: () => { this.driveSelected = false; }
+      onPress: () => {
+        this.driveSelected = false;
+      }
     });
 
     if (!driveStore.hasRentals) {
@@ -187,10 +196,7 @@ class DriveScreen extends Component {
       driveStore.computeActionInitialInspect(actions, () =>
         this.props.navigation.navigate(screens.INSPECT.name)
       );
-      driveStore.computeActionStartContract(
-        actions,
-        this.startContractSigning
-      );
+      driveStore.computeActionStartContract(actions, this.startContractSigning);
 
       if (driveStore.inUse) {
         otaKeyStore.computeActionEnableKey(
@@ -204,7 +210,9 @@ class DriveScreen extends Component {
         actions.push({
           style: actionStyles.ACTIVE,
           icon: icons.RETURN,
-          onPress: () => { this.returnSelected = true; }
+          onPress: () => {
+            this.returnSelected = true;
+          }
         });
       }
     }
@@ -218,7 +226,9 @@ class DriveScreen extends Component {
     actions.push({
       style: actionStyles.ACTIVE,
       icon: icons.BACK,
-      onPress: () => { this.returnSelected = false; }
+      onPress: () => {
+        this.returnSelected = false;
+      }
     });
     driveStore.computeActionReturn(actions, () =>
       this.props.navigation.navigate(screens.RETURN.name)
@@ -236,10 +246,8 @@ class DriveScreen extends Component {
   compileActions = () => {
     if (!this.driveSelected) {
       return this.actionsHomeScreen;
-
     } else if (this.driveSelected && !this.returnSelected) {
       return this.actionsDriveScreen;
-
     } else {
       return this.actionsReturnScreen;
     }
