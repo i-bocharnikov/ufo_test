@@ -157,7 +157,7 @@ export default {
     devicePermissionRestricted:
       'To use {{type}} activate it in the phone settings',
     companyInputPlaceholder: 'Company name (optional)',
-    vatInputPlaceholder: 'VAT number (optional)',
+    vatInputPlaceholder: 'VAT number (optional)'
   },
   inspect: {
     initialInspectionTitle: 'Initial inspection',
