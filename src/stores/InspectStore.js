@@ -17,9 +17,13 @@ export default class InspectStore {
 
   @action
   async listCarDamages() {
-    if (!driveStore.rental) {return false;}
+    if (driveStore.rental === null) {
+      return false;
+    }
 
-    const response = await getFromApi('/car_damages/' + driveStore.rental.reference);
+    const response = await getFromApi(
+      '/car_damages/' + driveStore.rental.reference
+    );
     if (response && response.status === 'success') {
       if (DEBUG) {
         console.info('driveStore.listCarDamages:', response.data);
@@ -44,12 +48,15 @@ export default class InspectStore {
       relative_position_y: this.relativePositionY
     };
 
-    const response = await postToApi('/car_damages/' + driveStore.rental.reference, body);
+    const response = await postToApi(
+      '/car_damages/' + driveStore.rental.reference,
+      body
+    );
     if (response && response.status === 'success') {
       if (DEBUG) {
         console.info('driveStore.addCarDamage:', response.data);
       }
-      this.carDamages = [ response.data.car_damage, ...this.carDamages ];
+      this.carDamages = [response.data.car_damage, ...this.carDamages];
       this.relativePositionX = 0.5;
       this.relativePositionY = 0.5;
       this.documentReference = null;
@@ -65,7 +72,9 @@ export default class InspectStore {
       return false;
     }
 
-    const response = await putToApi('/rentals/' + driveStore.rental.reference, { action: 'initial_inspection_done' });
+    const response = await putToApi('/rentals/' + driveStore.rental.reference, {
+      action: 'initial_inspection_done'
+    });
     if (response && response.status === 'success') {
       if (DEBUG) {
         console.info('inspectStore.confirmInitialInspection:', response.data);
@@ -82,7 +91,9 @@ export default class InspectStore {
       return false;
     }
 
-    const response = await putToApi('/rentals/' + driveStore.rental.reference, { action: 'final_inspection_done' });
+    const response = await putToApi('/rentals/' + driveStore.rental.reference, {
+      action: 'final_inspection_done'
+    });
     if (response && response.status === 'success') {
       if (DEBUG) {
         console.info('inspectStore.confirmFinalInspection:', response.data);
