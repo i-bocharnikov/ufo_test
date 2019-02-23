@@ -137,7 +137,9 @@ export default class DriveStore {
   }
 
   @computed get hasRentalConfirmed() {
-    return this.rentals.find(rental => rental.status === RENTAL_STATUS.CONFIRMED);
+    return this.rentals.find(
+      rental => rental.status === RENTAL_STATUS.CONFIRMED
+    );
   }
 
   @computed get hasRentalOngoing() {
@@ -226,9 +228,7 @@ export default class DriveStore {
       return;
     }
     actions.push({
-      style: this.rental.ready_for_return
-        ? actionStyles.TODO
-        : actionStyles.ACTIVE,
+      style: actionStyles.ACTIVE,
       icon: icons.WHERE,
       onPress: onPress
     });
@@ -245,7 +245,7 @@ export default class DriveStore {
     actions.push({
       style: this.rental.contract_ended
         ? actionStyles.DISABLE
-        : this.rental.ready_for_return && !this.rentals.final_inspection_done
+        : this.rental.ready_for_return && !this.rental.final_inspection_done
         ? actionStyles.TODO
         : actionStyles.ACTIVE,
       icon: icons.INSPECT,
