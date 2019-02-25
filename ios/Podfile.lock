@@ -48,7 +48,7 @@ PODS:
     - nanopb/encode (= 0.3.901)
   - nanopb/decode (0.3.901)
   - nanopb/encode (0.3.901)
-  - OTASDK (3.11.2)
+  - OTASDK (3.11.5)
   - Protobuf (3.6.1)
   - React (0.57.1):
     - React/Core (= 0.57.1)
@@ -171,7 +171,7 @@ SPEC CHECKSUMS:
   GoogleToolboxForMac: ff31605b7d66400dcec09bed5861689aebadda4d
   GTMSessionFetcher: 32aeca0aa144acea523e1c8e053089dec2cb98ca
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
-  OTASDK: a27060599c819c5ce02f06efa3400934c4fa0a7b
+  OTASDK: c876e7492cc6c25a7b7ac067943420b8998c4a18
   Protobuf: 1eb9700044745f00181c136ef21b8ff3ad5a0fd5
   React: 1fe0eb13d90b625d94c3b117c274dcfd2e760e11
   react-native-camera: eac1e8cc7523273a2a11956d0e5dac08296cf4b0
