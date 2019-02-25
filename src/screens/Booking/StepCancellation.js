@@ -113,12 +113,10 @@ class StepCancellationScreen extends Component {
       `order.${bookingStore.editableOrderRef ? 'newPrice' : 'price'}.pricingReference`
     );
 
-    if (!ref) {
-      return;
+    if (ref) {
+      bookingStore.priceInfoRef = ref;
+      this.props.navigation.navigate(screenKeys.BookingDetails);
     }
-
-    bookingStore.priceInfoRef = ref;
-    this.props.navigation.navigate(screenKeys.BookingDetails);
   };
 }
 
