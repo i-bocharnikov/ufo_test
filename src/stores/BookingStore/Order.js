@@ -126,17 +126,42 @@ export default class Order {
   static async updateOrder(editableOrderRef, payload) {
     const response = await putToApi(`/reserve/bookings/${editableOrderRef}`, payload, true);
 
-    if (response.isSuccess && _.has(response, 'data.updatedBooking')) {
-      return response.data.updatedBooking;
+    if (response.isSuccess) {
+      return response.data;
     } else {
       return this.fallbackOrderConfirmation;
     }
   }
 
   /*
-   * todo: implement in future
+   * @param {string} editableOrderRef
+   * @returns {Object}
+   * @description Get simulation of booking cancellation
    */
-  static async undoBooking() {
-    return false;
+  static async undoBooking(editableOrderRef) {
+    const response = await getFromApi(`/reserve/bookings/${editableOrderRef}/cancel`, true);
+    const data = _.get(response, 'data.canceledBooking');
+
+    if (response.isSuccess && data) {
+      return data;
+    } else {
+      return this.fallbackOrder;
+    }
+  }
+
+  /*
+   * @param {string} editableOrderRef
+   * @param {Object} payload
+   * @returns {Object}
+   * @description Confirm booking cancellation
+   */
+  static async confirmCancellation(editableOrderRef, payload) {
+    const response = await putToApi(`/reserve/bookings/${editableOrderRef}/cancel`, payload, true);
+
+    if (response.isSuccess) {
+      return response.data;
+    } else {
+      return this.fallbackOrderConfirmation;
+    }
   }
 }

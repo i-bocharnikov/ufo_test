@@ -247,7 +247,7 @@ class StepPayScreen extends Component {
           <View style={[ styles.separateLine, styles.separateLineInfoBlock ]} />
           <View style={styles.row}>
             <Text style={styles.infoTitle}>
-              {t('totalPricePayment')} :
+              {this.priceDescription}
             </Text>
             <Text style={styles.infoTitlePrice}>
               {bookingStore.orderPrice}
@@ -269,17 +269,19 @@ class StepPayScreen extends Component {
     );
   };
 
-  renderVoucherTooltip = () => {
-    return (
-      <UFOTooltip
-        isVisible={this.state.showVoucherTooltip}
-        onClose={() => this.setState({ showVoucherTooltip: false })}
-        originBtn={this.voucherTooltipRef}
-      >
-        {this.props.t('voucherTooltip')}
-      </UFOTooltip>
-    );
-  };
+  renderVoucherTooltip = () => (
+    <UFOTooltip
+      isVisible={this.state.showVoucherTooltip}
+      onClose={() => this.setState({ showVoucherTooltip: false })}
+      originBtn={this.voucherTooltipRef}
+    >
+      {this.props.t('voucherTooltip')}
+    </UFOTooltip>
+  );
+
+  get priceDescription() {
+    return _.get(bookingStore, 'price.description', `${this.props.t('totalPricePayment')} : `);
+  }
 
   /*
    * Launch camera to credit card, then handle card with stripe and locally save it into card list

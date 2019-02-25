@@ -390,7 +390,8 @@ class StepBookScreen extends Component {
     const isSuccess = await bookingStore.undoBooking();
 
     if (isSuccess) {
-      this.props.navigation.navigate(screenKeys.BookingStepPay);
+      bookingStore.isCancellation = true;
+      this.props.navigation.navigate(screenKeys.BookingStepCancellation);
     }
   };
 }
