@@ -1,6 +1,9 @@
 import moment from 'moment';
 
 import { values } from './../../utils/theme';
+import currencyMap from './../../utils/currencyMap';
+
+const DEFAULT_CURRENCY = 'EUR';
 
 export function getPreselectedDatesForRollPicker(periodInMonths = 12) {
   const dates = [];
@@ -35,4 +38,8 @@ export function getTimeItemsForRollPicker() {
   }
 
   return timeItems;
+}
+
+export function getCurrencyChar(currency = DEFAULT_CURRENCY) {
+  return currencyMap[currency] || DEFAULT_CURRENCY;
 }
