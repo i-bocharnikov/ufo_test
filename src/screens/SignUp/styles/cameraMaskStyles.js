@@ -34,8 +34,8 @@ export default StyleSheet.create({
 
   labelArea: {
     position: 'absolute',
-    left: 20,
-    right: 20,
+    left: 0,
+    right: 0,
     bottom: PADDING_HEIGHT + CARD_HEIGHT,
     justifyContent: 'flex-end',
     alignContent: 'center'
@@ -46,8 +46,8 @@ export default StyleSheet.create({
     fontSize: 20,
     textAlign: 'center',
     color: colors.TEXT_INVERT_COLOR,
-    paddingHorizontal: 10,
     lineHeight: 24,
+    paddingHorizontal: 32,
     textShadowColor: 'rgba(0,0,0,0.2)',
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 4
