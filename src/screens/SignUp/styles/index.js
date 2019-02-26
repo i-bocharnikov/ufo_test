@@ -142,6 +142,13 @@ export default StyleSheet.create({
     justifyContent: 'center'
   },
 
+  cardsPreviewContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around'
+  },
+
   inputMiles: { marginTop: GAP_BETWEEN },
 
   invoiceInputsWrapper: {

@@ -32,7 +32,12 @@ const captureStates = {
 
 @observer
 class DriverLicenceScreen extends Component {
-  @observable captureState = null;
+  @observable captureState = (
+    !registerStore.driverLicenceFrontDocument
+    || registerStore.driverLicenceFrontDocument === 'loading'
+  )
+    ? captureStates.CAPTURE_FRONT
+    : captureStates.PREVIEW;
   @observable frontImageUrl = null;
   @observable backImageUrl = null;
   @observable activityPending = false;
@@ -40,25 +45,8 @@ class DriverLicenceScreen extends Component {
 
   render() {
     const { t, navigation } = this.props;
-
-    //Check if we have to retrieve imageUrl from overview screen
-    if (this.captureState === null) {
-      this.frontImageUrl = navigation.getParam('frontImageUrl');
-      this.backImageUrl = navigation.getParam('backImageUrl');
-
-      if (
-        this.frontImageUrl === undefined ||
-        this.frontImageUrl === null ||
-        this.frontImageUrl === 'loading'
-      ) {
-        this.captureState = captureStates.CAPTURE_FRONT;
-      } else {
-        this.captureState = captureStates.PREVIEW;
-      }
-    }
-
-    const showCamera =
-      this.captureState !== captureStates.VALIDATE && this.captureState !== captureStates.PREVIEW;
+    const showCamera = this.captureState === captureStates.CAPTURE_FRONT
+      || this.captureState === captureStates.CAPTURE_BACK;
 
     return (
       <UFOContainer image={screens.REGISTER_OVERVIEW.backgroundImage}>
@@ -72,26 +60,8 @@ class DriverLicenceScreen extends Component {
           logo={showCamera}
           transparent={showCamera}
         />
-        {!showCamera && (
-          <ScrollView>
-            <View style={styles.cardsWrapper}>
-              <UFOCard title={t('register:driverLicenceCheckLabel')}>
-                <View style={styles.cardsContainer}>
-                  <UFOImage
-                    source={{ uri: this.frontImageUrl }}
-                    style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
-                    fallbackToImage={true}
-                  />
-                  <UFOImage
-                    source={{ uri: this.backImageUrl }}
-                    style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
-                    fallbackToImage={true}
-                  />
-                </View>
-              </UFOCard>
-            </View>
-          </ScrollView>
-        )}
+        {this.captureState === captureStates.PREVIEW && this.renderCurrentThumbs()}
+        {this.captureState === captureStates.VALIDATE && this.renderNewPreview()}
         {showCamera && (
           <UFOCamera
             onCameraReady={() => (this.isCameraAllowed = true)}
@@ -107,6 +77,44 @@ class DriverLicenceScreen extends Component {
       </UFOContainer>
     );
   }
+
+  renderCurrentThumbs = () => (
+    <View style={styles.cardsWrapper}>
+      <UFOCard title={this.props.t('register:redoCaptureConfirm')}>
+        <View style={styles.cardsPreviewContainer}>
+          <UFOImage
+            source={{ uri: registerStore.driverLicenceFrontDocument }}
+            style={{ width: CARD_WIDTH / 2, height: CARD_HEIGHT / 2 }}
+          />
+          <UFOImage
+            source={{ uri: registerStore.driverLicenceBackDocument }}
+            style={{ width: CARD_WIDTH / 2, height: CARD_HEIGHT / 2 }}
+          />
+        </View>
+      </UFOCard>
+    </View>
+  );
+
+  renderNewPreview = () => (
+    <ScrollView>
+      <View style={styles.cardsWrapper}>
+        <UFOCard title={this.props.t('register:driverLicenceCheckLabel')}>
+          <View style={styles.cardsContainer}>
+            <UFOImage
+              source={{ uri: this.frontImageUrl }}
+              style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
+              fallbackToImage={true}
+            />
+            <UFOImage
+              source={{ uri: this.backImageUrl }}
+              style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
+              fallbackToImage={true}
+            />
+          </View>
+        </UFOCard>
+      </View>
+    </ScrollView>
+  );
 
   renderCameraMask = () => {
     const sample = this.captureState === captureStates.CAPTURE_FRONT
@@ -287,4 +295,4 @@ class DriverLicenceScreen extends Component {
   };
 }
 
-export default translate('translations')(DriverLicenceScreen);
+export default translate()(DriverLicenceScreen);

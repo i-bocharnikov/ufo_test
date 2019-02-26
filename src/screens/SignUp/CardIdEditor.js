@@ -33,23 +33,21 @@ const captureStates = {
 
 @observer
 class IdentificationScreen extends Component {
-  @observable frontImageUrl = registerStore.identificationFrontDocument;
-  @observable backImageUrl = registerStore.identificationBackDocument;
-  @observable captureState = null;
+  @observable captureState = (
+    !registerStore.identificationFrontDocument
+    || registerStore.identificationFrontDocument === 'loading'
+  )
+    ? captureStates.CAPTURE_FRONT
+    : captureStates.PREVIEW;
+  @observable frontImageUrl = null;
+  @observable backImageUrl = null;
   @observable activityPending = false;
   @observable isCameraAllowed = false;
 
   render() {
     const { t, navigation } = this.props;
-
-    if (this.captureState === null) {
-      this.captureState = !this.frontImageUrl || this.frontImageUrl === 'loading'
-        ? captureStates.CAPTURE_FRONT
-        : (this.captureState = captureStates.PREVIEW);
-    }
-
-    const showCamera =
-      this.captureState !== captureStates.VALIDATE && this.captureState !== captureStates.PREVIEW;
+    const showCamera = this.captureState === captureStates.CAPTURE_FRONT
+      || this.captureState === captureStates.CAPTURE_BACK;
 
     return (
       <UFOContainer image={screens.REGISTER_OVERVIEW.backgroundImage}>
@@ -63,26 +61,8 @@ class IdentificationScreen extends Component {
           logo={showCamera}
           transparent={showCamera}
         />
-        {!showCamera && (
-          <ScrollView>
-            <View style={styles.cardsWrapper}>
-              <UFOCard title={t('register:identificationCheckLabel')}>
-                <View style={styles.cardsContainer}>
-                  <UFOImage
-                    source={{ uri: this.frontImageUrl }}
-                    style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
-                    fallbackToImage={true}
-                  />
-                  <UFOImage
-                    source={{ uri: this.backImageUrl }}
-                    style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
-                    fallbackToImage={true}
-                  />
-                </View>
-              </UFOCard>
-            </View>
-          </ScrollView>
-        )}
+        {this.captureState === captureStates.PREVIEW && this.renderCurrentThumbs()}
+        {this.captureState === captureStates.VALIDATE && this.renderNewPreview()}
         {showCamera && (
           <UFOCamera
             onCameraReady={() => (this.isCameraAllowed = true)}
@@ -126,6 +106,44 @@ class IdentificationScreen extends Component {
       </View>
     );
   };
+
+  renderCurrentThumbs = () => (
+    <View style={styles.cardsWrapper}>
+      <UFOCard title={this.props.t('register:redoCaptureConfirm')}>
+        <View style={styles.cardsPreviewContainer}>
+          <UFOImage
+            source={{ uri: registerStore.identificationFrontDocument }}
+            style={{ width: CARD_WIDTH / 2, height: CARD_HEIGHT / 2 }}
+          />
+          <UFOImage
+            source={{ uri: registerStore.identificationBackDocument }}
+            style={{ width: CARD_WIDTH / 2, height: CARD_HEIGHT / 2 }}
+          />
+        </View>
+      </UFOCard>
+    </View>
+  );
+
+  renderNewPreview = () => (
+    <ScrollView>
+      <View style={styles.cardsWrapper}>
+        <UFOCard title={this.props.t('register:identificationCheckLabel')}>
+          <View style={styles.cardsContainer}>
+            <UFOImage
+              source={{ uri: this.frontImageUrl }}
+              style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
+              fallbackToImage={true}
+            />
+            <UFOImage
+              source={{ uri: this.backImageUrl }}
+              style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
+              fallbackToImage={true}
+            />
+          </View>
+        </UFOCard>
+      </View>
+    </ScrollView>
+  );
 
   compileActions = () => {
     const initRegistration = this.props.navigation.getParam('initRegistration', false);

@@ -125,6 +125,7 @@ export default {
     addressInputPlaceholder: 'Street, number, post code, city and country',
     smsCodeInputLabel: 'The code received by SMS',
     addressLabel: 'Address',
+    redoCaptureConfirm: 'Please confirm you want to change the captured scan',
     identificationTitle: 'Register ID',
     identificationLabel: 'ID or Passport',
     identificationFrontInputLabel:
