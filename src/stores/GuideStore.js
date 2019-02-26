@@ -66,7 +66,7 @@ export default class GuideStore {
   }
 
   hasImage(guide) {
-    return guide.media_type === 'image';
+    return guide.media_type === 'image' || guide.media_type === 'external_map';
   }
   hasVideo(guide) {
     return guide.media_type === 'video';

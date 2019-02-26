@@ -110,7 +110,8 @@ export default {
     clipboard: 'clipboard',
     browse: 'Open browser',
     closeRental: 'Close rental',
-    emergencyCall: 'Emergency call'
+    emergencyCall: 'Emergency call',
+    map: 'Open map'
   },
   register: {
     overviewTitle: 'Registration',
@@ -211,7 +212,9 @@ export default {
   },
   guide: {
     findTitle: 'Where is the car',
-    returnTitle: 'How to return'
+    returnTitle: 'How to return',
+    mapDialogTitle: 'Open in Maps',
+    mapDialogMessage: 'What app would you like to use?'
   },
   term: {
     rentalAgreementTitle: 'Sign the agreement',
