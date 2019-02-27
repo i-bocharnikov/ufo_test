@@ -1,6 +1,7 @@
 package com.ufodrive.app;
 
 import com.facebook.react.ReactApplication;
+import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import im.shimo.react.prompt.RNPromptPackage;
 import io.codebakery.imagerotate.ImageRotatePackage;
 import com.masteratul.exceptionhandler.ReactNativeExceptionHandlerPackage;
@@ -41,6 +42,7 @@ public class MainApplication extends OtaKeysApplication implements ReactApplicat
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+          new RNGestureHandlerPackage(),
           new RNPromptPackage(),
           new ImageRotatePackage(),
           new ReactNativeExceptionHandlerPackage(),

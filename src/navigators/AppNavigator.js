@@ -6,9 +6,9 @@ import SupportStackNavigator from './SupportStackNavigator';
 import RegisterStackNavigator from './RegisterStackNavigator';
 
 export default createBottomTabNavigator({
+  [keys.Register]: RegisterStackNavigator,
   [keys.Drive]: { screen: screens.Drive },
   [keys.Booking]: BookingStackNavigator,
-  [keys.Register]: RegisterStackNavigator,
   [keys.Inspect]: InspectStackNavigator,
   [keys.Support]: SupportStackNavigator,
   [keys.Find]: { screen: screens.Find },
@@ -18,5 +18,5 @@ export default createBottomTabNavigator({
 },
 {
   initialRouteName: keys.Home,
-  navigationOptions: () => ({ tabBarVisible: false })
+  defaultNavigationOptions: () => ({ tabBarVisible: false })
 });

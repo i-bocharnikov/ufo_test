@@ -42,7 +42,7 @@
 		</dict>
 	</dict>
 	<key>NSAppleEventsUsageDescription</key>
-	<string></string>
+	<string/>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>UFODrive needs access</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
@@ -52,7 +52,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>UFODrive needs access to the camera to capture your driver license and inspect your vehicle</string>
 	<key>NSFaceIDUsageDescription</key>
-	<string>UFODrive needs Face ID authorisation, for you to confirm rental booking and approve terms.</string>
+	<string>Enabling Face ID allows quick and secure confirm your identity</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>UFODrive need location to be able to connect to vehicule (lock / unlock)</string>
 	<key>NSMotionUsageDescription</key>
@@ -97,8 +97,6 @@
 	<false/>
 	<key>kTCCServiceMediaLibrary</key>
 	<string>UFODrive needs access</string>
-	<key>NSFaceIDUsageDescription</key>
-	<string>Enabling Face ID allows quick and secure confirm your identity</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>comgooglemaps</string>
