@@ -416,7 +416,7 @@ export default StyleSheet.create({
     ...textThemes.SP_BOLD,
     fontSize: 11,
     lineHeight: 28,
-    letterSpacing: 3.5,
+    letterSpacing: 3.2,
     color: colors.MAIN_COLOR
   },
 
@@ -584,5 +584,8 @@ export default StyleSheet.create({
 
   undoBookingBtn: {
     marginTop: 28
-  }
+  },
+
+  /* styles specific for StepCancellationScreen */
+  screenCancelContainer: { backgroundColor: colors.BG_INVERT_TINT }
 });

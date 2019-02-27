@@ -63,10 +63,10 @@ export default class RegisterStore {
   @persist('object', User) @observable user = new User();
   @persist support_chat_identification_key = null;
 
-  @observable identificationFrontDocument = 'loading';
-  @observable identificationBackDocument = 'loading';
-  @observable driverLicenceFrontDocument = 'loading';
-  @observable driverLicenceBackDocument = 'loading';
+  @observable identificationFrontDocument = null;
+  @observable identificationBackDocument = null;
+  @observable driverLicenceFrontDocument = null;
+  @observable driverLicenceBackDocument = null;
 
   startupMessage = null;
   acknowledge_uri = '';
@@ -288,5 +288,28 @@ export default class RegisterStore {
     } catch (error) {
       return false;
     }
+  };
+
+  @action
+  fetchScanDocumentThumbs = async () => {
+    const idFrontScanRef = _.get(this.user, 'identification_scan_front_side.reference');
+    const idBackScanRef = _.get(this.user, 'identification_scan_back_side.reference');
+    const dlFrontScanRef = _.get(this.user, 'driver_licence_scan_front_side.reference');
+    const dlBackScanRef = _.get(this.user, 'driver_licence_scan_back_side.reference');
+
+    const loadThumbData = async (documentStoreName, documentRef) => {
+      if (documentRef) {
+        this[documentStoreName] = 'loading';
+        const imgData = await downloadFromApi(documentRef, false);
+        this[documentStoreName] = imgData ? `data:image/png;base64,${imgData}` : null;
+      }
+    };
+
+    await Promise.all([
+      loadThumbData('identificationFrontDocument', idFrontScanRef),
+      loadThumbData('identificationBackDocument', idBackScanRef),
+      loadThumbData('driverLicenceFrontDocument', dlFrontScanRef),
+      loadThumbData('driverLicenceBackDocument', dlBackScanRef)
+    ]);
   };
 }

@@ -6,6 +6,7 @@ const routeConfigs = {
   [keys.BookingStepBook]: { screen: screens.StepBook },
   [keys.BookingStepPay]: { screen: screens.StepPay },
   [keys.BookingStepDrive]: { screen: screens.StepDrive },
+  [keys.BookingStepCancellation]: { screen: screens.StepCancellation },
   [keys.BookingDetails]: { screen: screens.BookingDetails }
 };
 

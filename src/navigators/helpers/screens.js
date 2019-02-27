@@ -4,6 +4,7 @@ import Drive from './../../screens/drive/driveScreen';
 import StepBook from './../../screens/Booking/StepBook';
 import StepPay from './../../screens/Booking/StepPay';
 import StepDrive from './../../screens/Booking/StepDrive';
+import StepCancellation from './../../screens/Booking/StepCancellation';
 import BookingDetails from './../../screens/Booking/BookingDetails';
 
 import Inspect from './../../screens/inspect/inspectScreen';
@@ -36,6 +37,7 @@ export default {
   StepBook,
   StepPay,
   StepDrive,
+  StepCancellation,
   BookingDetails,
 
   Inspect,

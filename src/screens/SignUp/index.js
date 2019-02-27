@@ -33,7 +33,7 @@ class SignUpScreen extends Component {
   @observable refreshing = false;
 
   async componentDidMount() {
-    await this.initLoad();
+    await registerStore.fetchScanDocumentThumbs();
 
     reaction(
       () => registerStore.isConnected,
@@ -253,18 +253,12 @@ class SignUpScreen extends Component {
     if (registerStore.user.face_capture_required && !DeviceInfo.isEmulator()) {
       navigation.navigate(screenKeys.FaceRecognizer, params);
     } else {
-      this.props.navigation.navigate(screenKeys.Identification, {
-        frontImageUrl: registerStore.identificationFrontDocument,
-        backImageUrl: registerStore.identificationBackDocument
-      });
+      this.props.navigation.navigate(screenKeys.Identification);
     }
   };
 
   navToDriverCardScreen = () => {
-    this.props.navigation.navigate(screenKeys.DriverLicence, {
-      frontImageUrl: registerStore.driverLicenceFrontDocument,
-      backImageUrl: registerStore.driverLicenceBackDocument
-    });
+    this.props.navigation.navigate(screenKeys.DriverLicence);
   };
 
   navToMilesScreen = () => {
@@ -285,62 +279,10 @@ class SignUpScreen extends Component {
     Share.share(content, options);
   };
 
-  initLoad = async () => {
-    /* handle id card front */
-    registerStore.user.identificationFrontDocument = 'loading';
-    if (registerStore.user.identification_scan_front_side) {
-      const imgRef =
-        registerStore.user.identification_scan_front_side.reference;
-      const imgData = await registerStore.downloadDocument(imgRef);
-      registerStore.identificationFrontDocument = imgData
-        ? `data:image/png;base64,${imgData}`
-        : null;
-    } else {
-      registerStore.identificationFrontDocument = null;
-    }
-
-    /* handle id card back */
-    registerStore.user.identificationBackDocument = 'loading';
-    if (registerStore.user.identification_scan_back_side) {
-      const imgRef = registerStore.user.identification_scan_back_side.reference;
-      const imgData = await registerStore.downloadDocument(imgRef);
-      registerStore.identificationBackDocument = imgData
-        ? `data:image/png;base64,${imgData}`
-        : null;
-    } else {
-      registerStore.identificationBackDocument = null;
-    }
-
-    /* handle drive card front */
-    registerStore.user.driverLicenceFrontDocument = 'loading';
-    if (registerStore.user.driver_licence_scan_front_side) {
-      const imgRef =
-        registerStore.user.driver_licence_scan_front_side.reference;
-      const imgData = await registerStore.downloadDocument(imgRef);
-      registerStore.driverLicenceFrontDocument = imgData
-        ? `data:image/png;base64,${imgData}`
-        : null;
-    } else {
-      registerStore.driverLicenceFrontDocument = null;
-    }
-
-    /* handle drive card back */
-    registerStore.user.driverLicenceBackDocument = 'loading';
-    if (registerStore.user.driver_licence_scan_back_side) {
-      const imgRef = registerStore.user.driver_licence_scan_back_side.reference;
-      const imgData = await registerStore.downloadDocument(imgRef);
-      registerStore.driverLicenceBackDocument = imgData
-        ? `data:image/png;base64,${imgData}`
-        : null;
-    } else {
-      registerStore.driverLicenceBackDocument = null;
-    }
-  };
-
   refreshSignUpData = async () => {
     this.refreshing = true;
     await registerStore.getUserData();
-    await this.initLoad();
+    await registerStore.fetchScanDocumentThumbs();
     this.refreshing = false;
   };
 }

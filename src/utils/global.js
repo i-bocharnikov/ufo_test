@@ -247,6 +247,7 @@ export const icons = {
   CLOSE_RENTAL: new Icon('flag', 'icon:closeRental'),
   BROWSE: new Icon('browsers', 'icon:browse'),
   CLIPBOARD: new Icon('clipboard', 'icon:clipboard'),
+  MAP: new Icon('map', 'icon:find'),
 
   UNLOCK: new Icon('unlock', 'icon:unlock'),
   LOCK: new Icon('lock', 'icon:lock'),

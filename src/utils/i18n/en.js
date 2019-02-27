@@ -110,7 +110,8 @@ export default {
     clipboard: 'clipboard',
     browse: 'Open browser',
     closeRental: 'Close rental',
-    emergencyCall: 'Emergency call'
+    emergencyCall: 'Emergency call',
+    map: 'Open map'
   },
   register: {
     overviewTitle: 'Registration',
@@ -125,6 +126,7 @@ export default {
     addressInputPlaceholder: 'Street, number, post code, city and country',
     smsCodeInputLabel: 'The code received by SMS',
     addressLabel: 'Address',
+    redoCaptureConfirm: 'Please confirm you want to change the captured scan',
     identificationTitle: 'Register ID',
     identificationLabel: 'ID or Passport',
     identificationFrontInputLabel:
@@ -210,7 +212,9 @@ export default {
   },
   guide: {
     findTitle: 'Where is the car',
-    returnTitle: 'How to return'
+    returnTitle: 'How to return',
+    mapDialogTitle: 'Open in Maps',
+    mapDialogMessage: 'What app would you like to use?'
   },
   term: {
     rentalAgreementTitle: 'Sign the agreement',
@@ -223,8 +227,10 @@ export default {
     screenTitle: 'Book your car',
     screenTitleEdit: 'Update booking',
     subTitleStep1: 'BOOK',
-    subTitleStep2: 'PAY & CONFIRM',
+    subTitleStep1Upgrade: 'UPDATE',
+    subTitleStep2: 'PAY',
     subTitleStep3: 'DRIVE',
+    subTitleStep3Cancel: 'CANCEL',
     locSectionTitle: 'LOCATION',
     carsSectionTitle: 'CARS',
     timeSectionTitle: 'PICK-UP & RETURN TIME',
@@ -267,14 +273,17 @@ export default {
     calendarColorsNotes: 'Select multiple dates to see discounts',
     driveTitle: 'Booking completed!',
     driveUpdateTitle: 'Booking updated!',
+    driveCancelTitle: 'Your booking has been cancelled and your card refunded.',
     driveSubTitle: 'Enjoy your trip…',
     driveNextRegister: 'REGISTER',
     driveNextDrive: 'DRIVE YOUR CAR',
-    dreveDescrRegisterP1:
-      'Before the rental, please register by scanning your ID and driver licence.',
-    dreveDescrDriveP1: 'Find your bookings in the drive section of the app.',
-    dreveDescrP2: ' If you want to know more about how it works, ',
-    dreveDescrGuideLink: 'Please consult the FAQ.',
+    driveDescrGuideLink: 'Please consult the FAQ.',
+    driveNextHome: 'HOME',
+    driveDescrRegisterP1: 'Before the rental, please register by scanning your ID and driver licence.',
+    driveDescrDriveP1: 'Find your bookings in the drive section of the app.',
+    driveDescrP2: ' If you want to know more about how it works, ',
+    driveDescrGuideLink: 'Please consult the FAQ.',
+    driveDescrCancellation: 'Please note it will take a couple of day for the money to appear on your statement.\n\nWe look forward to welcoming you in the future.',
     feedBackTitle: 'Just one question',
     confirmDialog: 'DONE',
     feedBackInputPlaceholder: 'Your variant',
@@ -283,7 +292,8 @@ export default {
     termsAlertBtn: 'Read terms',
     termsLinkLabel: 'Terms and conditions',
     undoBooking: 'Cancel booking (fees may apply)',
-    bookingEditResult: 'BOOKING'
+    bookingEditResult: 'BOOKING',
+    cancelationFees: 'Cancelation fees'
   },
   launch: {
     launchTitle: 'Fast track\ncar rental',

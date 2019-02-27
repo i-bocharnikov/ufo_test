@@ -8,7 +8,8 @@ import cars from './Cars';
 import order from './Order';
 import {
   getPreselectedDatesForRollPicker,
-  getTimeItemsForRollPicker
+  getTimeItemsForRollPicker,
+  getCurrencyChar
 } from './helpers';
 import { values } from './../../utils/theme';
 
@@ -60,6 +61,8 @@ export default class BookingStore {
   /* modify existing booking */
   @observable editableOrderRef = this._defaultStore.editableOrderRef;
   @observable isOngoing = this._defaultStore.isOngoing;
+  @observable isCancellation = this._defaultStore.isCancellation;
+  @observable cancellationOrder = this._defaultStore.cancellationOrder;
 
   /**
    * @description Default data for store
@@ -96,7 +99,9 @@ export default class BookingStore {
       useRefferalAmount: false,
       bookingConfirmation: null,
       editableOrderRef: null,
-      isOngoing: false
+      isOngoing: false,
+      cancellationOrder: null,
+      isCancellation: false
     };
   }
 
@@ -578,6 +583,17 @@ export default class BookingStore {
   };
 
   /*
+   * @description Confirm cancellation of current booking
+   */
+  @action
+  confirmCancellation = async () => {
+    this.isLoading = true;
+    this.bookingConfirmation =
+      await order.confirmCancellation(this.editableOrderRef, this.cancellationOrder);
+    this.isLoading = false;
+  };
+
+  /*
    * @description Apply dates which proposed as alternative for booking
    */
   @action
@@ -611,10 +627,10 @@ export default class BookingStore {
   @action
   undoBooking = async () => {
     this.isLoading = true;
-    const isSuccess = await order.undoBooking();
+    this.cancellationOrder = await order.undoBooking(this.editableOrderRef);
     this.isLoading = false;
 
-    return isSuccess;
+    return !!this.cancellationOrder;
   };
 
   /**
@@ -667,48 +683,60 @@ export default class BookingStore {
   }
 
   /**
-   * @description Get formated string for price of current order
+   * @description Get formated price string for current order simulation
    */
   @computed
   get orderPrice() {
     const unknownPrice = '-';
-    const price = _.get(this.order, 'price.amount', unknownPrice);
+    const currentOrder = this.isCancellation ? this.cancellationOrder : this.order;
+    const price = _.get(currentOrder, 'price.amount', unknownPrice);
+    const currencyChar = getCurrencyChar( _.get(currentOrder, 'price.currency') );
 
     if (price === unknownPrice) {
       return price;
     }
 
     if (this.editableOrderRef && price) {
-      return `${price > 0 ? '+' : ''}${price}€`
+      return `${price > 0 ? '+' : ''}${price}${currencyChar}`;
     } else if (this.editableOrderRef) {
-      return `${price}€`;
+      return `${price}${currencyChar}`;
     }
 
-    return `€${this.order.price.amount}`;
+    return `${currencyChar}${price}`;
   }
 
   /**
-   * @description Get formated string for price without discounts
+   * @description Get formated price string without discounts
    */
   @computed
   get orderOriginPrice() {
-    if (!_.has(this.order, 'price.amountOrigin')) {
+    const amount = _.get(this.order, 'price.amountOrigin', '');
+    const currencyChar = getCurrencyChar( _.get(this.order, 'price.currency') );
+
+    if (!amount) {
       return null;
     }
 
-    return `€${this.order.price.amountOrigin}`;
+    return `${currencyChar}${amount}`;
   }
 
   /**
-   * @description Get formated string for price of changed order
+   * @description Get formated price string for changed order
    */
   @computed
   get orderNewPrice() {
-    return _.get(this.order, 'newPrice.amount', '') + '€';
+    const amount = _.get(this.order, 'newPrice.amount', '');
+    const currencyChar = getCurrencyChar( _.get(this.order, 'newPrice.currency') );
+
+    if (!amount) {
+      return null;
+    }
+
+    return `${amount}${currencyChar}`;
   }
 
   /**
-   * @description Get label for price
+   * @description Get marketing label for price
    */
   @computed
   get priceMarketingLabel() {
@@ -717,6 +745,38 @@ export default class BookingStore {
     }
 
     return this.order.price.marketingLabel;
+  }
+
+  /**
+   * @description Get label for cancellation, info about fees
+   */
+  @computed
+  get cancellationFeesLabel() {
+    const amount = _.get(this.cancellationOrder, 'feePrice.amount', '');
+    const description = _.get(this.cancellationOrder, 'feePrice.description', '');
+    const currencyChar = getCurrencyChar( _.get(this.cancellationOrder, 'feePrice.currency') );
+
+    if (!amount) {
+      return null;
+    }
+
+    return `${description}${amount}${currencyChar}`;
+  }
+
+  /**
+   * @description Get label for cancellation, info about price
+   */
+  @computed
+  get cancellationPriceLabel() {
+    const amount = _.get(this.cancellationOrder, 'currentPrice.amount', '');
+    const description = _.get(this.cancellationOrder, 'currentPrice.description', '');
+    const currencyChar = getCurrencyChar( _.get(this.cancellationOrder, 'currentPrice.currency') );
+
+    if (!amount) {
+      return null;
+    }
+
+    return `${description}${amount}${currencyChar}`;
   }
 
   /**
