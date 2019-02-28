@@ -6,7 +6,7 @@ import moment from 'moment';
 import _ from 'lodash';
 
 import { bookingStore } from './../../stores';
-import { keys as screenKeys } from './../../navigators/helpers';
+import screenKeys from './../../navigators/helpers/screenKeys';
 import { UFOContainer, UFOIcon, UFOLoader } from './../../components/common';
 import UFOTooltip from './../../components/UFOTooltip';
 import UFORollPicker from './../../components/UFORollPicker';

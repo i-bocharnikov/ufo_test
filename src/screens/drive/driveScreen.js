@@ -31,7 +31,7 @@ import { checkAndRequestLocationPermission } from './../../utils/permissions';
 import { checkConnectivity, uploadToApi } from '../../utils/api_deprecated';
 import pushNotificationService from './../../utils/pushNotificationService';
 import remoteLoggerService from '../../utils/remoteLoggerService';
-import { keys as screenKeys } from './../../navigators/helpers';
+import screenKeys from './../../navigators/helpers/screenKeys';
 import { checkServerAvailability } from './../../utils/api';
 import styles from './styles';
 import { videos } from './../../utils/theme';

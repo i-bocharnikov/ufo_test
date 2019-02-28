@@ -11,6 +11,8 @@ export default {
 
   Register: 'Register',
   SignUp: 'SignUp',
+  UserInfo: 'UserInfo',
+  LoyalityInfo: 'LoyalityInfo',
   Phone: 'Phone',
   Email: 'Email',
   Address: 'Address',

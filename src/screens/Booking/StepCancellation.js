@@ -5,7 +5,7 @@ import { observer } from 'mobx-react';
 import _ from 'lodash';
 
 import { bookingStore, driveStore } from './../../stores';
-import { keys as screenKeys } from './../../navigators/helpers';
+import screenKeys from './../../navigators/helpers/screenKeys';
 import { UFOContainer, UFOLoader } from './../../components/common';
 import BookingNavWrapper from './components/BookingNavWrapper';
 import BottomActionPanel from './components/BottomActionPanel';

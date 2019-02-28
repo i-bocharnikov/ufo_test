@@ -5,7 +5,7 @@ import { observer } from 'mobx-react';
 import { MarkdownView } from 'react-native-markdown-view';
 
 import { bookingStore } from './../../stores';
-import { keys as screenKeys } from './../../navigators/helpers';
+import screenKeys from './../../navigators/helpers/screenKeys';
 import UFONavBarWrapper from './../../components/header/UFONavBarWrapper';
 import UFOSlider from './../../components/UFOSlider';
 import { UFOContainer, UFOLoader, UFOImage, UFOIcon } from './../../components/common';

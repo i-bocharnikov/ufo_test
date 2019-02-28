@@ -4,7 +4,7 @@ import SplashController from 'react-native-splash-screen';
 import { observer } from 'mobx-react';
 import { translate } from 'react-i18next';
 
-import { keys as screenKeys } from './../../navigators/helpers';
+import screenKeys from './../../navigators/helpers/screenKeys';
 import { appStore, driveStore, registerStore } from './../../stores';
 import { UFOContainer, UFOImage } from './../../components/common';
 import UFOSlider from './../../components/UFOSlider';

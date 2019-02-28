@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, ScrollView, Text, Animated, TouchableOpacity } from 'react-native';
+import { View, ScrollView, Text, Animated, TouchableOpacity, ViewPropTypes } from 'react-native';
 import PropTypes from 'prop-types';
 
 import { UFOIcon } from './../common';
@@ -19,6 +19,7 @@ export default class UFONavBarWrapper extends Component {
       SubtitleComponent,
       isCollapsible,
       backgroundWrapper,
+      stylesHeader,
       children
     } = this.props;
     const hasSubtitle = subtitle || SubtitleComponent;
@@ -28,7 +29,7 @@ export default class UFONavBarWrapper extends Component {
         styles.wrapper,
         backgroundWrapper && { backgroundColor: backgroundWrapper }
       ]}>
-        <View style={[ styles.headerContainer, styles.headerShadow ]}>
+        <View style={[ styles.headerContainer, styles.headerShadow, stylesHeader ]}>
           <Animated.View style={[
             styles.header,
             { height: isCollapsible ? this.getHeaderHeight() : HEADER_HEIGHT }
@@ -162,5 +163,6 @@ UFONavBarWrapper.propTypes = {
   leftBtnIcon: PropTypes.string,
   rightBtnAction: PropTypes.func,
   rightBtnIcon: PropTypes.string,
-  backgroundWrapper: PropTypes.string
+  backgroundWrapper: PropTypes.string,
+  stylesHeader: ViewPropTypes.style
 };

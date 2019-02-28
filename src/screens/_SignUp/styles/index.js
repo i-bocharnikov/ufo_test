@@ -41,12 +41,6 @@ export const googleInputStyles = StyleSheet.create({
 });
 
 export default StyleSheet.create({
-  tabWrapper: {
-    flex: 1
-  },
-
-
-/* OLD STYLES */
   scrollWrapper: { flex: 1 },
 
   bodyWrapper: {

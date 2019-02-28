@@ -11,7 +11,6 @@ import UFOActionBar from './../../components/UFOActionBar';
 import UFOCard from './../../components/UFOCard';
 import { UFOImage, UFOContainer } from './../../components/common';
 import { registerStore } from './../../stores';
-import screenKeys from './../../navigators/helpers/screenKeys';
 import { screens, actionStyles, icons, images } from './../../utils/global';
 import { showWarning } from './../../utils/interaction';
 import styles from './styles';
@@ -32,10 +31,10 @@ const captureStates = {
 };
 
 @observer
-class IdentificationScreen extends Component {
+class DriverLicenceScreen extends Component {
   @observable captureState = (
-    !registerStore.identificationFrontDocument
-    || registerStore.identificationFrontDocument === 'loading'
+    !registerStore.driverLicenceFrontDocument
+    || registerStore.driverLicenceFrontDocument === 'loading'
   )
     ? captureStates.CAPTURE_FRONT
     : captureStates.PREVIEW;
@@ -54,9 +53,9 @@ class IdentificationScreen extends Component {
         <UFOHeader
           t={t}
           navigation={navigation}
-          currentScreen={screens.REGISTER_IDENTIFICATION}
+          currentScreen={screens.REGISTER_DRIVER_LICENCE}
           title={
-            showCamera ? null : t('register:identificationTitle', { user: registerStore.user })
+            showCamera ? null : t('register:driverLicenceTitle', { user: registerStore.user })
           }
           logo={showCamera}
           transparent={showCamera}
@@ -79,14 +78,52 @@ class IdentificationScreen extends Component {
     );
   }
 
+  renderCurrentThumbs = () => (
+    <View style={styles.cardsWrapper}>
+      <UFOCard title={this.props.t('register:redoCaptureConfirm')}>
+        <View style={styles.cardsPreviewContainer}>
+          <UFOImage
+            source={{ uri: registerStore.driverLicenceFrontDocument }}
+            style={{ width: CARD_WIDTH / 2, height: CARD_HEIGHT / 2 }}
+          />
+          <UFOImage
+            source={{ uri: registerStore.driverLicenceBackDocument }}
+            style={{ width: CARD_WIDTH / 2, height: CARD_HEIGHT / 2 }}
+          />
+        </View>
+      </UFOCard>
+    </View>
+  );
+
+  renderNewPreview = () => (
+    <ScrollView>
+      <View style={styles.cardsWrapper}>
+        <UFOCard title={this.props.t('register:driverLicenceCheckLabel')}>
+          <View style={styles.cardsContainer}>
+            <UFOImage
+              source={{ uri: this.frontImageUrl }}
+              style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
+              fallbackToImage={true}
+            />
+            <UFOImage
+              source={{ uri: this.backImageUrl }}
+              style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
+              fallbackToImage={true}
+            />
+          </View>
+        </UFOCard>
+      </View>
+    </ScrollView>
+  );
+
   renderCameraMask = () => {
     const sample = this.captureState === captureStates.CAPTURE_FRONT
-      ? images.captureCardIdFront
-      : images.captureCardIdBack;
+      ? images.driverCardFront
+      : images.driverCardBack;
 
     const captureHint = this.captureState === captureStates.CAPTURE_FRONT
-        ? this.props.t('register:identificationFrontInputLabel')
-        : this.props.t('register:identificationBackInputLabel');
+        ? this.props.t('register:driverLicenceFrontInputLabel')
+        : this.props.t('register:driverLicenceBackInputLabel');
 
     return (
       <View style={cameraMaskStyles.wrapper}>
@@ -107,51 +144,12 @@ class IdentificationScreen extends Component {
     );
   };
 
-  renderCurrentThumbs = () => (
-    <View style={styles.cardsWrapper}>
-      <UFOCard title={this.props.t('register:redoCaptureConfirm')}>
-        <View style={styles.cardsPreviewContainer}>
-          <UFOImage
-            source={{ uri: registerStore.identificationFrontDocument }}
-            style={{ width: CARD_WIDTH / 2, height: CARD_HEIGHT / 2 }}
-          />
-          <UFOImage
-            source={{ uri: registerStore.identificationBackDocument }}
-            style={{ width: CARD_WIDTH / 2, height: CARD_HEIGHT / 2 }}
-          />
-        </View>
-      </UFOCard>
-    </View>
-  );
-
-  renderNewPreview = () => (
-    <ScrollView>
-      <View style={styles.cardsWrapper}>
-        <UFOCard title={this.props.t('register:identificationCheckLabel')}>
-          <View style={styles.cardsContainer}>
-            <UFOImage
-              source={{ uri: this.frontImageUrl }}
-              style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
-              fallbackToImage={true}
-            />
-            <UFOImage
-              source={{ uri: this.backImageUrl }}
-              style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
-              fallbackToImage={true}
-            />
-          </View>
-        </UFOCard>
-      </View>
-    </ScrollView>
-  );
-
   compileActions = () => {
-    const initRegistration = this.props.navigation.getParam('initRegistration', false);
     const actions = [];
 
     actions.push({
       style: actionStyles.ACTIVE,
-      icon: initRegistration ? icons.CONTINUE_LATER : icons.CANCEL,
+      icon: icons.CANCEL,
       onPress: this.doCancel
     });
 
@@ -167,7 +165,7 @@ class IdentificationScreen extends Component {
     }
 
     if (this.captureState === captureStates.VALIDATE) {
-      const isNewCapture = _.isEmpty(registerStore.user.identification_front_side_reference);
+      const isNewCapture = _.isEmpty(registerStore.user.driver_licence_front_side_reference);
       actions.push({
         style: isNewCapture ? actionStyles.TODO : actionStyles.DISABLE,
         icon: icons.SAVE,
@@ -190,10 +188,7 @@ class IdentificationScreen extends Component {
   };
 
   doCancel = () => {
-    const initRegistration = this.props.navigation.getParam('initRegistration', false);
-    initRegistration
-      ? this.props.navigation.navigate(screenKeys.Home)
-      : this.props.navigation.popToTop();
+    this.props.navigation.popToTop();
   };
 
   doReset = () => {
@@ -257,17 +252,17 @@ class IdentificationScreen extends Component {
 
     if (this.frontImageUrl) {
       const document = await registerStore.uploadDocument(
-        'identification',
+        'driver_licence',
         type,
-        'id',
+        'driver_licence',
         'front_side',
         this.frontImageUrl
       );
 
       if (document && document.reference) {
-        registerStore.user.identification_front_side_reference = document.reference;
+        registerStore.user.driver_licence_front_side_reference = document.reference;
         const imgData = await registerStore.downloadDocument(document.reference);
-        registerStore.identificationFrontDocument = imgData
+        registerStore.driverLicenceFrontDocument = imgData
           ? `data:image/png;base64,${imgData}`
           : null;
       }
@@ -275,17 +270,17 @@ class IdentificationScreen extends Component {
 
     if (this.backImageUrl) {
       const document = await registerStore.uploadDocument(
-        'identification',
+        'driver_licence',
         type,
-        'id',
+        'driver_licence',
         'back_side',
         this.backImageUrl
       );
 
       if (document && document.reference) {
-        registerStore.user.identification_back_side_reference = document.reference;
+        registerStore.user.driver_licence_back_side_reference = document.reference;
         const imgData = await registerStore.downloadDocument(document.reference);
-        registerStore.identificationBackDocument = imgData
+        registerStore.driverLicenceBackDocument = imgData
           ? `data:image/png;base64,${imgData}`
           : null;
       }
@@ -295,12 +290,9 @@ class IdentificationScreen extends Component {
     this.activityPending = false;
 
     if (isSaved) {
-      const initRegistration = this.props.navigation.getParam('initRegistration', false);
-      initRegistration
-        ? this.props.navigation.navigate(screenKeys.DriverLicence)
-        : this.props.navigation.pop();
+      this.props.navigation.popToTop();
     }
   };
 }
 
-export default translate()(IdentificationScreen);
+export default translate()(DriverLicenceScreen);

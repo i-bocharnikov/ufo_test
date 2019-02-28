@@ -11,7 +11,7 @@ import _ from 'lodash';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import { bookingStore, feedbackStore, registerStore } from './../../stores';
-import { keys as screenKeys } from './../../navigators/helpers';
+import screenKeys from './../../navigators/helpers/screenKeys';
 import {
   UFOContainer,
   UFOImage,

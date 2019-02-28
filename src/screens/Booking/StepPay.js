@@ -7,7 +7,7 @@ import stripe from 'tipsi-stripe';
 import _ from 'lodash';
 
 import { bookingStore, driveStore } from './../../stores';
-import { keys as screenKeys } from './../../navigators/helpers';
+import screenKeys from './../../navigators/helpers/screenKeys';
 import {
   UFOContainer,
   UFOIcon,

@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import moment from 'moment-timezone';
 
-import { keys as screenKeys } from './../../navigators/helpers';
+import screenKeys from './../../navigators/helpers/screenKeys';
 import { driveStore, bookingStore, otaKeyStore } from './../../stores';
 import rentalStatuses from './../../stores/DriveStore/rentalStatuses';
 import { UFOText, UFOImage, UFOIcon, UFOLoader } from './../../components/common';

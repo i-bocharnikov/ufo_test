@@ -1,10 +1,11 @@
 import { createSwitchNavigator, createAppContainer } from 'react-navigation';
 
-import { keys, screens } from './helpers';
+import keys from './helpers/screenKeys';
 import AppNavigator from './AppNavigator';
+import Launch from './../screens/Launch';
 
 const routeConfigs = {
-  [keys.Launch]: { screen: screens.Launch },
+  [keys.Launch]: { screen: Launch },
   [keys.App]: AppNavigator
 };
 

@@ -13,7 +13,11 @@ export default StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,0.7)',
     paddingVertical: 8,
     paddingHorizontal: 12,
-    borderRadius: 8
+    borderRadius: 8,
+    shadowOffset: { width: 0, height: 1 },
+    shadowColor: 'black',
+    shadowOpacity: 0.4,
+    elevation: 1
   },
 
   message: {

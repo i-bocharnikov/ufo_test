@@ -11,5 +11,6 @@ export default {
   ATTENTION_COLOR: '#ea504c',
   BORDER_COLOR: '#d9d9d9',
   SUCCESS_COLOR: '#40b844',
-  BLOCKING_COLOR: 'rgba(24,24,24,0.86)'
+  BLOCKING_COLOR: 'rgba(24,24,24,0.86)',
+  TEXT_LIGHT_TRANSPARENT: 'rgba(255,255,255,0.4)'
 };

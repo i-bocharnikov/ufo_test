@@ -71,6 +71,24 @@ export default class RegisterStore {
   startupMessage = null;
   acknowledge_uri = '';
 
+  /*
+   * @description Get user full name
+   */
+  @computed
+  get userFullName() {
+    let name = '';
+
+    if (this.user.first_name) {
+      name += this.user.first_name;
+    }
+
+    if (this.user.last_name) {
+      name += name ? ` ${this.user.last_name}` : this.user.last_name;
+    }
+
+    return name;
+  }
+
   @computed get isAdmin() {
     return this.user.role === USER_ROLE_ADMIN;
   }
