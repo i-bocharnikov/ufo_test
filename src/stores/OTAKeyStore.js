@@ -5,7 +5,6 @@ import {
   Platform
 } from 'react-native';
 import { observable, action, computed } from 'mobx';
-import moment from 'moment';
 import i18n from 'i18next';
 import { persist } from 'mobx-persist';
 
@@ -61,27 +60,6 @@ export default class OTAKeyStore {
   @observable engineRunning = false;
   @observable doorsLocked = true;
   @observable energyCurrent = 0;
-
-  otaKeyLogger = async options => {
-    const { severity, code, action, message, description } = options;
-    const context = {
-      keyAccessDeviceIdentifier: this.keyAccessDeviceIdentifier,
-      keyAccessDeviceToken: this.keyAccessDeviceToken,
-      listenersInPlace: this.listenersInPlace,
-      key: this.key,
-      doorsLocked: this.doorsLocked,
-      engineRunning: this.engineRunning,
-      energyCurrent: this.energyCurrent
-    };
-    await remoteLoggerService.log(
-      severity,
-      code,
-      action,
-      message,
-      description,
-      context
-    );
-  };
 
   computeActionEnableKey(keyId, actions, onPress) {
     if (keyId && keyId === this.key.keyId) {
@@ -155,58 +133,58 @@ export default class OTAKeyStore {
 
   @action
   onOtaVehicleDataUpdated = async otaVehicleData => {
+    const action = 'otakeystore.onOtaVehicleDataUpdated';
     try {
-      await this.otaKeyLogger({
-        severity: severityTypes.INFO,
-        action: 'otakeystore.onOtaVehicleDataUpdated',
-        code: codeTypes.SUCCESS,
-        message: `>> ${otaVehicleData.doorsLocked ? 'LOCKED' : 'UNLOCKED'} / ${
+      await this.remoteOtaKeyNotifierLogger(
+        action,
+        `Doors ${otaVehicleData.doorsLocked ? 'LOCKED' : 'UNLOCKED'}, engine ${
           otaVehicleData.engineRunning ? 'STARTED' : 'STOPPED'
-        } / ${otaVehicleData.energyCurrent + '%'}`
-      });
+        } and battery at ${otaVehicleData.energyCurrent + '%'}`
+      );
       this.doorsLocked = otaVehicleData.doorsLocked === true ? true : false;
       this.engineRunning = otaVehicleData.engineRunning === true ? true : false;
       this.energyCurrent = otaVehicleData.energyCurrent;
     } catch (error) {
-      await this.otaKeyLogger({
-        severity: severityTypes.ERROR,
-        action: 'otakeystore.onOtaVehicleDataUpdated',
-        code: error.code && !isNaN(error.code) ? error.code : codeTypes.ERROR,
-        message: '>> exception',
-        description: error
-      });
+      await this.remoteOtaKeyErrorLogger(action, false, error);
     }
   };
 
   @action
   onOtaActionPerformed = async otaAction => {
+    const action = 'otakeystore.onOtaActionPerformed';
+
     try {
-      await this.otaKeyLogger({
-        severity: severityTypes.INFO,
-        action: 'otakeystore.onOtaActionPerformed',
-        code: codeTypes.SUCCESS,
-        message: `>> ${otaAction.otaOperation} / ${otaAction.otaState}`
-      });
+      await this.remoteOtaKeyNotifierLogger(
+        action,
+        `Operation: ${otaAction.otaOperation} and State: ${otaAction.otaState}`
+      );
     } catch (error) {
-      await this.otaKeyLogger({
-        severity: severityTypes.ERROR,
-        action: 'otakeystore.onOtaActionPerformed',
-        code: error.code && !isNaN(error.code) ? error.code : codeTypes.ERROR,
-        message: '>> exception',
-        description: error
-      });
+      await this.remoteOtaKeyErrorLogger(action, false, error);
+    }
+  };
+
+  @action
+  onSilentException = async nativeException => {
+    const action = 'otakeystore.onSilentException';
+    try {
+      await this.remoteOtaKeyFatalLogger(
+        action,
+        false,
+        `Native exception: ${
+          nativeException.localizedMessage
+            ? nativeException.localizedMessage
+            : nativeException.message
+        }`
+      );
+    } catch (error) {
+      await this.remoteOtaKeyErrorLogger(action, false, error);
     }
   };
 
   @action
   onOtaBluetoothStateChanged = async otaBluetoothState => {
+    const action = 'otakeystore.onOtaBluetoothStateChanged';
     try {
-      await this.otaKeyLogger({
-        severity: severityTypes.INFO,
-        action: 'otakeystore.onOtaBluetoothStateChanged',
-        code: codeTypes.SUCCESS,
-        message: `>> ${otaBluetoothState.newBluetoothState}`
-      });
       if (otaBluetoothState.newBluetoothState === 'CONNECTED') {
         this.isConnected = true;
         this.isConnecting = false;
@@ -217,39 +195,90 @@ export default class OTAKeyStore {
         this.isConnected = false;
         this.isConnecting = true;
       }
+      await this.remoteOtaKeyNotifierLogger(
+        action,
+        `Vehicle connection in state: ${otaBluetoothState.newBluetoothState}`
+      );
     } catch (error) {
-      await this.otaKeyLogger({
-        severity: severityTypes.ERROR,
-        action: 'otakeystore.onOtaBluetoothStateChanged',
-        code: error.code && !isNaN(error.code) ? error.code : codeTypes.ERROR,
-        message: '>> exception',
-        description: error
-      });
+      await this.remoteOtaKeyErrorLogger(action, false, error);
     }
   };
 
   @action
-  async addListeners(showError = true): Promise<boolean> {
-    if (this.listenersInPlace) {
-      return false;
+  async getKeyAccessDeviceIdentifier(force = false, showError = true) {
+    const action = `otakeystore.getKeyAccessDeviceIdentifier(${
+      force ? 'force new one' : 'reuse'
+    })`;
+    try {
+      await this.remoteOtaKeyStartLogger(action);
+      if (this.keyAccessDeviceIdentifier != null && !force) {
+        await this.remoteOtaKeySkippedLogger(
+          action,
+          this.keyAccessDeviceIdentifier
+        );
+        return this.keyAccessDeviceIdentifier;
+      }
+      this.keyAccessDeviceIdentifier = await this.ota.getAccessDeviceToken(
+        force
+      );
+      await this.remoteOtaKeySuccessLogger(
+        action,
+        this.keyAccessDeviceIdentifier
+      );
+    } catch (error) {
+      await this.remoteOtaKeyErrorLogger(action, showError, error);
+      await this.handleOTAAPIError(error, showError);
     }
+    return this.keyAccessDeviceIdentifier;
+  }
 
-    this.isConnecting = false;
-    this.isConnected = false;
-
-    this.engineRunning = false;
-    this.doorsLocked = true;
-    this.energyCurrent = 0;
+  @action
+  async openSession(keyAccessDeviceToken, showError = true) {
+    const action = `otakeystore.openSession(${keyAccessDeviceToken})`;
 
     try {
-      await this.otaKeyLogger({
-        severity: severityTypes.DEBUG,
-        action: 'otakeystore.addListeners',
-        code: codeTypes.SUCCESS,
-        message: `-> this.ota.addListeners(${String(
-          this.keyAccessDeviceRegistrationNumber
-        )}, ${String(showError)}) start`
-      });
+      await this.remoteOtaKeyStartLogger(action);
+      if (
+        typeof keyAccessDeviceToken !== 'string' ||
+        keyAccessDeviceToken === ''
+      ) {
+        await this.remoteOtaKeyFatalLogger(
+          action,
+          false,
+          'keyAccessDeviceToken is required'
+        );
+        return false;
+      }
+      this.keyAccessDeviceToken = keyAccessDeviceToken;
+      await this.addListeners();
+      const result = await this.ota.openSession(keyAccessDeviceToken);
+      await this.remoteOtaKeySuccessLogger(action, result, this.key);
+      return result;
+    } catch (error) {
+      await this.remoteOtaKeyErrorLogger(action, showError, error);
+      await this.handleOTAAPIError(error, showError);
+      return false;
+    }
+  }
+
+  @action
+  async addListeners(showError = true) {
+    //const action = `otakeystore.addListeners()`;
+    try {
+      //await this.remoteOtaKeyStartLogger(action);
+
+      if (this.listenersInPlace) {
+        //await this.remoteOtaKeySkippedLogger(action, 'already in place');
+        return true;
+      }
+
+      this.isConnecting = false;
+      this.isConnected = false;
+
+      this.engineRunning = false;
+      this.doorsLocked = true;
+      this.energyCurrent = 0;
+
       const result =
         Platform.OS === 'ios'
           ? await this.ota.addListeners()
@@ -267,153 +296,34 @@ export default class OTAKeyStore {
         'onOtaBluetoothStateChanged',
         this.onOtaBluetoothStateChanged
       );
-
-      await this.otaKeyLogger({
-        severity: severityTypes.INFO,
-        action: 'otakeystore.addListeners',
-        code: codeTypes.SUCCESS,
-        message: `<- this.ota.addListeners(${String(
-          this.keyAccessDeviceRegistrationNumber
-        )}, ${String(showError)}) return ${result}`,
-        description: result
-      });
-      this.listenersInPlace = true;
-
-      return result;
-    } catch (error) {
-      await this.otaKeyLogger({
-        severity: severityTypes.ERROR,
-        action: 'otakeystore.addListeners',
-        code: error.code && !isNaN(error.code) ? error.code : codeTypes.ERROR,
-        message: `<- this.ota.addListeners(${String(
-          this.keyAccessDeviceRegistrationNumber
-        )}, ${String(showError)}) failed: ${error}`,
-        description: error
-      });
-      this.handleOTAAPIError(error, showError);
-      return false;
-    }
-  }
-
-  @action
-  async getKeyAccessDeviceIdentifier(
-    force: boolean = false,
-    showError = true
-  ): Promise<string> {
-    try {
-      if (this.keyAccessDeviceIdentifier != null && !force) {
-        return this.keyAccessDeviceIdentifier;
+      if (Platform.OS !== 'ios') {
+        PlatformEventEmitter.addListener(
+          'onSilentException',
+          this.onSilentException
+        );
       }
-      await this.otaKeyLogger({
-        severity: severityTypes.DEBUG,
-        action: 'otakeystore.getOTAKeyAccessDeviceIdentifier',
-        code: codeTypes.SUCCESS,
-        message: `-> this.ota.getAccessDeviceToken(${String(force)}, ${String(
-          showError
-        )}) start`
-      });
-      this.keyAccessDeviceIdentifier = await this.ota.getAccessDeviceToken(
-        force
-      );
-      await this.otaKeyLogger({
-        severity: severityTypes.INFO,
-        action: 'otakeystore.getOTAKeyAccessDeviceIdentifier',
-        code: codeTypes.SUCCESS,
-        message: `<- this.ota.getAccessDeviceToken(${String(force)}, ${String(
-          showError
-        )}) return ${this.keyAccessDeviceIdentifier}`
-      });
-    } catch (error) {
-      await this.otaKeyLogger({
-        severity: severityTypes.ERROR,
-        action: 'otakeystore.getOTAKeyAccessDeviceIdentifier',
-        code: error.code && !isNaN(error.code) ? error.code : codeTypes.ERROR,
-        message: `<- this.ota.getAccessDeviceToken(${String(force)}, ${String(
-          showError
-        )}) failed: ${error}`,
-        description: error
-      });
-      this.handleOTAAPIError(error, showError);
-    }
-    return this.keyAccessDeviceIdentifier;
-  }
 
-  @action
-  async openSession(
-    keyAccessDeviceToken: string,
-    showError = true
-  ): Promise<boolean> {
-    if (
-      typeof keyAccessDeviceToken !== 'string' ||
-      keyAccessDeviceToken === ''
-    ) {
-      return false;
-    }
-
-    try {
-      this.keyAccessDeviceToken = keyAccessDeviceToken;
-      await this.addListeners();
-
-      const result = await this.ota.openSession(keyAccessDeviceToken);
-      await this.otaKeyLogger({
-        severity: severityTypes.INFO,
-        action: 'otakeystore.openOTASession',
-        code: codeTypes.SUCCESS,
-        message: `<- this.ota.openSession(${
-          this.keyAccessDeviceToken
-        }, ${String(showError)}) return ${result}`,
-        description: result
-      });
-
+      this.listenersInPlace = true;
+      //await this.remoteOtaKeySuccessLogger(action, result);
       return result;
     } catch (error) {
-      await this.otaKeyLogger({
-        severity: severityTypes.ERROR,
-        action: 'otakeystore.openOTASession',
-        code: error.code && !isNaN(error.code) ? error.code : codeTypes.ERROR,
-        message: `<- this.ota.openSession(${
-          this.keyAccessDeviceToken
-        }, ${String(showError)}) failed: ${error}`,
-        description: error
-      });
-      this.handleOTAAPIError(error, showError);
+      //await this.remoteOtaKeyErrorLogger(action, showError, error);
+      await this.handleOTAAPIError(error, showError);
       return false;
     }
   }
 
   @action
-  async getVehicleData(showError = true): Promise<boolean> {
+  async getVehicleData(showError = true) {
+    const action = `otakeystore.getVehicleData()`;
     try {
-      await this.otaKeyLogger({
-        severity: severityTypes.DEBUG,
-        action: 'otakeystore.getVehicleData',
-        code: codeTypes.SUCCESS,
-        message: `-> this.ota.getVehicleData(${String(showError)}) start`
-      });
+      await this.remoteOtaKeyStartLogger(action);
       const result = await this.ota.getVehicleData();
-      await this.otaKeyLogger({
-        severity: severityTypes.INFO,
-        action: 'otakeystore.getVehicleData',
-        code: codeTypes.SUCCESS,
-        message: `<- this.ota.getVehicleData(${String(
-          showError
-        )}) return ${JSON.stringify(result)}`,
-        description: result
-      });
-      return result;
+      await this.remoteOtaKeySuccessLogger(action, result, this.key);
+      return result === 'true' || result === true ? true : false;
     } catch (error) {
-      await this.otaKeyLogger({
-        severity: severityTypes.ERROR,
-        action: 'otakeystore.getVehicleData',
-        code: error.code && !isNaN(error.code) ? error.code : codeTypes.ERROR,
-        message: `<- this.ota.getVehicleData(${String(showError)}) failed: ${
-          error.code
-            ? i18n.t(`otaKeyNativeErrors:${error.code}`) || error.message
-            : error.message
-        }`,
-        description: error
-      });
-      this.handleOTAAPIError(error, showError);
+      await this.remoteOtaKeyErrorLogger(action, showError, error);
+      await this.handleOTAAPIError(error, showError);
       return false;
     }
   }
@@ -423,590 +333,257 @@ export default class OTAKeyStore {
   }
 
   @action
-  async enableKey(keyId: string, showError = true): Promise<boolean> {
-    if (typeof keyId !== 'string' || keyId === '') {
-      return false;
-    }
-
+  async enableKey(keyId, showError = true) {
+    const action = `otakeystore.enableKey(${keyId})`;
     try {
-      await this.otaKeyLogger({
-        severity: severityTypes.DEBUG,
-        action: 'otakeystore.enableKey',
-        code: codeTypes.SUCCESS,
-        message: `-> this.ota.enableKey(${keyId}, ${String(showError)}) start`
-      });
+      await this.remoteOtaKeyStartLogger(action);
+      if (typeof keyId !== 'string' || keyId === '') {
+        await this.remoteOtaKeyFatalLogger(action, false, 'KeyId is required');
+        return false;
+      }
       this.key = await this.ota.enableKey(keyId);
-      await this.otaKeyLogger({
-        severity: severityTypes.INFO,
-        action: 'otakeystore.enableKey',
-        code: codeTypes.SUCCESS,
-        message: `<- this.ota.enableKey(${keyId}, ${String(
-          showError
-        )}) return key ${this.key.keyId}`,
-        description: this.key
-      });
+      await this.remoteOtaKeySuccessLogger(
+        action,
+        this.key ? this.key.keyId : 'key empty',
+        this.key
+      );
       return true;
     } catch (error) {
-      await this.otaKeyLogger({
-        severity: severityTypes.ERROR,
-        action: 'otakeystore.enableKey',
-        code: error.code && !isNaN(error.code) ? error.code : codeTypes.ERROR,
-        message: `<- this.ota.enableKey(${keyId}, ${String(
-          showError
-        )}) failed: ${
-          error.code
-            ? i18n.t(`otaKeyNativeErrors:${error.code}`) || error.message
-            : error.message
-        }`,
-        description: error
-      });
-      this.handleOTAAPIError(error, showError);
+      await this.remoteOtaKeyErrorLogger(action, showError, error);
+      await this.handleOTAAPIError(error, showError);
       return false;
     }
   }
 
   @action
-  async endKey(keyId, showError = true): Promise<boolean> {
+  async endKey(keyId, showError = true) {
+    const action = `otakeystore.endKey(${keyId})`;
     try {
-      await this.otaKeyLogger({
-        severity: severityTypes.DEBUG,
-        action: 'otakeystore.endKey',
-        code: codeTypes.SUCCESS,
-        message: `-> this.ota.endKey(${keyId}, ${String(showError)}) start`
-      });
+      await this.remoteOtaKeyStartLogger(action);
       this.key = await this.ota.endKey(keyId);
-      await this.otaKeyLogger({
-        severity: severityTypes.INFO,
-        action: 'otakeystore.endKey',
-        code: codeTypes.SUCCESS,
-        message: `<- this.ota.endKey(${keyId}, ${String(
-          showError
-        )}) return key ${this.key.keyId}`,
-        description: this.key
-      });
+      await this.remoteOtaKeySuccessLogger(action, result, this.key);
       return true;
     } catch (error) {
-      await this.otaKeyLogger({
-        severity: severityTypes.ERROR,
-        action: 'otakeystore.endKey',
-        code: error.code && !isNaN(error.code) ? error.code : codeTypes.ERROR,
-        message: `<- this.ota.endKey(${keyId}, ${String(showError)}) failed: ${
-          error.code
-            ? i18n.t(`otaKeyNativeErrors:${error.code}`) || error.message
-            : error.message
-        }`,
-        description: error
-      });
-      this.handleOTAAPIError(error, showError);
+      await this.remoteOtaKeyErrorLogger(action, showError, error);
+      await this.handleOTAAPIError(error, showError);
       return false;
     }
   }
 
   @action
-  async switchToKey(keyId, showError = true): Promise<boolean> {
+  async switchToKey(keyId, showError = true) {
+    const action = `otakeystore.switchToKey(${keyId})`;
     try {
-      await this.otaKeyLogger({
-        severity: severityTypes.DEBUG,
-        action: 'otakeystore.switchToKey',
-        code: codeTypes.SUCCESS,
-        message: `-> this.ota.switchToKey(${keyId}, ${String(showError)}) start`
-      });
+      await this.remoteOtaKeyStartLogger(action);
       const result = await this.ota.switchToKey(keyId);
-      await this.otaKeyLogger({
-        severity: result ? severityTypes.INFO : severityTypes.ERROR,
-        action: 'otakeystore.switchToKey',
-        code: result ? codeTypes.SUCCESS : codeTypes.ERROR,
-        message: `<- this.ota.switchToKey( ${keyId}, ${String(
-          showError
-        )}) return key ${result}`,
-        description: this.key
-      });
-      return result;
+      await this.remoteOtaKeySuccessLogger(action, result, this.key);
+      return result === 'true' || result === true ? true : false;
     } catch (error) {
-      await this.otaKeyLogger({
-        severity: severityTypes.ERROR,
-        action: 'otakeystore.switchToKey',
-        code: error.code && !isNaN(error.code) ? error.code : codeTypes.ERROR,
-        message: `<- this.ota.switchToKey(${keyId}, ${String(
-          showError
-        )}) failed: ${
-          error.code
-            ? i18n.t(`otaKeyNativeErrors:${error.code}`) || error.message
-            : error.message
-        }`,
-        description: error
-      });
-      this.handleOTAAPIError(error, showError);
+      await this.remoteOtaKeyErrorLogger(action, showError, error);
+      await this.handleOTAAPIError(error, showError);
       return false;
     }
   }
 
   @action
-  async syncVehicleData(showError = true): Promise<boolean> {
+  async syncVehicleData(showError = true) {
+    const action = `otakeystore.syncVehicleData()`;
     try {
-      await this.otaKeyLogger({
-        severity: severityTypes.DEBUG,
-        action: 'otakeystore.syncVehicleData',
-        code: codeTypes.SUCCESS,
-        message: `-> this.ota.syncVehicleData(${String(showError)}) start`
-      });
+      await this.remoteOtaKeyStartLogger(action);
       const result = await this.ota.syncVehicleData();
-      await this.otaKeyLogger({
-        severity: severityTypes.INFO,
-        action: 'otakeystore.syncVehicleData',
-        code: codeTypes.SUCCESS,
-        message: `<- this.ota.syncVehicleData(${String(
-          showError
-        )}) return ${result}`,
-        description: result
-      });
-      return result;
+      await this.remoteOtaKeySuccessLogger(action, result);
+      return result === 'true' || result === true ? true : false;
     } catch (error) {
-      await this.otaKeyLogger({
-        severity: severityTypes.ERROR,
-        action: 'otakeystore.syncVehicleData',
-        code: error.code && !isNaN(error.code) ? error.code : codeTypes.ERROR,
-        message: `<- this.ota.syncVehicleData(${String(showError)}) failed: ${
-          error.code
-            ? i18n.t(`otaKeyNativeErrors:${error.code}`) || error.message
-            : error.message
-        }`,
-        description: error
-      });
-      this.handleOTAAPIError(error, showError);
+      await this.remoteOtaKeyErrorLogger(action, showError, error);
+      await this.handleOTAAPIError(error, showError);
       return false;
     }
   }
 
   @action
   async configureNetworkTimeouts(
-    connectTimeout: Number,
-    readTimeout: Number,
+    connectTimeout,
+    readTimeout,
     showError = true
-  ): Promise<boolean> {
-    // unused method
+  ) {
+    const action = `otakeystore.configureNetworkTimeouts()`;
     try {
-      await this.otaKeyLogger({
-        severity: severityTypes.DEBUG,
-        action: 'otakeystore.configureOTANetworkTimeouts',
-        code: codeTypes.SUCCESS,
-        message: `-> this.ota.configureNetworkTimeouts(${String(
-          connectTimeout
-        )}, ${String(readTimeout)}, ${String(showError)}) start`
-      });
+      await this.remoteOtaKeyStartLogger(action);
+
       const result = await this.ota.configureNetworkTimeouts(
         connectTimeout,
         readTimeout
       );
-      await this.otaKeyLogger({
-        severity: severityTypes.INFO,
-        action: 'otakeystore.configureOTANetworkTimeouts',
-        code: codeTypes.SUCCESS,
-        message: `<- this.ota.configureNetworkTimeouts(${String(
-          connectTimeout
-        )}, ${String(readTimeout)}, ${String(showError)}) return ${result}`,
-        description: result
-      });
-      return result;
+      await this.remoteOtaKeySuccessLogger(action, result);
+      return result === 'true' || result === true ? true : false;
     } catch (error) {
-      await this.otaKeyLogger({
-        severity: severityTypes.ERROR,
-        action: 'otakeystore.configureOTANetworkTimeouts',
-        code: error.code && !isNaN(error.code) ? error.code : codeTypes.ERROR,
-        message: `<- this.ota.configureNetworkTimeouts(${String(
-          connectTimeout
-        )}, ${String(readTimeout)}, ${String(showError)}) failed: ${error}`,
-        description: error
-      });
-      this.handleOTABLEError(error, showError);
+      await this.remoteOtaKeyErrorLogger(action, showError, error);
+      await this.handleOTABLEError(error, showError);
       return false;
     }
   }
 
   @action
-  async isConnectedToVehicle(showError = true): Promise<boolean> {
+  async isConnectedToVehicle(showError = true) {
+    const action = `otakeystore.isConnectedToVehicle()`;
     try {
-      await this.otaKeyLogger({
-        severity: severityTypes.DEBUG,
-        action: 'otakeystore.isConnectedToVehicle',
-        code: codeTypes.SUCCESS,
-        message: `-> this.ota.isConnectedToVehicle(${String(showError)}) start`
-      });
+      await this.remoteOtaKeyStartLogger(action);
       const result = await this.ota.isConnectedToVehicle();
-      await this.otaKeyLogger({
-        severity: severityTypes.INFO,
-        action: 'otakeystore.isConnectedToVehicle',
-        code: codeTypes.SUCCESS,
-        message: `<- this.ota.isConnectedToVehicle(${String(
-          showError
-        )}) return ${result}`,
-        description: result
-      });
-      return result;
+      await this.remoteOtaKeySuccessLogger(action, result);
+      return result === 'true' || result === true ? true : false;
     } catch (error) {
-      await this.otaKeyLogger({
-        severity: severityTypes.ERROR,
-        action: 'otakeystore.isConnectedToVehicle',
-        code: error.code && !isNaN(error.code) ? error.code : codeTypes.ERROR,
-        message: `<- this.ota.isConnectedToVehicle(${String(
-          showError
-        )}) failed: ${error}`,
-        description: error
-      });
-      this.handleOTABLEError(error, showError);
+      await this.remoteOtaKeyErrorLogger(action, showError, error);
+      await this.handleOTABLEError(error, showError);
       return false;
     }
   }
 
   @action
-  async isOperationInProgress(showError = true): Promise<boolean> {
-    // unused method
+  async isOperationInProgress(showError = true) {
+    const action = `otakeystore.isOperationInProgress()`;
     try {
-      await this.otaKeyLogger({
-        severity: severityTypes.DEBUG,
-        action: 'otakeystore.isOTAOperationInProgress',
-        code: codeTypes.SUCCESS,
-        message: `-> this.ota.isOperationInProgress(${String(showError)}) start`
-      });
+      await this.remoteOtaKeyStartLogger(action);
       const result = await this.ota.isOperationInProgress();
-      await this.otaKeyLogger({
-        severity: severityTypes.INFO,
-        action: 'otakeystore.isOTAOperationInProgress',
-        code: codeTypes.SUCCESS,
-        message: `<- this.ota.isOperationInProgress(${String(
-          showError
-        )}) return ${result}`,
-        description: result
-      });
-      return result;
+      await this.remoteOtaKeySuccessLogger(action, result);
+      return result === 'true' || result === true ? true : false;
     } catch (error) {
-      await this.otaKeyLogger({
-        severity: severityTypes.ERROR,
-        action: 'otakeystore.isOTAOperationInProgress',
-        code: error.code && !isNaN(error.code) ? error.code : codeTypes.ERROR,
-        message: `<- this.ota.isOperationInProgress(${String(
-          showError
-        )}) failed: ${error}`,
-        description: error
-      });
-      this.handleOTABLEError(error, showError);
+      await this.remoteOtaKeyErrorLogger(action, showError, error);
+      await this.handleOTABLEError(error, showError);
       return false;
     }
   }
 
   @action
-  async getBluetoothState(showError = true): Promise<string> {
-    // unused method
+  async getBluetoothState(showError = true) {
+    const action = `otakeystore.getBluetoothState()`;
     try {
-      await this.otaKeyLogger({
-        severity: severityTypes.DEBUG,
-        action: 'otakeystore.getBluetoothState',
-        code: codeTypes.SUCCESS,
-        message: `-> this.ota.getBluetoothState(${String(showError)}) start`
-      });
+      await this.remoteOtaKeyStartLogger(action);
       const result = await this.ota.getBluetoothState();
-      await this.otaKeyLogger({
-        severity: severityTypes.INFO,
-        action: 'otakeystore.getBluetoothState',
-        code: codeTypes.SUCCESS,
-        message: `<- this.ota.getBluetoothState(${String(
-          showError
-        )}) return ${result}`,
-        description: result
-      });
+      await this.remoteOtaKeySuccessLogger(action, result);
       return result;
     } catch (error) {
-      await this.otaKeyLogger({
-        severity: severityTypes.ERROR,
-        action: 'otakeystore.getBluetoothState',
-        code: error.code && !isNaN(error.code) ? error.code : codeTypes.ERROR,
-        message: `<- this.ota.getBluetoothState(${String(
-          showError
-        )}) failed: ${error}`,
-        description: error
-      });
-      this.handleOTABLEError(error, showError);
+      await this.remoteOtaKeyErrorLogger(action, showError, error);
+      await this.handleOTABLEError(error, showError);
       return 'UNKNOWN';
     }
   }
 
   @action
-  async connect(showNotification = false, showError = true): Promise<boolean> {
+  async connect(showNotification = false, showError = true) {
+    const action = `otakeystore.connect(${
+      showNotification ? 'with notification' : 'without notification'
+    })`;
     try {
-      await this.otaKeyLogger({
-        severity: severityTypes.INFO,
-        action: 'otakeystore.connectToVehicle',
-        code: codeTypes.SUCCESS,
-        message: `-> this.ota.connect(${String(showNotification)}, ${String(
-          showError
-        )}) start`
-      });
+      await this.remoteOtaKeyStartLogger(action);
       const result =
         Platform.OS === 'ios'
           ? await this.ota.connect()
           : await this.ota.connect(showNotification);
-      await this.otaKeyLogger({
-        severity: severityTypes.INFO,
-        action: 'otakeystore.connectToVehicle',
-        code: codeTypes.SUCCESS,
-        message: `<- this.ota.connect(${String(showNotification)}, ${String(
-          showError
-        )}) return ${result}`,
-        description: result
-      });
-      return result;
+      await this.remoteOtaKeySuccessLogger(action, result);
+      return result === 'true' || result === true ? true : false;
     } catch (error) {
-      if ((error.code = 'ALREADY_CONNECTED')) {
-        return true;
-      }
-
-      await this.otaKeyLogger({
-        severity: severityTypes.ERROR,
-        action: 'otakeystore.connectToVehicle',
-        code: error.code && !isNaN(error.code) ? error.code : codeTypes.ERROR,
-        message: `<- this.ota.connect(${String(showNotification)}, ${String(
-          showError
-        )}) failed: ${
-          error.code
-            ? i18n.t(`otaKeyNativeErrors:${error.code}`) || error.message
-            : error.message
-        }`,
-        description: error
-      });
-      this.handleOTABLEError(error, showError);
+      await this.remoteOtaKeyErrorLogger(action, showError, error);
+      await this.handleOTABLEError(error, showError);
       return false;
     }
   }
 
   @action
-  async disconnect(showError = true): Promise<boolean> {
+  async disconnect(showError = true) {
+    const action = `otakeystore.disconnect()`;
     try {
-      await this.otaKeyLogger({
-        severity: severityTypes.DEBUG,
-        action: 'otakeystore.disconnectFromVehicle',
-        code: codeTypes.SUCCESS,
-        message: `-> this.ota.disconnect(${String(showError)}) start`
-      });
+      await this.remoteOtaKeyStartLogger(action);
       const result = await this.ota.disconnect();
-      await this.otaKeyLogger({
-        severity: severityTypes.INFO,
-        action: 'otakeystore.disconnectFromVehicle',
-        code: codeTypes.SUCCESS,
-        message: `<- this.ota.disconnect(${String(
-          showError
-        )}) return ${result}`,
-        description: result
-      });
-      return result;
+      await this.remoteOtaKeySuccessLogger(action, result);
+      return result === 'true' || result === true ? true : false;
     } catch (error) {
-      await this.otaKeyLogger({
-        severity: severityTypes.ERROR,
-        action: 'otakeystore.disconnectFromVehicle',
-        code: error.code && !isNaN(error.code) ? error.code : codeTypes.ERROR,
-        message: `<- this.ota.disconnect(${String(showError)}) failed: ${
-          error.code
-            ? i18n.t(`otaKeyNativeErrors:${error.code}`) || error.message
-            : error.message
-        }`,
-        description: error
-      });
-      this.handleOTABLEError(error, showError);
+      await this.remoteOtaKeyErrorLogger(action, showError, error);
+      await this.handleOTABLEError(error, showError);
       return false;
     }
   }
 
   @action
-  async unlockDoors(
-    requestVehicleData: boolean = false,
-    showError = true
-  ): Promise<boolean> {
+  async unlockDoors(requestVehicleData = false, showError = true) {
+    const action = `otakeystore.unlockDoors(${
+      requestVehicleData ? 'with vehicle data' : 'without vehicle data'
+    })`;
     try {
-      await this.otaKeyLogger({
-        severity: severityTypes.DEBUG,
-        action: 'otakeystore.unlockDoors',
-        code: codeTypes.SUCCESS,
-        message: `-> this.ota.unlockDoors(${String(
-          requestVehicleData
-        )}, ${String(showError)}) start`
-      });
+      await this.remoteOtaKeyStartLogger(action);
       const result = await this.ota.unlockDoors(requestVehicleData, true);
-      await this.otaKeyLogger({
-        severity: severityTypes.INFO,
-        action: 'otakeystore.unlockDoors',
-        code: codeTypes.SUCCESS,
-        message: `<- this.ota.unlockDoors(${String(
-          requestVehicleData
-        )},  ${String(showError)}) return ${result}`,
-        description: result
-      });
-      return result;
+      await this.remoteOtaKeySuccessLogger(action, result);
+      return result === 'true' || result === true ? true : false;
     } catch (error) {
-      await this.otaKeyLogger({
-        severity: severityTypes.ERROR,
-        action: 'otakeystore.unlockDoors',
-        code: error.code && !isNaN(error.code) ? error.code : codeTypes.ERROR,
-        message: `<- this.ota.unlockDoors(${String(
-          requestVehicleData
-        )}, ${String(showError)}) failed: ${
-          error.code
-            ? i18n.t(`otaKeyNativeErrors:${error.code}`) || error.message
-            : error.message
-        }`,
-        description: error
-      });
-      this.handleOTABLEError(error, showError);
+      await this.remoteOtaKeyErrorLogger(action, showError, error);
+      await this.handleOTABLEError(error, showError);
       return false;
     }
   }
 
   @action
-  async lockDoors(
-    requestVehicleData: boolean = false,
-    showError = true
-  ): Promise<boolean> {
+  async lockDoors(requestVehicleData = false, showError = true) {
+    const action = `otakeystore.lockDoors(${
+      requestVehicleData ? 'with vehicle data' : 'without vehicle data'
+    })`;
     try {
-      await this.otaKeyLogger({
-        severity: severityTypes.DEBUG,
-        action: 'otakeystore.lockDoors',
-        code: codeTypes.SUCCESS,
-        message: `-> this.ota.lockDoors(${String(requestVehicleData)}, ${String(
-          showError
-        )},) start`
-      });
+      await this.remoteOtaKeyStartLogger(action);
       const result = await this.ota.lockDoors(requestVehicleData);
-      await this.otaKeyLogger({
-        severity: severityTypes.INFO,
-        action: 'otakeystore.lockDoors',
-        code: codeTypes.SUCCESS,
-        message: `<- this.ota.lockDoors(${String(requestVehicleData)}, ${String(
-          showError
-        )}) return ${result}`,
-        description: result
-      });
-      return result;
+      await this.remoteOtaKeySuccessLogger(action, result);
+      return result === 'true' || result === true ? true : false;
     } catch (error) {
-      await this.otaKeyLogger({
-        severity: severityTypes.ERROR,
-        action: 'otakeystore.lockDoors',
-        code: error.code && !isNaN(error.code) ? error.code : codeTypes.ERROR,
-        message: `<- this.ota.lockDoors(${String(requestVehicleData)}, ${String(
-          showError
-        )}) failed: ${
-          error.code
-            ? i18n.t(`otaKeyNativeErrors:${error.code}`) || error.message
-            : error.message
-        }`,
-        description: error
-      });
-      this.handleOTABLEError(error, showError);
+      await this.remoteOtaKeyErrorLogger(action, showError, error);
+      await this.handleOTABLEError(error, showError);
       return false;
     }
   }
 
   @action
-  async enableEngine(
-    requestVehicleData: boolean = false,
-    showError = true
-  ): Promise<boolean> {
+  async enableEngine(requestVehicleData = false, showError = true) {
+    const action = `otakeystore.enableEngine(${
+      requestVehicleData ? 'with vehicle data' : 'without vehicle data'
+    })`;
     try {
-      await this.otaKeyLogger({
-        severity: severityTypes.DEBUG,
-        action: 'otakeystore.enableEngine',
-        code: codeTypes.SUCCESS,
-        message: `-> this.ota.enableEngine(${String(
-          requestVehicleData
-        )}, ${String(showError)}) start`
-      });
+      await this.remoteOtaKeyStartLogger(action);
       const result = await this.ota.enableEngine(requestVehicleData);
-      await this.otaKeyLogger({
-        severity: severityTypes.INFO,
-        action: 'otakeystore.enableEngine',
-        code: codeTypes.SUCCESS,
-        message: `<- this.ota.enableEngine(${String(
-          requestVehicleData
-        )}, ${String(showError)}) return ${result}`,
-        description: result
-      });
-      return result;
+      await this.remoteOtaKeySuccessLogger(action, result);
+      return result === 'true' || result === true ? true : false;
     } catch (error) {
-      await this.otaKeyLogger({
-        severity: severityTypes.ERROR,
-        action: 'otakeystore.enableEngine',
-        code: error.code && !isNaN(error.code) ? error.code : codeTypes.ERROR,
-        message: `<- this.ota.enableEngine(${String(
-          requestVehicleData
-        )}, ${String(showError)}) failed: ${
-          error.code
-            ? i18n.t(`otaKeyNativeErrors:${error.code}`) || error.message
-            : error.message
-        }`,
-        description: error
-      });
-      this.handleOTABLEError(error, showError);
+      await this.remoteOtaKeyErrorLogger(action, showError, error);
+      await this.handleOTABLEError(error, showError);
       return false;
     }
   }
 
   @action
-  async disableEngine(
-    requestVehicleData: boolean = false,
-    showError = true
-  ): Promise<boolean> {
+  async disableEngine(requestVehicleData = false, showError = true) {
+    const action = `otakeystore.disableEngine(${
+      requestVehicleData ? 'with vehicle data' : 'without vehicle data'
+    })`;
     try {
-      await this.otaKeyLogger({
-        severity: severityTypes.DEBUG,
-        action: 'otakeystore.disableEngine',
-        code: codeTypes.SUCCESS,
-        message: `-> this.ota.disableEngine(${String(
-          requestVehicleData
-        )}, ${String(showError)}) start`
-      });
+      await this.remoteOtaKeyStartLogger(action);
       const result = await this.ota.disableEngine(requestVehicleData);
-      await this.otaKeyLogger({
-        severity: severityTypes.INFO,
-        action: 'otakeystore.disableEngine',
-        code: codeTypes.SUCCESS,
-        message: `<- this.ota.disableEngine(${String(
-          requestVehicleData
-        )}, ${String(showError)}) return ${result}`,
-        description: result
-      });
-      return result;
+      await this.remoteOtaKeySuccessLogger(action, result);
+      return result === 'true' || result === true ? true : false;
     } catch (error) {
-      await this.otaKeyLogger({
-        severity: severityTypes.ERROR,
-        action: 'otakeystore.disableEngine',
-        code: error.code && !isNaN(error.code) ? error.code : codeTypes.ERROR,
-        message: `<- this.ota.disableEngine(${String(
-          requestVehicleData
-        )}, ${String(showError)}) failed: ${
-          error.code
-            ? i18n.t(`otaKeyNativeErrors:${error.code}`) || error.message
-            : error.message
-        }`,
-        description: error
-      });
-      this.handleOTABLEError(error, showError);
+      await this.remoteOtaKeyErrorLogger(action, showError, error);
+      await this.handleOTABLEError(error, showError);
       return false;
     }
   }
 
   @action
   async closeSession() {
+    const action = `otakeystore.closeSession()`;
     try {
+      await this.remoteOtaKeyStartLogger(action);
       await this.ota.closeSession();
+      await this.remoteOtaKeySuccessLogger(action, '');
     } catch (error) {
-      await this.otaKeyLogger({
-        severity: severityTypes.ERROR,
-        action: 'otakeystore.closeSession',
-        code: error.code,
-        message: `<- this.ota.closeSession failed: ${error}`,
-        description: error
-      });
+      await this.remoteOtaKeyErrorLogger(action, true, error);
     }
   }
 
-  handleOTAAPIError = (error, showError) => {
+  handleOTAAPIError = async (error, showError) => {
     const { code, message } = error;
 
     this.isConnecting = false;
@@ -1016,14 +593,52 @@ export default class OTAKeyStore {
     this.doorsLocked = true;
     this.energyCurrent = 0;
 
-    if (!showError || code === '38') {
+    switch (code) {
+      case 19:
+        /*Key has been replaced*/
+        await this.remoteOtaKeyFatalLogger(
+          'handleOTAAPIError',
+          false,
+          `OTA API Error Code [${code}]`
+        );
+        break;
+      case '19':
+        /*Key has been replaced*/
+        await this.remoteOtaKeyFatalLogger(
+          'handleOTAAPIError',
+          false,
+          `OTA API Error Code [${code}]`
+        );
+        break;
+      case 2620:
+        /*Key doesn't belong to device*/
+        await this.remoteOtaKeyFatalLogger(
+          'handleOTAAPIError',
+          false,
+          `OTA API Error Code [${code}]`
+        );
+        break;
+      case '2620':
+        /*Key doesn't belong to device*/
+        await this.remoteOtaKeyFatalLogger(
+          'handleOTAAPIError',
+          false,
+          `OTA API Error Code [${code}]`
+        );
+        break;
+
+      default:
+        break;
+    }
+
+    if (!showError) {
       return;
     }
 
-    this.showNativeOTAError(code, message);
+    await this.showNativeOTAError(code, message);
   };
 
-  handleOTABLEError = (error, showError) => {
+  handleOTABLEError = async (error, showError) => {
     const { code, message } = error;
 
     this.isConnecting = false;
@@ -1033,14 +648,46 @@ export default class OTAKeyStore {
     this.doorsLocked = true;
     this.energyCurrent = 0;
 
-    if (!showError || code === 'ALREADY_CONNECTED') {
+    switch (code) {
+      case 19:
+        /*Key doesn't belong to device*/
+        await this.remoteOtaKeyFatalLogger(
+          'handleOTABLEError',
+          false,
+          `OTA BLE Error Code [${code}]`
+        );
+        break;
+      case '19':
+        /*Key doesn't belong to device*/
+        await this.remoteOtaKeyFatalLogger(
+          'handleOTABLEError',
+          false,
+          `OTA BLE Error Code [${code}]`
+        );
+        break;
+
+      case 'ALREADY_CONNECTED':
+        /*already connected to vehicle*/
+        return;
+      case 38:
+        /*action probably done*/
+        return;
+      case '38':
+        /*action probably done*/
+        return;
+
+      default:
+        break;
+    }
+
+    if (!showError) {
       return;
     }
 
-    this.showNativeOTAError(code, message);
+    await this.showNativeOTAError(code, message);
   };
 
-  showNativeOTAError = (errorCode, errorMessage) => {
+  showNativeOTAError = async (code, errorMessage) => {
     const defaultCode = 'notFound';
     /*
      * use error code
@@ -1048,10 +695,87 @@ export default class OTAKeyStore {
      * if errorMessage empty - use default message
      */
     const message =
-      i18n.t(`otaKeyNativeErrors:${errorCode}`) ||
+      i18n.t(`otaKeyNativeErrors:${code}`) ||
       errorMessage ||
       i18n.t(`otaKeyNativeErrors:${defaultCode}`);
 
     showToastError(message);
+  };
+
+  remoteOtaKeyStartLogger = async (action, description = null) => {
+    const severity = severityTypes.INFO;
+    const code = codeTypes.SUCCESS;
+    const message = `Execution Started...`;
+    await this.remoteOtaKeyLogger(severity, code, action, message, description);
+  };
+
+  remoteOtaKeySuccessLogger = async (action, result, description = null) => {
+    const severity = severityTypes.INFO;
+    const code = codeTypes.SUCCESS;
+    const message = `Execution done: ${String(result)}`;
+    await this.remoteOtaKeyLogger(severity, code, action, message, description);
+  };
+
+  remoteOtaKeySkippedLogger = async (action, result, description = null) => {
+    const severity = severityTypes.INFO;
+    const code = codeTypes.SUCCESS;
+    const message = `Execution skipped: ${String(result)}`;
+    await this.remoteOtaKeyLogger(severity, code, action, message, description);
+  };
+
+  remoteOtaKeyNotifierLogger = async (action, result, description = null) => {
+    const severity = severityTypes.INFO;
+    const code = codeTypes.SUCCESS;
+    const message = `Notification: ${String(result)}`;
+    await this.remoteOtaKeyLogger(severity, code, action, message, description);
+  };
+
+  remoteOtaKeyErrorLogger = async (action, showError, error) => {
+    const severity = severityTypes.ERROR;
+    const code =
+      error.code && !isNaN(error.code) ? error.code : codeTypes.ERROR;
+    const message = `Execution failed ${
+      showError ? 'and error is visible' : 'but error is not visible'
+    }: ${
+      error.code
+        ? i18n.t(`otaKeyNativeErrors:${error.code}`) || error.message
+        : error.message
+    }`;
+    await this.remoteOtaKeyLogger(severity, code, action, message, error);
+  };
+
+  remoteOtaKeyFatalLogger = async (action, showError, errorMessage) => {
+    const severity = severityTypes.FATAL;
+    const code = codeTypes.ERROR;
+    const message = `Fata error detected ${
+      showError ? 'and error is visible' : 'but error is not visible'
+    }: ${errorMessage}`;
+    await this.remoteOtaKeyLogger(severity, code, action, message);
+  };
+
+  remoteOtaKeyLogger = async (
+    severity,
+    code,
+    action,
+    message,
+    description = null
+  ) => {
+    const context = {
+      keyAccessDeviceIdentifier: this.keyAccessDeviceIdentifier,
+      keyAccessDeviceToken: this.keyAccessDeviceToken,
+      listenersInPlace: this.listenersInPlace,
+      key: this.key,
+      doorsLocked: this.doorsLocked,
+      engineRunning: this.engineRunning,
+      energyCurrent: this.energyCurrent
+    };
+    await remoteLoggerService.log(
+      severity,
+      code,
+      action,
+      message,
+      description,
+      context
+    );
   };
 }

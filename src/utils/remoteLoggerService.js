@@ -14,7 +14,8 @@ export const severityTypes = {
   DEBUG: 'debug',
   INFO: 'info',
   WARN: 'warn',
-  ERROR: 'error'
+  ERROR: 'error',
+  FATAL: 'fatal'
 };
 
 class RemoteLoggerService {
