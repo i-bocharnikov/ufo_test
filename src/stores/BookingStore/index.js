@@ -150,6 +150,7 @@ export default class BookingStore {
     if (isSelectedNew) {
       this.selectedLocationRef = ref;
       this.cars = await cars.getCars(ref);
+      this.correctStartTime();
     } else {
       this.selectedLocationRef = null;
       this.cars = await cars.getCars();
@@ -237,7 +238,7 @@ export default class BookingStore {
   };
 
   /**
-   * @description Correct chosen time if was selected the same dates
+   * @description Correct chosen time if was selected starting today or the same dates
   */
   @action
   correctSelectedTime = () => {
@@ -251,6 +252,12 @@ export default class BookingStore {
         .startOf('hour')
         .add(60, 'minutes')
         .format(values.TIME_STRING_FORMAT);
+      return;
+    }
+
+    /* handle case for starting today rentals */
+    if (this.startRentalDate.isSame(TODAY, 'days')) {
+      this.correctStartTime(true);
       return;
     }
 
@@ -271,6 +278,55 @@ export default class BookingStore {
     } else {
       this.startRentalTime = this._defaultStore.startRentalTime;
       this.endRentalTime = this._defaultStore.endRentalTime;
+    }
+  };
+
+  /*
+   * @description Correct start time for location (use only for today start date)
+   */
+  @action
+  correctStartTime = isToday => {
+    /* if isToday wasn't check outside, do it here */
+    if (!isToday && !this.startRentalDate.isSame(TODAY, 'days')) {
+      return;
+    }
+
+    const location = _.find(this.locations, { reference: this.selectedLocationRef });
+
+    if (location) {
+      const currentLocationTime = moment
+        .tz(location.timezone)
+        .startOf('hour')
+        .format(values.TIME_STRING_FORMAT);
+
+      const currentLocationTimeIndex = _.findIndex(
+        this.rollPickersTimeItems,
+        item => item.label === currentLocationTime
+      );
+
+      if (
+        currentLocationTimeIndex < this.rollPickerStartSelectedTimeItem
+        || currentLocationTimeIndex === -1
+      ) {
+        return;
+      }
+
+      const isEndDateToday = this.endRentalDate.isSame(TODAY, 'days');
+      /* if time more or equal 22:00 */
+      if (currentLocationTimeIndex >= this.rollPickersTimeItems.length - 2) {
+        const lastItem = this.rollPickersTimeItems.length - 1;
+        this.startRentalTime = this.rollPickersTimeItems[lastItem - 1].label;
+
+        if (isEndDateToday) {
+          this.endRentalTime = this.rollPickersTimeItems[lastItem].label;
+        }
+      } else {
+        this.startRentalTime = currentLocationTime;
+
+        if (isEndDateToday && this.rollPickerEndSelectedTimeItem <= currentLocationTimeIndex) {
+          this.endRentalTime = this.rollPickersTimeItems[currentLocationTimeIndex + 1].label;
+        }
+      }
     }
   };
 
