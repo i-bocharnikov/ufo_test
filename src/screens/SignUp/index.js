@@ -22,7 +22,10 @@ class SignUpScreen extends Component {
           rightBtnUseDefault={true}
         />
         <SignUpInnerTabNavigator navigation={this.props.navigation} />
-        <UFOPopover message={registerStore.user.registration_message} />
+        <UFOPopover
+          message={registerStore.user.registration_message}
+          positionOffsets={{ bottom: 36 }}
+        />
       </View>
     );
   }

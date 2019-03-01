@@ -52,17 +52,17 @@ class SignUpScreen extends Component {
 
   renderIdCardBlock() {
     const isFilled =
-      registerStore.identificationFrontDocument &&
-      registerStore.identificationBackDocument;
+      registerStore.idCardFrontScan &&
+      registerStore.idCardBackScan;
 
     return isFilled ? (
       <Fragment>
         <UFOImage
-          source={{ uri: registerStore.identificationFrontDocument }}
+          source={{ uri: registerStore.idCardFrontScan }}
           style={styles.cardThumb}
         />
         <UFOImage
-          source={{ uri: registerStore.identificationBackDocument }}
+          source={{ uri: registerStore.idCardBackScan }}
           style={styles.cardThumb}
         />
         {this.renderIcon(styles.cardIcon)}
@@ -74,17 +74,17 @@ class SignUpScreen extends Component {
 
   renderDriverCardBlock() {
     const isFilled =
-      registerStore.driverLicenceFrontDocument &&
-      registerStore.driverLicenceBackDocument;
+      registerStore.dlCardFrontScan &&
+      registerStore.dlCardBackScan;
 
     return isFilled ? (
       <Fragment>
         <UFOImage
-          source={{ uri: registerStore.driverLicenceFrontDocument }}
+          source={{ uri: registerStore.dlCardFrontScan }}
           style={styles.cardThumb}
         />
         <UFOImage
-          source={{ uri: registerStore.driverLicenceBackDocument }}
+          source={{ uri: registerStore.dlCardBackScan }}
           style={styles.cardThumb}
         />
         {this.renderIcon(styles.cardIcon)}

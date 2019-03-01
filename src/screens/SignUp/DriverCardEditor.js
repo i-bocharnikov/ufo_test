@@ -33,8 +33,8 @@ const captureStates = {
 @observer
 class DriverLicenceScreen extends Component {
   @observable captureState = (
-    !registerStore.driverLicenceFrontDocument
-    || registerStore.driverLicenceFrontDocument === 'loading'
+    !registerStore.dlCardFrontScan
+    || registerStore.dlCardFrontScan === 'loading'
   )
     ? captureStates.CAPTURE_FRONT
     : captureStates.PREVIEW;
@@ -83,11 +83,11 @@ class DriverLicenceScreen extends Component {
       <UFOCard title={this.props.t('register:redoCaptureConfirm')}>
         <View style={styles.cardsPreviewContainer}>
           <UFOImage
-            source={{ uri: registerStore.driverLicenceFrontDocument }}
+            source={{ uri: registerStore.dlCardFrontScan }}
             style={{ width: CARD_WIDTH / 2, height: CARD_HEIGHT / 2 }}
           />
           <UFOImage
-            source={{ uri: registerStore.driverLicenceBackDocument }}
+            source={{ uri: registerStore.dlCardBackScan }}
             style={{ width: CARD_WIDTH / 2, height: CARD_HEIGHT / 2 }}
           />
         </View>
@@ -262,7 +262,7 @@ class DriverLicenceScreen extends Component {
       if (document && document.reference) {
         registerStore.user.driver_licence_front_side_reference = document.reference;
         const imgData = await registerStore.downloadDocument(document.reference);
-        registerStore.driverLicenceFrontDocument = imgData
+        registerStore.dlCardFrontScan = imgData
           ? `data:image/png;base64,${imgData}`
           : null;
       }
@@ -280,7 +280,7 @@ class DriverLicenceScreen extends Component {
       if (document && document.reference) {
         registerStore.user.driver_licence_back_side_reference = document.reference;
         const imgData = await registerStore.downloadDocument(document.reference);
-        registerStore.driverLicenceBackDocument = imgData
+        registerStore.dlCardBackScan = imgData
           ? `data:image/png;base64,${imgData}`
           : null;
       }

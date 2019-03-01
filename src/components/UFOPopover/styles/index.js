@@ -10,13 +10,13 @@ export default StyleSheet.create({
     alignSelf: 'center',
     zIndex: 999,
     maxWidth: 280,
-    backgroundColor: 'rgba(255,255,255,0.7)',
+    backgroundColor: 'rgba(255,255,255,0.64)',
     paddingVertical: 8,
     paddingHorizontal: 12,
     borderRadius: 8,
     shadowOffset: { width: 0, height: 1 },
     shadowColor: 'black',
-    shadowOpacity: 0.4,
+    shadowOpacity: 0.28,
     elevation: 1
   },
 

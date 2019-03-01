@@ -14,11 +14,9 @@ export default {
   UserInfo: 'UserInfo',
   LoyalityInfo: 'LoyalityInfo',
   Phone: 'Phone',
-  Email: 'Email',
   Address: 'Address',
   Identification: 'Identification',
   DriverLicence: 'DriverLicence',
-  Miles: 'Miles',
 
   /* screen names move from global.screens, look additional options there */
   Home: 'Drive',

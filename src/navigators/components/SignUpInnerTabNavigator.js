@@ -1,4 +1,5 @@
 import { createMaterialTopTabNavigator } from 'react-navigation';
+import i18n from 'i18next';
 
 import keys from './../helpers/screenKeys';
 import UserInfo from './../../screens/SignUp/UserInfo';
@@ -7,8 +8,14 @@ import { colors } from './../../utils/theme';
 import styles from './../styles/tabBarTop';
 
 const routeConfigs = {
-  [keys.UserInfo]: { screen: UserInfo },
-  [keys.LoyalityInfo]: { screen: LoyalityInfo }
+  [keys.UserInfo]: {
+    screen: UserInfo,
+    navigationOptions: { tabBarLabel: i18n.t('register:userInfoTabLabel') }
+  },
+  [keys.LoyalityInfo]: {
+    screen: LoyalityInfo,
+    navigationOptions: { tabBarLabel: i18n.t('register:loyalityInfoTabLabel') }
+  }
 };
 
 const navigatorConfig = {

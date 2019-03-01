@@ -34,8 +34,8 @@ const captureStates = {
 @observer
 class IdentificationScreen extends Component {
   @observable captureState = (
-    !registerStore.identificationFrontDocument
-    || registerStore.identificationFrontDocument === 'loading'
+    !registerStore.idCardFrontScan
+    || registerStore.idCardFrontScan === 'loading'
   )
     ? captureStates.CAPTURE_FRONT
     : captureStates.PREVIEW;
@@ -112,11 +112,11 @@ class IdentificationScreen extends Component {
       <UFOCard title={this.props.t('register:redoCaptureConfirm')}>
         <View style={styles.cardsPreviewContainer}>
           <UFOImage
-            source={{ uri: registerStore.identificationFrontDocument }}
+            source={{ uri: registerStore.idCardFrontScan }}
             style={{ width: CARD_WIDTH / 2, height: CARD_HEIGHT / 2 }}
           />
           <UFOImage
-            source={{ uri: registerStore.identificationBackDocument }}
+            source={{ uri: registerStore.idCardBackScan }}
             style={{ width: CARD_WIDTH / 2, height: CARD_HEIGHT / 2 }}
           />
         </View>
@@ -267,7 +267,7 @@ class IdentificationScreen extends Component {
       if (document && document.reference) {
         registerStore.user.identification_front_side_reference = document.reference;
         const imgData = await registerStore.downloadDocument(document.reference);
-        registerStore.identificationFrontDocument = imgData
+        registerStore.idCardFrontScan = imgData
           ? `data:image/png;base64,${imgData}`
           : null;
       }
@@ -285,7 +285,7 @@ class IdentificationScreen extends Component {
       if (document && document.reference) {
         registerStore.user.identification_back_side_reference = document.reference;
         const imgData = await registerStore.downloadDocument(document.reference);
-        registerStore.identificationBackDocument = imgData
+        registerStore.idCardBackScan = imgData
           ? `data:image/png;base64,${imgData}`
           : null;
       }

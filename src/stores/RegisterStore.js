@@ -6,7 +6,7 @@ import uuid from 'uuid';
 import { parsePhoneNumber } from 'libphonenumber-js';
 import _ from 'lodash';
 
-import configurations from '../utils/configurations';
+import configurations from './../utils/configurations';
 import {
   clearAuthenticationsFromStore,
   getAuthenticationUUIDFromStore,
@@ -15,7 +15,7 @@ import {
   getAuthenticationPasswordFromStore,
   setAuthenticationTokenInStore,
   getAuthenticationTokenFromStore
-} from '../utils/authentications';
+} from './../utils/authentications';
 import {
   useTokenInApi as useTokenInApi_deprecated,
   postToApi,
@@ -26,21 +26,20 @@ import {
 } from './../utils/api_deprecated';
 import { setAuthTokenForApi } from './../utils/api';
 
-const DEBUG = false;
-
-const USER_STATUS_REGISTERED = 'registered';
-const USER_STATUS_REGISTRATION_PENDING = 'registration_pending';
-const USER_STATUS_REGISTRATION_MISSING = 'registration_missing';
-const STATUS_MISSING = 'missing';
-const STATUS_NOT_VALIDATED = 'not_validated';
-const STATUS_VALIDATED = 'validated';
-const USER_ROLE_ADMIN = 'admin';
+const USER_STATUSES = {
+  REGISTERED: 'registered',
+  REGISTRATION_PENDING: 'registration_pending',
+  REGISTRATION_MISSING: 'registration_missing',
+  MISSING: 'missing',
+  NOT_VALIDATED: 'not_validated',
+  VALIDATED: 'validated',
+  ADMIN: 'admin'
+};
 
 class User {
   @persist @observable reference = null;
   @persist @observable role = null;
   @persist @observable status = null;
-  @persist @observable company_name = null;
   @persist @observable first_name = null;
   @persist @observable last_name = null;
   @persist @observable phone_number = null;
@@ -56,20 +55,20 @@ class User {
   @persist @observable driver_licence_back_side_reference = null;
   @persist @observable miles_and_more = null;
   @persist @observable face_capture_required = false;
+  @persist @observable company_name = null;
   @persist @observable vat_number = null;
 }
 
 export default class RegisterStore {
   @persist('object', User) @observable user = new User();
-  @persist support_chat_identification_key = null;
-
-  @observable identificationFrontDocument = null;
-  @observable identificationBackDocument = null;
-  @observable driverLicenceFrontDocument = null;
-  @observable driverLicenceBackDocument = null;
+  @persist supportChatIDKey = null;
+  @observable idCardFrontScan = null;
+  @observable idCardBackScan = null;
+  @observable dlCardFrontScan = null;
+  @observable dlCardBackScan = null;
 
   startupMessage = null;
-  acknowledge_uri = '';
+  acknowledgeUri = '';
 
   /*
    * @description Get user full name
@@ -89,51 +88,39 @@ export default class RegisterStore {
     return name;
   }
 
-  @computed get isAdmin() {
-    return this.user.role === USER_ROLE_ADMIN;
+  /*
+   * @description Checking user status
+   */
+  @computed
+  get isConnected() {
+    return this.user.status !== USER_STATUSES.REGISTRATION_MISSING;
   }
 
-  @computed get isConnected() {
-    return this.user.status !== USER_STATUS_REGISTRATION_MISSING;
+  /*
+   * @description Checking user status
+   */
+  @computed
+  get isUserRegistered() {
+    return this.user.status === USER_STATUSES.REGISTERED;
   }
 
-  @computed get isUserRegistered() {
-    return this.user.status === USER_STATUS_REGISTERED;
-  }
-
-  @computed get isUserRegistrationInProgress() {
-    return this.user.status === USER_STATUS_REGISTRATION_PENDING;
-  }
-
-  @computed get isUserRegistrationMissing() {
-    return this.user.status === USER_STATUS_REGISTRATION_MISSING;
-  }
-
-  @computed get isCurrentPhoneValid() {
+  /*
+   * @description Checking phone number
+   */
+  @computed
+  get isCurrentPhoneValid() {
     try {
       const phone = _.get(this.user, 'phone_number');
 
-      if (!phone) {
-        return false;
+      if (phone) {
+        const phoneParsed = parsePhoneNumber(phone);
+        return phoneParsed.isValid();
       }
 
-      const phoneParsed = parsePhoneNumber(phone);
-      return phoneParsed.isValid();
+      return false
     } catch (error) {
       return false;
     }
-  }
-
-  isStatusMissing(status) {
-    return status === STATUS_MISSING;
-  }
-
-  isStatusNotValidated(status) {
-    return status === STATUS_NOT_VALIDATED;
-  }
-
-  isStatusValidated(status) {
-    return status === STATUS_VALIDATED;
   }
 
   async reuseToken() {
@@ -190,7 +177,7 @@ export default class RegisterStore {
       await setAuthTokenForApi(response.data.token);
 
       this.user = response.data.user;
-      this.support_chat_identification_key = response.data.support_chat_identification_key;
+      this.supportChatIDKey = response.data.support_chat_identification_key;
       this.startupMessage = response.data.message;
       return response.data.key_access_device_token;
     }
@@ -212,7 +199,7 @@ export default class RegisterStore {
       if (DEBUG) {
         console.info('registerStore.requestCode:', response.data);
       }
-      this.acknowledge_uri = response.data.notification.acknowledge_uri;
+      this.acknowledgeUri = response.data.notification.acknowledge_uri;
       return true;
     }
     return false;
@@ -220,7 +207,7 @@ export default class RegisterStore {
 
   @action
   async connect(code) {
-    const response = await postToApi(`/${this.acknowledge_uri}`, { validation_code: code });
+    const response = await postToApi(`/${this.acknowledgeUri}`, { validation_code: code });
 
     if (response && response.status === 'success') {
       DEBUG && console.info('registerStore.connect:', response.data);
@@ -234,10 +221,10 @@ export default class RegisterStore {
   async disconnect() {
     // NOTE: add logout service on server so we can unmap device and user in place of recreating new device
     await clearAuthenticationsFromStore();
-    this.identificationFrontDocument = null;
-    this.identificationBackDocument = null;
-    this.driverLicenceFrontDocument = null;
-    this.driverLicenceBackDocument = null;
+    this.idCardFrontScan = null;
+    this.idCardBackScan = null;
+    this.dlCardFrontScan = null;
+    this.dlCardBackScan = null;
   }
 
   @action
@@ -324,10 +311,10 @@ export default class RegisterStore {
     };
 
     await Promise.all([
-      loadThumbData('identificationFrontDocument', idFrontScanRef),
-      loadThumbData('identificationBackDocument', idBackScanRef),
-      loadThumbData('driverLicenceFrontDocument', dlFrontScanRef),
-      loadThumbData('driverLicenceBackDocument', dlBackScanRef)
+      loadThumbData('idCardFrontScan', idFrontScanRef),
+      loadThumbData('idCardBackScan', idBackScanRef),
+      loadThumbData('dlCardFrontScan', dlFrontScanRef),
+      loadThumbData('dlCardBackScan', dlBackScanRef)
     ]);
   };
 }

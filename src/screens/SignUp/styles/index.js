@@ -1,164 +1,116 @@
 import { StyleSheet } from 'react-native';
 
 import { colors, textThemes } from './../../../utils/theme';
-import { ACTION_BAR_HEIGHT } from './../../../components/UFOActionBar';
 import { ufoInputStyles } from './../../../components/common';
-
-const GAP_BETWEEN = 9;
-
-export const googleInputStyles = StyleSheet.create({
-  container: {
-    flex: 0,
-    marginLeft: 24,
-    marginRight: 24
-  },
-
-  textInputContainer: {
-    height: 'auto',
-    backgroundColor: 'transparent',
-    marginLeft: 0,
-    marginRight: 0,
-    marginTop: 32,
-    borderTopWidth: 0
-  },
-
-  textInput: {
-    ...ufoInputStyles,
-    marginLeft: 0,
-    marginRight: 0,
-    borderRadius: 0,
-    paddingLeft: 20,
-    paddingRight: 12
-  },
-
-  separator: { backgroundColor: 'transparent' },
-
-  row: {
-    backgroundColor: colors.BG_INVERT,
-    marginLeft: 0,
-    marginRight: 0
-  }
-});
 
 export default StyleSheet.create({
   tabWrapper: {
     flex: 1
   },
 
-
-/* OLD STYLES */
-  scrollWrapper: { flex: 1 },
-
-  bodyWrapper: {
-    paddingHorizontal: 24,
-    paddingTop: 32,
-    paddingBottom: ACTION_BAR_HEIGHT
-  },
-
-  inputBlock: { marginBottom: GAP_BETWEEN },
-
-  cardsBlock: {
-    flexDirection: 'row',
-    justifyContent: 'space-between'
-  },
-
-  cardWrapper: {
+  container: {
     flex: 1,
-    alignItems: 'center',
-    backgroundColor: colors.BG_INVERT,
-    paddingVertical: 20
+    backgroundColor: colors.BG_INVERT_TINT
   },
 
-  leftGap: { marginLeft: GAP_BETWEEN },
+  scrollContainer: {
+    paddingTop: 32,
+    paddingHorizontal: 24
+  },
 
-  topGap: { marginTop: GAP_BETWEEN },
+  row: {
+    flexDirection: 'row'
+  },
+
+  blockShadow: {
+    shadowOffset: { width: 0, height: 1 },
+    shadowRadius: 4,
+    shadowColor: 'black',
+    shadowOpacity: 0.1,
+    elevation: 1
+  },
+
+  infoPreviewBlock: {
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    backgroundColor: colors.BG_INVERT,
+    marginBottom: 18
+  },
+
+  infoPreviewIcon: {
+    position: 'absolute',
+    right: 16,
+    top: 10,
+    fontSize: 20,
+    color: colors.SUCCESS_COLOR
+  },
+
+  previewEditLabel: {
+    ...textThemes.SP_SEMIBOLD,
+    fontSize: 15,
+    color: colors.TEXT_LIGHT_COLOR,
+    letterSpacing: 1.2,
+    textDecorationLine: 'underline',
+    position: 'absolute',
+    right: 16,
+    bottom: 16
+  },
+
+  infoPreviewTitle: {
+    ...textThemes.SP_SEMIBOLD,
+    fontSize: 20,
+    color: colors.MAIN_COLOR,
+    letterSpacing: 0.8,
+    marginTop: 12
+  },
+
+  infoPreviewItem: {
+    ...textThemes.SP_LIGHT,
+    fontSize: 17,
+    lineHeight: 23,
+    letterSpacing: 1.4,
+    marginTop: 10,
+    marginBottom: 2,
+    marginRight: 32
+  },
+
+  cardPickerBlock: {
+    flex: 1,
+    height: 164,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: colors.BG_INVERT,
+    paddingTop: 20,
+    paddingBottom: 16,
+    marginBottom: 18
+  },
+
+  cardPickerBlockIndent: {
+    marginRight: 4
+  },
 
   cardPickerImg: {
-    width: 88,
-    height: 68,
+    height: 52,
     resizeMode: 'contain',
-    marginBottom: 4
+    marginBottom: 2,
+    marginTop: 10
   },
 
   cardPickerLabel: {
     ...textThemes.SP_REGULAR,
-    lineHeight: 19.1,
-    textAlign: 'center',
-    marginTop: 8
+    fontSize: 17,
+    letterSpacing: 1.6,
+    textAlign: 'center'
+  },
+
+  cardPickerEditPosition: {
+    right: 4,
+    bottom: 4
   },
 
   cardThumb: {
-    width: 82,
-    height: 46,
-    marginBottom: 1
-  },
-
-  registrationStatus: {
-    ...textThemes.SP_REGULAR,
-    lineHeight: 18,
-    paddingVertical: 10,
-    textAlign: 'center',
-    backgroundColor: colors.BG_INVERT
-  },
-
-  referalBlock: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    height: 58,
-    paddingHorizontal: 24,
-    backgroundColor: colors.BG_INVERT
-  },
-
-  referalLabel: {
-    ...textThemes.SP_LIGHT,
-    fontSize: 17,
-    flex: 1
-  },
-
-  referalImg: {
-    height: 35,
-    width: 28,
-    resizeMode: 'contain',
-    marginLeft: 8
-  },
-
-  inputIcon: {
-    fontSize: 24,
-    marginLeft: 8,
-    color: colors.SUCCESS_COLOR
-  },
-
-  cardIcon: {
-    position: 'absolute',
-    marginLeft: 0,
-    top: 8,
-    right: 12
-  },
-
-  cardsWrapper: {
-    flex: 1,
-    paddingHorizontal: 12,
-    marginTop: 24,
-    marginBottom: 100
-  },
-
-  cardsContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-
-  cardsPreviewContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-around'
-  },
-
-  inputMiles: { marginTop: GAP_BETWEEN },
-
-  invoiceInputsWrapper: {
-    paddingHorizontal: 24,
-    paddingBottom: ACTION_BAR_HEIGHT
+    width: 84,
+    height: 42,
+    marginBottom: 2
   }
 });
