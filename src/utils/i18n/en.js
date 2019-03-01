@@ -277,7 +277,6 @@ export default {
     driveSubTitle: 'Enjoy your trip…',
     driveNextRegister: 'REGISTER',
     driveNextDrive: 'DRIVE YOUR CAR',
-    driveDescrGuideLink: 'Please consult the FAQ.',
     driveNextHome: 'HOME',
     driveDescrRegisterP1: 'Before the rental, please register by scanning your ID and driver licence.',
     driveDescrDriveP1: 'Find your bookings in the drive section of the app.',
