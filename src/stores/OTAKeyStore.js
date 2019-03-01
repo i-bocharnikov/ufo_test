@@ -361,7 +361,11 @@ export default class OTAKeyStore {
     try {
       await this.remoteOtaKeyStartLogger(action);
       this.key = await this.ota.endKey(keyId);
-      await this.remoteOtaKeySuccessLogger(action, result, this.key);
+      await this.remoteOtaKeySuccessLogger(
+        action,
+        this.key ? this.key.keyId : 'key empty',
+        this.key
+      );
       return true;
     } catch (error) {
       await this.remoteOtaKeyErrorLogger(action, showError, error);
