@@ -1,5 +1,5 @@
-import React, { Component, Fragment } from 'react';
-import { ScrollView, View, Text, TouchableOpacity } from 'react-native';
+import React, { Component } from 'react';
+import { ScrollView, View, Text, TouchableOpacity, RefreshControl } from 'react-native';
 import { observer } from 'mobx-react';
 import { observable, reaction } from 'mobx';
 import { translate } from 'react-i18next';
@@ -29,7 +29,15 @@ class UserInfo extends Component {
   render() {
     return (
       <UFOContainer style={styles.container}>
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <ScrollView
+          contentContainerStyle={styles.scrollContainer}
+          refreshControl={
+            <RefreshControl
+              onRefresh={this.refreshData}
+              refreshing={this.refreshing}
+            />
+          }
+        >
           {this.renderContactsBlock()}
           {this.renderAddressBlock()}
           {this.renderScanThumbBlock()}
@@ -43,7 +51,7 @@ class UserInfo extends Component {
 
     return (
       <TouchableOpacity
-        onPress={this.navToUserAddressScreen}
+        onPress={this.navToUserContactsScreen}
         style={[ styles.infoPreviewBlock, styles.blockShadow ]}
         activeOpacity={values.BTN_OPACITY_DEFAULT}
       >
@@ -72,7 +80,7 @@ class UserInfo extends Component {
 
     return (
       <TouchableOpacity
-        onPress={this.navToUserContactsScreen}
+        onPress={this.navToUserAddressScreen}
         style={[ styles.infoPreviewBlock, styles.blockShadow ]}
         activeOpacity={values.BTN_OPACITY_DEFAULT}
       >
@@ -180,7 +188,7 @@ class UserInfo extends Component {
     );
   };
 
-  refreshSignUpData = async () => {
+  refreshData = async () => {
     this.refreshing = true;
     await registerStore.getUserData();
     await registerStore.fetchScanDocumentThumbs();
@@ -188,7 +196,7 @@ class UserInfo extends Component {
   };
 
   navToUserContactsScreen = () => {
-    this.props.navigation.navigate(screenKeys.Phone);
+    this.props.navigation.navigate(screenKeys.Contacts);
   };
 
   navToUserAddressScreen = () => {

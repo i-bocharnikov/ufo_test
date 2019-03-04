@@ -17,14 +17,16 @@ class SignUpScreen extends Component {
     return (
       <View style={styles.tabWrapper}>
         <UFOHeader
-          title={registerStore.userFullName || this.props.t('overviewTitle')}
+          title={registerStore.userFullName || this.props.t('overviewHeader')}
           leftBtnUseDefault={true}
           rightBtnUseDefault={true}
+          isSingle={false}
         />
         <SignUpInnerTabNavigator navigation={this.props.navigation} />
         <UFOPopover
           message={registerStore.user.registration_message}
           positionOffsets={{ bottom: 36 }}
+          showOnce={true}
         />
       </View>
     );

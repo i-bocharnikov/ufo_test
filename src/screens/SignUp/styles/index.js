@@ -1,7 +1,6 @@
 import { StyleSheet } from 'react-native';
 
 import { colors, textThemes } from './../../../utils/theme';
-import { ufoInputStyles } from './../../../components/common';
 
 export default StyleSheet.create({
   tabWrapper: {
@@ -112,5 +111,125 @@ export default StyleSheet.create({
     width: 84,
     height: 42,
     marginBottom: 2
+  },
+
+  creditInfoBlock: {
+    alignItems: 'center',
+    paddingTop: 24,
+    paddingBottom: 12,
+    backgroundColor: colors.MAIN_COLOR
+  },
+
+  creditInfoBG: {
+    position: 'absolute',
+    left: 0,
+    top: 24,
+    height: 54,
+    width: 46
+  },
+
+  creditTolltipBtn: {
+    position: 'absolute',
+    right: 16,
+    top: 24
+  },
+
+  creditTolltipIcon: {
+    color: colors.TEXT_INVERT_COLOR,
+    fontSize: 16
+  },
+
+  creditHeader: {
+    ...textThemes.SP_SEMIBOLD,
+    color: colors.TEXT_INVERT_COLOR,
+    fontSize: 20,
+    letterSpacing: 0.5,
+    marginBottom: 14
+  },
+
+  creditValue: {
+    ...textThemes.SP_SEMIBOLD,
+    color: colors.TEXT_INVERT_COLOR,
+    fontSize: 28,
+    letterSpacing: 1.8,
+    marginBottom: 10
+  },
+
+  creditDescription: {
+    ...textThemes.SP_LIGHT,
+    color: colors.TEXT_INVERT_COLOR,
+    fontSize: 17,
+    lineHeight: 22,
+    textAlign: 'center',
+    marginHorizontal: 16
+  },
+
+  shareReferralTitle: {
+    ...textThemes.SP_BOLD,
+    fontSize: 28,
+    letterSpacing: 0.4,
+    textAlign: 'center',
+    marginTop: 32
+  },
+
+  shareReferralDescr: {
+    ...textThemes.SP_SEMIBOLD,
+    fontSize: 17,
+    lineHeight: 23,
+    letterSpacing: 0.8,
+    color: colors.MAIN_COLOR,
+    textAlign: 'center',
+    marginTop: 8
+  },
+
+  shareReferralBtn: {
+    backgroundColor: colors.MAIN_COLOR,
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 50,
+    marginTop: 22,
+    marginBottom: 8
+  },
+
+  shareReferralCode: {
+    ...textThemes.SP_BOLD,
+    color: colors.TEXT_INVERT_COLOR,
+    fontSize: 28,
+    lineHeight: 28,
+    letterSpacing: 1.2
+  },
+
+  shareReferralIcon: {
+    position: 'absolute',
+    right: 16,
+    height: 28,
+    width: 22,
+    resizeMode: 'contain'
+  },
+
+  milesBlock: {
+    alignItems: 'center',
+    backgroundColor: colors.BG_INVERT,
+    paddingVertical: 8,
+    marginTop: 16,
+    marginBottom: 16
+  },
+
+  milesTitle: {
+    ...textThemes.SP_LIGHT,
+    color: colors.TEXT_LIGHT_COLOR,
+    fontSize: 17,
+    letterSpacing: 1.6
+  },
+
+  milesLabel: {
+    ...textThemes.SP_BOLD,
+    fontSize: 28,
+    letterSpacing: 1.6,
+    marginTop: 8
+  },
+
+  nextInputIndent: {
+    marginTop: 24
   }
 });

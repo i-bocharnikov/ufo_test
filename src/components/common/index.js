@@ -1,6 +1,8 @@
 import UFOContainer from './UFOContainer';
 import UFOTextInput from './UFOTextInput';
+import UFOTextInputBold from './UFOTextInputBold';
 import { ufoInputStyles } from './UFOTextInput/styles';
+import { ufoInputBoldStyles } from './UFOTextInputBold/styles';
 import UFOIcon from './UFOIcon';
 import UFOImage from './UFOImage';
 import UFOVideo from './UFOVideo';
@@ -15,7 +17,9 @@ import UFOIcon_old from './UFOIcon_old';
 export {
   UFOContainer,
   UFOTextInput,
+  UFOTextInputBold,
   ufoInputStyles,
+  ufoInputBoldStyles,
   UFOIcon,
   UFOImage,
   UFOVideo,

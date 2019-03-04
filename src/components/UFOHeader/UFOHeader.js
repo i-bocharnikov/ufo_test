@@ -11,7 +11,7 @@ import { values } from './../../utils/theme';
 class UFOHeader extends PureComponent {
   render() {
     return (
-      <View style={styles.header}>
+      <View style={[ styles.header, this.props.isSingle && styles.headerSingle ]}>
         {this.renderLeftBtn()}
         <Text
           style={styles.title}
@@ -25,7 +25,7 @@ class UFOHeader extends PureComponent {
   }
 
   renderLeftBtn = () => {
-    const { leftBtnUseDefault, leftBtnAction, leftBtnIcon } = this.props;
+    const { leftBtnUseDefault, leftBtnAction, leftBtnIcon, isSingle } = this.props;
 
     if (!leftBtnAction && !leftBtnUseDefault) {
       return null;
@@ -34,7 +34,7 @@ class UFOHeader extends PureComponent {
     return (
       <TouchableOpacity
         onPress={leftBtnUseDefault ? this.leftBtnDefaultAction : leftBtnAction}
-        style={styles.leftBtn}
+        style={[ styles.leftBtn, isSingle && styles.btnSingle ]}
         activeOpacity={values.BTN_OPACITY_DEFAULT}
       >
         <UFOIcon
@@ -48,7 +48,7 @@ class UFOHeader extends PureComponent {
   };
 
   renderRightBtn = () => {
-    const { rightBtnUseDefault, rightBtnAction, rightBtnIcon } = this.props;
+    const { rightBtnUseDefault, rightBtnAction, rightBtnIcon, isSingle } = this.props;
 
     if (!rightBtnAction && !rightBtnUseDefault) {
       return null;
@@ -57,7 +57,7 @@ class UFOHeader extends PureComponent {
     return (
       <TouchableOpacity
         onPress={rightBtnUseDefault ? this.rightBtnDefaultAction : rightBtnAction}
-        style={styles.rightBtn}
+        style={[ styles.rightBtn, isSingle && styles.btnSingle ]}
         activeOpacity={values.BTN_OPACITY_DEFAULT}
       >
         <UFOIcon
@@ -80,7 +80,8 @@ class UFOHeader extends PureComponent {
 }
 
 UFOHeader.defaultProps = {
-  leftBtnIcon: 'keyboard-backspace',
+  isSingle: true,
+  leftBtnIcon: 'home',
   rightBtnIcon: 'help-circle-outline'
 };
 
@@ -91,7 +92,8 @@ UFOHeader.propTypes = {
   leftBtnIcon: PropTypes.string,
   rightBtnUseDefault: PropTypes.bool,
   rightBtnAction: PropTypes.func,
-  rightBtnIcon: PropTypes.string
+  rightBtnIcon: PropTypes.string,
+  isSingle: PropTypes.bool
 };
 
 export default withNavigation(UFOHeader);

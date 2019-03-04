@@ -33,6 +33,10 @@ export default class UFOPopover extends Component {
     const visibleMessage = this.state.visibleMessage;
     const prevVisibleMessage = prevState.visibleMessage;
 
+    if (this.props.showOnce && message === prevProps.message) {
+      return;
+    }
+
     if (!message && visibleMessage) {
       this.hidePopover();
 
@@ -170,6 +174,7 @@ UFOPopover.defaultProps = { positionOffsets: {} };
 
 UFOPopover.propTypes = {
   message: PropTypes.string,
+  showOnce: PropTypes.bool,
   positionOffsets: PropTypes.shape({
     top: PropTypes.number,
     bottom: PropTypes.number,

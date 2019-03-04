@@ -23,6 +23,7 @@ import cameraMaskStyles, {
   PADDING_WIDTH,
   PADDING_HEIGHT
 } from './styles/cameraMaskStyles';
+import { downloadFromApi } from './../../utils/api_deprecated';
 
 const captureStates = {
   PREVIEW: 'PREVIEW',
@@ -266,7 +267,7 @@ class IdentificationScreen extends Component {
 
       if (document && document.reference) {
         registerStore.user.identification_front_side_reference = document.reference;
-        const imgData = await registerStore.downloadDocument(document.reference);
+        const imgData = await downloadFromApi(document.reference, false);
         registerStore.idCardFrontScan = imgData
           ? `data:image/png;base64,${imgData}`
           : null;
@@ -284,7 +285,7 @@ class IdentificationScreen extends Component {
 
       if (document && document.reference) {
         registerStore.user.identification_back_side_reference = document.reference;
-        const imgData = await registerStore.downloadDocument(document.reference);
+        const imgData = await downloadFromApi(document.reference, false);
         registerStore.idCardBackScan = imgData
           ? `data:image/png;base64,${imgData}`
           : null;

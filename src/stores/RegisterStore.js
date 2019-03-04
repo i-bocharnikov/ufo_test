@@ -57,6 +57,7 @@ class User {
   @persist @observable face_capture_required = false;
   @persist @observable company_name = null;
   @persist @observable vat_number = null;
+  @persist @observable loyalty_balance_amount = null;
 }
 
 export default class RegisterStore {
@@ -123,14 +124,29 @@ export default class RegisterStore {
     }
   }
 
-  async reuseToken() {
+  /*
+   * @description Get credit amount string
+   */
+  @computed
+  get creditAmountLabel() {
+    return this.user.loyalty_balance_amount || '-';
+  }
+
+  /*
+   * @description Get and save localy auth token
+   */
+  @action
+  reuseToken = async () => {
     const token = await getAuthenticationTokenFromStore();
     await useTokenInApi_deprecated(token);
     await setAuthTokenForApi(token);
   }
 
+  /*
+   * @description Register device with identifier
+   */
   @action
-  async registerDevice(keyAccessDeviceIdentifier) {
+  registerDevice = async keyAccessDeviceIdentifier => {
     let device_uuid = await getAuthenticationUUIDFromStore();
     let device_pwd = await getAuthenticationPasswordFromStore();
     let isNew = false;
@@ -145,7 +161,7 @@ export default class RegisterStore {
       uuid: device_uuid,
       password: device_pwd,
       key_access_device_identifier: keyAccessDeviceIdentifier,
-      type: Platform.OS === 'ios' ? 'ios' : 'android',
+      type: Platform.OS,
       customer_app_name: await DeviceInfo.getBundleId(),
       customer_app_version: configurations.UFO_APP_VERSION,
       customer_app_build_number: configurations.UFO_APP_BUILD_NUMBER,
@@ -156,19 +172,16 @@ export default class RegisterStore {
       name: await DeviceInfo.getDeviceName(),
       description: await DeviceInfo.getUserAgent()
     };
+
     const response = isNew
       ? await postToApi('/users/devices', body, true, true)
-      : await putToApi('/users/devices/' + device_uuid, body, true, true);
+      : await putToApi(`/users/devices/${device_uuid}`, body, true, true);
 
     if (
-      response &&
-      response.status === 'success' &&
-      response.data &&
-      response.data.token &&
-      response.data.user
+      _.isMatch(response, { 'status': 'success' })
+      && _.has(response, 'data.token')
+      && _.has(response, 'data.user')
     ) {
-
-      DEBUG && console.info('registerStore.registerDevice:', response.data);
 
       await setAuthenticationUUIDInStore(device_uuid);
       await setAuthenticationPasswordInStore(device_pwd);
@@ -179,47 +192,44 @@ export default class RegisterStore {
       this.user = response.data.user;
       this.supportChatIDKey = response.data.support_chat_identification_key;
       this.startupMessage = response.data.message;
+
       return response.data.key_access_device_token;
     }
+
     return null;
   }
 
+  /*
+   * @returns {boolean}
+   * @description Request of sms for phone validation
+   */
   @action
-  async requestCode() {
-    const response = await postToApi(
-      '/users/validation/phone_number/' + this.user.phone_number,
-      {}
-    );
-    if (
-      response &&
-      response.status === 'success' &&
-      response.data &&
-      response.data.notification
-    ) {
-      if (DEBUG) {
-        console.info('registerStore.requestCode:', response.data);
-      }
+  requestSmsCode = async () => {
+    const response = await postToApi(`/users/validation/phone_number/${this.user.phone_number}`);
+
+    if ( response && response.status === 'success' && _.has(response, 'data.notification')) {
       this.acknowledgeUri = response.data.notification.acknowledge_uri;
       return true;
     }
+
     return false;
   }
 
+  /*
+   * @returns {boolean}
+   * @description Confirm phone and login
+   */
   @action
-  async connect(code) {
+  connect = async code => {
     const response = await postToApi(`/${this.acknowledgeUri}`, { validation_code: code });
-
-    if (response && response.status === 'success') {
-      DEBUG && console.info('registerStore.connect:', response.data);
-      return true;
-    }
-
-    return false;
+    return _.isMatch(response, { 'status': 'success' });
   }
 
+  /*
+   * @description Logout at device
+   */
   @action
-  async disconnect() {
-    // NOTE: add logout service on server so we can unmap device and user in place of recreating new device
+  disconnect = async () => {
     await clearAuthenticationsFromStore();
     this.idCardFrontScan = null;
     this.idCardBackScan = null;
@@ -227,18 +237,19 @@ export default class RegisterStore {
     this.dlCardBackScan = null;
   }
 
+  /*
+   * @param {Object} extraData
+   * @returns {boolean}
+   * @description Save current local user data to server
+   */
   @action
-  async save(extraData = {}) {
+  save = async (extraData = {}) => {
     const response = await putToApi(`/users/${this.user.reference}`, {
       ...this.user,
       ...extraData
     });
 
-    if (
-      response &&
-      response.status === 'success' &&
-      _.has(response, 'data.user')
-    ) {
+    if (response && response.status === 'success' && _.has(response, 'data.user')) {
       this.user = response.data.user;
       return true;
     }
@@ -246,34 +257,49 @@ export default class RegisterStore {
     return false;
   }
 
-  async downloadDocument(reference) {
-    return await downloadFromApi(reference, false);
-  }
-
-  async uploadDocument(domain, format, type, sub_type, uri) {
+  /*
+   * @param {string} domain
+   * @param {string} format
+   * @param {string} type
+   * @param {string} sub_type
+   * @param {string} uri
+   * @returns {Object}
+   * @description Upload document and get back object with document info
+   */
+  @action
+  uploadDocument = async (domain, format, type, sub_type, uri) => {
     const response = await uploadToApi(domain, format, type, sub_type, uri);
+
     if (response && response.status === 'success') {
-      if (DEBUG) {
-        console.info('registerStore.uploadDocument:', response.data);
-      }
       return response.data.document;
     }
+
     return null;
   }
 
+  /*
+   * @returns {boolean}
+   * @description Get current user data
+   */
   @action
   getUserData = async () => {
-    const response = await getFromApi('/users/' + this.user.reference);
+    if (this.user.reference) {
+      const response = await getFromApi(`/users/${this.user.reference}`);
 
-    if (response && response.status === 'success') {
-      this.user = response.data.user;
-
-      return true;
+      if (response && response.status === 'success') {
+        this.user = response.data.user;
+        return true;
+      }
     }
 
     return false;
   };
 
+  /*
+   * @param {string} fileUri
+   * @returns {boolean}
+   * @description Upload face captured image and save new user data
+   */
   @action
   uploadFaceCapture = async fileUri => {
     try {
@@ -295,6 +321,9 @@ export default class RegisterStore {
     }
   };
 
+  /*
+   * @description Get thumbs images about previous documents' scans
+   */
   @action
   fetchScanDocumentThumbs = async () => {
     const idFrontScanRef = _.get(this.user, 'identification_scan_front_side.reference');

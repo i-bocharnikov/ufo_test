@@ -13,7 +13,7 @@ export default {
   SignUp: 'SignUp',
   UserInfo: 'UserInfo',
   LoyalityInfo: 'LoyalityInfo',
-  Phone: 'Phone',
+  Contacts: 'Contacts',
   Address: 'Address',
   Identification: 'Identification',
   DriverLicence: 'DriverLicence',

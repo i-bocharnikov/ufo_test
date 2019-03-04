@@ -526,7 +526,7 @@ class DriveScreen extends Component {
     if (registerStore.isConnected) {
       this.props.navigation.navigate(screenKeys.Register);
     } else {
-      this.props.navigation.navigate(screenKeys.Phone);
+      this.props.navigation.navigate(screenKeys.Contacts);
     }
   };
 

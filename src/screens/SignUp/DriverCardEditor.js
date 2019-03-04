@@ -22,6 +22,7 @@ import cameraMaskStyles, {
   PADDING_WIDTH,
   PADDING_HEIGHT
 } from './styles/cameraMaskStyles';
+import { downloadFromApi } from './../../utils/api_deprecated';
 
 const captureStates = {
   PREVIEW: 'PREVIEW',
@@ -261,7 +262,7 @@ class DriverLicenceScreen extends Component {
 
       if (document && document.reference) {
         registerStore.user.driver_licence_front_side_reference = document.reference;
-        const imgData = await registerStore.downloadDocument(document.reference);
+        const imgData = await downloadFromApi(document.reference);
         registerStore.dlCardFrontScan = imgData
           ? `data:image/png;base64,${imgData}`
           : null;
@@ -279,7 +280,7 @@ class DriverLicenceScreen extends Component {
 
       if (document && document.reference) {
         registerStore.user.driver_licence_back_side_reference = document.reference;
-        const imgData = await registerStore.downloadDocument(document.reference);
+        const imgData = await downloadFromApi(document.reference);
         registerStore.dlCardBackScan = imgData
           ? `data:image/png;base64,${imgData}`
           : null;

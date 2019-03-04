@@ -1,4 +1,5 @@
 import { observable, action } from 'mobx';
+import i18n from 'i18next';
 
 import { driveStore, otaKeyStore, registerStore, supportStore } from './../stores';
 import { checkConnectivity } from './../utils/api_deprecated';
@@ -199,13 +200,13 @@ export default class AppStore {
   }
 
   @action
-  async disconnect(t) {
+  async disconnect() {
     confirm(
-      t('global:confirmationTitle'),
-      t('register:disconnectConfirmationMessage'),
+      i18n.t('global:confirmationTitle'),
+      i18n.t('register:disconnectConfirmationMessage'),
       async () => {
         if ( await checkConnectivity() ) {
-          registerStore.disconnect(t);
+          registerStore.disconnect();
           otaKeyStore.closeSession();
           await this.initialise();
           await remoteLoggerService.info('disconnect', 'success', registerStore.user);
