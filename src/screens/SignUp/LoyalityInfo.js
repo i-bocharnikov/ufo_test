@@ -19,7 +19,9 @@ import styles from './styles';
 import { values, images } from './../../utils/theme';
 
 @observer
-class LoyalityInfo extends Component {
+class LoyalityInfoScreen extends Component {
+  dateTooltipRef = React.createRef();
+  
   @observable refreshing = false;
   @observable showDateTooltip = false;
 
@@ -41,7 +43,7 @@ class LoyalityInfo extends Component {
           <UFOTooltip
             isVisible={this.showDateTooltip}
             onClose={() => { this.showDateTooltip = false; }}
-            originBtn={this.dateTooltipRef}
+            originBtn={this.dateTooltipRef.current}
           >
             {this.props.t('creditTooltip')}
           </UFOTooltip>
@@ -70,7 +72,7 @@ class LoyalityInfo extends Component {
         />
         <TouchableOpacity
           onPress={() => { this.showDateTooltip = true; }}
-          ref={ref => { this.dateTooltipRef = ref; }}
+          ref={this.dateTooltipRef}
           style={styles.creditTolltipBtn}
           activeOpacity={values.BTN_OPACITY_DEFAULT}
         >
@@ -85,9 +87,9 @@ class LoyalityInfo extends Component {
 
   renderReferralBlock = () => {
     const { t } = this.props;
-    const code = registerStore.user.referral_code || 'RSBL0';
+    const code = registerStore.user.referral_code;
 
-    if (!code) {
+    if (!code || !registerStore.isConnected) {
       return null;
     }
 
@@ -118,9 +120,9 @@ class LoyalityInfo extends Component {
 
   renderPrtnerBlock = () => {
     const { t } = this.props;
-    const milesNum = registerStore.user.miles_and_more || '123465789';
+    const milesNum = registerStore.user.miles_and_more;
 
-    if (!milesNum) {
+    if (!milesNum || !registerStore.isConnected) {
       return null;
     }
 
@@ -141,6 +143,9 @@ class LoyalityInfo extends Component {
     );
   };
 
+  /*
+   * Share referral code in some app
+  */
   shareRefCode = () => {
     const code = registerStore.user.referral_code;
     const message = this.props.t('referalCodeMessage', { code });
@@ -155,6 +160,9 @@ class LoyalityInfo extends Component {
     Share.share(content, options);
   };
 
+  /*
+   * Refresh user data from server
+  */
   refreshData = async () => {
     this.refreshing = true;
     await registerStore.getUserData();
@@ -162,4 +170,4 @@ class LoyalityInfo extends Component {
   };
 }
 
-export default translate('register')(LoyalityInfo);
+export default translate('register')(LoyalityInfoScreen);

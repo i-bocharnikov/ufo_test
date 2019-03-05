@@ -115,6 +115,7 @@ export default {
   },
   register: {
     overviewHeader: 'Registration',
+    overviewHeader_progress: 'Registration in progress',
     userInfoTabLabel: 'My infos',
     loyalityInfoTabLabel: 'Loyalty & referral',
     userInfoPersonalTitle: 'PERSONAL',
@@ -137,18 +138,11 @@ export default {
     milesTitle: 'Miles & more',
     shareDialogTitle: 'Share referal code',
     referalCodeMessage: 'You can use my UFODRIVE referral code {{code}} to get €30 off of your first ride',
-    contactsHeaderStage1: 'Enter your phone',
-    contactsHeaderStage2: 'Your contacts',
-
-    phoneNumberInputLabel: 'Phone numebr',
-    emailInputLabel: 'Email address',
-    phoneTitle: 'Register - Phone',
-    addressTitle: 'Register Address',
-    phoneNumberLabel: 'Phone',
-    emailTitle: 'Register Email',
-    addressInputLabel: 'Your billing address',
-    addressInputPlaceholder: 'Street, number, post code, city and country',
-    smsCodeInputLabel: 'The code received by SMS',
+    contactsHeader: 'Your contacts',
+    contactsHeader_phone: 'Enter your phone',
+    contactsHeader_code: 'Enter code',
+    addressHeader: 'Your billing info',
+    optionalPlaceholder: 'optional',
     redoCaptureConfirm: 'Please confirm you want to change the captured scan',
     identificationTitle: 'Register ID',
     identificationLabel: 'ID or Passport',
@@ -166,8 +160,8 @@ export default {
       'Please check that the text is readable and the whole document is visible',
     driverLicenceBackInputLabel:
       'Please position the back side of your driver licence inside this rectangle.',
-    CameraNotAvailable: 'The camera is not available',
-    CameraProcessingError:
+    cameraNotAvailable: 'The camera is not available',
+    cameraProcessingError:
       'Unexpected issues detected during the image processing of the camera ({{message}}). Please try again and/or contact the support team if the problem persists.',
     devicePermissionTitle: 'Permission to use {{type}}',
     cameraPermissionMessage:
@@ -175,11 +169,8 @@ export default {
     disconnectConfirmationMessage: 'Are you sure you want to logout?',
     idCardPickerLabel: 'Passport\nor ID card',
     driveCardPickerLabel: 'Driving\nLicense',
-    referalBlock: 'Referal Code {{code}}',
     devicePermissionRestricted:
       'To use {{type}} activate it in the phone settings',
-    companyInputPlaceholder: 'Company name (optional)',
-    vatInputPlaceholder: 'VAT number (optional)'
   },
   inspect: {
     initialInspectionTitle: 'Initial inspection',

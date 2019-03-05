@@ -13,10 +13,10 @@ export default {
   SignUp: 'SignUp',
   UserInfo: 'UserInfo',
   LoyalityInfo: 'LoyalityInfo',
-  Contacts: 'Contacts',
-  Address: 'Address',
-  Identification: 'Identification',
-  DriverLicence: 'DriverLicence',
+  ContactsInfoEditor: 'ContactsInfoEditor',
+  BillingInfoEditor: 'BillingInfoEditor',
+  IdCardEditor: 'IdCardEditor',
+  DriverCardEditor: 'DriverCardEditor',
 
   /* screen names move from global.screens, look additional options there */
   Home: 'Drive',

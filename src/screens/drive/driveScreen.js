@@ -523,11 +523,17 @@ class DriveScreen extends Component {
   };
 
   navToRegister = () => {
-    if (registerStore.isConnected) {
-      this.props.navigation.navigate(screenKeys.Register);
+    let screenKey;
+
+    if (!registerStore.isConnected) {
+      screenKey = screenKeys.ContactsInfoEditor;
+    } else if (registerStore.isUserRegistered) {
+      screenKey = screenKeys.LoyalityInfo;
     } else {
-      this.props.navigation.navigate(screenKeys.Contacts);
+      screenKey = screenKeys.UserInfo;
     }
+
+    this.props.navigation.navigate(screenKey);
   };
 
   startContractSigning = () => {

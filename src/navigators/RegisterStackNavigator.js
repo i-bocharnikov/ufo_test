@@ -2,17 +2,17 @@ import { createStackNavigator } from 'react-navigation';
 
 import keys from './helpers/screenKeys';
 import SignUp from './../screens/SignUp';
-import ContactsEditor from './../screens/SignUp/ContactsEditor';
-import AddressEditor from './../screens/SignUp/AddressEditor';
-import CardIdEditor from './../screens/SignUp/CardIdEditor';
+import ContactsInfoEditor from './../screens/SignUp/ContactsInfoEditor';
+import BillingInfoEditor from './../screens/SignUp/BillingInfoEditor';
+import IdCardEditor from './../screens/SignUp/IdCardEditor';
 import DriverCardEditor from './../screens/SignUp/DriverCardEditor';
 
 const routeConfigs = {
   [keys.SignUp]: { screen: SignUp },
-  [keys.Contacts]: { screen: ContactsEditor },
-  [keys.Address]: { screen: AddressEditor },
-  [keys.Identification]: { screen: CardIdEditor },
-  [keys.DriverLicence]: { screen: DriverCardEditor }
+  [keys.ContactsInfoEditor]: { screen: ContactsInfoEditor },
+  [keys.BillingInfoEditor]: { screen: BillingInfoEditor },
+  [keys.IdCardEditor]: { screen: IdCardEditor },
+  [keys.DriverCardEditor]: { screen: DriverCardEditor }
 };
 
 const navigatorConfig = {

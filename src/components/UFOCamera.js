@@ -156,7 +156,7 @@ export default class UFOCamera extends Component {
   takePicture = async (customOptions = {}) => {
     try {
       if (!this.camera) {
-        showWarning(i18n.t('Registration:CameraNotAvailable'));
+        showWarning(i18n.t('registration:cameraNotAvailable'));
 
         return null;
       }

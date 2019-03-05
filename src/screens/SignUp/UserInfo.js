@@ -14,7 +14,7 @@ import { values, images } from './../../utils/theme';
 const IS_EMULATOR = DeviceInfo.isEmulator();
 
 @observer
-class UserInfo extends Component {
+class UserInfoScreen extends Component {
   @observable refreshing = false;
 
   async componentDidMount() {
@@ -58,11 +58,23 @@ class UserInfo extends Component {
         <Text style={styles.infoPreviewTitle}>
           {t('userInfoPersonalTitle')}
         </Text>
-        <Text style={styles.infoPreviewItem} numberOfLines={1}>
+        <Text
+          style={[
+            styles.infoPreviewItem,
+            !registerStore.user.phone_number && styles.infoPreviewMissedItem
+          ]}
+          numberOfLines={1}
+        >
           {registerStore.user.phone_number || t('phoneLabel')}
         </Text>
-        <Text style={styles.infoPreviewItem} numberOfLines={1}>
-          {registerStore.user.email || t('emailInputLabel')}
+        <Text
+          style={[
+            styles.infoPreviewItem,
+            !registerStore.user.email && styles.infoPreviewMissedItem
+          ]}
+          numberOfLines={1}
+        >
+          {registerStore.user.email || t('emailLabel')}
         </Text>
         <UFOIcon
           name="md-checkmark"
@@ -87,13 +99,31 @@ class UserInfo extends Component {
         <Text style={styles.infoPreviewTitle}>
           {t('userInfoAddresslTitle')}
         </Text>
-        <Text style={styles.infoPreviewItem} numberOfLines={1}>
+        <Text
+          style={[
+            styles.infoPreviewItem,
+            !registerStore.user.company_name && styles.infoPreviewMissedItem
+          ]}
+          numberOfLines={1}
+        >
           {registerStore.user.company_name || t('companyNameLabel')}
         </Text>
-        <Text style={styles.infoPreviewItem} numberOfLines={1}>
+        <Text
+          style={[
+            styles.infoPreviewItem,
+            !registerStore.user.vat_number && styles.infoPreviewMissedItem
+          ]}
+          numberOfLines={1}
+        >
           {registerStore.user.vat_number || t('vatNumberLabel')}
         </Text>
-        <Text style={styles.infoPreviewItem} numberOfLines={2}>
+        <Text
+          style={[
+            styles.infoPreviewItem,
+            !registerStore.user.address && styles.infoPreviewMissedItem
+          ]}
+          numberOfLines={2}
+        >
           {registerStore.user.address || t('addressLabel')}
         </Text>
         <UFOIcon
@@ -188,6 +218,9 @@ class UserInfo extends Component {
     );
   };
 
+  /*
+   * Refresh user data from server
+  */
   refreshData = async () => {
     this.refreshing = true;
     await registerStore.getUserData();
@@ -195,18 +228,27 @@ class UserInfo extends Component {
     this.refreshing = false;
   };
 
+  /*
+   * Nav to contacts editor
+  */
   navToUserContactsScreen = () => {
-    this.props.navigation.navigate(screenKeys.Contacts);
+    this.props.navigation.navigate(screenKeys.ContactsInfoEditor);
   };
 
+  /*
+   * Nav to address editor
+  */
   navToUserAddressScreen = () => {
-    this.props.navigation.navigate(screenKeys.Address);
+    this.props.navigation.navigate(screenKeys.BillingInfoEditor);
   };
 
+  /*
+   * Nav to id capture editor
+  */
   navToIdCardScreen = () => {
     const { navigation, t } = this.props;
     const params = {
-      actionNavNext: () => navigation.navigate(screenKeys.Identification),
+      actionNavNext: () => navigation.navigate(screenKeys.IdCardEditor),
       actionNavBack: () => navigation.navigate(screenKeys.SignUp),
       actionHandleFileAsync: registerStore.uploadFaceCapture,
       description: t('faceRecognizing:registerCaptureDescription'),
@@ -216,13 +258,16 @@ class UserInfo extends Component {
     if (registerStore.user.face_capture_required && !IS_EMULATOR) {
       navigation.navigate(screenKeys.FaceRecognizer, params);
     } else {
-      this.props.navigation.navigate(screenKeys.Identification);
+      this.props.navigation.navigate(screenKeys.IdCardEditor);
     }
   };
 
+  /*
+   * Nav to DL capture editor
+  */
   navToDriverCardScreen = () => {
-    this.props.navigation.navigate(screenKeys.DriverLicence);
+    this.props.navigation.navigate(screenKeys.DriverCardEditor);
   };
 }
 
-export default translate('register')(UserInfo);
+export default translate('register')(UserInfoScreen);

@@ -1,11 +1,51 @@
 import { StyleSheet } from 'react-native';
 
 import { colors, textThemes } from './../../../utils/theme';
+import { ufoInputBoldStyles } from './../../../components/common';
+import { ACTION_BAR_HEIGHT } from './../../../components/UFOActionBar';
+
+const HORIZONTAL_INDENTS = 24;
+
+export const googleInputStyles = StyleSheet.create({
+  textInputContainer: {
+    height: 'auto',
+    backgroundColor: 'transparent',
+    borderTopWidth: 0,
+    borderBottomWidth: 0
+  },
+
+  textInput: {
+    ...ufoInputBoldStyles,
+    marginLeft: 0,
+    marginRight: 0,
+    marginTop: 0,
+    paddingLeft: 0,
+    paddingRight: 0,
+    paddingTop: 0,
+    paddingBottom: 0,
+    borderRadius: 0
+  },
+
+  separator: { backgroundColor: colors.BORDER_COLOR },
+
+  row: {
+    alignItems: 'center',
+    height: 48,
+    backgroundColor: colors.BG_INVERT,
+    paddingLeft: 12,
+    paddingRight: 12,
+    paddingVertical: 0
+  },
+
+  description: {
+    ...textThemes.SP_LIGHT,
+    fontSize: 17,
+    lineHeight: 21
+  }
+});
 
 export default StyleSheet.create({
-  tabWrapper: {
-    flex: 1
-  },
+  tabWrapper: { flex: 1 },
 
   container: {
     flex: 1,
@@ -14,12 +54,12 @@ export default StyleSheet.create({
 
   scrollContainer: {
     paddingTop: 32,
-    paddingHorizontal: 24
+    paddingHorizontal: HORIZONTAL_INDENTS
   },
 
-  row: {
-    flexDirection: 'row'
-  },
+  actionBarIndent: { paddingBottom: ACTION_BAR_HEIGHT },
+
+  row: { flexDirection: 'row' },
 
   blockShadow: {
     shadowOffset: { width: 0, height: 1 },
@@ -73,6 +113,10 @@ export default StyleSheet.create({
     marginRight: 32
   },
 
+  infoPreviewMissedItem: {
+    color: colors.TEXT_LIGHT_COLOR
+  },
+
   cardPickerBlock: {
     flex: 1,
     height: 164,
@@ -84,9 +128,7 @@ export default StyleSheet.create({
     marginBottom: 18
   },
 
-  cardPickerBlockIndent: {
-    marginRight: 4
-  },
+  cardPickerBlockIndent: { marginRight: 4 },
 
   cardPickerImg: {
     height: 52,
@@ -229,7 +271,27 @@ export default StyleSheet.create({
     marginTop: 8
   },
 
-  nextInputIndent: {
-    marginTop: 24
+  nextInputIndent: { marginTop: 24 },
+
+  cardsWrapper: {
+    marginHorizontal: HORIZONTAL_INDENTS,
+    marginTop: 12,
+    paddingBottom: 8
+  },
+
+  cardsTitle: {
+    textAlign: 'center',
+    marginBottom: 8
+  },
+
+  cardsPreviewContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around'
+  },
+
+  cardsContainer: {
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 });

@@ -16,6 +16,12 @@ const styles = StyleSheet.create({
   button: {
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  label: {
+    marginTop: 4,
+    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+    textShadowOffset: {width: 0.8, height: 0.8},
+    textShadowRadius: 1
   }
 });
 
@@ -61,7 +67,7 @@ class UFOAction extends Component {
             h10
             upper
             inverted={!inverted}
-            style={{ marginTop: 5 }}
+            style={styles.label}
           >
             {t(icon.i18nKey)}
           </UFOText>

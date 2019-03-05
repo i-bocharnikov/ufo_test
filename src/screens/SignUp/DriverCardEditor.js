@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
-import { Image, View, ScrollView, Text, ImageEditor } from 'react-native';
+import { Image, View, Text, ImageEditor } from 'react-native';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 import { translate } from 'react-i18next';
 import _ from 'lodash';
 
 import UFOCamera from './../../components/UFOCamera';
-import UFOHeader from './../../components/header/UFOHeader';
+import { UFOHeader } from './../../components/UFOHeader';
 import UFOActionBar from './../../components/UFOActionBar';
-import UFOCard from './../../components/UFOCard';
 import { UFOImage, UFOContainer } from './../../components/common';
 import { registerStore } from './../../stores';
-import { screens, actionStyles, icons, images } from './../../utils/global';
+import { downloadFromApi } from './../../utils/api_deprecated';
 import { showWarning } from './../../utils/interaction';
 import styles from './styles';
 import cameraMaskStyles, {
@@ -22,7 +21,9 @@ import cameraMaskStyles, {
   PADDING_WIDTH,
   PADDING_HEIGHT
 } from './styles/cameraMaskStyles';
-import { downloadFromApi } from './../../utils/api_deprecated';
+import { images } from './../../utils/theme';
+// deprecated, using in old UFOActionBar
+import { actionStyles, icons } from './../../utils/global';
 
 const captureStates = {
   PREVIEW: 'PREVIEW',
@@ -32,17 +33,19 @@ const captureStates = {
 };
 
 @observer
-class DriverLicenceScreen extends Component {
+class DriverCardEditorScreen extends Component {
+  cameraRef = React.createRef();
+
+  @observable activityPending = false;
+  @observable isCameraAllowed = false;
+  @observable frontImageUrl = null;
+  @observable backImageUrl = null;
   @observable captureState = (
     !registerStore.dlCardFrontScan
     || registerStore.dlCardFrontScan === 'loading'
   )
     ? captureStates.CAPTURE_FRONT
     : captureStates.PREVIEW;
-  @observable frontImageUrl = null;
-  @observable backImageUrl = null;
-  @observable activityPending = false;
-  @observable isCameraAllowed = false;
 
   render() {
     const { t, navigation } = this.props;
@@ -50,29 +53,25 @@ class DriverLicenceScreen extends Component {
       || this.captureState === captureStates.CAPTURE_BACK;
 
     return (
-      <UFOContainer image={screens.REGISTER_OVERVIEW.backgroundImage}>
+      <UFOContainer style={styles.container}>
         <UFOHeader
-          t={t}
-          navigation={navigation}
-          currentScreen={screens.REGISTER_DRIVER_LICENCE}
-          title={
-            showCamera ? null : t('register:driverLicenceTitle', { user: registerStore.user })
-          }
-          logo={showCamera}
-          transparent={showCamera}
+          title={t('driverLicenceLabel')}
+          leftBtnIcon="keyboard-backspace"
+          leftBtnAction={this.doCancel}
+          rightBtnUseDefault={true}
         />
         {this.captureState === captureStates.PREVIEW && this.renderCurrentThumbs()}
         {this.captureState === captureStates.VALIDATE && this.renderNewPreview()}
         {showCamera && (
           <UFOCamera
-            onCameraReady={() => (this.isCameraAllowed = true)}
-            ref={ref => (this.cameraRef = ref)}
+            onCameraReady={this.onCameraReady}
+            ref={this.cameraRef}
             forbiddenCallback={navigation.goBack}
             cameraMask={this.renderCameraMask()}
           />
         )}
         <UFOActionBar
-          actions={this.compileActions()}
+          actions={this.compileActions}
           activityPending={this.activityPending}
         />
       </UFOContainer>
@@ -80,41 +79,41 @@ class DriverLicenceScreen extends Component {
   }
 
   renderCurrentThumbs = () => (
-    <View style={styles.cardsWrapper}>
-      <UFOCard title={this.props.t('register:redoCaptureConfirm')}>
-        <View style={styles.cardsPreviewContainer}>
-          <UFOImage
-            source={{ uri: registerStore.dlCardFrontScan }}
-            style={{ width: CARD_WIDTH / 2, height: CARD_HEIGHT / 2 }}
-          />
-          <UFOImage
-            source={{ uri: registerStore.dlCardBackScan }}
-            style={{ width: CARD_WIDTH / 2, height: CARD_HEIGHT / 2 }}
-          />
-        </View>
-      </UFOCard>
+    <View style={[ styles.cardsWrapper, styles.blockShadow ]}>
+      <Text style={[ styles.infoPreviewTitle, styles.cardsTitle ]}>
+        {this.props.t('redoCaptureConfirm')}
+      </Text>
+      <View style={styles.cardsPreviewContainer}>
+        <UFOImage
+          source={{ uri: registerStore.dlCardFrontScan }}
+          style={{ width: CARD_WIDTH / 2, height: CARD_HEIGHT / 2 }}
+        />
+        <UFOImage
+          source={{ uri: registerStore.dlCardBackScan }}
+          style={{ width: CARD_WIDTH / 2, height: CARD_HEIGHT / 2 }}
+        />
+      </View>
     </View>
   );
 
   renderNewPreview = () => (
-    <ScrollView>
-      <View style={styles.cardsWrapper}>
-        <UFOCard title={this.props.t('register:driverLicenceCheckLabel')}>
-          <View style={styles.cardsContainer}>
-            <UFOImage
-              source={{ uri: this.frontImageUrl }}
-              style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
-              fallbackToImage={true}
-            />
-            <UFOImage
-              source={{ uri: this.backImageUrl }}
-              style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
-              fallbackToImage={true}
-            />
-          </View>
-        </UFOCard>
+    <View style={[ styles.cardsWrapper, styles.blockShadow ]}>
+      <Text style={[ styles.infoPreviewTitle, styles.cardsTitle ]}>
+        {this.props.t('driverLicenceCheckLabel')}
+      </Text>
+      <View style={styles.cardsContainer}>
+        <UFOImage
+          source={{ uri: this.frontImageUrl }}
+          style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
+          fallbackToImage={true}
+        />
+        <UFOImage
+          source={{ uri: this.backImageUrl }}
+          style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
+          fallbackToImage={true}
+        />
       </View>
-    </ScrollView>
+    </View>
   );
 
   renderCameraMask = () => {
@@ -123,8 +122,8 @@ class DriverLicenceScreen extends Component {
       : images.driverCardBack;
 
     const captureHint = this.captureState === captureStates.CAPTURE_FRONT
-        ? this.props.t('register:driverLicenceFrontInputLabel')
-        : this.props.t('register:driverLicenceBackInputLabel');
+        ? this.props.t('driverLicenceFrontInputLabel')
+        : this.props.t('driverLicenceBackInputLabel');
 
     return (
       <View style={cameraMaskStyles.wrapper}>
@@ -145,7 +144,7 @@ class DriverLicenceScreen extends Component {
     );
   };
 
-  compileActions = () => {
+  get compileActions() {
     const actions = [];
 
     actions.push({
@@ -186,22 +185,38 @@ class DriverLicenceScreen extends Component {
     }
 
     return actions;
+  }
+
+  /*
+   * Callback to camera ready state
+  */
+  onCameraReady = () => {
+    this.isCameraAllowed = true;
   };
 
+  /*
+   * Cancel capturing and go back
+  */
   doCancel = () => {
     this.props.navigation.popToTop();
   };
 
+  /*
+   * Reset new captured data
+  */
   doReset = () => {
     this.frontImageUrl = null;
     this.backImageUrl = null;
     this.captureState = captureStates.CAPTURE_FRONT;
   };
 
+  /*
+   * Capture and handle photo
+  */
   doCapture = async () => {
     const t = this.props.t;
     this.activityPending = true;
-    const imageData = await this.cameraRef.takePicture();
+    const imageData = await this.cameraRef.current.takePicture();
     if (!imageData) {
       this.activityPending = false;
 
@@ -242,11 +257,14 @@ class DriverLicenceScreen extends Component {
       },
       error => {
         this.activityPending = false;
-        showWarning(t('Registration:CameraProcessingError', { message: error.message }));
+        showWarning(t('cameraProcessingError', { message: error.message }));
       }
     );
   };
 
+  /*
+   * Save new images
+  */
   doSave = async () => {
     this.activityPending = true;
     const type = this.frontImageUrl && this.backImageUrl ? 'two_side' : 'one_side';
@@ -296,4 +314,4 @@ class DriverLicenceScreen extends Component {
   };
 }
 
-export default translate()(DriverLicenceScreen);
+export default translate('register')(DriverCardEditorScreen);

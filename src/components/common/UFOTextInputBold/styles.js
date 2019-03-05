@@ -5,6 +5,7 @@ export const ufoInputBoldStyles = {
   ...textThemes.SP_SEMIBOLD,
   fontSize: 28,
   height: 28,
+  lineHeight: 28,
   padding: 0,
   letterSpacing: 1.2,
   backgroundColor: 'transparent'
@@ -15,12 +16,12 @@ export default StyleSheet.create({
     paddingHorizontal: 12,
     paddingTop: 8,
     paddingBottom: 10,
-    backgroundColor: colors.BG_INVERT
+    backgroundColor: colors.BG_INVERT,
+    borderWidth: 1,
+    borderColor: colors.BG_INVERT
   },
 
-  input: {
-    ...ufoInputBoldStyles
-  },
+  input: { ...ufoInputBoldStyles },
 
   title: {
     ...textThemes.SP_LIGHT,
@@ -31,13 +32,7 @@ export default StyleSheet.create({
     marginBottom: 5
   },
 
-  invalidBorder: {
-    borderWidth: 1,
-    borderColor: colors.ATTENTION_COLOR
-  },
+  invalidBorder: { borderColor: colors.ATTENTION_COLOR },
 
-  successBorder: {
-    borderWidth: 1,
-    borderColor: colors.SUCCESS_COLOR
-  }
+  successBorder: { borderColor: colors.SUCCESS_COLOR }
 });

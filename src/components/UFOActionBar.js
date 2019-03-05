@@ -135,16 +135,24 @@ export default class UFOActionBar extends Component {
   };
 
   keyboardDidShow = event => {
+    if (Platform.OS === 'android') {
+      return;
+    }
+
     Animated.timing(
       this.animations.bottom,
       {
-        toValue: event.endCoordinates.height,
+        toValue: event.endCoordinates.height - 12,
         duration: this.animationDuration
       }
     ).start();
   };
 
   keyboardDidHide = () => {
+    if (Platform.OS === 'android') {
+      return;
+    }
+
     Animated.timing(
       this.animations.bottom,
       {

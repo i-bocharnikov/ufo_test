@@ -25,7 +25,10 @@ const REGEX_CODE_VALIDATION = /^([0-9]{3}-?[0-9]{3})$/;
 const REGEX_EMAIL_VALIDATION = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 @observer
-class ContactsEditor extends Component {
+class ContactsInfoEditorScreen extends Component {
+  phoneInputRef = React.createRef();
+  countryPickerRef = React.createRef();
+
   @observable initRegistration = !registerStore.isConnected;
   @observable countryCode = DeviceInfo.getDeviceCountry().toLowerCase();
   @observable smsCodeRequested = false;
@@ -45,17 +48,23 @@ class ContactsEditor extends Component {
     return (
       <UFOContainer style={styles.container}>
         <UFOHeader
-          title={this.props.t('contactsHeaderStage1')}
+          title={this.props.t('contactsHeader', { context: this.headerContext })}
           leftBtnIcon="keyboard-backspace"
           leftBtnAction={this.doCancel}
           rightBtnUseDefault={true}
         />
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <ScrollView
+          contentContainerStyle={styles.scrollContainer}
+          keyboardShouldPersistTaps="handled"
+        >
           {registerStore.isConnected && this.renderContactsEditBlock()}
           {!registerStore.isConnected && !this.smsCodeRequested && this.renderPhoneConnectBlock()}
           {!registerStore.isConnected && this.smsCodeRequested && this.renderCodeConnectBlock()}
         </ScrollView>
-        <UFOActionBar actions={this.compileActions} />
+        <UFOActionBar
+          actions={this.compileActions}
+          activityPending={this.activityPending}
+        />
       </UFOContainer>
     );
   }
@@ -70,16 +79,16 @@ class ContactsEditor extends Component {
         InputComponent={
           <Fragment>
             <PhoneInput
-              ref={ref => { this.phoneInput = ref; }}
+              ref={this.phoneInputRef}
               value={registerStore.user.phone_number}
               onChangePhoneNumber={this.onChangePhoneNumber}
               textProps={{ autoFocus: true }}
               textStyle={{ ...ufoInputBoldStyles }}
-              onPressFlag={() => this.countryPicker.openModal()}
+              onPressFlag={() => this.countryPickerRef.current.openModal()}
               initialCountry={_.isEmpty(this.countryCode) ? 'lu' : this.countryCode}
             />
             <CountryPicker
-              ref={ref => { this.countryPicker = ref; }}
+              ref={this.countryPickerRef}
               onChange={this.selectCountry}
               translation={i18n.language}
               cca2={this.countryCode}
@@ -139,6 +148,14 @@ class ContactsEditor extends Component {
       </Fragment>
     );
   };
+
+  get headerContext() {
+    if (registerStore.isConnected) {
+      return null;
+    }
+
+    return this.smsCodeRequested ? 'code' : 'phone';
+  }
 
   get compileActions() {
     const actions = [{
@@ -217,6 +234,7 @@ class ContactsEditor extends Component {
     if (isConnected) {
       this.smsCode = null;
       this.emailValue = registerStore.user.email;
+      this.initRegistration = !!registerStore.user.email
     }
   };
 
@@ -246,7 +264,7 @@ class ContactsEditor extends Component {
 
     if (isSaved) {
       this.initRegistration
-        ? this.props.navigation.replace(screenKeys.Address, { initRegistration: true })
+        ? this.props.navigation.replace(screenKeys.BillingInfoEditor, { initRegistration: true })
         : this.props.navigation.pop();
     }
   };
@@ -256,8 +274,8 @@ class ContactsEditor extends Component {
   */
   selectCountry = country => {
     registerStore.user.phone_number = null;
-    this.phoneInput.selectCountry(country.cca2.toLowerCase());
-    this.phoneInput.focus();
+    this.phoneInputRef.current.selectCountry(country.cca2.toLowerCase());
+    this.phoneInputRef.current.focus();
     this.countryCode = country.cca2;
   };
 
@@ -283,4 +301,4 @@ class ContactsEditor extends Component {
   };
 }
 
-export default translate('register')(ContactsEditor);
+export default translate('register')(ContactsInfoEditorScreen);

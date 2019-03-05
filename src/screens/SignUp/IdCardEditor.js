@@ -1,18 +1,17 @@
 import React, { Component } from 'react';
-import { Image, View, ScrollView, Text, ImageEditor } from 'react-native';
+import { Image, View, Text, ImageEditor } from 'react-native';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 import { translate } from 'react-i18next';
 import _ from 'lodash';
 
 import UFOCamera from './../../components/UFOCamera';
-import UFOHeader from './../../components/header/UFOHeader';
+import { UFOHeader } from './../../components/UFOHeader';
 import UFOActionBar from './../../components/UFOActionBar';
-import UFOCard from './../../components/UFOCard';
 import { UFOImage, UFOContainer } from './../../components/common';
 import { registerStore } from './../../stores';
 import screenKeys from './../../navigators/helpers/screenKeys';
-import { screens, actionStyles, icons, images } from './../../utils/global';
+import { downloadFromApi } from './../../utils/api_deprecated';
 import { showWarning } from './../../utils/interaction';
 import styles from './styles';
 import cameraMaskStyles, {
@@ -23,7 +22,9 @@ import cameraMaskStyles, {
   PADDING_WIDTH,
   PADDING_HEIGHT
 } from './styles/cameraMaskStyles';
-import { downloadFromApi } from './../../utils/api_deprecated';
+import { images } from './../../utils/theme';
+// deprecated, using in old UFOActionBar
+import { actionStyles, icons } from './../../utils/global';
 
 const captureStates = {
   PREVIEW: 'PREVIEW',
@@ -33,17 +34,19 @@ const captureStates = {
 };
 
 @observer
-class IdentificationScreen extends Component {
+class IdCardEditorScreen extends Component {
+  cameraRef = React.createRef();
+
+  @observable activityPending = false;
+  @observable isCameraAllowed = false;
+  @observable frontImageUrl = null;
+  @observable backImageUrl = null;
   @observable captureState = (
-    !registerStore.idCardFrontScan
-    || registerStore.idCardFrontScan === 'loading'
+    !registerStore.dlCardFrontScan
+    || registerStore.dlCardFrontScan === 'loading'
   )
     ? captureStates.CAPTURE_FRONT
     : captureStates.PREVIEW;
-  @observable frontImageUrl = null;
-  @observable backImageUrl = null;
-  @observable activityPending = false;
-  @observable isCameraAllowed = false;
 
   render() {
     const { t, navigation } = this.props;
@@ -51,29 +54,25 @@ class IdentificationScreen extends Component {
       || this.captureState === captureStates.CAPTURE_BACK;
 
     return (
-      <UFOContainer image={screens.REGISTER_OVERVIEW.backgroundImage}>
+      <UFOContainer style={styles.container}>
         <UFOHeader
-          t={t}
-          navigation={navigation}
-          currentScreen={screens.REGISTER_IDENTIFICATION}
-          title={
-            showCamera ? null : t('register:identificationTitle', { user: registerStore.user })
-          }
-          logo={showCamera}
-          transparent={showCamera}
+          title={t('identificationLabel')}
+          leftBtnIcon="keyboard-backspace"
+          leftBtnAction={this.doCancel}
+          rightBtnUseDefault={true}
         />
         {this.captureState === captureStates.PREVIEW && this.renderCurrentThumbs()}
         {this.captureState === captureStates.VALIDATE && this.renderNewPreview()}
         {showCamera && (
           <UFOCamera
-            onCameraReady={() => (this.isCameraAllowed = true)}
-            ref={ref => (this.cameraRef = ref)}
+            onCameraReady={this.onCameraReady}
+            ref={this.cameraRef}
             forbiddenCallback={navigation.goBack}
             cameraMask={this.renderCameraMask()}
           />
         )}
         <UFOActionBar
-          actions={this.compileActions()}
+          actions={this.compileActions}
           activityPending={this.activityPending}
         />
       </UFOContainer>
@@ -86,8 +85,8 @@ class IdentificationScreen extends Component {
       : images.captureCardIdBack;
 
     const captureHint = this.captureState === captureStates.CAPTURE_FRONT
-        ? this.props.t('register:identificationFrontInputLabel')
-        : this.props.t('register:identificationBackInputLabel');
+        ? this.props.t('identificationFrontInputLabel')
+        : this.props.t('identificationBackInputLabel');
 
     return (
       <View style={cameraMaskStyles.wrapper}>
@@ -110,43 +109,43 @@ class IdentificationScreen extends Component {
 
   renderCurrentThumbs = () => (
     <View style={styles.cardsWrapper}>
-      <UFOCard title={this.props.t('register:redoCaptureConfirm')}>
-        <View style={styles.cardsPreviewContainer}>
-          <UFOImage
-            source={{ uri: registerStore.idCardFrontScan }}
-            style={{ width: CARD_WIDTH / 2, height: CARD_HEIGHT / 2 }}
-          />
-          <UFOImage
-            source={{ uri: registerStore.idCardBackScan }}
-            style={{ width: CARD_WIDTH / 2, height: CARD_HEIGHT / 2 }}
-          />
-        </View>
-      </UFOCard>
+      <Text style={[ styles.infoPreviewTitle, styles.cardsTitle ]}>
+        {this.props.t('redoCaptureConfirm')}
+      </Text>
+      <View style={styles.cardsPreviewContainer}>
+        <UFOImage
+          source={{ uri: registerStore.idCardFrontScan }}
+          style={{ width: CARD_WIDTH / 2, height: CARD_HEIGHT / 2 }}
+        />
+        <UFOImage
+          source={{ uri: registerStore.idCardBackScan }}
+          style={{ width: CARD_WIDTH / 2, height: CARD_HEIGHT / 2 }}
+        />
+      </View>
     </View>
   );
 
   renderNewPreview = () => (
-    <ScrollView>
-      <View style={styles.cardsWrapper}>
-        <UFOCard title={this.props.t('register:identificationCheckLabel')}>
-          <View style={styles.cardsContainer}>
-            <UFOImage
-              source={{ uri: this.frontImageUrl }}
-              style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
-              fallbackToImage={true}
-            />
-            <UFOImage
-              source={{ uri: this.backImageUrl }}
-              style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
-              fallbackToImage={true}
-            />
-          </View>
-        </UFOCard>
+    <View style={styles.cardsWrapper}>
+      <Text style={[ styles.infoPreviewTitle, styles.cardsTitle ]}>
+        {this.props.t('identificationCheckLabel')}
+      </Text>
+      <View style={styles.cardsContainer}>
+        <UFOImage
+          source={{ uri: this.frontImageUrl }}
+          style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
+          fallbackToImage={true}
+        />
+        <UFOImage
+          source={{ uri: this.backImageUrl }}
+          style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
+          fallbackToImage={true}
+        />
       </View>
-    </ScrollView>
+    </View>
   );
 
-  compileActions = () => {
+  get compileActions() {
     const initRegistration = this.props.navigation.getParam('initRegistration', false);
     const actions = [];
 
@@ -188,8 +187,18 @@ class IdentificationScreen extends Component {
     }
 
     return actions;
+  }
+
+  /*
+   * Callback to camera ready state
+  */
+  onCameraReady = () => {
+    this.isCameraAllowed = true;
   };
 
+  /*
+   * Cancel capturing and go back
+  */
   doCancel = () => {
     const initRegistration = this.props.navigation.getParam('initRegistration', false);
     initRegistration
@@ -197,16 +206,22 @@ class IdentificationScreen extends Component {
       : this.props.navigation.popToTop();
   };
 
+  /*
+   * Reset new captured data
+  */
   doReset = () => {
     this.frontImageUrl = null;
     this.backImageUrl = null;
     this.captureState = captureStates.CAPTURE_FRONT;
   };
 
+  /*
+   * Capture and handle photo
+  */
   doCapture = async () => {
     const t = this.props.t;
     this.activityPending = true;
-    const imageData = await this.cameraRef.takePicture();
+    const imageData = await this.cameraRef.current.takePicture();
     if (!imageData) {
       this.activityPending = false;
 
@@ -247,7 +262,7 @@ class IdentificationScreen extends Component {
       },
       error => {
         this.activityPending = false;
-        showWarning(t('Registration:CameraProcessingError', { message: error.message }));
+        showWarning(t('cameraProcessingError', { message: error.message }));
       }
     );
   };
@@ -298,10 +313,10 @@ class IdentificationScreen extends Component {
     if (isSaved) {
       const initRegistration = this.props.navigation.getParam('initRegistration', false);
       initRegistration
-        ? this.props.navigation.navigate(screenKeys.DriverLicence)
+        ? this.props.navigation.navigate(screenKeys.DriverCardEditor)
         : this.props.navigation.pop();
     }
   };
 }
 
-export default translate()(IdentificationScreen);
+export default translate('register')(IdCardEditorScreen);

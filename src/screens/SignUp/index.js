@@ -17,7 +17,9 @@ class SignUpScreen extends Component {
     return (
       <View style={styles.tabWrapper}>
         <UFOHeader
-          title={registerStore.userFullName || this.props.t('overviewHeader')}
+          title={registerStore.userFullName || this.props.t('overviewHeader', {
+            context: registerStore.isUserRegistered ? null: 'progress'
+          })}
           leftBtnUseDefault={true}
           rightBtnUseDefault={true}
           isSingle={false}

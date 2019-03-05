@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {
   TextInput,
   ViewPropTypes,
-  View,
+  TouchableOpacity,
   Text
 } from 'react-native';
 import PropTypes from 'prop-types';
@@ -11,6 +11,8 @@ import { colors } from './../../../utils/theme';
 import styles from './styles';
 
 export default class UFOTextInputBold extends Component {
+  inputRef = React.createRef();
+
   render() {
     const {
       style,
@@ -23,12 +25,16 @@ export default class UFOTextInputBold extends Component {
     } = this.props;
 
     return (
-      <View style={[
-        styles.container,
-        invalidStatus && styles.invalidBorder,
-        successStatus && styles.successBorder,
-        containerStyle
-      ]}>
+      <TouchableOpacity
+        style={[
+          styles.container,
+          invalidStatus && styles.invalidBorder,
+          successStatus && styles.successBorder,
+          containerStyle
+        ]}
+        activeOpacity={1}
+        onPress={this.forceFocus}
+      >
         {!!title && (
           <Text style={styles.title}>
             {title}
@@ -39,12 +45,19 @@ export default class UFOTextInputBold extends Component {
             style={[ styles.input, style ]}
             placeholderColor={colors.TEXT_LIGHT_COLOR}
             underlineColorAndroid="transparent"
-            {...restInputProps}
+            { ...restInputProps }
+            ref={this.inputRef}
           />
         )}
-      </View>
+      </TouchableOpacity>
     );
   }
+
+  forceFocus = () => {
+    if (this.inputRef && !this.props.InputComponent) {
+      this.inputRef.current.focus();
+    }
+  };
 }
 
 UFOTextInputBold.propTypes = {
@@ -54,5 +67,6 @@ UFOTextInputBold.propTypes = {
   InputComponent: PropTypes.element,
   invalidStatus: PropTypes.bool,
   successStatus: PropTypes.bool,
+  inputComponentRef: PropTypes.object,
   ...TextInput.propTypes
 };
