@@ -6,6 +6,7 @@ export default {
   BookingStepBook: 'BookingStepBook',
   BookingStepPay: 'BookingStepPay',
   BookingStepDrive: 'BookingStepDrive',
+  BookingStepCancellation: 'BookingStepCancellation',
   BookingDetails: 'BookingDetails',
 
   Register: 'Register',

@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { UFOText, UFOImage } from './../common';
 import { colors, icons, actionStyles, screens, sizes, logos } from './../../utils/global';
 import UFOAction from './../UFOAction';
-import activitiesStore from './../../stores/activitiesStore';
+import { activitiesStore } from './../../stores';
 import styles from './styles';
 
 @observer
@@ -24,8 +24,6 @@ export default class UFOHeader extends Component {
     ) : null;
 
     const alpha = transparent ? 0 : 0.7;
-    const isSupport = currentScreen.supportFaqCategory !== null;
-
     const activities = activitiesStore.activities;
     let activitiesMessage = null;
 
@@ -53,37 +51,54 @@ export default class UFOHeader extends Component {
           ]}
         >
           <View style={styles.left}>
-            <UFOAction
-              action={{
-                style: actionStyles.ACTIVE,
-                icon: icons.HOME,
-                onPress: this.goToHome
-              }}
-              size={sizes.SMALL}
-              noText
-            />
+            {this.renderLeftAction()}
           </View>
           <View style={styles.body}>
             {titleComponent}
             {logoComponent}
           </View>
           <View style={styles.right}>
-            {isSupport && (
-              <UFOAction
-                action={{
-                  style: actionStyles.TODO,
-                  icon: icons.HELP,
-                  onPress: () => this.goToSupport(currentScreen)
-                }}
-                size={sizes.SMALL}
-                noText
-              />
-            )}
+            {this.renderRightAction()}
           </View>
         </View>
       </View>
     );
   }
+
+  renderLeftAction = () => {
+    const { leftAction } = this.props;
+    const defaultAction = {
+      style: actionStyles.ACTIVE,
+      icon: icons.HOME,
+      onPress: this.goToHome
+    };
+
+    return (
+      <UFOAction
+        action={leftAction || defaultAction}
+        size={sizes.SMALL}
+        noText
+      />
+    );
+  };
+
+  renderRightAction = () => {
+    const { rightAction, currentScreen = screens.HOME  } = this.props;
+    const isSupport = currentScreen.supportFaqCategory !== null;
+    const defaultAction = {
+      style: actionStyles.TODO,
+      icon: icons.HELP,
+      onPress: () => this.goToSupport(currentScreen)
+    };
+
+    return (isSupport || rightAction) && (
+      <UFOAction
+        action={rightAction || defaultAction}
+        size={sizes.SMALL}
+        noText
+      />
+    );
+  };
 
   goToHome = () => {
     this.props.navigation.navigate(screens.HOME.name);
@@ -102,5 +117,7 @@ UFOHeader.propTypes = {
   transparent: PropTypes.bool,
   title: PropTypes.string,
   logo: PropTypes.bool,
-  currentScreen: PropTypes.object
+  currentScreen: PropTypes.object,
+  leftAction: PropTypes.object,
+  rightAction: PropTypes.object
 };

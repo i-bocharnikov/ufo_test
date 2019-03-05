@@ -416,7 +416,7 @@ export default StyleSheet.create({
     ...textThemes.SP_BOLD,
     fontSize: 11,
     lineHeight: 28,
-    letterSpacing: 3.5,
+    letterSpacing: 3.2,
     color: colors.MAIN_COLOR
   },
 
@@ -427,6 +427,15 @@ export default StyleSheet.create({
     color: colors.TEXT_DEFAULT_COLOR,
     flex: 1,
     textAlign: 'right'
+  },
+
+  infoTitleNewPrice: {
+    ...textThemes.SP_BOLD,
+    fontSize: 11,
+    letterSpacing: 2.6,
+    color: colors.MAIN_COLOR,
+    marginTop: 24,
+    marginBottom: 8
   },
 
   separateLine: {
@@ -571,5 +580,12 @@ export default StyleSheet.create({
     ...textThemes.SP_REGULAR,
     color: colors.MAIN_LIGHT_COLOR,
     fontSize: 14
-  }
+  },
+
+  undoBookingBtn: {
+    marginTop: 28
+  },
+
+  /* styles specific for StepCancellationScreen */
+  screenCancelContainer: { backgroundColor: colors.BG_INVERT_TINT }
 });

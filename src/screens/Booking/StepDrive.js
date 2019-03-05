@@ -3,17 +3,14 @@ import {
   View,
   Text,
   TouchableHighlight,
-  Modal,
-  TouchableOpacity,
-  ScrollView
+  Modal
 } from 'react-native';
 import { translate } from 'react-i18next';
 import { observer } from 'mobx-react';
 import _ from 'lodash';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import { bookingStore, feedbackStore } from './../../stores';
-import registerStore from './../../stores/registerStore';
+import { bookingStore, feedbackStore, registerStore } from './../../stores';
 import { keys as screenKeys } from './../../navigators/helpers';
 import {
   UFOContainer,
@@ -70,20 +67,51 @@ class StepDriveScreen extends Component {
   renderMainContent = () => {
     const isRegistered = registerStore.isUserRegistered;
     const t = this.props.t;
+    let title = '';
+    let description = '';
+    let btnLabel = '';
+
+    if (bookingStore.isCancellation) {
+      title = t('driveCancelTitle');
+    } else if (bookingStore.editableOrderRef) {
+      title = t('driveUpdateTitle');
+    } else {
+      title = t('driveTitle');
+    }
+
+    if (bookingStore.isCancellation) {
+      description = t('driveDescrCancellation');
+      btnLabel = t('driveNextHome');
+    } else if (isRegistered) {
+      description = t('driveDescrDriveP1');
+      btnLabel = t('driveNextDrive');
+    } else {
+      description = t('driveDescrRegisterP1');
+      btnLabel = t('driveNextRegister');
+    }
 
     return (
       <Fragment>
-        <Text style={[ styles.headerTitle, styles.textShadow ]}>
-          {t('driveTitle')}
+        <Text style={[
+          styles.headerTitle,
+          styles.textShadow,
+          bookingStore.isCancellation && styles.headerTitleIndent
+        ]}>
+          {title}
         </Text>
-        <Text style={[ styles.headerSubTitle, styles.textShadow ]}>
-          {t('driveSubTitle')}
-        </Text>
-        <Text style={[ styles.descriptionText, styles.textShadow ]}>
-          {t(isRegistered ? 'dreveDescrDriveP1' : 'dreveDescrRegisterP1')}
-          <Text style={styles.linkedText} onPress={this.navToGuide}>
-            {t('dreveDescrGuideLink')}
+        {!bookingStore.isCancellation && (
+          <Text style={[ styles.headerSubTitle, styles.textShadow ]}>
+            {t('driveSubTitle')}
           </Text>
+        )}
+        <Text style={[ styles.descriptionText, styles.textShadow ]}>
+          {description}
+          {!bookingStore.editableOrderRef && t('driveDescrP2')}
+          {!bookingStore.editableOrderRef && (
+            <Text style={styles.linkedText} onPress={this.navToGuide}>
+              {t('driveDescrGuideLink')}
+            </Text>
+          )}
         </Text>
         <TouchableHighlight
           onPress={this.navNext}
@@ -91,7 +119,7 @@ class StepDriveScreen extends Component {
           style={styles.nextBtn}
         >
           <Text style={styles.nextBtnLabel}>
-            {t(isRegistered ? 'driveNextDrive' : 'driveNextRegister')}
+            {btnLabel}
           </Text>
         </TouchableHighlight>
       </Fragment>
@@ -99,6 +127,10 @@ class StepDriveScreen extends Component {
   };
 
   renderFeedBackDialog = () => {
+    if (bookingStore.editableOrderRef) {
+      return null;
+    }
+
     const showDialog = this.state.showFeedBackDialog && !feedbackStore.isLoading;
     const feedback = feedbackStore.reserveFeedBack;
 
@@ -224,9 +256,14 @@ class StepDriveScreen extends Component {
     const { navigation } = this.props;
     navigation.popToTop();
 
+    if (bookingStore.isCancellation) {
+      navigation.navigate(screenKeys.Home);
+      return;
+    }
+
     registerStore.isUserRegistered
       ? navigation.navigate(screenKeys.Drive)
-      : navigation.navigate(screenKeys.SignUp);
+      : navigation.navigate(screenKeys.Phone);
   };
 
   /*

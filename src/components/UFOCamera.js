@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { Component, Fragment } from 'react';
 import { StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import ImageRotate from 'react-native-image-rotate';
 import PropTypes from 'prop-types';
 import i18n from 'i18next';
 
+import FocusListener from './../navigators/utils/FocusListener';
 import { showWarning } from './../utils/interaction';
 import { checkAndRequestCameraPermission } from './../utils/permissions';
 import { UFOIcon_old } from './common';
@@ -30,13 +31,7 @@ const FLASH_MODE_ITEMS = [
 ];
 
 const styles = StyleSheet.create({
-  preview: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    bottom: 0,
-    right: 0
-  },
+  preview: { ...StyleSheet.absoluteFill },
   torchBtn: {
     flexDirection: 'row',
     alignSelf: 'center',
@@ -59,13 +54,14 @@ const styles = StyleSheet.create({
   }
 });
 
-export default class UFOCamera extends React.Component {
+export default class UFOCamera extends Component {
   constructor() {
     super();
     this.camera = null;
     this.state = {
       hasPermit: false,
-      flashMode: FLASH_MODE_ITEMS[0]
+      flashMode: FLASH_MODE_ITEMS[0],
+      isFocused: true
     };
   }
 
@@ -80,10 +76,26 @@ export default class UFOCamera extends React.Component {
   }
 
   render() {
-    const { showTorchBtn, torchBtnTopIndent, ...restCameraProps } = this.props;
-    const { hasPermit, flashMode } = this.state;
+    return (
+      <Fragment>
+        <FocusListener
+          onFocus={this.onNavFocus}
+          onBlur={this.onNavBlur}
+        />
+        {this.renderCameraView()}
+      </Fragment>
+    );
+  }
 
-    return hasPermit ? (
+  renderCameraView = () => {
+    const { showTorchBtn, torchBtnTopIndent, cameraMask, ...restCameraProps } = this.props;
+    const { hasPermit, flashMode, isFocused } = this.state;
+
+    if (!hasPermit || !isFocused) {
+      return null;
+    }
+
+    return (
       <RNCamera
         style={styles.preview}
         type={RNCAMERA_CONSTANTS.Type.back}
@@ -108,9 +120,18 @@ export default class UFOCamera extends React.Component {
             </Text>
           </TouchableOpacity>
         )}
+        {cameraMask}
       </RNCamera>
-    ) : null;
-  }
+    );
+  };
+
+  onNavFocus = () => {
+    this.setState({ isFocused: true });
+  };
+
+  onNavBlur = () => {
+    this.setState({ isFocused: false });
+  };
 
   changeFlashMode = () => {
     const currentIndex = this.state.flashMode.index;
@@ -177,5 +198,6 @@ UFOCamera.propTypes = {
   forbiddenCallback: PropTypes.func,
   torchBtnTopIndent: PropTypes.number,
   showTorchBtn: PropTypes.bool,
+  cameraMask: PropTypes.node,
   ...RNCamera.propTypes
 };

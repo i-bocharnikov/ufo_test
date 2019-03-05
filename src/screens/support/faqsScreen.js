@@ -1,20 +1,14 @@
 import React, { Component } from 'react';
-import { SectionList, View, Text, StyleSheet } from 'react-native';
+import { SectionList, View, StyleSheet } from 'react-native';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 import { translate } from 'react-i18next';
-import { NavigationEvents } from 'react-navigation';
 import Touchable from 'react-native-platform-touchable';
 import call from 'react-native-phone-call';
 
 import UFOHeader from './../../components/header/UFOHeader';
 import UFOActionBar from './../../components/UFOActionBar';
-import {
-  UFOContainer,
-  UFOText,
-  UFOIcon_old,
-  UFOImage
-} from './../../components/common';
+import { UFOContainer, UFOText, UFOIcon_old } from './../../components/common';
 import {
   actionStyles,
   icons,
@@ -23,13 +17,7 @@ import {
   navigationParams,
   screens
 } from './../../utils/global';
-import supportStore from './../../stores/supportStore';
-import { driveStore } from './../../stores';
-import registerStore from '../../stores/registerStore';
-import remoteLoggerService from '../../utils/remoteLoggerService';
-
-const SUPPORT_FAQ = navigationParams.SUPPORT_FAQ;
-const SUPPORT_FAQ_CATEGORY = navigationParams.SUPPORT_FAQ_CATEGORY;
+import { driveStore, supportStore } from './../../stores';
 
 const styles = StyleSheet.create({
   faqList: {
@@ -104,7 +92,6 @@ class SupportFaqsScreen extends Component {
 
     return (
       <UFOContainer image={screens.SUPPORT_FAQS.backgroundImage}>
-        <NavigationEvents onWillFocus={this.onLoad} />
         <UFOHeader
           t={t}
           navigation={navigation}
@@ -157,13 +144,6 @@ class SupportFaqsScreen extends Component {
     </Touchable>
   );
 
-  onLoad = async payload => {
-    if (payload && payload.state && payload.state.routeName !== 'SupportFaqs') {
-      return;
-    }
-    //await this.doRefresh();
-  };
-
   onPressSection = reference => {
     if (this.section === reference) {
       this.section = null;
@@ -179,9 +159,7 @@ class SupportFaqsScreen extends Component {
     });
   };
 
-  doRefresh = async () => {
-    return await supportStore.list();
-  };
+  doRefresh = async () => await supportStore.list();
 
   doBack = () => {
     const { navigation } = this.props;

@@ -72,6 +72,7 @@ class StepPayScreen extends Component {
         navToFaq={this.navToFaq}
         navToFirstStep={this.navBack}
         currentStep={2}
+        isEditing={!!bookingStore.editableOrderRef}
         BottomActionPanel={this.renderBottomPanel()}
       >
         <UFOContainer style={styles.screenPaymentContainer}>
@@ -89,23 +90,28 @@ class StepPayScreen extends Component {
             </Text>
           </TouchableOpacity>
           <Text style={[ styles.sectionTitle, styles.sectionTitleIndents ]}>
-            {t('loyalityProgramtitle')}
+            {t(bookingStore.editableOrderRef
+              ? 'loyalityProgramEditTitle'
+              : 'loyalityProgramTitle'
+            )}
           </Text>
-          <UFOTextInput
-            containerStyle={styles.screenHorizIndents}
-            wrapperStyle={[
-              styles.voucherInput,
-              styles.blockShadow,
-              Platform.OS === 'android' && styles.blockShadowAndroidFix
-            ]}
-            placeholder={t('voucherPlaceholder')}
-            autoCapitalize="characters"
-            onChangeText={this.handleInputVoucher}
-            defaultValye={bookingStore.voucherCode}
-            invalidStatus={_.isBoolean(isVoucherValid) && !isVoucherValid}
-            successStatus={_.isBoolean(isVoucherValid) && isVoucherValid}
-            alertMessage={voucherInvalidError}
-          />
+          {!bookingStore.editableOrderRef && (
+            <UFOTextInput
+              containerStyle={styles.screenHorizIndents}
+              wrapperStyle={[
+                styles.voucherInput,
+                styles.blockShadow,
+                Platform.OS === 'android' && styles.blockShadowAndroidFix
+              ]}
+              placeholder={t('voucherPlaceholder')}
+              autoCapitalize="characters"
+              onChangeText={this.handleInputVoucher}
+              defaultValye={bookingStore.voucherCode}
+              invalidStatus={_.isBoolean(isVoucherValid) && !isVoucherValid}
+              successStatus={_.isBoolean(isVoucherValid) && isVoucherValid}
+              alertMessage={voucherInvalidError}
+            />
+          )}
           {this.renderLoyaltyBlock()}
           {this.renderBookingInfoSection()}
           {this.renderVoucherTooltip()}
@@ -171,11 +177,13 @@ class StepPayScreen extends Component {
   };
 
   renderLoyaltyBlock = () => {
+    const isActive = bookingStore.allowReferralAmountUse;
+
     return !bookingStore.loyaltyProgramInfo ? null : (
       <TouchableOpacity
-        style={[ styles.actionBtnDark, styles.loyalityBtn ]}
-        onPress={bookingStore.switchReferralUsing}
-        activeOpacity={values.BTN_OPACITY_DEFAULT}
+        style={[ styles.actionBtnDark, styles.loyalityBtn, !isActive && { opacity: 0.85 } ]}
+        onPress={isActive ? bookingStore.switchReferralUsing : null}
+        activeOpacity={isActive ? values.BTN_OPACITY_DEFAULT : 0.85}
       >
         <TouchableOpacity
           onPress={() => this.setState({ showVoucherTooltip: true })}
@@ -231,10 +239,15 @@ class StepPayScreen extends Component {
           <Text style={styles.infoText}>
             {t('common:scheduleTo')} {bookingStore.rentalScheduleEnd}
           </Text>
+          {!!bookingStore.editableOrderRef && (
+            <Text style={styles.infoTitleNewPrice}>
+              {t('bookingEditResult')} {bookingStore.editableOrderRef} : {bookingStore.orderNewPrice}
+            </Text>
+          )}
           <View style={[ styles.separateLine, styles.separateLineInfoBlock ]} />
           <View style={styles.row}>
             <Text style={styles.infoTitle}>
-              {t('totalPricePayment')} :
+              {this.priceDescription}
             </Text>
             <Text style={styles.infoTitlePrice}>
               {bookingStore.orderPrice}
@@ -256,17 +269,19 @@ class StepPayScreen extends Component {
     );
   };
 
-  renderVoucherTooltip = () => {
-    return (
-      <UFOTooltip
-        isVisible={this.state.showVoucherTooltip}
-        onClose={() => this.setState({ showVoucherTooltip: false })}
-        originBtn={this.voucherTooltipRef}
-      >
-        {this.props.t('voucherTooltip')}
-      </UFOTooltip>
-    );
-  };
+  renderVoucherTooltip = () => (
+    <UFOTooltip
+      isVisible={this.state.showVoucherTooltip}
+      onClose={() => this.setState({ showVoucherTooltip: false })}
+      originBtn={this.voucherTooltipRef}
+    >
+      {this.props.t('voucherTooltip')}
+    </UFOTooltip>
+  );
+
+  get priceDescription() {
+    return _.get(bookingStore, 'price.description', `${this.props.t('totalPricePayment')} : `);
+  }
 
   /*
    * Launch camera to credit card, then handle card with stripe and locally save it into card list
@@ -327,9 +342,14 @@ class StepPayScreen extends Component {
   };
 
   /*
-   * Handle payment and go to next step
+   * Confirm agreements before payment for booking
   */
-  handleToNextStep = async () => {
+  confirmAgreements = async () => {
+    if (bookingStore.editableOrderRef) {
+      this.agreementConfirmed = true;
+      return;
+    }
+
     if (!this.agreementConfirmed) {
       const confirmAction = () => { this.agreementConfirmed = true; };
       await confirm(
@@ -340,6 +360,13 @@ class StepPayScreen extends Component {
         { neutral: this.props.t('termsAlertBtn') }
       );
     }
+  };
+
+  /*
+   * Handle payment and go to next step
+  */
+  handleToNextStep = async () => {
+    await this.confirmAgreements();
 
     if (!this.agreementConfirmed) {
       return;
@@ -364,14 +391,15 @@ class StepPayScreen extends Component {
    * Open order price description
   */
   openPriceInfo = () => {
-    const ref = _.get(bookingStore, 'order.price.pricingReference');
+    const ref = _.get(
+      bookingStore,
+      `order.${bookingStore.editableOrderRef ? 'newPrice' : 'price'}.pricingReference`
+    );
 
-    if (!ref) {
-      return;
+    if (ref) {
+      bookingStore.priceInfoRef = ref;
+      this.props.navigation.navigate(screenKeys.BookingDetails);
     }
-
-    bookingStore.priceInfoRef = ref;
-    this.props.navigation.navigate(screenKeys.BookingDetails);
   };
 }
 

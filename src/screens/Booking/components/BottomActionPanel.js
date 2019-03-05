@@ -59,7 +59,7 @@ class BottomActionPanel extends Component {
               {actionSubTitle}
             </Text>
           )}
-          {isWaiting && this.renderActionOverlap()}
+          {this.renderActionOverlap()}
         </TouchableOpacity>
       </View>
     );
@@ -84,7 +84,7 @@ class BottomActionPanel extends Component {
   };
 
   renderMarketingLabel = () => {
-    if (!bookingStore.priceMarketingLabel) {
+    if (!bookingStore.priceMarketingLabel || bookingStore.editableOrderRef) {
       return null;
     }
 
@@ -98,6 +98,10 @@ class BottomActionPanel extends Component {
   };
 
   renderActionOverlap = () => {
+    if (!this.props.isWaiting) {
+      return null;
+    }
+
     return (
       <View style={styles.bottomPanelActionOverlap}>
         <UFOLoader
@@ -109,7 +113,11 @@ class BottomActionPanel extends Component {
   };
 
   get priceLabel() {
-    if (bookingStore.orderOriginPrice && bookingStore.orderOriginPrice !== bookingStore.orderPrice) {
+    if (
+      bookingStore.orderOriginPrice
+      && bookingStore.orderOriginPrice !== bookingStore.orderPrice
+      && !bookingStore.editableOrderRef
+    ) {
       return (
         <Fragment>
           <Text style={styles.bottomPanelOriginValue}>

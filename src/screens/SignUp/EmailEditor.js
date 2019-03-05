@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import { observer } from 'mobx-react';
-import { observable, action } from 'mobx';
+import { observable } from 'mobx';
 import { translate } from 'react-i18next';
 
 import UFOHeader from './../../components/header/UFOHeader';
 import UFOActionBar from './../../components/UFOActionBar';
 import { UFOContainer, UFOTextInput } from './../../components/common';
-import { screens, actionStyles, icons } from '../../utils/global';
-import registerStore from './../../stores/registerStore';
+import { keys as screenKeys } from './../../navigators/helpers';
+import { screens, actionStyles, icons } from './../../utils/global';
+import { registerStore } from './../../stores';
 import styles from './styles';
 
 const REGEX_EMAIL_VALIDATION = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -47,36 +48,14 @@ class EmailScreen extends Component {
     );
   }
 
-  @action
-  doCancel = async isInWizzard => {
-    isInWizzard
-      ? this.props.navigation.navigate(screens.HOME.name)
-      : this.props.navigation.popToTop();
-  };
-
-  @action
-  doSave = async isInWizzard => {
-    registerStore.user.email = this.emailValue;
-
-    if (await registerStore.save()) {
-      if (isInWizzard) {
-        this.props.navigation.navigate(screens.REGISTER_ADDRESS.name, { isInWizzard });
-        return;
-      }
-
-      this.props.navigation.pop();
-      return;
-    }
-  };
-
   compileActions = () => {
-    const isInWizzard = this.props.navigation.getParam('isInWizzard', false);
+    const initRegistration = this.props.navigation.getParam('initRegistration', false);
 
     const actions = [
       {
         style: actionStyles.ACTIVE,
-        icon: isInWizzard ? icons.CONTINUE_LATER : icons.CANCEL,
-        onPress: async () => await this.doCancel(isInWizzard)
+        icon: initRegistration ? icons.CONTINUE_LATER : icons.CANCEL,
+        onPress: this.doCancel
       },
       {
         style: this.emailValue
@@ -84,13 +63,32 @@ class EmailScreen extends Component {
           && this.emailValue !== registerStore.user.email
             ? actionStyles.TODO
             : actionStyles.DISABLE,
-        icon: isInWizzard ? icons.NEXT : icons.SAVE,
-        onPress: async () => await this.doSave(isInWizzard)
+        icon: initRegistration ? icons.NEXT : icons.SAVE,
+        onPress: this.doSave
       }
     ];
 
     return actions;
   };
+
+  doCancel = () => {
+    const initRegistration = this.props.navigation.getParam('initRegistration', false);
+    initRegistration
+      ? this.props.navigation.navigate(screenKeys.Home)
+      : this.props.navigation.popToTop();
+  };
+
+  doSave = async () => {
+    const initRegistration = this.props.navigation.getParam('initRegistration', false);
+    registerStore.user.email = this.emailValue;
+    const isSaved = await registerStore.save();
+
+    if (isSaved) {
+      initRegistration
+        ? this.props.navigation.navigate(screenKeys.Address, { initRegistration: true })
+        : this.props.navigation.pop();
+    }
+  };
 }
 
-export default translate('translations')(EmailScreen);
+export default translate()(EmailScreen);

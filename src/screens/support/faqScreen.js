@@ -13,7 +13,7 @@ import {
   navigationParams,
   dims
 } from './../../utils/global';
-import supportStore from './../../stores/supportStore';
+import { supportStore } from './../../stores';
 import UFOCard from './../../components/UFOCard';
 import { action, observable } from 'mobx';
 import { NavigationEvents } from 'react-navigation';
@@ -38,7 +38,7 @@ class SupportFaqScreen extends Component {
   refresh = async () => {
     this.refreshing = true;
 
-    const { t, navigation } = this.props;
+    const { navigation } = this.props;
     const faqCategoryReference = navigation.getParam(
       navigationParams.SUPPORT_FAQ_CATEGORY
     );

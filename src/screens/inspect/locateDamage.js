@@ -47,7 +47,7 @@ class LocateDamageScreen extends Component {
         //console.log("******************onPanResponderMove", gestureState)
       },
       onPanResponderTerminationRequest: () => true,
-      onPanResponderRelease: (evt) => {
+      onPanResponderRelease: evt => {
         // The user has released all touches while this view is the
         // responder. This typically means a gesture has succeeded
         this.relativePositionY = evt.nativeEvent.locationY / BODY_HEIGHT;

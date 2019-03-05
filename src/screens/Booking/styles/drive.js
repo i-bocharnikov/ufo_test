@@ -135,5 +135,9 @@ export default StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(0,0,0,0.4)',
     zIndex: 0
+  },
+
+  headerTitleIndent: {
+    marginBottom: 16
   }
 });

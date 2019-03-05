@@ -14,7 +14,8 @@ export const severityTypes = {
   DEBUG: 'debug',
   INFO: 'info',
   WARN: 'warn',
-  ERROR: 'error'
+  ERROR: 'error',
+  FATAL: 'fatal'
 };
 
 class RemoteLoggerService {
@@ -125,12 +126,12 @@ class RemoteLoggerService {
       context: { ...context }
     };
 
-    return await this.postLog(payload);
+    await this.postLog(payload);
   };
 
   postLog = async payload => {
-    logToApi('/user_experiences', payload).catch(error => {
-      this.persistLog(payload).catch(error => {});
+    logToApi('/user_experiences', payload).catch(() => {
+      this.persistLog(payload).catch();
     });
   };
 

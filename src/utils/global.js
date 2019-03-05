@@ -11,7 +11,7 @@ const THEME = configurations.theme;
 export const backgrounds = {
   HOME001:
     THEME === THEME_UFO
-      ? require('../assets/images/background/UFOBGHOME001.png')
+      ? require('../assets/images/background/UFOBGDRIVE001.png')
       : require('../assets/images/background/ACLBGHOME001.png'),
   HOME002:
     THEME === THEME_UFO
@@ -247,6 +247,7 @@ export const icons = {
   CLOSE_RENTAL: new Icon('flag', 'icon:closeRental'),
   BROWSE: new Icon('browsers', 'icon:browse'),
   CLIPBOARD: new Icon('clipboard', 'icon:clipboard'),
+  MAP: new Icon('map', 'icon:find'),
 
   UNLOCK: new Icon('unlock', 'icon:unlock'),
   LOCK: new Icon('lock', 'icon:lock'),

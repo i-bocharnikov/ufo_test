@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { View } from 'react-native';
+import { View, BackHandler } from 'react-native';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 import { translate } from 'react-i18next';
@@ -15,20 +15,27 @@ import {
   UFOTextInput,
   ufoInputStyles
 } from './../../components/common';
+import { keys as screenKeys } from './../../navigators/helpers';
 import { screens, actionStyles, icons } from './../../utils/global';
-import appStore from './../../stores/appStore';
-import registerStore from './../../stores/registerStore';
+import { appStore, registerStore } from './../../stores';
 import styles from './styles';
 
 const REGEX_CODE_VALIDATION = /^([0-9]{3}-?[0-9]{3})$/;
 
 @observer
 class PhoneScreen extends Component {
-
   @observable countryCode = DeviceInfo.getDeviceCountry().toLowerCase();
   @observable activityPending = false;
   @observable isCodeRequested = false;
   @observable code = null;
+
+  componentDidMount() {
+    BackHandler.addEventListener('hardwareBackPress', this.doCancel);
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.doCancel);
+  }
 
   render() {
     const { t, i18n, navigation } = this.props;
@@ -139,9 +146,12 @@ class PhoneScreen extends Component {
 
   doCancel = () => {
     this.isCodeRequested = false;
-    !registerStore.isConnected
-      ? this.props.navigation.navigate(screens.HOME.name)
-      : this.props.navigation.popToTop();
+    registerStore.isConnected
+      ? this.props.navigation.popToTop()
+      : this.props.navigation.navigate(screenKeys.Home);
+
+    /* for prevent hardwareBackPress event on android */
+    return true;
   };
 
   doDisconnect = async () => {
@@ -152,23 +162,16 @@ class PhoneScreen extends Component {
   };
 
   doConnect = async () => {
-    const isInWizzard = this.props.navigation.getParam('isInWizzard', false);
     this.activityPending = true;
-
-    if (await appStore.connect(this.code)) {
-      this.code = null;
-      if (isInWizzard && _.isEmpty(registerStore.user.email)) {
-        this.props.navigation.navigate(screens.REGISTER_EMAIL.name, { isInWizzard });
-        this.activityPending = false;
-        return;
-      } else {
-        this.props.navigation.pop();
-        this.activityPending = false;
-        return;
-      }
-    }
-
+    const isConnected = await appStore.connect(this.code);
     this.activityPending = false;
+
+    if (isConnected) {
+      this.code = null;
+      _.isEmpty(registerStore.user.email)
+        ? this.props.navigation.navigate(screenKeys.Email, { initRegistration: true })
+        : this.props.navigation.pop();
+    }
   };
 
   doRequestCode = async () => {

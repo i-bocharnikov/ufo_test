@@ -10,24 +10,22 @@ import UFOActionBar from './../../components/UFOActionBar';
 import { UFOContainer } from './../../components/common';
 import { screens, actionStyles, icons } from './../../utils/global';
 import { driveStore, termStore } from './../../stores';
-import { showPrompt, showToastError } from './../../utils/interaction';
-import { NavigationEvents } from 'react-navigation';
-import remoteLoggerService from '../../utils/remoteLoggerService';
+import { showPrompt, showToastError, biometricConfirm } from './../../utils/interaction';
+import remoteLoggerService from './../../utils/remoteLoggerService';
 
 @observer
 class InspectScreen extends Component {
   @observable activityPending = false;
+  screenFocusListener = null;
 
-  componentWillMount() {
+  componentDidMount() {
     this.refresh();
+    this.screenFocusListener = this.props.navigation.addListener('didFocus', this.refresh);
   }
 
-  @action
-  refresh = async () => {
-    this.activityPending = true;
-    await termStore.getRentalAgreement();
-    this.activityPending = false;
-  };
+  componentWillUnmount() {
+    this.screenFocusListener.remove();
+  }
 
   render() {
     const { t, navigation } = this.props;
@@ -47,14 +45,11 @@ class InspectScreen extends Component {
 
     return (
       <UFOContainer image={screens.RENTAL_AGREEMENT.backgroundImage}>
-        <NavigationEvents onWillFocus={() => this.refresh()} />
         <UFOHeader
           t={t}
           navigation={navigation}
           currentScreen={screens.DRIVE}
-          title={t('term:rentalAgreementTitle', {
-            rental: driveStore.rental
-          })}
+          title={t('term:rentalAgreementTitle', { rental: driveStore.rental })}
         />
         {_.isString(html) && <WebView source={{ html }} />}
         <UFOActionBar
@@ -65,6 +60,13 @@ class InspectScreen extends Component {
       </UFOContainer>
     );
   }
+
+  @action
+  refresh = async () => {
+    this.activityPending = true;
+    await termStore.getRentalAgreement();
+    this.activityPending = false;
+  };
 
   @action
   doSign = async () => {
@@ -85,32 +87,31 @@ class InspectScreen extends Component {
 
     const promptHandler = async str => {
       if (str.toUpperCase().trim() === confirmKey.toUpperCase()) {
-        await remoteLoggerService.info(
+        await this.doSign();
+        remoteLoggerService.info(
           'confirmContractSignature',
           `confirmation accepted: Input ${str} does match confirmKey ${confirmKey}`
         );
-        this.activityPending = true;
-        await this.doSign();
-        this.activityPending = false;
         return;
       }
-      await remoteLoggerService.error(
-        'confirmContractSignature',
-        `${t(
-          'error:stringNotMatch'
-        )}: Input ${str} does not match confirmKey ${confirmKey}`
-      );
 
       showToastError(t('error:stringNotMatch'), 160);
       this.activityPending = false;
+
+      remoteLoggerService.error(
+        'confirmContractSignature',
+        `${t('error:stringNotMatch')}: Input ${str} does not match confirmKey ${confirmKey}`
+      );
     };
 
-    showPrompt(
+    const biometricFallback = () => showPrompt(
       t('term:confirmContractTitle', { strKey: confirmKey }),
       t('term:confirmContractDescription'),
       promptHandler,
-      () => (this.activityPending = false)
+      () => { this.activityPending = false; }
     );
+
+    biometricConfirm(this.doSign, biometricFallback);
   };
 }
 

@@ -15,8 +15,8 @@ export default Platform.select({
     '8':
       'This action is not possible because the system does not support it or is deactivated',
     '9': 'No need to connect again, already connected to the vehicle',
-    '10': 'Action cannot be performed because not connected to vehicle',
-    '11': 'Vehicle has not been found after 10s searching',
+    '10': 'Vehicle is not reachable',
+    '11': 'The vehicle is not reachable',
     '12':
       "Can't process the action, as a previous one is still in progress, wait for it to finish",
     '13': 'You currently have no used key, please ask support to get one',
@@ -120,10 +120,10 @@ export default Platform.select({
       'The putback request has been refused by integrator (the fuel level is incorrect)',
     // Bluetooth error code
     BLE_NOT_AVAILABLE: 'Bluetooth is not available on this phone.',
-    DEVICE_NOT_FOUND: 'Vehicle has not been found after 10s searching',
+    DEVICE_NOT_FOUND: 'The vehicle is not reachable',
     BLUETOOTH_OFF: 'Bluetooth is OFF, switch it ON',
     NOT_CONNECTED: 'Vehicle is not reachable',
-    'TIME_OUT_CONNECTION ': 'Vehicle is visible, but is too far to connect to',
+    TIME_OUT_CONNECTION: 'Vehicle is visible, but is too far to connect to',
     TIME_OUT_ACTION:
       'Action has not been performed, or no response has been received',
     TIME_OUT_VEHICLE_DATA: 'Reading vehicle data has not been successful',
@@ -133,7 +133,7 @@ export default Platform.select({
       'This action is not possible because, the vehicle does not support it or is deactivated',
     ALREADY_CONNECTED:
       'No need to connect again, already connected to the vehicle',
-    'KEY_INVALID ': 'The key is invalid, please ask support to get one',
+    KEY_INVALID: 'The key is invalid, please ask support to get one',
     BAD_VIN:
       'Vin from token is not matching with the vehicle one, bad configuration backend side, vehicle need a reconfiguration',
     KEY_INCORRECT_MILEAGE:
@@ -142,7 +142,7 @@ export default Platform.select({
       'You are trying to use a key which is in the future, wait for the start date given to be reached',
     KEY_TOO_LATE:
       'You are trying to use a key with is in the past, please ask support to get one',
-    'KEY_DEPRECATED ':
+    KEY_DEPRECATED:
       'The action performed was time limited, and is now not active anymore',
     KEY_INVALIDATED:
       'This key is not valid anymore as another key has been with the vehicle, please ask support to get one',

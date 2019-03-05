@@ -27,7 +27,9 @@ export default {
     confirmationTitle: 'Confirmation needed',
     confirmationOk: 'OK',
     confirmationCancel: 'Cancel',
-    willRestart: 'Application will be restarted'
+    willRestart: 'Application will be restarted',
+    biomerticConfirmTitle: 'Touch sensor to confirm',
+    biomerticConfirmFailed: 'Not match, please try again'
   },
   error: {
     error: 'Error',
@@ -57,7 +59,8 @@ export default {
     rentalKeyMissing:
       'The key is missing, please contact UFODRIVE if the problem persist.',
     rentalNotOpen: 'The rental is not yet started, please wait...',
-    bluetoothNeeded: 'Please enable bluetooth on device and try again'
+    bluetoothNeeded: 'Please enable bluetooth on your phone and try again',
+    connectivityIssue: 'Connectivity Issue, please try again'
   },
   icon: {
     reserve: 'Reserve',
@@ -107,7 +110,8 @@ export default {
     clipboard: 'clipboard',
     browse: 'Open browser',
     closeRental: 'Close rental',
-    emergencyCall: 'Emergency call'
+    emergencyCall: 'Emergency call',
+    map: 'Open map'
   },
   register: {
     overviewTitle: 'Registration',
@@ -122,6 +126,7 @@ export default {
     addressInputPlaceholder: 'Street, number, post code, city and country',
     smsCodeInputLabel: 'The code received by SMS',
     addressLabel: 'Address',
+    redoCaptureConfirm: 'Please confirm you want to change the captured scan',
     identificationTitle: 'Register ID',
     identificationLabel: 'ID or Passport',
     identificationFrontInputLabel:
@@ -152,7 +157,9 @@ export default {
     referalCodeMessage:
       'You can use my UFODRIVE referral code {{code}} to get €30 off of your first ride',
     devicePermissionRestricted:
-      'To use {{type}} activate it in the phone settings'
+      'To use {{type}} activate it in the phone settings',
+    companyInputPlaceholder: 'Company name (optional)',
+    vatInputPlaceholder: 'VAT number (optional)'
   },
   inspect: {
     initialInspectionTitle: 'Initial inspection',
@@ -200,11 +207,14 @@ export default {
     connecting: '...Connecting...',
     locked: 'Doors locked',
     unlocked: 'Doors unlocked',
-    noData: '...'
+    noData: '...',
+    editBooking: 'Amend'
   },
   guide: {
     findTitle: 'Where is the car',
-    returnTitle: 'How to return'
+    returnTitle: 'How to return',
+    mapDialogTitle: 'Open in Maps',
+    mapDialogMessage: 'What app would you like to use?'
   },
   term: {
     rentalAgreementTitle: 'Sign the agreement',
@@ -215,9 +225,12 @@ export default {
   },
   booking: {
     screenTitle: 'Book your car',
+    screenTitleEdit: 'Update booking',
     subTitleStep1: 'BOOK',
-    subTitleStep2: 'PAY & CONFIRM',
+    subTitleStep1Upgrade: 'UPDATE',
+    subTitleStep2: 'PAY',
     subTitleStep3: 'DRIVE',
+    subTitleStep3Cancel: 'CANCEL',
     locSectionTitle: 'LOCATION',
     carsSectionTitle: 'CARS',
     timeSectionTitle: 'PICK-UP & RETURN TIME',
@@ -243,7 +256,8 @@ export default {
     stepPayNextTitle: 'CONFIRM',
     stepPayNextSubTitle: 'Go to step 3',
     creditCardTitle: 'CREDIT CARD INFO',
-    loyalityProgramtitle: 'VOUCHER & LOYALTY PROGRAM',
+    loyalityProgramTitle: 'VOUCHER & LOYALTY PROGRAM',
+    loyalityProgramEditTitle: 'LOYALTY PROGRAM',
     infoAtPaymentTitle: 'BOOKING INFORMATION',
     totalPricePayment: 'TOTAL - ALL INCLUDED',
     voucherPlaceholder: 'Voucher / referral code',
@@ -258,21 +272,29 @@ export default {
     highDemandColor: 'high demand',
     calendarColorsNotes: 'Select multiple dates to see discounts',
     driveTitle: 'Booking completed!',
+    driveUpdateTitle: 'Booking updated!',
+    driveCancelTitle: 'Your booking has been cancelled and your card refunded.',
     driveSubTitle: 'Enjoy your trip…',
     driveNextRegister: 'REGISTER',
     driveNextDrive: 'DRIVE YOUR CAR',
-    dreveDescrRegisterP1:
-      'Before the rental, please register by scanning your ID and driver licence. If you want to know more about how it works, ',
-    dreveDescrDriveP1:
-      'Find your bookings in the drive section of the app. If you want to know more about how it works, ',
-    dreveDescrGuideLink: 'Please consult the FAQ.',
+    driveNextHome: 'HOME',
+    driveDescrRegisterP1:
+      'Before the rental, please register by scanning your ID and driver licence.',
+    driveDescrDriveP1: 'Find your bookings in the drive section of the app.',
+    driveDescrP2: ' If you want to know more about how it works, ',
+    driveDescrGuideLink: 'Please consult the FAQ.',
+    driveDescrCancellation:
+      'Please note it will take a couple of day for the money to appear on your statement.\n\nWe look forward to welcoming you in the future.',
     feedBackTitle: 'Just one question',
     confirmDialog: 'DONE',
     feedBackInputPlaceholder: 'Your variant',
     ageConfirmation:
       'By confirming, I certify that I have read and fully accepted the general terms and conditions and that I am at least 26 years old and in possession of a valid driver license.',
     termsAlertBtn: 'Read terms',
-    termsLinkLabel: 'Terms and conditions'
+    termsLinkLabel: 'Terms and conditions',
+    undoBooking: 'Cancel booking (fees may apply)',
+    bookingEditResult: 'BOOKING',
+    cancelationFees: 'Cancelation fees'
   },
   launch: {
     launchTitle: 'Fast track\ncar rental',

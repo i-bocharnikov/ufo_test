@@ -1,20 +1,25 @@
 import axios from 'axios';
+import _ from 'lodash';
 
 import i18n from './i18n';
 import configs from './../utils/configurations';
 import { showToastError } from './interaction';
 
-const ufoServerPrivateApi = axios.create({
-  headers: { 'Accept-Language': i18n.language },
-  baseURL: `${configs.UFO_SERVER_PRIVATE_API_URL}${configs.UFO_SERVER_API_VERSION}/`,
-  timeout: 30000
-});
+const ufoServerPrivateApi = createApi(false, configs.UFO_SERVER_API_VERSION);
+const ufoServerPublicApi = createApi(true, configs.UFO_SERVER_API_VERSION);
 
-const ufoServerPublicApi = axios.create({
-  headers: { 'Accept-Language': i18n.language },
-  baseURL: `${configs.UFO_SERVER_PUBLIC_API_URL}${configs.UFO_SERVER_API_VERSION}/`,
-  timeout: 30000
-});
+/**
+  * @param {String} apiType
+  * @param {String} apiVersion
+  * @description Show toast as default api error handler
+  */
+function createApi(isPublicApi, apiVersion) {
+  return axios.create({
+    headers: { 'Accept-Language': i18n.language },
+    baseURL: `${isPublicApi ? configs.UFO_SERVER_PUBLIC_API_URL : configs.UFO_SERVER_PRIVATE_API_URL}${apiVersion}/`,
+    timeout: 30000
+  });
+}
 
 /**
   * @param {Object} error
@@ -30,6 +35,11 @@ function defaultErrorHandler(error) {
   setTimeout(() => showToastError(message), 300);
 }
 
+/**
+  * @param {Object} axiosRes
+  * @param {boolean} isSuccess
+  * @description Create standard response object
+  */
 function formatResponse(axiosRes, isSuccess = true) {
   return {
     isSuccess,
@@ -44,6 +54,11 @@ function formatResponse(axiosRes, isSuccess = true) {
   */
 export function getErrorMessage(errorObj) {
   let errorMsg = null;
+
+  // axios error about connectivity
+  if (errorObj.message === 'Network Error') {
+    return i18n.t('error:connectivityIssue');
+  }
 
   if (
     errorObj.response
@@ -91,8 +106,8 @@ export async function getFromApi(path, errorHandling = false, usePublicApi = fal
 /**
   * @param {string} path
   * @param {Object} body
-  * @returns {boolean} errorHandling
-  * @returns {boolean} usePublicApi
+  * @param {boolean} errorHandling
+  * @param {boolean} usePublicApi
   * @description Make POST request to server api
   */
 export async function postToApi(path, body, errorHandling = false, usePublicApi = false) {
@@ -110,11 +125,25 @@ export async function postToApi(path, body, errorHandling = false, usePublicApi 
   }
 }
 
-export async function putToApi(path, body, errorHandling = false, usePublicApi = false) {
+/**
+  * @param {string} path
+  * @param {Object} body
+  * @param {boolean} errorHandling
+  * @param {boolean} usePublicApi
+  * @param {string} apiVersion
+  * @description Make PUT request to server api
+  */
+export async function putToApi(path, body, errorHandling = false, usePublicApi = false, apiVersion) {
   try {
-    const api = usePublicApi ? ufoServerPublicApi : ufoServerPrivateApi;
-    const response = await api.put(path, body);
+    let api;
 
+    if (apiVersion) {
+      api = createApi(usePublicApi, apiVersion);
+    } else {
+      api = usePublicApi ? ufoServerPublicApi : ufoServerPrivateApi;
+    }
+
+    const response = await api.put(path, body);
     return formatResponse(response);
   } catch (error) {
     if (errorHandling) {
@@ -136,5 +165,89 @@ export async function checkServerAvailability() {
     return true;
   } catch (error) {
     return false;
+  }
+}
+
+/**
+  * @param {string} fileUri
+  * @param {Function} progressListener
+  * @returns {Object} formData
+  * @returns {boolean} errorHandling
+  * @returns {string} apiVersion
+  * @description Upload file with form data and listen progress
+  */
+export async function uploadToApiWithProgress(
+  fileUri,
+  progressListener,
+  /* domain, format, type, sub_type, path */
+  formData = {},
+  errorHandling = false,
+  apiVersion = configs.UFO_SERVER_DEPRECATED_API_VERSION
+) {
+  try {
+    // using one percent to show loading start
+    let percentCompleted = 1;
+    const fileOriginName = _.trimEnd(fileUri, '/');
+    const fileType = 'image/jpeg';
+
+    const fileName = (domain && sub_type) ? `${domain}${sub_type}.jpg` : fileOriginName;
+    const { domain, format, type, sub_type } = formData;
+
+    const path = formData.path || 'documents';
+    const api = createApi(false, apiVersion);
+    const data = new FormData();
+
+    data.append('file_name', fileName);
+    data.append('content_type', fileType);
+    data.append('document', {
+      uri: fileUri,
+      type: fileType,
+      name: fileName
+    });
+
+    if (domain) {
+      data.append('domain', domain);
+    }
+
+    if (format) {
+      data.append('format', format);
+    }
+
+    if (type) {
+      data.append('type', type);
+    }
+
+    if (sub_type) {
+      data.append('sub_type', sub_type);
+    }
+
+    progressListener(percentCompleted);
+    const response = await api.post(path, data, {
+      /* request config */
+      headers: { 'Content-Type': 'multipart/form-data' },
+      onUploadProgress: progressEvent => {
+        percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
+
+        if (percentCompleted > 0) {
+          progressListener(percentCompleted);
+        }
+      }
+    });
+
+    // if request finished progress should be full
+    if (percentCompleted !== 100) {
+      percentCompleted = 100;
+      progressListener(percentCompleted);
+    }
+
+    return formatResponse(response.data || response);
+  } catch (error) {
+    progressListener(0);
+
+    if (errorHandling) {
+      defaultErrorHandler(error);
+    }
+
+    return formatResponse(error, false);
   }
 }

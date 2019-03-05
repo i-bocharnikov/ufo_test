@@ -73,7 +73,7 @@ class CommentDamageScreen extends Component {
       {
         style: actionStyles.ACTIVE,
         icon: icons.CANCEL,
-        onPress: () => this.props.navigation.popToTop()
+        onPress: this.doCancel
       },
       {
         style: actionStyles.ACTIVE,
@@ -83,7 +83,7 @@ class CommentDamageScreen extends Component {
       {
         style: this.comment ? actionStyles.TODO : actionStyles.DISABLE,
         icon: icons.SAVE,
-        onPress: () => this.doSave()
+        onPress: this.doSave
       }
     ];
 
@@ -162,6 +162,12 @@ class CommentDamageScreen extends Component {
     if (inspectStore.addCarDamage()) {
       this.props.navigation.popToTop();
     }
+  };
+
+  @action
+  doCancel = () => {
+    inspectStore.documentReference = null;
+    this.props.navigation.popToTop();
   };
 
   keyboardDidShow = () => {

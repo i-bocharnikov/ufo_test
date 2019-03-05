@@ -18,10 +18,6 @@ export default class UFONavBarWrapper extends Component {
       subtitle,
       SubtitleComponent,
       isCollapsible,
-      leftBtnAction,
-      leftBtnIcon,
-      rightBtnAction,
-      rightBtnIcon,
       backgroundWrapper,
       children
     } = this.props;
@@ -37,52 +33,20 @@ export default class UFONavBarWrapper extends Component {
             styles.header,
             { height: isCollapsible ? this.getHeaderHeight() : HEADER_HEIGHT }
           ]}>
-            {leftBtnAction && (
-              <TouchableOpacity
-                onPress={leftBtnAction}
-                style={styles.leftBtn}
-                activeOpacity={values.BTN_OPACITY_DEFAULT}
-              >
-                <UFOIcon
-                  name={leftBtnIcon}
-                  iconPack="MaterialCommunity"
-                  animated={true}
-                  style={[
-                    styles.actionIcon,
-                    { fontSize: isCollapsible ? this.getActionIconSize() : ACTION_ICON_SIZE }
-                  ]}
-                />
-              </TouchableOpacity>
-            )}
+            {this.renderLeftBtn()}
             <Animated.Text style={[
               styles.title,
               { fontSize: isCollapsible ? this.getHeaderTitleSize() : TITLE_FONT_SIZE }
             ]}>
               {title}
             </Animated.Text>
-            {rightBtnAction && (
-              <TouchableOpacity
-                onPress={rightBtnAction}
-                style={styles.rightBtn}
-                activeOpacity={values.BTN_OPACITY_DEFAULT}
-              >
-                <UFOIcon
-                  name={rightBtnIcon}
-                  iconPack="MaterialCommunity"
-                  animated={true}
-                  style={[
-                    styles.actionIcon,
-                    { fontSize: isCollapsible ? this.getActionIconSize() : ACTION_ICON_SIZE }
-                  ]}
-                />
-              </TouchableOpacity>
-            )}
+            {this.renderRightBtn()}
           </Animated.View>
           {hasSubtitle && (
             <View style={styles.subHeader}>
               {SubtitleComponent
                 ? SubtitleComponent
-                : <Text style={[ styles.subTitle, styles.subTitleCenter ]}>{subtitle}</Text>
+                : <Text style={[ styles.subTitle, styles.subTitleCenter ]} numberOfLines={1}>{subtitle}</Text>
               }
             </View>
           )}
@@ -102,6 +66,58 @@ export default class UFONavBarWrapper extends Component {
           {children}
         </ScrollView>
       </View>
+    );
+  }
+
+  renderLeftBtn() {
+    const { isCollapsible, leftBtnAction, leftBtnIcon } = this.props;
+
+    if (!leftBtnAction) {
+      return null;
+    }
+
+    return (
+      <TouchableOpacity
+        onPress={leftBtnAction}
+        style={styles.leftBtn}
+        activeOpacity={values.BTN_OPACITY_DEFAULT}
+      >
+        <UFOIcon
+          name={leftBtnIcon}
+          iconPack="MaterialCommunity"
+          animated={true}
+          style={[
+            styles.actionIcon,
+            { fontSize: isCollapsible ? this.getActionIconSize() : ACTION_ICON_SIZE }
+          ]}
+        />
+      </TouchableOpacity>
+    );
+  }
+
+  renderRightBtn() {
+    const { isCollapsible, rightBtnAction, rightBtnIcon } = this.props;
+
+    if (!rightBtnAction) {
+      return null;
+    }
+
+    return (
+      <TouchableOpacity
+        onPress={rightBtnAction}
+        style={styles.rightBtn}
+        activeOpacity={values.BTN_OPACITY_DEFAULT}
+      >
+        <UFOIcon
+          name={rightBtnIcon}
+          iconPack="MaterialCommunity"
+          animated={true}
+          style={[
+            styles.actionIcon,
+            { fontSize: isCollapsible ? this.getActionIconSize() : ACTION_ICON_SIZE }
+          ]}
+        />
+      </TouchableOpacity>
     );
   }
 

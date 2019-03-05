@@ -85,6 +85,7 @@ static id ObjectOrNull(id object)
 }
 
 NSString *UNEXPECTED_ERROR_CODE = @"999";
+NSString *CONNECTED_ERROR_CODE = @"11";
 RCT_EXPORT_MODULE();
 
 // custom events and listeners
@@ -362,7 +363,7 @@ RCT_REMAP_METHOD(connect,
   {
     [[OTAManager instance] connectToVehicleWithCompletion:^(NSError *error) {
                                               if (error) {
-                                                reject(UNEXPECTED_ERROR_CODE, @"connect", error);
+                                                reject(CONNECTED_ERROR_CODE, @"connect", error);
                                               } else {
                                                 resolve(@YES);
                                               }
@@ -513,6 +514,22 @@ RCT_REMAP_METHOD(disableEngine,
     @try{
     reject(UNEXPECTED_ERROR_CODE, @"disableEngine", error);
     }@catch (NSError *error){/*ignore*/}
+  }
+}
+
+// closeSession
+RCT_REMAP_METHOD(closeSession,
+                 closeSessionResolver:(RCTPromiseResolveBlock)resolve
+                 closeSessionRejecter:(RCTPromiseRejectBlock)reject)
+{
+  @try
+  {
+    [[OTAManager instance] closeSession];
+    resolve(@YES);
+  }
+  @catch (NSError *error)
+  {
+    reject(UNEXPECTED_ERROR_CODE, @"closeSession", error);
   }
 }
 

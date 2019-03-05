@@ -12,10 +12,10 @@ import {
 import { observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { translate } from 'react-i18next';
+import DeviceInfo from 'react-native-device-info';
 
 import { keys as screenKeys } from './../../navigators/helpers';
-import registerStore from './../../stores/registerStore';
-import appStore from './../../stores/appStore';
+import { appStore, registerStore } from './../../stores';
 import UFOHeader from './../../components/header/UFOHeader';
 import UFOActionBar from './../../components/UFOActionBar';
 import UFOPopover from './../../components/UFOPopover';
@@ -27,14 +27,13 @@ import {
 } from './../../components/common';
 import { screens, images, actionStyles, icons } from './../../utils/global';
 import styles from './styles';
-import DeviceInfo from 'react-native-device-info';
 
 @observer
 class SignUpScreen extends Component {
   @observable refreshing = false;
 
   async componentDidMount() {
-    await this.initLoad();
+    await registerStore.fetchScanDocumentThumbs();
 
     reaction(
       () => registerStore.isConnected,
@@ -199,7 +198,7 @@ class SignUpScreen extends Component {
       {
         style: actionStyles.ACTIVE,
         icon: icons.HOME,
-        onPress: () => navigation.navigate(screens.HOME.name)
+        onPress: () => navigation.navigate(screenKeys.Home)
       }
     ];
 
@@ -215,7 +214,7 @@ class SignUpScreen extends Component {
           ? actionStyles.TODO
           : actionStyles.DISABLE,
         icon: icons.DONE,
-        onPress: () => navigation.navigate(screens.HOME.name)
+        onPress: () => navigation.navigate(screenKeys.Home)
       });
     } else {
       actions.push({
@@ -223,7 +222,7 @@ class SignUpScreen extends Component {
           ? actionStyles.TODO
           : actionStyles.ACTIVE,
         icon: icons.LOGIN,
-        onPress: async () => navigation.navigate(screens.REGISTER_PHONE.name)
+        onPress: this.navToPhoneScreen
       });
     }
 
@@ -231,15 +230,15 @@ class SignUpScreen extends Component {
   };
 
   navToPhoneScreen = () => {
-    this.props.navigation.navigate(screens.REGISTER_PHONE.name);
+    this.props.navigation.navigate(screenKeys.Phone);
   };
 
   navToEmailScreen = () => {
-    this.props.navigation.navigate(screens.REGISTER_EMAIL.name);
+    this.props.navigation.navigate(screenKeys.Email);
   };
 
   navToAddressScreen = () => {
-    this.props.navigation.navigate(screens.REGISTER_ADDRESS.name);
+    this.props.navigation.navigate(screenKeys.Address);
   };
 
   navToIdCardScreen = () => {
@@ -247,29 +246,23 @@ class SignUpScreen extends Component {
     const params = {
       actionNavNext: () => navigation.navigate(screenKeys.Identification),
       actionNavBack: () => navigation.navigate(screenKeys.SignUp),
-      actionHandleFileAsync: this.uploadFaceCapture,
+      actionHandleFileAsync: registerStore.uploadFaceCapture,
       description: t('faceRecognizing:registerCaptureDescription'),
       autohandling: true
     };
     if (registerStore.user.face_capture_required && !DeviceInfo.isEmulator()) {
       navigation.navigate(screenKeys.FaceRecognizer, params);
     } else {
-      this.props.navigation.navigate(screens.REGISTER_IDENTIFICATION.name, {
-        frontImageUrl: registerStore.identificationFrontDocument,
-        backImageUrl: registerStore.identificationBackDocument
-      });
+      this.props.navigation.navigate(screenKeys.Identification);
     }
   };
 
   navToDriverCardScreen = () => {
-    this.props.navigation.navigate(screens.REGISTER_DRIVER_LICENCE.name, {
-      frontImageUrl: registerStore.driverLicenceFrontDocument,
-      backImageUrl: registerStore.driverLicenceBackDocument
-    });
+    this.props.navigation.navigate(screenKeys.DriverLicence);
   };
 
   navToMilesScreen = () => {
-    this.props.navigation.navigate(screens.REGISTER_MILES.name);
+    this.props.navigation.navigate(screenKeys.Miles);
   };
 
   shareRefCode = () => {
@@ -286,91 +279,12 @@ class SignUpScreen extends Component {
     Share.share(content, options);
   };
 
-  initLoad = async () => {
-    /* handle id card front */
-    registerStore.user.identificationFrontDocument = 'loading';
-    if (registerStore.user.identification_scan_front_side) {
-      const imgRef =
-        registerStore.user.identification_scan_front_side.reference;
-      const imgData = await registerStore.downloadDocument(imgRef);
-      registerStore.identificationFrontDocument = imgData
-        ? `data:image/png;base64,${imgData}`
-        : null;
-    } else {
-      registerStore.identificationFrontDocument = null;
-    }
-
-    /* handle id card back */
-    registerStore.user.identificationBackDocument = 'loading';
-    if (registerStore.user.identification_scan_back_side) {
-      const imgRef = registerStore.user.identification_scan_back_side.reference;
-      const imgData = await registerStore.downloadDocument(imgRef);
-      registerStore.identificationBackDocument = imgData
-        ? `data:image/png;base64,${imgData}`
-        : null;
-    } else {
-      registerStore.identificationBackDocument = null;
-    }
-
-    /* handle drive card front */
-    registerStore.user.driverLicenceFrontDocument = 'loading';
-    if (registerStore.user.driver_licence_scan_front_side) {
-      const imgRef =
-        registerStore.user.driver_licence_scan_front_side.reference;
-      const imgData = await registerStore.downloadDocument(imgRef);
-      registerStore.driverLicenceFrontDocument = imgData
-        ? `data:image/png;base64,${imgData}`
-        : null;
-    } else {
-      registerStore.driverLicenceFrontDocument = null;
-    }
-
-    /* handle drive card back */
-    registerStore.user.driverLicenceBackDocument = 'loading';
-    if (registerStore.user.driver_licence_scan_back_side) {
-      const imgRef = registerStore.user.driver_licence_scan_back_side.reference;
-      const imgData = await registerStore.downloadDocument(imgRef);
-      registerStore.driverLicenceBackDocument = imgData
-        ? `data:image/png;base64,${imgData}`
-        : null;
-    } else {
-      registerStore.driverLicenceBackDocument = null;
-    }
-  };
-
   refreshSignUpData = async () => {
     this.refreshing = true;
     await registerStore.getUserData();
-    await this.initLoad();
+    await registerStore.fetchScanDocumentThumbs();
     this.refreshing = false;
-  };
-
-  uploadFaceCapture = async fileUri => {
-    try {
-      const uploadedFace = await registerStore.uploadDocument(
-        'identification',
-        'one_side',
-        'face_capture',
-        'front_side',
-        fileUri
-      );
-
-      const isSuccess = await registerStore.save({
-        identification_face_capture_reference: uploadedFace.reference
-      });
-
-      return isSuccess;
-    } catch (error) {
-      return false;
-    }
   };
 }
 
-export default translate('translations')(SignUpScreen);
-
-/*
-  didn't replace (refactor) in render:
-  UFOHeader
-  UFOActionBar
-  UFOImage
-*/
+export default translate()(SignUpScreen);

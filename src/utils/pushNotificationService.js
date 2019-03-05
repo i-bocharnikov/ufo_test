@@ -2,13 +2,12 @@ import firebase from 'react-native-firebase';
 import { putToApi } from './api';
 import remoteLoggerService from './remoteLoggerService';
 import { checkConnectivity } from './api_deprecated';
-import appStore from '../stores/appStore';
-import { driveStore } from '../stores';
+import { appStore, driveStore } from '../stores';
 
 const FCM = firebase.messaging();
 const FCN = firebase.notifications();
 
-class NotificationService {
+class PushNotificationService {
   constructor() {
     this.enabled = false;
     this.fcmToken = null;
@@ -243,6 +242,6 @@ class NotificationService {
   };
 }
 
-const notificationService = new NotificationService();
+const pushNotificationService = new PushNotificationService();
 
-export default notificationService;
+export default pushNotificationService;
