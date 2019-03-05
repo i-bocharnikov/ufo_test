@@ -208,7 +208,7 @@ export default {
     locked: 'Doors locked',
     unlocked: 'Doors unlocked',
     noData: '...',
-    editBooking: 'Edit'
+    editBooking: 'Amend'
   },
   guide: {
     findTitle: 'Where is the car',
@@ -278,11 +278,13 @@ export default {
     driveNextRegister: 'REGISTER',
     driveNextDrive: 'DRIVE YOUR CAR',
     driveNextHome: 'HOME',
-    driveDescrRegisterP1: 'Before the rental, please register by scanning your ID and driver licence.',
+    driveDescrRegisterP1:
+      'Before the rental, please register by scanning your ID and driver licence.',
     driveDescrDriveP1: 'Find your bookings in the drive section of the app.',
     driveDescrP2: ' If you want to know more about how it works, ',
     driveDescrGuideLink: 'Please consult the FAQ.',
-    driveDescrCancellation: 'Please note it will take a couple of day for the money to appear on your statement.\n\nWe look forward to welcoming you in the future.',
+    driveDescrCancellation:
+      'Please note it will take a couple of day for the money to appear on your statement.\n\nWe look forward to welcoming you in the future.',
     feedBackTitle: 'Just one question',
     confirmDialog: 'DONE',
     feedBackInputPlaceholder: 'Your variant',
