@@ -15,8 +15,8 @@ export default Platform.select({
     '8':
       'This action is not possible because the system does not support it or is deactivated',
     '9': 'No need to connect again, already connected to the vehicle',
-    '10': 'Action cannot be performed because not connected to vehicle',
-    '11': 'Vehicle has not been found after 10s searching',
+    '10': 'Vehicle is not reachable',
+    '11': 'The vehicle is not reachable',
     '12':
       "Can't process the action, as a previous one is still in progress, wait for it to finish",
     '13': 'You currently have no used key, please ask support to get one',
@@ -120,7 +120,7 @@ export default Platform.select({
       'The putback request has been refused by integrator (the fuel level is incorrect)',
     // Bluetooth error code
     BLE_NOT_AVAILABLE: 'Bluetooth is not available on this phone.',
-    DEVICE_NOT_FOUND: 'Vehicle has not been found after 10s searching',
+    DEVICE_NOT_FOUND: 'The vehicle is not reachable',
     BLUETOOTH_OFF: 'Bluetooth is OFF, switch it ON',
     NOT_CONNECTED: 'Vehicle is not reachable',
     TIME_OUT_CONNECTION: 'Vehicle is visible, but is too far to connect to',

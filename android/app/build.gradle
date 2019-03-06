@@ -101,7 +101,7 @@ android {
         applicationId "com.ufodrive.app"
         minSdkVersion 23
         targetSdkVersion 27
-        versionCode 23
+        versionCode 24
         versionName "2.2.0"
         ndk {
             abiFilters "armeabi-v7a", "x86"

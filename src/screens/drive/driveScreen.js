@@ -42,6 +42,7 @@ class DriveScreen extends Component {
   @observable returnSelected = false;
   @observable refreshing = false;
   @observable activityPending = false;
+  keyGenerationInProgress = false;
 
   async componentDidMount() {
     if (driveStore.hasRentalOngoing && registerStore.isUserRegistered) {
@@ -264,8 +265,13 @@ class DriveScreen extends Component {
     if (driveStore.inUse && driveStore.rental.key_id) {
       const keyId = driveStore.rental.key_id;
       if (keyId !== otaKeyStore.key.keyId || !otaKeyStore.isKeyEnabled) {
-        await otaKeyStore.enableKey(keyId, false);
-        await otaKeyStore.switchToKey(keyId, false);
+        if (this.keyGenerationInProgress === false) {
+          this.keyGenerationInProgress = true;
+          if ((await otaKeyStore.enableKey(keyId, false)) === true) {
+            await otaKeyStore.switchToKey(keyId, false);
+          }
+          this.keyGenerationInProgress = false;
+        }
       }
     }
   };
@@ -338,14 +344,28 @@ class DriveScreen extends Component {
 
     await this.doEnableAndSwitch();
 
-    await otaKeyStore.syncVehicleData(false);
-    if (!DeviceInfo.isEmulator() && !otaKeyStore.isConnectedToVehicle(true)) {
-      await otaKeyStore.connect(
+    if (await checkConnectivity()) {
+      await otaKeyStore.syncVehicleData(false);
+    }
+
+    if (DeviceInfo.isEmulator()) {
+      this.activityPending = false;
+      return;
+    }
+
+    let isConnected = await otaKeyStore.isConnectedToVehicle(false);
+    if (!isConnected) {
+      isConnected = await otaKeyStore.connect(
         false,
         false
       );
-      await otaKeyStore.getVehicleData(false);
+      if (!isConnected) {
+        this.activityPending = false;
+        return;
+      }
     }
+
+    await otaKeyStore.getVehicleData(false);
 
     this.activityPending = false;
   };
@@ -405,17 +425,26 @@ class DriveScreen extends Component {
       await this.doEnableAndSwitch();
     }
 
-    if (!DeviceInfo.isEmulator() && !otaKeyStore.isConnectedToVehicle(true)) {
-      await otaKeyStore.connect(
+    let isConnected = await otaKeyStore.isConnectedToVehicle(true);
+    if (!isConnected) {
+      isConnected = await otaKeyStore.connect(
         false,
-        false
+        true
       );
+      if (!isConnected) {
+        this.activityPending = false;
+        return;
+      }
     }
 
     await otaKeyStore.unlockDoors(false, true);
     await otaKeyStore.getVehicleData(false);
 
     this.activityPending = false;
+
+    if (await checkConnectivity()) {
+      await otaKeyStore.syncVehicleData(false);
+    }
   };
 
   doLockCar = async () => {
@@ -465,7 +494,6 @@ class DriveScreen extends Component {
         {},
         otaKeyStore.key
       );
-
       this.activityPending = false;
       return;
     }
@@ -474,24 +502,26 @@ class DriveScreen extends Component {
       await this.doEnableAndSwitch();
     }
 
-    if (!DeviceInfo.isEmulator() && !otaKeyStore.isConnectedToVehicle(true)) {
-      await otaKeyStore.connect(
+    let isConnected = await otaKeyStore.isConnectedToVehicle(true);
+    if (!isConnected) {
+      isConnected = await otaKeyStore.connect(
         false,
-        false
+        true
       );
+      if (!isConnected) {
+        this.activityPending = false;
+        return;
+      }
     }
 
     await otaKeyStore.lockDoors(false, true);
     await otaKeyStore.getVehicleData(false);
 
     this.activityPending = false;
-  };
 
-  doConnectCar = async () => {
-    this.activityPending = true;
-    await otaKeyStore.connect();
-    await otaKeyStore.getVehicleData();
-    this.activityPending = false;
+    if (await checkConnectivity()) {
+      await otaKeyStore.syncVehicleData(false);
+    }
   };
 
   confirmCloseRental = async t => {

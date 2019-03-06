@@ -2,6 +2,7 @@ package com.ufodrive.app;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.facebook.react.bridge.Arguments;
@@ -484,7 +485,7 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
     @ReactMethod
     public void isConnectedToVehicle(final Promise promise){
         try{
-            boolean result = getOtaSdk().getBle().isConnectedToVehicle();
+            boolean result = getOtaSdk().getBle().isConnectedToVehicle();            
             promise.resolve(result);
         }catch(Exception e) {
             try {promise.reject(e);}catch(Exception ignore){silentException(e);}
@@ -800,12 +801,11 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
     }
 
     private void silentException(Exception exception) {
-        //Toast.makeText(getReactApplicationContext(), "Silent Exception:"+exception.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-    }
-
-    private void sendEvent(ReactContext reactContext, String eventName, @Nullable WritableMap params) {
-        //Toast.makeText(getReactApplicationContext(), "event ["+eventName+"] sent", Toast.LENGTH_LONG).show();
-        reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, params);
+        WritableMap map = Arguments.createMap();
+        map.putString("localizedMessage", exception != null ? exception.getLocalizedMessage() : "no message");
+        map.putString("message", exception != null ? exception.getMessage() : "no message");
+        map.putString("stack", exception != null ? Log.getStackTraceString(exception) : "no stack trace");
+        sendEvent(getReactApplicationContext(), "onSilentException", map);
     }
 
     @Override
@@ -823,5 +823,10 @@ public class OTAKeyModule extends ReactContextBaseJavaModule implements BleListe
         map.putString("newBluetoothState", newBluetoothState != null ? newBluetoothState.name() : null);
         map.putString("previousBluetoothState", previousBluetoothState1 != null ? previousBluetoothState1.name() : null);
         sendEvent(getReactApplicationContext(), "onOtaBluetoothStateChanged", map);
+    }
+
+    private void sendEvent(ReactContext reactContext, String eventName, @Nullable WritableMap params) {
+        //Toast.makeText(getReactApplicationContext(), "event ["+eventName+"] sent", Toast.LENGTH_LONG).show();
+        reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, params);
     }
 }
