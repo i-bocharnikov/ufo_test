@@ -267,6 +267,9 @@ class IdCardEditorScreen extends Component {
     );
   };
 
+  /*
+   * Save new images
+  */
   doSave = async () => {
     this.activityPending = true;
     const type = this.frontImageUrl && this.backImageUrl ? 'two_side' : 'one_side';
