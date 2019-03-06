@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Image, View, Text, ImageEditor } from 'react-native';
+import { Image, View, Text, ImageEditor, ScrollView } from 'react-native';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 import { translate } from 'react-i18next';
@@ -27,7 +27,6 @@ import { images } from './../../utils/theme';
 import { actionStyles, icons } from './../../utils/global';
 
 const captureStates = {
-  PREVIEW: 'PREVIEW',
   CAPTURE_FRONT: 'CAPTURE_FRONT',
   CAPTURE_BACK: 'CAPTURE_BACK',
   VALIDATE: 'VALIDATE'
@@ -41,17 +40,10 @@ class IdCardEditorScreen extends Component {
   @observable isCameraAllowed = false;
   @observable frontImageUrl = null;
   @observable backImageUrl = null;
-  @observable captureState = (
-    !registerStore.dlCardFrontScan
-    || registerStore.dlCardFrontScan === 'loading'
-  )
-    ? captureStates.CAPTURE_FRONT
-    : captureStates.PREVIEW;
+  @observable captureState = captureStates.CAPTURE_FRONT;
 
   render() {
     const { t, navigation } = this.props;
-    const showCamera = this.captureState === captureStates.CAPTURE_FRONT
-      || this.captureState === captureStates.CAPTURE_BACK;
 
     return (
       <UFOContainer style={styles.container}>
@@ -61,9 +53,7 @@ class IdCardEditorScreen extends Component {
           leftBtnAction={this.doCancel}
           rightBtnUseDefault={true}
         />
-        {this.captureState === captureStates.PREVIEW && this.renderCurrentThumbs()}
-        {this.captureState === captureStates.VALIDATE && this.renderNewPreview()}
-        {showCamera && (
+        {this.captureState === captureStates.VALIDATE ? this.renderNewPreview() : (
           <UFOCamera
             onCameraReady={this.onCameraReady}
             ref={this.cameraRef}
@@ -107,42 +97,26 @@ class IdCardEditorScreen extends Component {
     );
   };
 
-  renderCurrentThumbs = () => (
-    <View style={styles.cardsWrapper}>
-      <Text style={[ styles.infoPreviewTitle, styles.cardsTitle ]}>
-        {this.props.t('redoCaptureConfirm')}
-      </Text>
-      <View style={styles.cardsPreviewContainer}>
-        <UFOImage
-          source={{ uri: registerStore.idCardFrontScan }}
-          style={{ width: CARD_WIDTH / 2, height: CARD_HEIGHT / 2 }}
-        />
-        <UFOImage
-          source={{ uri: registerStore.idCardBackScan }}
-          style={{ width: CARD_WIDTH / 2, height: CARD_HEIGHT / 2 }}
-        />
-      </View>
-    </View>
-  );
-
   renderNewPreview = () => (
-    <View style={styles.cardsWrapper}>
-      <Text style={[ styles.infoPreviewTitle, styles.cardsTitle ]}>
-        {this.props.t('identificationCheckLabel')}
-      </Text>
-      <View style={styles.cardsContainer}>
-        <UFOImage
-          source={{ uri: this.frontImageUrl }}
-          style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
-          fallbackToImage={true}
-        />
-        <UFOImage
-          source={{ uri: this.backImageUrl }}
-          style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
-          fallbackToImage={true}
-        />
+    <ScrollView contentContainerStyle={styles.actionBarIndent}>
+      <View style={styles.cardsWrapper}>
+        <Text style={[ styles.infoPreviewTitle, styles.cardsTitle ]}>
+          {this.props.t('identificationCheckLabel')}
+        </Text>
+        <View style={styles.cardsContainer}>
+          <UFOImage
+            source={{ uri: this.frontImageUrl }}
+            style={{ width: CARD_WIDTH, height: CARD_HEIGHT, marginBottom: 4 }}
+            fallbackToImage={true}
+          />
+          <UFOImage
+            source={{ uri: this.backImageUrl }}
+            style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
+            fallbackToImage={true}
+          />
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 
   get compileActions() {

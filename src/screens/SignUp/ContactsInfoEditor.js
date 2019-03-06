@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { View, BackHandler, ScrollView } from 'react-native';
+import { View, BackHandler, ScrollView, Text } from 'react-native';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 import { translate } from 'react-i18next';
@@ -105,14 +105,19 @@ class ContactsInfoEditorScreen extends Component {
     const { t } = this.props;
 
     return (
-      <UFOTextInputBold
-        title={t('smsCodeLabel')}
-        containerStyle={styles.blockShadow}
-        autoFocus={true}
-        maxLength={10}
-        keyboardType="number-pad"
-        onChangeText={this.onChangeCode}
-      />
+      <Fragment>
+        <UFOTextInputBold
+          title={t('smsCodeLabel')}
+          containerStyle={styles.blockShadow}
+          autoFocus={true}
+          maxLength={10}
+          keyboardType="number-pad"
+          onChangeText={this.onChangeCode}
+        />
+        <Text style={styles.smsCodeNote}>
+          {t('smsWaitingNote')}
+        </Text>
+      </Fragment>
     );
   };
 

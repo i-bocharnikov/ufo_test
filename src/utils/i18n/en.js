@@ -89,7 +89,7 @@ export default {
     driverLicence: 'Driver licence',
     select: 'Select',
     capture: 'Capture',
-    newCapture: 'Try again',
+    newCapture: 'New capture',
     torch: 'Torch',
     validate: 'Validate',
     done: 'Done',
@@ -138,39 +138,28 @@ export default {
     milesTitle: 'Miles & more',
     shareDialogTitle: 'Share referal code',
     referalCodeMessage: 'You can use my UFODRIVE referral code {{code}} to get €30 off of your first ride',
-    contactsHeader: 'Your contacts',
+    contactsHeader: 'Personal info',
     contactsHeader_phone: 'Enter your phone',
     contactsHeader_code: 'Enter code',
-    addressHeader: 'Your billing info',
+    addressHeader: 'Invoicing info',
     optionalPlaceholder: 'optional',
-    redoCaptureConfirm: 'Please confirm you want to change the captured scan',
     identificationTitle: 'Register ID',
     identificationLabel: 'ID or Passport',
-    identificationFrontInputLabel:
-      'Please position the front side of your ID card or passport inside this rectangle',
-    identificationCheckLabel:
-      'Please check that the text is readable and that the whole document is visible',
-    identificationBackInputLabel:
-      'Please position the back side of your ID card or passport inside this rectangle.',
+    identificationFrontInputLabel: 'Please position the front side of your ID card or passport inside this rectangle',
+    identificationCheckLabel: 'Please check that the text is readable and that the whole document is visible',
+    identificationBackInputLabel: 'Please position the back side of your ID card or passport inside this rectangle.',
     driverLicenceTitle: 'Register driver licence',
     driverLicenceLabel: 'Driver licence',
-    driverLicenceFrontInputLabel:
-      'Please position the front side of your driver licence inside this rectangle',
-    driverLicenceCheckLabel:
-      'Please check that the text is readable and the whole document is visible',
-    driverLicenceBackInputLabel:
-      'Please position the back side of your driver licence inside this rectangle.',
+    driverLicenceFrontInputLabel: 'Please position the front side of your driver licence inside this rectangle',
+    driverLicenceCheckLabel: 'Please check that the text is readable and the whole document is visible',
+    driverLicenceBackInputLabel: 'Please position the back side of your driver licence inside this rectangle.',
     cameraNotAvailable: 'The camera is not available',
-    cameraProcessingError:
-      'Unexpected issues detected during the image processing of the camera ({{message}}). Please try again and/or contact the support team if the problem persists.',
+    cameraProcessingError: 'Unexpected issues detected during the image processing of the camera ({{message}}). Please try again and/or contact the support team if the problem persists.',
     devicePermissionTitle: 'Permission to use {{type}}',
-    cameraPermissionMessage:
-      "We need your permission to use your phone's camera",
+    cameraPermissionMessage: 'We need your permission to use your phone\'s camera',
     disconnectConfirmationMessage: 'Are you sure you want to logout?',
-    idCardPickerLabel: 'Passport\nor ID card',
-    driveCardPickerLabel: 'Driving\nLicense',
-    devicePermissionRestricted:
-      'To use {{type}} activate it in the phone settings',
+    devicePermissionRestricted: 'To use {{type}} activate it in the phone settings',
+    smsWaitingNote: 'An SMS with the needed code sent by UFODRIVE will arrive soon depending on your mobile operator'
   },
   inspect: {
     initialInspectionTitle: 'Initial inspection',

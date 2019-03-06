@@ -3,9 +3,9 @@ import { colors, textThemes } from './../../../utils/theme';
 
 export const ufoInputBoldStyles = {
   ...textThemes.SP_SEMIBOLD,
-  fontSize: 28,
-  height: 28,
-  lineHeight: 28,
+  fontSize: 23,
+  height: 27,
+  lineHeight: 27,
   padding: 0,
   letterSpacing: 1.2,
   backgroundColor: 'transparent'

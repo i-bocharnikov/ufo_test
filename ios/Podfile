@@ -31,7 +31,7 @@ target 'driverApp' do
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
   pod 'react-native-sensitive-info', :path => '../node_modules/react-native-sensitive-info'
   pod 'ReactNativePermissions', :path => '../node_modules/react-native-permissions'
-  pod 'OTASDK', '~> 3.11.2'
+  pod 'OTASDK', '~> 3.11.5'
   pod 'Stripe', '~> 13.2.0'
   pod 'react-native-camera', path: '../node_modules/react-native-camera', subspecs: [
     'FaceDetector'

@@ -276,7 +276,8 @@ export default StyleSheet.create({
   cardsWrapper: {
     marginHorizontal: HORIZONTAL_INDENTS,
     marginTop: 12,
-    paddingBottom: 8
+    paddingBottom: 8,
+    backgroundColor: colors.BG_INVERT
   },
 
   cardsTitle: {
@@ -284,14 +285,18 @@ export default StyleSheet.create({
     marginBottom: 8
   },
 
-  cardsPreviewContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-around'
-  },
-
   cardsContainer: {
     alignItems: 'center',
     justifyContent: 'center'
+  },
+
+  smsCodeNote: {
+    ...textThemes.SP_SEMIBOLD,
+    fontSize: 17,
+    lineHeight: 23,
+    letterSpacing: 0.8,
+    color: colors.TEXT_LIGHT_COLOR,
+    textAlign: 'center',
+    marginTop: 16
   }
 });
