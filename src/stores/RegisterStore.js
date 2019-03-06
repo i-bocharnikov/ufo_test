@@ -140,7 +140,7 @@ export default class RegisterStore {
     const token = await getAuthenticationTokenFromStore();
     await useTokenInApi_deprecated(token);
     await setAuthTokenForApi(token);
-  }
+  };
 
   /*
    * @description Register device with identifier
@@ -197,7 +197,7 @@ export default class RegisterStore {
     }
 
     return null;
-  }
+  };
 
   /*
    * @returns {boolean}
@@ -213,7 +213,7 @@ export default class RegisterStore {
     }
 
     return false;
-  }
+  };
 
   /*
    * @returns {boolean}
@@ -223,7 +223,7 @@ export default class RegisterStore {
   connect = async code => {
     const response = await postToApi(`/${this.acknowledgeUri}`, { validation_code: code });
     return _.isMatch(response, { 'status': 'success' });
-  }
+  };
 
   /*
    * @description Logout at device
@@ -235,7 +235,7 @@ export default class RegisterStore {
     this.idCardBackScan = null;
     this.dlCardFrontScan = null;
     this.dlCardBackScan = null;
-  }
+  };
 
   /*
    * @param {Object} extraData
@@ -255,7 +255,7 @@ export default class RegisterStore {
     }
 
     return false;
-  }
+  };
 
   /*
    * @param {string} domain
@@ -275,7 +275,7 @@ export default class RegisterStore {
     }
 
     return null;
-  }
+  };
 
   /*
    * @returns {boolean}

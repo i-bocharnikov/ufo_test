@@ -22,7 +22,7 @@ class UserInfoScreen extends Component {
 
     reaction(
       () => registerStore.isConnected,
-      () => registerStore.isConnected && this.refreshSignUpData()
+      () => registerStore.isConnected && this.refreshData()
     );
   }
 
