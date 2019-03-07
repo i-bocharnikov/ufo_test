@@ -43,7 +43,7 @@ class StepCancellationScreen extends Component {
               {t('cancelationFees')}
             </Text>
             {bookingStore.currentPriceLabel && (
-              <Text style={styles.infoTitleNewPrice}>
+              <Text style={[ styles.infoTitleNewPrice, styles.infoNewPriceIndent ]}>
                 {bookingStore.currentPriceLabel}
               </Text>
             )}

@@ -229,11 +229,6 @@ class StepPayScreen extends Component {
               {bookingStore.newPriceLabel}
             </Text>
           )}
-          {bookingStore.feesPriceLabel && (
-            <Text style={[ styles.infoTitle, styles.infoBlockCarImgIndent ]}>
-              {bookingStore.feesPriceLabel}
-            </Text>
-          )}
           <Text style={[ styles.infoText, styles.infoBlockCarImgIndent ]}>
             {bookingStore.order.location.name}
           </Text>
@@ -246,8 +241,16 @@ class StepPayScreen extends Component {
           <Text style={styles.infoText}>
             {t('common:scheduleTo')} {bookingStore.rentalScheduleEnd}
           </Text>
+          {bookingStore.feesPriceLabel && (
+            <Text style={[ styles.infoTitleNewPrice, styles.infoNewPriceIndent ]}>
+              {bookingStore.feesPriceLabel}
+            </Text>
+          )}
           {bookingStore.currentPriceLabel && (
-            <Text style={styles.infoTitleNewPrice}>
+            <Text style={[
+              styles.infoTitleNewPrice,
+              !bookingStore.feesPriceLabel && styles.infoNewPriceIndent
+            ]}>
               {bookingStore.currentPriceLabel}
             </Text>
           )}
