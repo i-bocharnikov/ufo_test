@@ -224,9 +224,11 @@ class StepPayScreen extends Component {
             source={{ uri: bookingStore.order.carModel.imageUrl }}
             resizeMode="contain"
           />
-          <Text style={[ styles.infoTitle, styles.infoBlockCarImgIndent ]}>
-            {t('subTitleStep3')} : {bookingStore.orderPrice}
-          </Text>
+          {bookingStore.newPriceLabel && (
+            <Text style={[ styles.infoTitle, styles.infoBlockCarImgIndent ]}>
+              {bookingStore.newPriceLabel}
+            </Text>
+          )}
           <Text style={[ styles.infoText, styles.infoBlockCarImgIndent ]}>
             {bookingStore.order.location.name}
           </Text>
@@ -239,9 +241,17 @@ class StepPayScreen extends Component {
           <Text style={styles.infoText}>
             {t('common:scheduleTo')} {bookingStore.rentalScheduleEnd}
           </Text>
-          {!!bookingStore.editableOrderRef && (
-            <Text style={styles.infoTitleNewPrice}>
-              {t('bookingEditResult')} {bookingStore.editableOrderRef} : {bookingStore.orderNewPrice}
+          {bookingStore.feesPriceLabel && (
+            <Text style={[ styles.infoTitleNewPrice, styles.infoNewPriceIndent ]}>
+              {bookingStore.feesPriceLabel}
+            </Text>
+          )}
+          {bookingStore.currentPriceLabel && (
+            <Text style={[
+              styles.infoTitleNewPrice,
+              !bookingStore.feesPriceLabel && styles.infoNewPriceIndent
+            ]}>
+              {bookingStore.currentPriceLabel}
             </Text>
           )}
           <View style={[ styles.separateLine, styles.separateLineInfoBlock ]} />
@@ -280,7 +290,7 @@ class StepPayScreen extends Component {
   );
 
   get priceDescription() {
-    return _.get(bookingStore, 'price.description', `${this.props.t('totalPricePayment')} : `);
+    return _.get(bookingStore.order, 'price.description', `${this.props.t('totalPricePayment')} : `);
   }
 
   /*
@@ -345,16 +355,11 @@ class StepPayScreen extends Component {
    * Confirm agreements before payment for booking
   */
   confirmAgreements = async () => {
-    if (bookingStore.editableOrderRef) {
-      this.agreementConfirmed = true;
-      return;
-    }
-
     if (!this.agreementConfirmed) {
       const confirmAction = () => { this.agreementConfirmed = true; };
       await confirm(
         null,
-        this.props.t('ageConfirmation'),
+        this.props.t(bookingStore.editableOrderRef ? 'updateConfirmation' : 'ageConfirmation'),
         confirmAction,
         this.openTermsUrl,
         { neutral: this.props.t('termsAlertBtn') }

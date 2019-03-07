@@ -434,8 +434,11 @@ export default StyleSheet.create({
     fontSize: 11,
     letterSpacing: 2.6,
     color: colors.MAIN_COLOR,
-    marginTop: 24,
     marginBottom: 8
+  },
+
+  infoNewPriceIndent: {
+    marginTop: 24,
   },
 
   separateLine: {
