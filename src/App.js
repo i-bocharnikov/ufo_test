@@ -18,6 +18,7 @@ import { observer } from 'mobx-react';
 
 import { appStore } from './stores';
 import RootStack from './navigators/RootNavigator';
+import navStateListener from './navigators/helpers/navStateListener';
 import { colors, images } from './utils/theme';
 import remoteLoggerService from './utils/remoteLoggerService';
 
@@ -95,7 +96,7 @@ class App extends Component {
           backgroundColor={colors.BG_TRANSITION_COLOR}
           barStyle="light-content"
         />
-        <RootStack />
+        <RootStack onNavigationStateChange={navStateListener} />
         {!this.animationDone && (
           <Animated.Image
             source={images.BG_LAUNCH}

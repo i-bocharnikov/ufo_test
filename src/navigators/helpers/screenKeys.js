@@ -18,6 +18,12 @@ export default {
   IdCardEditor: 'IdCardEditor',
   DriverCardEditor: 'DriverCardEditor',
 
+  Support: 'Support',
+  SupportGuideList: 'SupportGuideList',
+  SupportChat: 'SupportChat',
+  SupportFaq: 'SupportFaq',
+  SupportGuide: 'SupportGuide',
+
   /* screen names move from global.screens, look additional options there */
   Home: 'Drive',
   Drive: 'Drive',
@@ -26,10 +32,6 @@ export default {
   InspectLocateDamage: 'InspectLocateDamage',
   InspectCaptureDamage: 'InspectCaptureDamage',
   InspectCommentDamage: 'InspectCommentDamage',
-
-  SupportFaqs: 'SupportFaqs',
-  SupportFaq: 'SupportFaq',
-  SupportChat: 'SupportChat',
 
   Find: 'Find',
   Return: 'Return',

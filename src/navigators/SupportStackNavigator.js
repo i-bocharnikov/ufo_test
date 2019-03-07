@@ -1,18 +1,16 @@
 import { createStackNavigator } from 'react-navigation';
 
 import keys from './helpers/screenKeys';
-import SupportFaqs from './../screens/support/faqsScreen';
-import SupportFaq from './../screens/support/faqScreen';
-import SupportChat from './../screens/support/chatScreen';
+import Support from './../screens/Support';
+import Guide from './../screens/Support/Guide';
 
 const routeConfigs = {
-  [keys.SupportFaqs]: { screen: SupportFaqs },
-  [keys.SupportFaq]: { screen: SupportFaq },
-  [keys.SupportChat]: { screen: SupportChat }
+  [keys.Support]: { screen: Support },
+  [keys.SupportGuide]: { screen: Guide }
 };
 
 const navigatorConfig = {
-  initialRouteName: keys.SupportFaqs,
+  initialRouteName: keys.Support,
   headerMode: 'none'
 };
 

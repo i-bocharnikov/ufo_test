@@ -336,7 +336,7 @@ class StepPayScreen extends Component {
   */
   navToFaq = () => {
     this.props.navigation.navigate(
-      screenKeys.SupportFaqs,
+      screenKeys.Support,
       { PREVIOUS_SCREEN: screenKeys.Booking }
     );
   };

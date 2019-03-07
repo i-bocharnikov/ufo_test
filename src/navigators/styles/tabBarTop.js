@@ -20,5 +20,12 @@ export default StyleSheet.create({
     width: '24%',
     marginHorizontal: '8%',
     height: 5
+  },
+
+  tripleIndicator: {
+    backgroundColor: colors.MAIN_LIGHT_COLOR,
+    width: '16%',
+    marginHorizontal: '5%',
+    height: 5
   }
 });

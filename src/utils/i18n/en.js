@@ -1,5 +1,67 @@
 import otaKeyNativeErrors from './en_otaKeyNativeErrors';
 
+/*
+ * labels for registration process and screens
+ */
+const register = {
+  overviewHeader: 'Registration',
+  overviewHeader_progress: 'Registration in progress',
+  userInfoTabLabel: 'My infos',
+  loyalityInfoTabLabel: 'Loyalty & referral',
+  userInfoPersonalTitle: 'PERSONAL',
+  userInfoAddresslTitle: 'INVOICING',
+  phoneLabel: 'Phone number',
+  emailLabel: 'Email address',
+  companyNameLabel: 'Company name',
+  vatNumberLabel: 'VAT number',
+  addressLabel: 'Address',
+  dlThumbLabel: 'Driving\nLicense',
+  idCardThumbLabel: 'Passport\nor ID card',
+  smsCodeLabel: 'SMS code',
+  editBtn: 'edit',
+  creditInfoTitle: 'MY CREDIT',
+  creditInfoDescr: 'You can use your credit when booking your next rental.',
+  creditTooltip: 'Gain free credit and additional benefits',
+  creditShareTitle: 'Earn more credits',
+  creditShareDescr: 'Your will recieve credits after each rentals.\nTo earn even more credits, invite your friend to use this app.',
+  prtnerBlockTitle: 'Partnerships',
+  milesTitle: 'Miles & more',
+  shareDialogTitle: 'Share referal code',
+  referalCodeMessage: 'You can use my UFODRIVE referral code {{code}} to get €30 off of your first ride',
+  contactsHeader: 'Personal info',
+  contactsHeader_phone: 'Enter your phone',
+  contactsHeader_code: 'Enter code',
+  addressHeader: 'Invoicing info',
+  optionalPlaceholder: 'optional',
+  identificationTitle: 'Register ID',
+  identificationLabel: 'ID or Passport',
+  identificationFrontInputLabel: 'Please position the front side of your ID card or passport inside this rectangle',
+  identificationCheckLabel: 'Please check that the text is readable and that the whole document is visible',
+  identificationBackInputLabel: 'Please position the back side of your ID card or passport inside this rectangle.',
+  driverLicenceTitle: 'Register driver licence',
+  driverLicenceLabel: 'Driver licence',
+  driverLicenceFrontInputLabel: 'Please position the front side of your driver licence inside this rectangle',
+  driverLicenceCheckLabel: 'Please check that the text is readable and the whole document is visible',
+  driverLicenceBackInputLabel: 'Please position the back side of your driver licence inside this rectangle.',
+  cameraNotAvailable: 'The camera is not available',
+  cameraProcessingError: 'Unexpected issues detected during the image processing of the camera ({{message}}). Please try again and/or contact the support team if the problem persists.',
+  devicePermissionTitle: 'Permission to use {{type}}',
+  cameraPermissionMessage: 'We need your permission to use your phone\'s camera',
+  disconnectConfirmationMessage: 'Are you sure you want to logout?',
+  devicePermissionRestricted: 'To use {{type}} activate it in the phone settings',
+  smsWaitingNote: 'An SMS with the needed code sent by UFODRIVE will arrive soon depending on your mobile operator'
+};
+
+/*
+ * labels for support screens
+ */
+const support = {
+  overviewHeader: 'Help',
+  guideListTab: 'Guides',
+  chatTab: 'Chat',
+  faqTab: 'FAQ',
+};
+
 export default {
   common: {
     okBtn: 'OK',
@@ -113,54 +175,6 @@ export default {
     emergencyCall: 'Emergency call',
     map: 'Open map'
   },
-  register: {
-    overviewHeader: 'Registration',
-    overviewHeader_progress: 'Registration in progress',
-    userInfoTabLabel: 'My infos',
-    loyalityInfoTabLabel: 'Loyalty & referral',
-    userInfoPersonalTitle: 'PERSONAL',
-    userInfoAddresslTitle: 'INVOICING',
-    phoneLabel: 'Phone number',
-    emailLabel: 'Email address',
-    companyNameLabel: 'Company name',
-    vatNumberLabel: 'VAT number',
-    addressLabel: 'Address',
-    dlThumbLabel: 'Driving\nLicense',
-    idCardThumbLabel: 'Passport\nor ID card',
-    smsCodeLabel: 'SMS code',
-    editBtn: 'edit',
-    creditInfoTitle: 'MY CREDIT',
-    creditInfoDescr: 'You can use your credit when booking your next rental.',
-    creditTooltip: 'Gain free credit and additional benefits',
-    creditShareTitle: 'Earn more credits',
-    creditShareDescr: 'Your will recieve credits after each rentals.\nTo earn even more credits, invite your friend to use this app.',
-    prtnerBlockTitle: 'Partnerships',
-    milesTitle: 'Miles & more',
-    shareDialogTitle: 'Share referal code',
-    referalCodeMessage: 'You can use my UFODRIVE referral code {{code}} to get €30 off of your first ride',
-    contactsHeader: 'Personal info',
-    contactsHeader_phone: 'Enter your phone',
-    contactsHeader_code: 'Enter code',
-    addressHeader: 'Invoicing info',
-    optionalPlaceholder: 'optional',
-    identificationTitle: 'Register ID',
-    identificationLabel: 'ID or Passport',
-    identificationFrontInputLabel: 'Please position the front side of your ID card or passport inside this rectangle',
-    identificationCheckLabel: 'Please check that the text is readable and that the whole document is visible',
-    identificationBackInputLabel: 'Please position the back side of your ID card or passport inside this rectangle.',
-    driverLicenceTitle: 'Register driver licence',
-    driverLicenceLabel: 'Driver licence',
-    driverLicenceFrontInputLabel: 'Please position the front side of your driver licence inside this rectangle',
-    driverLicenceCheckLabel: 'Please check that the text is readable and the whole document is visible',
-    driverLicenceBackInputLabel: 'Please position the back side of your driver licence inside this rectangle.',
-    cameraNotAvailable: 'The camera is not available',
-    cameraProcessingError: 'Unexpected issues detected during the image processing of the camera ({{message}}). Please try again and/or contact the support team if the problem persists.',
-    devicePermissionTitle: 'Permission to use {{type}}',
-    cameraPermissionMessage: 'We need your permission to use your phone\'s camera',
-    disconnectConfirmationMessage: 'Are you sure you want to logout?',
-    devicePermissionRestricted: 'To use {{type}} activate it in the phone settings',
-    smsWaitingNote: 'An SMS with the needed code sent by UFODRIVE will arrive soon depending on your mobile operator'
-  },
   inspect: {
     initialInspectionTitle: 'Initial inspection',
     finalInspectionTitle: 'Declare damage(s)',
@@ -185,7 +199,6 @@ export default {
     reservePaymentTitle: 'Confirm',
     bookingLink: 'Coming soon, please follow this link to book a car'
   },
-  support: { supportTitle: 'How can we help you?' },
   drive: {
     driveTitle: 'Rental',
     rentalReference: 'Rental {{rental.reference}} {{rental.status}}',
@@ -328,5 +341,7 @@ export default {
     incorrectFaceSize: 'Your face must be closer to the camera',
     incorrectFaceYaw: 'Your face must be in front of the camera'
   },
+  register,
+  support,
   otaKeyNativeErrors
 };

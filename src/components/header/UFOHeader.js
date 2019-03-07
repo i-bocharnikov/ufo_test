@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 
 import { UFOText, UFOImage } from './../common';
 import { colors, icons, actionStyles, screens, sizes, logos } from './../../utils/global';
+import screenKeys from './../../navigators/helpers/screenKeys';
 import UFOAction from './../UFOAction';
 import { activitiesStore } from './../../stores';
 import styles from './styles';
@@ -105,10 +106,7 @@ export default class UFOHeader extends Component {
   };
 
   goToSupport = currentScreen => {
-    this.props.navigation.navigate(screens.SUPPORT_FAQS.name, {
-      SUPPORT_FAQ_CATEGORY: currentScreen.supportFaqCategory,
-      PREVIOUS_SCREEN: currentScreen
-    });
+    this.props.navigation.navigate(screenKeys.Support);
   };
 }
 

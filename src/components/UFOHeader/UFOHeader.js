@@ -75,7 +75,7 @@ class UFOHeader extends PureComponent {
   };
 
   rightBtnDefaultAction = () => {
-    this.props.navigation.navigate(screenKeys.SupportFaqs);
+    this.props.navigation.navigate(screenKeys.Support);
   };
 }
 
@@ -84,6 +84,9 @@ UFOHeader.defaultProps = {
   leftBtnIcon: 'home',
   rightBtnIcon: 'help-circle-outline'
 };
+/*
+ * use 'keyboard-backspace' as standart back button icon
+*/
 
 UFOHeader.propTypes = {
   title: PropTypes.string.isRequired,

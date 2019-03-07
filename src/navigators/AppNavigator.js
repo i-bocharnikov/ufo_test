@@ -23,5 +23,5 @@ export default createBottomTabNavigator({
 },
 {
   initialRouteName: keys.Home,
-  defaultNavigationOptions: () => ({ tabBarVisible: false })
+  defaultNavigationOptions: { tabBarVisible: false }
 });

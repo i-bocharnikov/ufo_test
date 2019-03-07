@@ -271,7 +271,7 @@ class StepDriveScreen extends Component {
   */
   navToGuide = () => {
     this.props.navigation.popToTop();
-    this.props.navigation.navigate(screenKeys.SupportFaqs);
+    this.props.navigation.navigate(screenKeys.Support);
   };
 }
 
