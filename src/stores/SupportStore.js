@@ -1,20 +1,10 @@
-import moment from 'moment';
-import 'moment-timezone';
-import { observable, action } from 'mobx';
+import { observable, action, computed } from 'mobx';
 import { persist } from 'mobx-persist';
+import _ from 'lodash';
 
 import { getFromApi } from './../utils/api_deprecated';
-import remoteLoggerService from '../utils/remoteLoggerService';
 
-class FaqCategory {
-  @persist @observable reference = null;
-  @persist @observable name = null;
-  @persist @observable priority = null;
-  @observable expanded = false;
-  @persist('list', Faq) @observable faqs = [];
-}
-
-class Faq {
+class Guide {
   @persist @observable reference = null;
   @persist @observable title = null;
   @persist @observable media_type = null;
@@ -23,46 +13,45 @@ class Faq {
   @persist @observable priority = null;
 }
 
+class GuideCategory {
+  @persist @observable reference = null;
+  @persist @observable name = null;
+  @persist @observable priority = null;
+  @persist('list', Guide) @observable faqs = [];
+}
+
 export default class SupportStore {
-  @persist('list', FaqCategory) @observable faqCategories = [];
+  @persist('list', GuideCategory) @observable guideCategories = [];
+  @observable chosenCategoryRef = null;
+  @observable chosenGuide = null;
 
-  async getFaq(faqCategoryReference, faqReference) {
-    const category = this.faqCategories.find(
-      item => item.reference === faqCategoryReference
-    );
-
-    if (!category) {
-      return null;
+  /*
+   * @description Get list of filtred guides
+   */
+  @computed
+  get guideList() {
+    if (this.chosenCategoryRef) {
+      const category = _.find(this.guideCategories, [ 'reference', this.chosenCategoryRef ]);
+      return _.get(category, 'faqs', []);
     }
 
-    const faq = category.faqs.find(item => item.reference === faqReference);
-    await remoteLoggerService.info(
-      'getFaq',
-      `FAQ-${faq.reference}-${faq.title}`,
-      faq
-    );
-    return faq;
+    /* if category wasn't cosen return guides from all categories */
+    return this.guideCategories.reduce((arr, item) => [ ...arr, ...item.faqs ], []);
   }
 
-  hasImage(faq) {
-    return faq.media_type === 'image';
-  }
-  hasVideo(faq) {
-    return faq.media_type === 'video';
-  }
-
+  /*
+   * @returns {boolean}
+   * @description Fetch list of guides from server
+   */
   @action
-  async reset() {
-    return await this.list();
-  }
-
-  @action
-  async list() {
+  fetchGuides = async () => {
     const response = await getFromApi('/faqs');
+
     if (response && response.status === 'success') {
-      this.faqCategories = response.data.faq_categories;
+      this.guideCategories = response.data.faq_categories;
       return true;
     }
+
     return false;
-  }
+  };
 }

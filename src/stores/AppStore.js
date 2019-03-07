@@ -66,7 +66,7 @@ export default class AppStore {
     try {
       await remoteLoggerService.initialise();
       await driveStore.reset();
-      await supportStore.reset();
+      await supportStore.fetchGuides();
     } catch (error) {
       await remoteLoggerService.error(
         'initialiseRemoteDate',
@@ -119,9 +119,9 @@ export default class AppStore {
           remoteLoggerService.info(
             'initialiseLocalStore',
             'supportStore loaded',
-            supportStore.faqCategories
-              ? supportStore.faqCategories.length
-              : 0 + ' faqCategories'
+            supportStore.guideCategories
+              ? supportStore.guideCategories.length
+              : 0 + ' guideCategories'
           )
         )
         .catch(error => {
