@@ -290,6 +290,8 @@ export default {
     feedBackInputPlaceholder: 'Your variant',
     ageConfirmation:
       'By confirming, I certify that I have read and fully accepted the general terms and conditions and that I am at least 26 years old and in possession of a valid driver license.',
+    updateConfirmation: 'By confirming, I certify that I have read and fully accepted the general terms and conditions and that I am at least 26 years old and in possession of a valid driver license.',
+    undoConfirmation: 'Confirmation for cancellable.',
     termsAlertBtn: 'Read terms',
     termsLinkLabel: 'Terms and conditions',
     undoBooking: 'Cancel booking (fees may apply)',

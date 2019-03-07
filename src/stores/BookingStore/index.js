@@ -739,7 +739,7 @@ export default class BookingStore {
   }
 
   /**
-   * @description Get formated price string for current order simulation
+   * @description Get formated price string to render in footer
    */
   @computed
   get orderPrice() {
@@ -752,43 +752,19 @@ export default class BookingStore {
       return price;
     }
 
-    if (this.editableOrderRef && price) {
-      return `${price > 0 ? '+' : ''}${price}${currencyChar}`;
-    } else if (this.editableOrderRef) {
-      return `${price}${currencyChar}`;
-    }
-
-    return `${currencyChar}${price}`;
+    return `${price}${currencyChar}`;
   }
 
   /**
-   * @description Get formated price string without discounts
+   * @description Get formated price string to render in footer
    */
   @computed
   get orderOriginPrice() {
-    const amount = _.get(this.order, 'price.amountOrigin', '');
-    const currencyChar = getCurrencyChar( _.get(this.order, 'price.currency') );
+    const currentOrder = this.isCancellation ? this.cancellationOrder : this.order;
+    const amount = _.get(currentOrder, 'price.amountOrigin', '');
+    const currencyChar = getCurrencyChar( _.get(currentOrder, 'price.currency') );
 
-    if (!amount) {
-      return null;
-    }
-
-    return `${currencyChar}${amount}`;
-  }
-
-  /**
-   * @description Get formated price string for changed order
-   */
-  @computed
-  get orderNewPrice() {
-    const amount = _.get(this.order, 'newPrice.amount', '');
-    const currencyChar = getCurrencyChar( _.get(this.order, 'newPrice.currency') );
-
-    if (!amount) {
-      return null;
-    }
-
-    return `${amount}${currencyChar}`;
+    return amount || _.isNumber(amount) ? `${amount}${currencyChar}` : null;
   }
 
   /**
@@ -804,35 +780,41 @@ export default class BookingStore {
   }
 
   /**
-   * @description Get label for cancellation, info about fees
+   * @description Get label about fees
    */
   @computed
-  get cancellationFeesLabel() {
-    const amount = _.get(this.cancellationOrder, 'feePrice.amount', '');
-    const description = _.get(this.cancellationOrder, 'feePrice.description', '');
-    const currencyChar = getCurrencyChar( _.get(this.cancellationOrder, 'feePrice.currency') );
+  get feesPriceLabel() {
+    const currentOrder = this.isCancellation ? this.cancellationOrder : this.order;
+    const amount = _.get(currentOrder, 'feePrice.amount', '');
+    const description = _.get(currentOrder, 'feePrice.description', '');
+    const currencyChar = getCurrencyChar( _.get(currentOrder, 'feePrice.currency') );
 
-    if (!amount) {
-      return null;
-    }
-
-    return `${description}${amount}${currencyChar}`;
+    return amount || _.isNumber(amount) ? `${description}${amount}${currencyChar}` : null;
   }
 
   /**
-   * @description Get label for cancellation, info about price
+   * @description Get label about new price
    */
   @computed
-  get cancellationPriceLabel() {
-    const amount = _.get(this.cancellationOrder, 'currentPrice.amount', '');
-    const description = _.get(this.cancellationOrder, 'currentPrice.description', '');
-    const currencyChar = getCurrencyChar( _.get(this.cancellationOrder, 'currentPrice.currency') );
+  get newPriceLabel() {
+    const amount = _.get(this.order, 'newPrice.amount', '');
+    const description = _.get(this.order, 'newPrice.description', '');
+    const currencyChar = getCurrencyChar( _.get(this.order, 'newPrice.currency') );
 
-    if (!amount) {
-      return null;
-    }
+    return amount || _.isNumber(amount) ? `${description}${amount}${currencyChar}` : null;
+  }
 
-    return `${description}${amount}${currencyChar}`;
+  /**
+   * @description Get label about current price
+   */
+  @computed
+  get currentPriceLabel() {
+    const currentOrder = this.isCancellation ? this.cancellationOrder : this.order;
+    const amount = _.get(currentOrder, 'currentPrice.amount', '');
+    const description = _.get(currentOrder, 'currentPrice.description', '');
+    const currencyChar = getCurrencyChar( _.get(currentOrder, 'currentPrice.currency') );
+
+    return amount || _.isNumber(amount) ? `${description}${amount}${currencyChar}` : null;
   }
 
   /**
