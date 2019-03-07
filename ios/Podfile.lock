@@ -48,8 +48,8 @@ PODS:
     - nanopb/encode (= 0.3.901)
   - nanopb/decode (0.3.901)
   - nanopb/encode (0.3.901)
-  - OTASDK (3.11.5)
-  - Protobuf (3.6.1)
+  - OTASDK (3.11.7)
+  - Protobuf (3.7.0)
   - React (0.57.1):
     - React/Core (= 0.57.1)
   - react-native-camera/FaceDetector (1.6.4):
@@ -176,16 +176,16 @@ SPEC CHECKSUMS:
   GoogleToolboxForMac: ff31605b7d66400dcec09bed5861689aebadda4d
   GTMSessionFetcher: 32aeca0aa144acea523e1c8e053089dec2cb98ca
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
-  OTASDK: c876e7492cc6c25a7b7ac067943420b8998c4a18
-  Protobuf: 1eb9700044745f00181c136ef21b8ff3ad5a0fd5
-  React: 1fe0eb13d90b625d94c3b117c274dcfd2e760e11
-  react-native-camera: eac1e8cc7523273a2a11956d0e5dac08296cf4b0
-  react-native-sensitive-info: f78f6471a8ee7de67e11ffccc7060eb93b969ef5
-  ReactNativePermissions: 9f2d9c45c98800795e6c2ed330e25d11a66a8169
-  RNGestureHandler: afde2addc517e85cc97a25bfe119acbee779a7ce
+  OTASDK: a506beca0dbcd5d593b18e5015218c79602448f1
+  Protobuf: 7a877b7f3e5964e3fce995e2eb323dbc6831bb5a
+  React: b4e0982b0ed6a7de90e96cf6fe5cf036aeadd1ec
+  react-native-camera: 96151b76a412f94e3a641d7f8eff6130ea47aed1
+  react-native-sensitive-info: a006146a650e81d3074e0abf3a5cafb1fd0e9d7f
+  ReactNativePermissions: 2e324bb3baf12702e3ec27f76c8ae1158fa69fc6
+  RNGestureHandler: 0438a761e8f29be3b809f9e7e43014f3aba4d7a6
   Stripe: 2c69e216061d54d9c538204bb4f58bd597ddfc5b
-  yoga: b1ce48b6cf950b98deae82838f5173ea7cf89e85
+  yoga: 5e2e4bcf11188977f799b64625dc5913c2aea8fd
 
 PODFILE CHECKSUM: 0ce81c28b181a8fc3929de81426b5186f7c6292e
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.6.1
