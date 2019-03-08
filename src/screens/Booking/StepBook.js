@@ -141,7 +141,7 @@ class StepBookScreen extends Component {
   getKeyItem = (item, i) => `${i}-${item.reference}`;
 
   renderLocationSlide = ({ item, index }) => {
-    if (bookingStore.isOngoing && bookingStore.selectedLocationRef !== item.reference) {
+    if (bookingStore.editableOrderRef && bookingStore.selectedLocationRef !== item.reference) {
       return null;
     }
 
@@ -152,7 +152,7 @@ class StepBookScreen extends Component {
         onSelect={this.onSelectLocation}
         isSelected={bookingStore.selectedLocationRef === item.reference}
         openInfo={this.openLocationInfo}
-        isFirstItem={index === 0 || bookingStore.isOngoing}
+        isFirstItem={index === 0 || !!bookingStore.editableOrderRef}
       />
     );
   };
@@ -287,7 +287,7 @@ class StepBookScreen extends Component {
   };
 
   onSelectLocation = ref => {
-    if (ref && !bookingStore.isOngoing) {
+    if (ref && !bookingStore.editableOrderRef) {
       bookingStore.selectLocation(ref);
     }
   };

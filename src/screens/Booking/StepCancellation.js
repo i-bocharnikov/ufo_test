@@ -9,10 +9,13 @@ import { keys as screenKeys } from './../../navigators/helpers';
 import { UFOContainer, UFOLoader } from './../../components/common';
 import BookingNavWrapper from './components/BookingNavWrapper';
 import BottomActionPanel from './components/BottomActionPanel';
+import { confirm } from './../../utils/interaction';
 import styles from './styles';
 
 @observer
 class StepCancellationScreen extends Component {
+  agreementConfirmed = false;
+
   render() {
     const { t } = this.props;
 
@@ -31,15 +34,19 @@ class StepCancellationScreen extends Component {
             {t('infoAtPaymentTitle')}
           </Text>
           <View style={[ styles.infoBlock, styles.blockShadow ]}>
-            <Text style={[ styles.infoTitle, styles.infoBlockCarImgIndent ]}>
-              {bookingStore.cancellationFeesLabel}
-            </Text>
+            {bookingStore.feesPriceLabel && (
+              <Text style={[ styles.infoTitle, styles.infoBlockCarImgIndent ]}>
+                {bookingStore.feesPriceLabel}
+              </Text>
+            )}
             <Text style={[ styles.infoText, styles.infoBlockCarImgIndent ]}>
               {t('cancelationFees')}
             </Text>
-            <Text style={styles.infoTitleNewPrice}>
-              {bookingStore.cancellationPriceLabel}
-            </Text>
+            {bookingStore.currentPriceLabel && (
+              <Text style={[ styles.infoTitleNewPrice, styles.infoNewPriceIndent ]}>
+                {bookingStore.currentPriceLabel}
+              </Text>
+            )}
             <View style={[ styles.separateLine, styles.separateLineInfoBlock ]} />
             <View style={styles.row}>
               <Text style={styles.infoTitle}>
@@ -71,7 +78,7 @@ class StepCancellationScreen extends Component {
   );
 
   get priceDescription() {
-    return _.get(bookingStore, 'price.description', `${this.props.t('totalPricePayment')} : `);
+    return _.get(bookingStore.order, 'price.description', `${this.props.t('totalPricePayment')} : `);
   }
 
   /*
@@ -93,9 +100,28 @@ class StepCancellationScreen extends Component {
   };
 
   /*
+   * Confirm cancellation
+  */
+  confirmAgreements = async () => {
+    if (!this.agreementConfirmed) {
+      await confirm(
+        null,
+        this.props.t('ageConfirmation'),
+        () => { this.agreementConfirmed = true; }
+      );
+    }
+  };
+
+  /*
    * Handle payment and go to next step
   */
   handleToNextStep = async () => {
+    await this.confirmAgreements();
+
+    if (!this.agreementConfirmed) {
+      return;
+    }
+
     await bookingStore.confirmCancellation();
 
     if (bookingStore.bookingConfirmation) {

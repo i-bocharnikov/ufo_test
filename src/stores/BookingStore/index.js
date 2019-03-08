@@ -42,9 +42,10 @@ export default class BookingStore {
   @observable locationInfoRef = this._defaultStore.locationInfoRef;
   @observable carInfoRef = this._defaultStore.carInfoRef;
   @observable priceInfoRef = this._defaultStore.priceInfoRef;
-  @observable locationInfoDescription = this._defaultStore.locationInfoDescription;
+  @observable locationInfoDescription = this._defaultStore
+    .locationInfoDescription;
   @observable carInfoDescription = this._defaultStore.carInfoDescription;
-  @observable priceInfoDescription = this._defaultStore.priceInfoDescription
+  @observable priceInfoDescription = this._defaultStore.priceInfoDescription;
 
   /* step pay & confirm */
   @observable stripeApiKey = this._defaultStore.stripeApiKey;
@@ -54,7 +55,8 @@ export default class BookingStore {
   @observable voucherCode = this._defaultStore.voucherCode;
   @observable loyaltyProgramInfo = this._defaultStore.loyaltyProgramInfo;
   @observable useRefferalAmount = this._defaultStore.useRefferalAmount;
-  @observable allowReferralAmountUse = this._defaultStore.allowReferralAmountUse;
+  @observable allowReferralAmountUse = this._defaultStore
+    .allowReferralAmountUse;
 
   @observable bookingConfirmation = this._defaultStore.bookingConfirmation;
 
@@ -84,6 +86,7 @@ export default class BookingStore {
       endRentalTime: moment(TOMORROW)
         .add(20, 'h')
         .format(values.TIME_STRING_FORMAT),
+      duration: null,
       locationInfoRef: null,
       carInfoRef: null,
       priceInfoRef: null,
@@ -127,7 +130,7 @@ export default class BookingStore {
 
     this.isLoading = true;
 
-    const [ receivedLocations, receivedCars ] = await Promise.all([
+    const [receivedLocations, receivedCars] = await Promise.all([
       locations.getLocations(),
       cars.getCars()
     ]);
@@ -239,14 +242,14 @@ export default class BookingStore {
 
   /**
    * @description Correct chosen time if was selected starting today or the same dates
-  */
+   */
   @action
   correctSelectedTime = () => {
     /* handle case for ongoign rental */
     if (
-      this.isOngoing
-      && TODAY.diff(this.endRentalDate, 'days') === 0
-      && moment(this.endRentalTime, values.TIME_STRING_FORMAT).isBefore( Date.now() )
+      this.isOngoing &&
+      TODAY.diff(this.endRentalDate, 'days') === 0 &&
+      moment(this.endRentalTime, values.TIME_STRING_FORMAT).isBefore(Date.now())
     ) {
       this.endRentalTime = moment()
         .startOf('hour')
@@ -265,16 +268,17 @@ export default class BookingStore {
     const startIndex = this.rollPickerStartSelectedTimeItem;
     const endIndex = this.rollPickerEndSelectedTimeItem;
 
-    if (this.startRentalDate.diff(this.endRentalDate, 'days') !== 0 || startIndex < endIndex) {
+    if (
+      this.startRentalDate.diff(this.endRentalDate, 'days') !== 0 ||
+      startIndex < endIndex
+    ) {
       return;
     }
 
     if (startIndex + 1 < this.rollPickersTimeItems.length) {
       this.endRentalTime = this.rollPickersTimeItems[startIndex + 1].label;
-
     } else if (endIndex > 0) {
       this.startRentalTime = this.rollPickersTimeItems[endIndex - 1].label;
-
     } else {
       this.startRentalTime = this._defaultStore.startRentalTime;
       this.endRentalTime = this._defaultStore.endRentalTime;
@@ -291,7 +295,9 @@ export default class BookingStore {
       return;
     }
 
-    const location = _.find(this.locations, { reference: this.selectedLocationRef });
+    const location = _.find(this.locations, {
+      reference: this.selectedLocationRef
+    });
 
     if (location) {
       const currentLocationTime = moment
@@ -305,8 +311,8 @@ export default class BookingStore {
       );
 
       if (
-        currentLocationTimeIndex < this.rollPickerStartSelectedTimeItem
-        || currentLocationTimeIndex === -1
+        currentLocationTimeIndex < this.rollPickerStartSelectedTimeItem ||
+        currentLocationTimeIndex === -1
       ) {
         return;
       }
@@ -323,8 +329,13 @@ export default class BookingStore {
       } else {
         this.startRentalTime = currentLocationTime;
 
-        if (isEndDateToday && this.rollPickerEndSelectedTimeItem <= currentLocationTimeIndex) {
-          this.endRentalTime = this.rollPickersTimeItems[currentLocationTimeIndex + 1].label;
+        if (
+          isEndDateToday &&
+          this.rollPickerEndSelectedTimeItem <= currentLocationTimeIndex
+        ) {
+          this.endRentalTime = this.rollPickersTimeItems[
+            currentLocationTimeIndex + 1
+          ].label;
         }
       }
     }
@@ -356,7 +367,8 @@ export default class BookingStore {
       return;
     }
 
-    const isOneDayRental = this.startRentalDate.diff(this.endRentalDate, 'days') === 0;
+    const isOneDayRental =
+      this.startRentalDate.diff(this.endRentalDate, 'days') === 0;
 
     if (isOneDayRental && itemIndex + 1 >= this.rollPickersTimeItems.length) {
       // forbid to choose last time-item of day as start
@@ -388,7 +400,8 @@ export default class BookingStore {
       return;
     }
 
-    const isOneDayRental = this.startRentalDate.diff(this.endRentalDate, 'days') === 0;
+    const isOneDayRental =
+      this.startRentalDate.diff(this.endRentalDate, 'days') === 0;
 
     if (isOneDayRental && itemIndex === 0) {
       // forbid to choose first time-item of day as end
@@ -397,7 +410,11 @@ export default class BookingStore {
       this.endRentalTime = timeStr;
     }
 
-    if (!this.isOngoing && isOneDayRental && this.rollPickerStartSelectedTimeItem >= itemIndex) {
+    if (
+      !this.isOngoing &&
+      isOneDayRental &&
+      this.rollPickerStartSelectedTimeItem >= itemIndex
+    ) {
       const prevIndex = itemIndex - 1 >= 0 ? itemIndex - 1 : itemIndex;
       this.startRentalTime = this.rollPickersTimeItems[prevIndex].label;
     }
@@ -416,9 +433,13 @@ export default class BookingStore {
    * @param {Object} momentEndBooking
    * @param {boolean} isOngoing
    * @description Set origin start/end dates and time for editing booking
-  */
+   */
   @action
-  setEditingPeriod = async (momentStartBooking, momentEndBooking, isOngoing) => {
+  setEditingPeriod = async (
+    momentStartBooking,
+    momentEndBooking,
+    isOngoing
+  ) => {
     const startDate = moment(momentStartBooking).startOf('day');
     const endDate = moment(momentEndBooking).startOf('day');
     this.startRentalTime = momentStartBooking.format(values.TIME_STRING_FORMAT);
@@ -427,14 +448,15 @@ export default class BookingStore {
     if (!isOngoing) {
       /* if rental didn't start, check and set chosen dates to min allowed values */
       this.startRentalDate = startDate.isBefore(TODAY) ? TODAY : startDate;
-      this.endRentalDate = endDate.isBefore(this.startRentalDate) ? TOMORROW : endDate;
+      this.endRentalDate = endDate.isBefore(this.startRentalDate)
+        ? TOMORROW
+        : endDate;
       this.correctSelectedTime();
-
     } else {
       /* if rental is ongoing, set start as constant value and end date as min allowed value */
       this.startRentalDate = startDate;
 
-      if (momentEndBooking.isBefore( Date.now() )) {
+      if (momentEndBooking.isBefore(Date.now())) {
         this.endRentalDate = TODAY;
         this.endRentalTime = moment()
           .startOf('hour')
@@ -461,7 +483,9 @@ export default class BookingStore {
       this.locationInfoRef &&
       this.locationInfoRef !== this.locationInfoDescription.reference
     ) {
-      this.locationInfoDescription = await locations.getDescription(this.locationInfoRef);
+      this.locationInfoDescription = await locations.getDescription(
+        this.locationInfoRef
+      );
     }
 
     if (
@@ -475,7 +499,9 @@ export default class BookingStore {
       this.priceInfoRef &&
       this.priceInfoRef !== this.priceInfoDescription.reference
     ) {
-      this.priceInfoDescription = await order.getPriceDescription(this.priceInfoRef);
+      this.priceInfoDescription = await order.getPriceDescription(
+        this.priceInfoRef
+      );
     }
 
     this.isLoading = false;
@@ -499,10 +525,10 @@ export default class BookingStore {
     const data = await order.getPaymentOptions(this.selectedLocationRef);
     this.stripeApiKey = data.paymentPublicApi;
     this.loyaltyProgramInfo = data.loyaltyProgram.message;
-    this.allowReferralAmountUse = data.loyaltyProgram.referralAmountAvaialable;
+    this.allowReferralAmountUse = data.loyaltyProgram.isBalanceAvailable;
 
     this.userCreditCards = data.userCreditCards;
-    const defaultCard = _.find(this.userCreditCards, [ 'default', true ]);
+    const defaultCard = _.find(this.userCreditCards, ['default', true]);
     this.currentCreditCardRef = defaultCard ? defaultCard.reference : null;
 
     this.isLoading = false;
@@ -644,8 +670,10 @@ export default class BookingStore {
   @action
   confirmCancellation = async () => {
     this.isLoading = true;
-    this.bookingConfirmation =
-      await order.confirmCancellation(this.editableOrderRef, this.cancellationOrder);
+    this.bookingConfirmation = await order.confirmCancellation(
+      this.editableOrderRef,
+      this.cancellationOrder
+    );
     this.isLoading = false;
   };
 
@@ -661,7 +689,9 @@ export default class BookingStore {
       return;
     }
 
-    const momentStartAlt = moment.utc(startAlt).tz(this.order.schedule.timezone);
+    const momentStartAlt = moment
+      .utc(startAlt)
+      .tz(this.order.schedule.timezone);
     const momentEndAlt = moment.utc(endAlt).tz(this.order.schedule.timezone);
 
     this.endRentalTime = momentEndAlt.format(values.TIME_STRING_FORMAT);
@@ -679,7 +709,7 @@ export default class BookingStore {
 
   /*
    * @description Undo booking (for editing existing rentals)
-  */
+   */
   @action
   undoBooking = async () => {
     this.isLoading = true;
@@ -710,12 +740,16 @@ export default class BookingStore {
    */
   @computed
   get rollPickerOngoingStartDate() {
-    const dateString = this.startRentalDate.format(values.DATE_ROLLPICKER_FORMAT);
-    return [{
-      label: dateString,
-      id: dateString,
-      available: true
-    }];
+    const dateString = this.startRentalDate.format(
+      values.DATE_ROLLPICKER_FORMAT
+    );
+    return [
+      {
+        label: dateString,
+        id: dateString,
+        available: true
+      }
+    ];
   }
 
   /**
@@ -739,56 +773,58 @@ export default class BookingStore {
   }
 
   /**
-   * @description Get formated price string for current order simulation
+   * @description Get formated price string to render in footer
+   */
+  @computed
+  get isOrderRefundOrZero() {
+    const unknownPrice = '-';
+    const currentOrder = this.isCancellation
+      ? this.cancellationOrder
+      : this.order;
+
+    const price = currentOrder
+      ? currentOrder.price
+        ? currentOrder.price.amount
+        : unknownPrice
+      : unknownPrice;
+    if (price === unknownPrice) {
+      return false;
+    }
+
+    return price <= 0;
+  }
+
+  /**
+   * @description Get formated price string to render in footer
    */
   @computed
   get orderPrice() {
     const unknownPrice = '-';
-    const currentOrder = this.isCancellation ? this.cancellationOrder : this.order;
+    const currentOrder = this.isCancellation
+      ? this.cancellationOrder
+      : this.order;
     const price = _.get(currentOrder, 'price.amount', unknownPrice);
-    const currencyChar = getCurrencyChar( _.get(currentOrder, 'price.currency') );
+    const currencyChar = getCurrencyChar(_.get(currentOrder, 'price.currency'));
 
     if (price === unknownPrice) {
       return price;
     }
 
-    if (this.editableOrderRef && price) {
-      return `${price > 0 ? '+' : ''}${price}${currencyChar}`;
-    } else if (this.editableOrderRef) {
-      return `${price}${currencyChar}`;
-    }
-
-    return `${currencyChar}${price}`;
+    return `${price}${currencyChar}`;
   }
 
   /**
-   * @description Get formated price string without discounts
+   * @description Get formated price string to render in footer
    */
   @computed
   get orderOriginPrice() {
-    const amount = _.get(this.order, 'price.amountOrigin', '');
-    const currencyChar = getCurrencyChar( _.get(this.order, 'price.currency') );
+    const currentOrder = this.isCancellation
+      ? this.cancellationOrder
+      : this.order;
+    const amount = _.get(currentOrder, 'price.amountOrigin', '');
+    const currencyChar = getCurrencyChar(_.get(currentOrder, 'price.currency'));
 
-    if (!amount) {
-      return null;
-    }
-
-    return `${currencyChar}${amount}`;
-  }
-
-  /**
-   * @description Get formated price string for changed order
-   */
-  @computed
-  get orderNewPrice() {
-    const amount = _.get(this.order, 'newPrice.amount', '');
-    const currencyChar = getCurrencyChar( _.get(this.order, 'newPrice.currency') );
-
-    if (!amount) {
-      return null;
-    }
-
-    return `${amount}${currencyChar}`;
+    return amount || _.isNumber(amount) ? `${amount}${currencyChar}` : null;
   }
 
   /**
@@ -804,35 +840,69 @@ export default class BookingStore {
   }
 
   /**
-   * @description Get label for cancellation, info about fees
+   * @description Get duration label for the booking
    */
   @computed
-  get cancellationFeesLabel() {
-    const amount = _.get(this.cancellationOrder, 'feePrice.amount', '');
-    const description = _.get(this.cancellationOrder, 'feePrice.description', '');
-    const currencyChar = getCurrencyChar( _.get(this.cancellationOrder, 'feePrice.currency') );
-
-    if (!amount) {
+  get durationLabel() {
+    if (!_.has(this.order, 'schedule.duration')) {
       return null;
     }
 
-    return `${description}${amount}${currencyChar}`;
+    return this.order.schedule.duration;
   }
 
   /**
-   * @description Get label for cancellation, info about price
+   * @description Get label about fees
    */
   @computed
-  get cancellationPriceLabel() {
-    const amount = _.get(this.cancellationOrder, 'currentPrice.amount', '');
-    const description = _.get(this.cancellationOrder, 'currentPrice.description', '');
-    const currencyChar = getCurrencyChar( _.get(this.cancellationOrder, 'currentPrice.currency') );
+  get feesPriceLabel() {
+    const currentOrder = this.isCancellation
+      ? this.cancellationOrder
+      : this.order;
+    const amount = _.get(currentOrder, 'feePrice.amount', '');
+    const description = _.get(currentOrder, 'feePrice.description', '');
+    const currencyChar = getCurrencyChar(
+      _.get(currentOrder, 'feePrice.currency')
+    );
 
-    if (!amount) {
-      return null;
-    }
+    return amount || _.isNumber(amount)
+      ? `${description}${amount}${currencyChar}`
+      : null;
+  }
 
-    return `${description}${amount}${currencyChar}`;
+  /**
+   * @description Get label about new price
+   */
+  @computed
+  get newPriceLabel() {
+    const amount = _.get(this.order, 'newPrice.amount', '');
+    const description = _.get(this.order, 'newPrice.description', '');
+    const currencyChar = getCurrencyChar(
+      _.get(this.order, 'newPrice.currency')
+    );
+
+    return amount || _.isNumber(amount)
+      ? `${description}${amount}${currencyChar}`
+      : null;
+  }
+
+  /**
+   * @description Get label about current price
+   */
+  @computed
+  get currentPriceLabel() {
+    const currentOrder = this.isCancellation
+      ? this.cancellationOrder
+      : this.order;
+    const amount = _.get(currentOrder, 'currentPrice.amount', '');
+    const description = _.get(currentOrder, 'currentPrice.description', '');
+    const currencyChar = getCurrencyChar(
+      _.get(currentOrder, 'currentPrice.currency')
+    );
+
+    return amount || _.isNumber(amount)
+      ? `${description}${amount}${currencyChar}`
+      : null;
   }
 
   /**
@@ -878,10 +948,12 @@ export default class BookingStore {
    */
   @computed
   get rollPickerOngoingStartTime() {
-    return [{
-      label: this.startRentalTime,
-      id: this.startRentalTime
-    }];
+    return [
+      {
+        label: this.startRentalTime,
+        id: this.startRentalTime
+      }
+    ];
   }
 
   /**
@@ -1052,7 +1124,9 @@ export default class BookingStore {
    * @description Get description how will looking the order
    */
   getOrderSimulation = async (requestHandling = true) => {
-    const location = _.find(this.locations, { reference: this.selectedLocationRef });
+    const location = _.find(this.locations, {
+      reference: this.selectedLocationRef
+    });
 
     if (!this.selectedLocationRef || !this.selectedCarRef || !location) {
       if (requestHandling) {
