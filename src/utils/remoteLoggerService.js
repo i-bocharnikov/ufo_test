@@ -82,6 +82,17 @@ class RemoteLoggerService {
     );
   };
 
+  fatal = async (action, message = '', description = {}, context = {}) => {
+    return await this.log(
+      severityTypes.FATAL,
+      codeTypes.ERROR,
+      action,
+      message,
+      description,
+      context
+    );
+  };
+
   debug = async (action, message = '', description = {}, context = {}) => {
     return await this.log(
       severityTypes.DEBUG,

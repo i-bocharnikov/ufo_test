@@ -26,7 +26,7 @@ const errorHandler = (error, isFatal) => {
   if (isFatal) {
     const message = i18n.t('error:jsExceptionFatal');
     remoteLoggerService
-      .error(
+      .fatal(
         'errorHandler',
         'Fatal Javascript Exception',
         { root: `${error.name} : ${error.message}` },
@@ -54,7 +54,9 @@ setJSExceptionHandler(errorHandler);
 
 setNativeExceptionHandler(exceptionStr => {
   remoteLoggerService
-    .error('NativeExceptionHandler', 'Fatal Native Exception', { message: exceptionStr })
+    .error('NativeExceptionHandler', 'Fatal Native Exception', {
+      message: exceptionStr
+    })
     .catch();
 });
 
@@ -99,7 +101,7 @@ class App extends Component {
         {!this.animationDone && (
           <Animated.Image
             source={images.BG_LAUNCH}
-            style={[ styles.imageMask, this.imageAnimatedStyles ]}
+            style={[styles.imageMask, this.imageAnimatedStyles]}
           />
         )}
       </SafeAreaView>
@@ -111,27 +113,25 @@ class App extends Component {
       transform: [
         {
           scale: this.loadingProgress.interpolate({
-            inputRange: [ 0, 100 ],
-            outputRange: [ 1, 32 ]
+            inputRange: [0, 100],
+            outputRange: [1, 32]
           })
         }
       ],
       opacity: this.loadingProgress.interpolate({
-        inputRange: [ 0, 50, 100 ],
-        outputRange: [ 1, 0.8, 0 ]
+        inputRange: [0, 50, 100],
+        outputRange: [1, 0.8, 0]
       })
     };
   }
 
-  startMaskAnimation = () => Animated.timing(
-    this.loadingProgress,
-    {
+  startMaskAnimation = () =>
+    Animated.timing(this.loadingProgress, {
       useNativeDriver: true,
       toValue: 100,
       duration: 1200,
       easing: Easing.ease
-    }
-  ).start(() => ( this.animationDone = true ));
+    }).start(() => (this.animationDone = true));
 }
 
 export default App;
