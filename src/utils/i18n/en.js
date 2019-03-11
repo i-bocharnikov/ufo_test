@@ -4,6 +4,7 @@ export default {
   common: {
     okBtn: 'OK',
     cancelBtn: 'Cancel',
+    openBtn: 'Open',
     closeBtn: 'close',
     modeAuto: 'auto',
     modeOn: 'on',
@@ -14,7 +15,8 @@ export default {
     scheduleFrom: 'from',
     scheduleTo: 'to',
     postponeBtn: 'Ask me later',
-    termsUrl: 'https://www.ufodrive.com/en/terms-and-conditions'
+    termsUrl: 'https://www.ufodrive.com/en/terms-and-conditions',
+    referralGuideLink: 'https://www.ufodrive.com/en/ufo-world/referral'
   },
   activities: {
     internetAccessFailure: 'Unexpected internet connectivity issues. Operating in offline/degraded mode',
@@ -239,8 +241,6 @@ export default {
     totalPricePayment: 'TOTAL - ALL INCLUDED',
     voucherPlaceholder: 'Voucher / referral code',
     milesPlaceholder: 'Miles and more number',
-    voucherTooltip:
-      'Gain free credit and additional benefits by referring new customers. More information on https://www.ufodrive.com/en/ufo-world/referral',
     scanCreditCardBtn: 'Scan a new credit card',
     applyBtn: 'APPLY\nALTERNATIVE',
     pickUpAlt: 'Pickup',
@@ -273,7 +273,8 @@ export default {
     termsLinkLabel: 'Terms and conditions',
     undoBooking: 'Cancel booking (fees may apply)',
     bookingEditResult: 'BOOKING',
-    cancelationFees: 'Cancelation fees'
+    cancelationFees: 'Cancelation fees',
+    readMoreByLink: 'Read more info on the link'
   },
   launch: {
     launchTitle: 'Fast track\ncar rental',

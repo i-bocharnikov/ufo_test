@@ -8,6 +8,7 @@ import {
   processColor
 } from 'react-native';
 import { translate } from 'react-i18next';
+import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { CardIOModule, CardIOUtilities } from 'react-native-awesome-card-io';
 import stripe from 'tipsi-stripe';
@@ -23,7 +24,6 @@ import {
   UFOTextInput,
   UFOGradientView
 } from './../../components/common';
-import UFOTooltip from './../../components/UFOTooltip';
 import BookingNavWrapper from './components/BookingNavWrapper';
 import BottomActionPanel from './components/BottomActionPanel';
 import styles from './styles';
@@ -36,24 +36,19 @@ const CREDIT_CARD_DEFAULT_IMG =
 
 @observer
 class StepPayScreen extends Component {
+  @observable isPending = false;
+  @observable voucherInvalidError = '';
+
   constructor(props) {
     super(props);
     this.CARDIO_SCAN_OPTIONS = {
       languageOrLocale: props.i18n.language,
-      guideColor:
-        Platform.OS === 'ios'
-          ? processColor(colors.MAIN_COLOR)
-          : colors.MAIN_COLOR,
+      guideColor: Platform.OS === 'ios' ? processColor(colors.MAIN_COLOR) : colors.MAIN_COLOR,
       hideCardIOLogo: true,
       usePaypalActionbarIcon: false
     };
     this.handleInputVoucher = _.debounce(this.validateAndApplyVoucher, 300);
     this.agreementConfirmed = false;
-    this.state = {
-      showVoucherTooltip: false,
-      isVoucherValid: null,
-      voucherInvalidError: ''
-    };
   }
 
   async componentDidMount() {
@@ -65,19 +60,11 @@ class StepPayScreen extends Component {
     }
 
     if (bookingStore.voucherCode) {
-      const voucherInvalidError = await bookingStore.validateVoucher(
-        bookingStore.voucherCode
-      );
-      this.setState({
-        isVoucherValid: !voucherInvalidError,
-        voucherInvalidError
-      });
+      this.voucherInvalidError = await bookingStore.validateVoucher(bookingStore.voucherCode);
     }
   }
 
   render() {
-    const { t } = this.props;
-
     return (
       <BookingNavWrapper
         navBack={this.navBack}
@@ -88,50 +75,77 @@ class StepPayScreen extends Component {
         BottomActionPanel={this.renderBottomPanel()}
       >
         <UFOContainer style={styles.screenPaymentContainer}>
-          {this.renderCreditCardBlock(t)}
-          {this.renderLoyaltyBlock(t)}
+          {this.renderCreditCardBlock()}
+          {this.renderLoyaltyBlock()}
           {this.renderBookingInfoSection()}
-          {this.renderVoucherTooltip()}
-          <UFOLoader isVisible={bookingStore.isLoading} stealthMode={true} />
+          <UFOLoader
+            isVisible={bookingStore.isLoading}
+            stealthMode={true}
+          />
         </UFOContainer>
       </BookingNavWrapper>
     );
   }
 
-  renderBottomPanel = () => {
-    const isVoucherInvalid =
-      _.isBoolean(this.state.isVoucherValid) && !this.state.isVoucherValid;
+  renderBottomPanel = () => (
+    <BottomActionPanel
+      action={this.handleToNextStep}
+      actionTitle={this.props.t('stepPayNextTitle')}
+      actionSubTitle={this.props.t('stepPayNextSubTitle')}
+      isAvailable={!!bookingStore.currentCreditCardRef && !this.voucherInvalidError}
+      isWaiting={bookingStore.isLoading || this.isPending}
+      openPriceInfo={this.openPriceInfo}
+    />
+  );
 
-    return (
-      <BottomActionPanel
-        action={this.handleToNextStep}
-        actionTitle={this.props.t('stepPayNextTitle')}
-        actionSubTitle={this.props.t('stepPayNextSubTitle')}
-        isAvailable={!!bookingStore.currentCreditCardRef && !isVoucherInvalid}
-        isWaiting={bookingStore.isLoading}
-        openPriceInfo={this.openPriceInfo}
-      />
-    );
-  };
-
-  renderCreditCardBlock = t => {
-    return bookingStore.isOrderRefundOrZero ? null : (
+  renderCreditCardBlock = () => {
+    return bookingStore.isOrderPriceRefundOrZero ? null : (
       <View>
-        <Text style={[styles.sectionTitle, styles.sectionTitleIndents]}>
-          {t('creditCardTitle')}
+        <Text style={[ styles.sectionTitle, styles.sectionTitleIndents ]}>
+          {this.props.t('creditCardTitle')}
         </Text>
         {bookingStore.userCreditCards.map(item =>
           this.renderCreditCardItem(item)
         )}
         <TouchableOpacity
-          onPress={this.scranCreditCard}
+          onPress={this.scanCreditCard}
           activeOpacity={values.BTN_OPACITY_DEFAULT}
-          style={[styles.actionBtnDark, styles.scanCardBtn]}
+          style={[ styles.actionBtnDark, styles.scanCardBtn ]}
         >
           <Text style={styles.actionBtnDarkLabel}>
-            {t('scanCreditCardBtn')}
+            {this.props.t('scanCreditCardBtn')}
           </Text>
         </TouchableOpacity>
+      </View>
+    );
+  };
+
+  renderLoyaltyBlock = () => {
+    return bookingStore.editableOrderRef ? null : (
+      <View>
+        <Text style={[ styles.sectionTitle, styles.sectionTitleIndents ]}>
+          {this.props.t(
+            bookingStore.editableOrderRef
+              ? 'loyalityProgramEditTitle'
+              : 'loyalityProgramTitle'
+          )}
+        </Text>
+        <UFOTextInput
+          containerStyle={styles.screenHorizIndents}
+          wrapperStyle={[
+            styles.voucherInput,
+            styles.blockShadow,
+            Platform.OS === 'android' && styles.blockShadowAndroidFix
+          ]}
+          placeholder={this.props.t('voucherPlaceholder')}
+          autoCapitalize="characters"
+          onChangeText={this.handleInputVoucher}
+          defaultValye={bookingStore.voucherCode}
+          invalidStatus={!!this.voucherInvalidError}
+          successStatus={!!bookingStore.voucherCode && !this.voucherInvalidError}
+          alertMessage={this.voucherInvalidError}
+        />
+        {this.renderLoyaltyCode()}
       </View>
     );
   };
@@ -174,37 +188,6 @@ class StepPayScreen extends Component {
     );
   };
 
-  renderLoyaltyBlock = t => {
-    const { isVoucherValid, voucherInvalidError } = this.state;
-    return bookingStore.editableOrderRef ? null : (
-      <View>
-        <Text style={[styles.sectionTitle, styles.sectionTitleIndents]}>
-          {t(
-            bookingStore.editableOrderRef
-              ? 'loyalityProgramEditTitle'
-              : 'loyalityProgramTitle'
-          )}
-        </Text>
-        <UFOTextInput
-          containerStyle={styles.screenHorizIndents}
-          wrapperStyle={[
-            styles.voucherInput,
-            styles.blockShadow,
-            Platform.OS === 'android' && styles.blockShadowAndroidFix
-          ]}
-          placeholder={t('voucherPlaceholder')}
-          autoCapitalize="characters"
-          onChangeText={this.handleInputVoucher}
-          defaultValye={bookingStore.voucherCode}
-          invalidStatus={_.isBoolean(isVoucherValid) && !isVoucherValid}
-          successStatus={_.isBoolean(isVoucherValid) && isVoucherValid}
-          alertMessage={voucherInvalidError}
-        />
-        {this.renderLoyaltyCode()}
-      </View>
-    );
-  };
-
   renderLoyaltyCode = () => {
     const isActive = bookingStore.allowReferralAmountUse;
 
@@ -218,10 +201,7 @@ class StepPayScreen extends Component {
         onPress={isActive ? bookingStore.switchReferralUsing : null}
         activeOpacity={isActive ? values.BTN_OPACITY_DEFAULT : 0.85}
       >
-        <TouchableOpacity
-          onPress={() => this.setState({ showVoucherTooltip: true })}
-          ref={ref => (this.voucherTooltipRef = ref)}
-        >
+        <TouchableOpacity onPress={this.onPressReferralGuide}>
           <UFOIcon
             name="ios-information-circle-outline"
             style={styles.loyalityTolltipIcon}
@@ -242,21 +222,21 @@ class StepPayScreen extends Component {
 
     return (
       <View style={styles.infoSectionWrapper}>
-        <Text style={[styles.sectionTitle, styles.sectionTitleIndents]}>
+        <Text style={[ styles.sectionTitle, styles.sectionTitleIndents ]}>
           {t('infoAtPaymentTitle')}
         </Text>
-        <View style={[styles.infoBlock, styles.blockShadow]}>
+        <View style={[ styles.infoBlock, styles.blockShadow ]}>
           <UFOImage
             style={styles.infoBlockCarImg}
             source={{ uri: bookingStore.order.carModel.imageUrl }}
             resizeMode="contain"
           />
           {bookingStore.newPriceLabel && (
-            <Text style={[styles.infoTitle, styles.infoBlockCarImgIndent]}>
+            <Text style={[ styles.infoTitle, styles.infoBlockCarImgIndent ]}>
               {bookingStore.newPriceLabel}
             </Text>
           )}
-          <Text style={[styles.infoText, styles.infoBlockCarImgIndent]}>
+          <Text style={[ styles.infoText, styles.infoBlockCarImgIndent ]}>
             {`${bookingStore.order.carModel.manufacturer} ${
               bookingStore.order.carModel.name
             }`}
@@ -265,14 +245,14 @@ class StepPayScreen extends Component {
             {bookingStore.order.location.name}
           </Text>
           <Text style={styles.infoText}>
-            {bookingStore.durationLabel} {t('common:days')}{' '}
+            {bookingStore.bookingDurationLabel}
             {t('common:scheduleFrom')} {bookingStore.rentalScheduleStart}
           </Text>
           <Text style={styles.infoText}>
             {t('common:scheduleTo')} {bookingStore.rentalScheduleEnd}
           </Text>
           {bookingStore.feesPriceLabel && (
-            <Text style={[styles.infoTitleNewPrice, styles.infoNewPriceIndent]}>
+            <Text style={[ styles.infoTitleNewPrice, styles.infoNewPriceIndent ]}>
               {bookingStore.feesPriceLabel}
             </Text>
           )}
@@ -286,7 +266,7 @@ class StepPayScreen extends Component {
               {bookingStore.currentPriceLabel}
             </Text>
           )}
-          <View style={[styles.separateLine, styles.separateLineInfoBlock]} />
+          <View style={[ styles.separateLine, styles.separateLineInfoBlock ]} />
           <View style={styles.row}>
             <Text style={styles.infoTitle}>{this.priceDescription}</Text>
             <Text style={styles.infoTitlePrice}>{bookingStore.orderPrice}</Text>
@@ -304,16 +284,6 @@ class StepPayScreen extends Component {
     );
   };
 
-  renderVoucherTooltip = () => (
-    <UFOTooltip
-      isVisible={this.state.showVoucherTooltip}
-      onClose={() => this.setState({ showVoucherTooltip: false })}
-      originBtn={this.voucherTooltipRef}
-    >
-      {this.props.t('voucherTooltip')}
-    </UFOTooltip>
-  );
-
   get priceDescription() {
     return _.get(
       bookingStore.order,
@@ -325,8 +295,9 @@ class StepPayScreen extends Component {
   /*
    * Launch camera to credit card, then handle card with stripe and locally save it into card list
    */
-  scranCreditCard = async () => {
+  scanCreditCard = async () => {
     try {
+      this.isPending = true;
       const hasPermit = await checkAndRequestCameraPermission();
       const options = { ...this.CARDIO_SCAN_OPTIONS, noCamera: !hasPermit };
       const cardIoData = await CardIOModule.scanCard(options);
@@ -342,6 +313,8 @@ class StepPayScreen extends Component {
       });
     } catch (error) {
       console.log('CARDIO ERROR:', error);
+    } finally {
+      this.isPending = false;
     }
   };
 
@@ -349,17 +322,9 @@ class StepPayScreen extends Component {
    * Apply voucher code, receive new order object into bookingStore
    */
   validateAndApplyVoucher = async code => {
-    let isValid = null;
-    let voucherInvalidError = '';
+    this.voucherInvalidError = code ? await bookingStore.validateVoucher(code) : '';
 
-    if (code) {
-      voucherInvalidError = await bookingStore.validateVoucher(code);
-      isValid = !voucherInvalidError;
-    }
-
-    this.setState({ isVoucherValid: isValid, voucherInvalidError });
-
-    if (isValid) {
+    if (code && !this.voucherInvalidError) {
       await bookingStore.appyVoucherCode(code);
     } else if (bookingStore.voucherCode) {
       await bookingStore.resetVoucherCode();
@@ -419,6 +384,9 @@ class StepPayScreen extends Component {
     if (bookingStore.bookingConfirmation) {
       await driveStore.reset();
       this.props.navigation.replace(screenKeys.BookingStepDrive);
+    } else {
+      /* if confirmation failed - remove used credit card from list */
+      bookingStore.removeCreditCardFromList(bookingStore.currentCreditCardRef, true);
     }
   };
 
@@ -444,6 +412,25 @@ class StepPayScreen extends Component {
       bookingStore.priceInfoRef = ref;
       this.props.navigation.navigate(screenKeys.BookingDetails);
     }
+  };
+
+  /*
+   * Propose to open info in browser
+   */
+  onPressReferralGuide = async () => {
+    const t = this.props.t;
+    const infoUrl = this.props.t('common:referralGuideLink');
+
+    await confirm(
+      null,
+      `${t('readMoreByLink')}\n${infoUrl}`,
+      () => Linking.openURL(infoUrl),
+      null,
+      {
+        confirm: t('common:openBtn'),
+        cancel: t('common:cancelBtn')
+      }
+    );
   };
 }
 
