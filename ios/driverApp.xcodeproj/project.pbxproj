@@ -1801,7 +1801,7 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-driverApp/Pods-driverApp-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-driverApp/Pods-driverApp-frameworks.sh",
 				"${PODS_ROOT}/OTASDK/OTASDK.framework",
 				"${PODS_ROOT}/OTASDK/OTASDK.framework.dSYM",
 			);
@@ -1814,7 +1814,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-driverApp/Pods-driverApp-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-driverApp/Pods-driverApp-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		E0355FF0A095D79A7A459844 /* [CP] Check Pods Manifest.lock */ = {
@@ -1847,7 +1847,7 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-driverApp/Pods-driverApp-resources.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-driverApp/Pods-driverApp-resources.sh",
 				"${PODS_CONFIGURATION_BUILD_DIR}/GoogleMobileVision/GoogleMVFaceDetectorResources.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/Stripe/Stripe.bundle",
 			);
@@ -1860,7 +1860,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-driverApp/Pods-driverApp-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-driverApp/Pods-driverApp-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
