@@ -18,7 +18,7 @@ const IS_IOS = Platform.OS === 'ios';
  */
 export function showToastError(errorMessage, yOffset = 0, xOffset = 0) {
   const message = typeof errorMessage === 'string' ? errorMessage : i18n.t('error:unknown');
-  await remoteLoggerService.warn('showToastError', `show message: "${message}".`);
+  remoteLoggerService.warn('showToastError', `show message: "${message}".`);
   Vibration.vibrate();
   IS_IOS
     ? Toast.showWithGravity(message, Toast.LONG, Toast.TOP)
@@ -32,7 +32,7 @@ export function showToastError(errorMessage, yOffset = 0, xOffset = 0) {
  */
 export async function showAlertInfo(title = '', message = '') {
   return new Promise(resolve => {
-    await remoteLoggerService.warn('showAlertInfo', `show title "${title}" and message: "${message}".`);
+    remoteLoggerService.warn('showAlertInfo', `show title "${title}" and message: "${message}".`);
     Alert.alert(title, message, [{ text: i18n.t('common:okBtn'), onPress: resolve }]);
   });
 }
