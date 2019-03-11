@@ -6,6 +6,7 @@ import TouchID from 'react-native-touch-id';
 import PasscodeAuth from 'react-native-passcode-auth';
 
 import { colors } from './theme';
+import remoteLoggerService from './remoteLoggerService';
 
 const IS_IOS = Platform.OS === 'ios';
 
@@ -14,39 +15,25 @@ const IS_IOS = Platform.OS === 'ios';
  * @param {string} errorMessage
  * @param {number} yOffset
  * @param {number} xOffset
-*/
+ */
 export function showToastError(errorMessage, yOffset = 0, xOffset = 0) {
   const message = typeof errorMessage === 'string' ? errorMessage : i18n.t('error:unknown');
+  await remoteLoggerService.warn('showToastError', `show message: "${message}".`);
   Vibration.vibrate();
   IS_IOS
-    ? Toast.showWithGravity(
-        message,
-        Toast.LONG,
-        Toast.TOP
-      )
-    : ToastAndroid.showWithGravityAndOffset(
-        message,
-        ToastAndroid.LONG,
-        ToastAndroid.TOP,
-        xOffset,
-        yOffset
-      );
+    ? Toast.showWithGravity(message, Toast.LONG, Toast.TOP)
+    : ToastAndroid.showWithGravityAndOffset(message, ToastAndroid.LONG, ToastAndroid.TOP, xOffset, yOffset);
 }
 
 /*
  * Show awaiting native alert popup
  * @param {string} title
  * @param {string} message
-*/
+ */
 export async function showAlertInfo(title = '', message = '') {
   return new Promise(resolve => {
-    Alert.alert(
-      title,
-      message,
-      [
-        { text: i18n.t('common:okBtn'), onPress: resolve }
-      ],
-    );
+    await remoteLoggerService.warn('showAlertInfo', `show title "${title}" and message: "${message}".`);
+    Alert.alert(title, message, [{ text: i18n.t('common:okBtn'), onPress: resolve }]);
   });
 }
 
@@ -57,7 +44,7 @@ export async function showAlertInfo(title = '', message = '') {
  * @param {Function} confirmAction
  * @param {Function} neutralAction
  * @param {Object} btnLabels
-*/
+ */
 export async function confirm(
   title = '',
   message = '',
@@ -67,11 +54,13 @@ export async function confirm(
   btnLabels = {}
 ) {
   return new Promise(resolve => {
-    const actions = [{
-      text: btnLabels.cancel || i18n.t('common:cancelBtn'),
-      style: IS_IOS ? 'cancel' : 'negative',
-      onPress: resolve
-    }];
+    const actions = [
+      {
+        text: btnLabels.cancel || i18n.t('common:cancelBtn'),
+        style: IS_IOS ? 'cancel' : 'negative',
+        onPress: resolve
+      }
+    ];
 
     if (typeof confirmAction === 'function') {
       actions.unshift({
@@ -106,12 +95,10 @@ export async function confirm(
  * @param {Function} action
  * @param {Function} cancelAction
  * @param {Object} options
-*/
+ */
 export function showPrompt(title = '', descr = '', action, cancelAction, options = {}) {
   const cancelFn = typeof cancelAction === 'function' ? cancelAction : () => null;
-  const actions = [
-    { text: i18n.t('common:cancelBtn'), onPress: cancelFn, style: 'cancel' }
-  ];
+  const actions = [{ text: i18n.t('common:cancelBtn'), onPress: cancelFn, style: 'cancel' }];
 
   if (typeof action === 'function') {
     const agreeAction = { text: i18n.t('common:okBtn'), onPress: action };
@@ -130,7 +117,7 @@ export function showPrompt(title = '', descr = '', action, cancelAction, options
  * @param {Function} confirmAction
  * @param {Function} fallback
  * @return {boolean}
-*/
+ */
 export const biometricConfirm = IS_IOS ? biometricConfirmIOS : biometricConfirmAndroid;
 
 async function biometricConfirmAndroid(confirmAction, fallback) {
