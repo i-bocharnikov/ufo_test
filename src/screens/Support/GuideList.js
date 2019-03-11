@@ -14,6 +14,8 @@ import { values } from './../../utils/theme';
 class GuideListScreen extends Component {
   @observable refreshing = false;
 
+  defaultCategoryTag = { name: this.props.t('guideAllCategory') };
+
   render() {
     return (
       <UFOContainer style={styles.container}>
@@ -37,25 +39,56 @@ class GuideListScreen extends Component {
   renderGuideTags = () => (
     <ScrollView
       horizontal={true}
+      contentContainerStyle={styles.guideTagsContainer}
+      showsHorizontalScrollIndicator={false}
     >
-      {supportStore.guideCategories.map(category => (
-        <TouchableOpacity
-          key={category.reference}
-          onPress={() => this.onCategoryPress(category.reference)}
-          activeOpacity={values.BTN_OPACITY_DEFAULT}
-        >
-          <Text>
-            {category.name}
-          </Text>
-        </TouchableOpacity>
+      {this.renderTagItem(
+        this.defaultCategoryTag,
+        !supportStore.chosenCategoryRef,
+        true
+      )}
+      {supportStore.guideCategories.map((category, i, collection) => this.renderTagItem(
+        category,
+        supportStore.chosenCategoryRef === category.reference,
+        false,
+        (i === collection.length - 1)
       ))}
     </ScrollView>
   );
 
+  renderTagItem = (category, isChoosen, isFirst, isLast) => (
+    <TouchableOpacity
+      key={category.reference}
+      onPress={() => this.onCategoryPress(category.reference)}
+      activeOpacity={values.BTN_OPACITY_DEFAULT}
+      style={[
+        styles.guideTagBtn,
+        styles.blockShadow,
+        isFirst && styles.guideTagBtnFirst,
+        isLast && styles.guideTagBtnLast,
+        isChoosen && styles.guideTagBtnChosen
+      ]}
+    >
+      <Text style={[
+        styles.guideTagLabel,
+        isChoosen && styles.guideTagLabelChosen
+      ]}>
+        {category.name.toUpperCase()}
+      </Text>
+    </TouchableOpacity>
+  );
+
   renderGuideItem = ({ item }) => (
-    <Text>
-      {item.title}
-    </Text>
+    <TouchableOpacity
+      onPress={() => this.onGuidePress(item)}
+      activeOpacity={values.BTN_OPACITY_DEFAULT}
+      style={styles.guideItem}
+    >
+      <Text style={styles.guideItemLabel}>
+        {item.title}
+      </Text>
+      <UFOIcon style={styles.guideItemIcon} name="md-right" />
+    </TouchableOpacity>
   );
 
   guideListKeyExtractor = item => `${item.reference}${item.title}`;
@@ -73,6 +106,10 @@ class GuideListScreen extends Component {
       supportStore.chosenCategoryRef = ref;
     }
   };
+
+  onGuidePress = guide => {
+    console.log('GUIDE PRESS', guide);
+  };
 }
 
-export default translate()(GuideListScreen);
+export default translate('support')(GuideListScreen);
