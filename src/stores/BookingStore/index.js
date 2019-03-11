@@ -42,8 +42,7 @@ export default class BookingStore {
   @observable locationInfoRef = this._defaultStore.locationInfoRef;
   @observable carInfoRef = this._defaultStore.carInfoRef;
   @observable priceInfoRef = this._defaultStore.priceInfoRef;
-  @observable locationInfoDescription = this._defaultStore
-    .locationInfoDescription;
+  @observable locationInfoDescription = this._defaultStore.locationInfoDescription;
   @observable carInfoDescription = this._defaultStore.carInfoDescription;
   @observable priceInfoDescription = this._defaultStore.priceInfoDescription;
 
@@ -55,8 +54,7 @@ export default class BookingStore {
   @observable voucherCode = this._defaultStore.voucherCode;
   @observable loyaltyProgramInfo = this._defaultStore.loyaltyProgramInfo;
   @observable useRefferalAmount = this._defaultStore.useRefferalAmount;
-  @observable allowReferralAmountUse = this._defaultStore
-    .allowReferralAmountUse;
+  @observable allowReferralAmountUse = this._defaultStore.allowReferralAmountUse;
 
   @observable bookingConfirmation = this._defaultStore.bookingConfirmation;
 
@@ -86,7 +84,6 @@ export default class BookingStore {
       endRentalTime: moment(TOMORROW)
         .add(20, 'h')
         .format(values.TIME_STRING_FORMAT),
-      duration: null,
       locationInfoRef: null,
       carInfoRef: null,
       priceInfoRef: null,
@@ -565,6 +562,28 @@ export default class BookingStore {
   };
 
   /**
+   * @param {string} cardIoObj
+   * @param {boolean} removeOnlyIfNew
+   * @description Remove credit card from userCreditCards list
+   */
+  @action
+  removeCreditCardFromList = (cardRef, removeOnlyIfNew) => {
+    const isNew = _.has(
+      _.find(this.userCreditCards, [ 'reference', cardRef ]),
+      'token'
+    );
+
+    if (removeOnlyIfNew && !isNew) {
+      return;
+    }
+
+    this.userCreditCards = this.userCreditCards.filter(card => card.reference !== cardRef);
+    this.currentCreditCardRef = this.userCreditCards.length
+      ? this.userCreditCards[0].reference
+      : null;
+  };
+
+  /**
    * @param {string} code
    * @description Apply voucher code to exist order
    */
@@ -607,21 +626,23 @@ export default class BookingStore {
       return i18n.t('error:invalidCodeError');
     }
 
-    const isValid = await order.validateVoucher(
+    const response = await order.validateVoucher(
       code,
       this.selectedLocationRef,
       this.selectedCarRef,
       _.get(this.order, 'schedule.startAt')
     );
 
-    if (isValid) {
+    if (response.isValid) {
       return '';
     }
 
-    return i18n.t('error:invalidCodeError', {
+    const defaultMessage = i18n.t('error:invalidCodeError', {
       code,
       context: code[0] === 'R' ? 'referal' : 'voucher'
     });
+
+    return response.invalidMessage || defaultMessage;
   };
 
   /*
@@ -660,8 +681,6 @@ export default class BookingStore {
       : await order.confirmOrder(payload);
 
     this.isLoading = false;
-
-    return false;
   };
 
   /*
@@ -773,25 +792,14 @@ export default class BookingStore {
   }
 
   /**
-   * @description Get formated price string to render in footer
+   * @description Get info is price refund or zero
    */
   @computed
-  get isOrderRefundOrZero() {
-    const unknownPrice = '-';
-    const currentOrder = this.isCancellation
-      ? this.cancellationOrder
-      : this.order;
+  get isOrderPriceRefundOrZero() {
+    const currentOrder = this.isCancellation ? this.cancellationOrder : this.order;
+    const price = _.get(currentOrder, 'price.amount');
 
-    const price = currentOrder
-      ? currentOrder.price
-        ? currentOrder.price.amount
-        : unknownPrice
-      : unknownPrice;
-    if (price === unknownPrice) {
-      return false;
-    }
-
-    return price <= 0;
+    return !!price && price <= 0
   }
 
   /**
@@ -843,12 +851,9 @@ export default class BookingStore {
    * @description Get duration label for the booking
    */
   @computed
-  get durationLabel() {
-    if (!_.has(this.order, 'schedule.duration')) {
-      return null;
-    }
-
-    return this.order.schedule.duration;
+  get bookingDurationLabel() {
+    const duration = _.get(this.order, 'schedule.duration');
+    return duration ? `${duration} ${i18n.t('common:days')} ` : '';
   }
 
   /**
