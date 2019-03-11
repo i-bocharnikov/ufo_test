@@ -799,7 +799,7 @@ export default class BookingStore {
     const currentOrder = this.isCancellation ? this.cancellationOrder : this.order;
     const price = _.get(currentOrder, 'price.amount');
 
-    return !!price && price <= 0
+    return !_.isNil(price) && price <= 0;
   }
 
   /**
