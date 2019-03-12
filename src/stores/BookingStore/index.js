@@ -6,16 +6,12 @@ import i18n from 'i18next';
 import locations from './Locations';
 import cars from './Cars';
 import order from './Order';
-<<<<<<< HEAD
 import {
   getPreselectedDatesForRollPicker,
   getTimeItemsForRollPicker,
   getCurrencyChar
 } from './helpers';
 import rentalStatuses from './../DriveStore/rentalStatuses';
-=======
-import { getPreselectedDatesForRollPicker, getTimeItemsForRollPicker, getCurrencyChar } from './helpers';
->>>>>>> adf94e24dcee4d7f6a32a831b1138a0216382399
 import { values } from './../../utils/theme';
 
 // period in months
@@ -126,14 +122,17 @@ export default class BookingStore {
   @action
   getInitialData = async () => {
     if (this.editableOrderRef) {
-      /* in case of editing booking the reset makes before attach editing data */
+      /* in case of editing booking use this.startEditing */
       return;
     }
 
     this.resetStore();
     this.isLoading = true;
 
-    const [receivedLocations, receivedCars] = await Promise.all([locations.getLocations(), cars.getCars()]);
+    const [ receivedLocations, receivedCars ] = await Promise.all([
+      locations.getLocations(),
+      cars.getCars()
+    ]);
 
     this.locations = receivedLocations;
     this.cars = receivedCars;
@@ -142,7 +141,9 @@ export default class BookingStore {
   };
 
   /**
-   * @description Start editing, force selection for booking and fetch data
+   * @param {Object} rental
+   * @param {Function} navAction
+   * @description Start editing, force selection for booking, nav to screen and fetch data
    */
   @action
   startEditing = async (rental, navAction) => {
