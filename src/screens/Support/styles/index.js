@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { colors, textThemes } from './../../../utils/theme';
 
 const HORIZONTAL_INDENTS = 24;
@@ -43,7 +43,7 @@ export default StyleSheet.create({
     fontSize: 10,
     lineHeight: TAG_HEIGHT,
     letterSpacing: 0.36,
-    marginTop: 1
+    marginTop: Platform.OS == 'ios' ? 1 : 0
   },
 
   guideTagBtnChosen: { backgroundColor: colors.MAIN_COLOR },
@@ -57,19 +57,22 @@ export default StyleSheet.create({
     marginBottom: 16,
     marginHorizontal: HORIZONTAL_INDENTS,
     backgroundColor: colors.BG_INVERT,
-    paddingVertical: 16,
-    paddingHorizontal: 12
+    paddingVertical: 20,
+    paddingHorizontal: 16
   },
 
   guideItemLabel: {
     ...textThemes.SP_BOLD,
     fontSize: 14,
+    lineHeight: 18,
     color: colors.MAIN_COLOR,
-    letterSpacing: 0.5
+    letterSpacing: 0.5,
+    flex: 1
   },
 
   guideItemIcon: {
     color: colors.TEXT_DEFAULT_COLOR,
-    fontSize: 16
+    fontSize: 16,
+    marginLeft: 8
   }
 });

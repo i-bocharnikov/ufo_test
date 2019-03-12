@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
 import { View, BackHandler } from 'react-native';
 import i18n from 'i18next';
+import call from 'react-native-phone-call';
+import { observer } from 'mobx-react';
 
+import { driveStore } from './../../stores';
 import SupportInnerTabNavigator from './../../navigators/components/SupportInnerTabNavigator';
 import { supportBackBtnState } from './../../navigators/helpers/navStateListener';
 import { UFOHeader } from './../../components/UFOHeader';
 import styles from './styles';
 
-export default class SupportScreen extends Component {
+@observer
+class SupportScreen extends Component {
   static router = SupportInnerTabNavigator.router;
 
   componentDidMount() {
@@ -25,6 +29,8 @@ export default class SupportScreen extends Component {
           title={i18n.t('support:overviewHeader')}
           leftBtnAction={this.navBack}
           leftBtnIcon="keyboard-backspace"
+          rightBtnAction={driveStore.emergencyNumber ? this.callToSupport : null}
+          rightBtnIcon="phone"
           isSingle={false}
         />
         <SupportInnerTabNavigator navigation={this.props.navigation} />
@@ -42,4 +48,13 @@ export default class SupportScreen extends Component {
 
     return false;
   };
+
+  callToSupport = () => {
+    call({
+      number: driveStore.emergencyNumber,
+      prompt: false
+    });
+  };
 }
+
+export default SupportScreen;

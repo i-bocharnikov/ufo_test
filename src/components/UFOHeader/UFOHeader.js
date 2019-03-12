@@ -11,7 +11,11 @@ import { values } from './../../utils/theme';
 class UFOHeader extends PureComponent {
   render() {
     return (
-      <View style={[ styles.header, this.props.isSingle && styles.headerSingle ]}>
+      <View style={[
+        styles.header,
+        this.props.isSingle && styles.headerSingle,
+        this.props.isSingle && styles.headerShadow
+      ]}>
         {this.renderLeftBtn()}
         <Text
           style={styles.title}

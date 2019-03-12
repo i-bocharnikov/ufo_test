@@ -60,7 +60,8 @@ const support = {
   guideListTab: 'Guides',
   chatTab: 'Chat',
   faqTab: 'FAQ',
-  guideAllCategory: 'all'
+  guideAllCategory: 'all',
+  guideHeader: 'Guide'
 };
 
 export default {

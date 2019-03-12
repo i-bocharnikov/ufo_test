@@ -1,11 +1,13 @@
 import { StyleSheet } from 'react-native';
 import { colors, textThemes } from './../../utils/theme';
+import { SUB_HEADER_HEIGHT, headerShadow } from './../../components/UFOHeader/styles';
 
 export default StyleSheet.create({
   container: {
     backgroundColor: colors.BG_DEFAULT,
-    height: 48,
-    paddingTop: 6
+    height: SUB_HEADER_HEIGHT,
+    paddingTop: 6,
+    ...headerShadow
   },
 
   label: {

@@ -40,6 +40,29 @@ export default class SupportStore {
   }
 
   /*
+   * @description Get category title for chosen guide
+   */
+  @computed
+  get guideCategorytitle() {
+    const guideRef = _.get(this.chosenGuide, 'reference');
+
+    if (guideRef) {
+      let category;
+      this.guideCategories.forEach(categoryBlock => {
+        category = categoryBlock.faqs.some(item => item.reference === guideRef)
+          ? categoryBlock
+          : category;
+      });
+
+      if (category) {
+        return category.name;
+      }
+    }
+
+    return '';
+  }
+
+  /*
    * @returns {boolean}
    * @description Fetch list of guides from server
    */

@@ -109,19 +109,9 @@ export default class DriveStore {
     return this.rentals[this.index];
   }
 
-  @computed get emergencyNumber() {
-    if (
-      this.index === null ||
-      this.rental === null ||
-      this.rental.car === null
-    ) {
-      return null;
-    }
-    if (!this.hasRentalOngoing) {
-      return null;
-    }
-
-    return this.rental.car.support_number;
+  @computed
+  get emergencyNumber() {
+    return _.get(this.rental, 'car.support_number', null);
   }
 
   @computed get hasRentals() {

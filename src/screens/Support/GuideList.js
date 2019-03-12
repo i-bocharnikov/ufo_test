@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ScrollView, View, Text, RefreshControl, FlatList, TouchableOpacity } from 'react-native';
+import { ScrollView, Text, RefreshControl, FlatList, TouchableOpacity } from 'react-native';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 import { translate } from 'react-i18next';
@@ -82,12 +82,16 @@ class GuideListScreen extends Component {
     <TouchableOpacity
       onPress={() => this.onGuidePress(item)}
       activeOpacity={values.BTN_OPACITY_DEFAULT}
-      style={styles.guideItem}
+      style={[ styles.guideItem, styles.blockShadow ]}
     >
       <Text style={styles.guideItemLabel}>
         {item.title}
       </Text>
-      <UFOIcon style={styles.guideItemIcon} name="md-right" />
+      <UFOIcon
+        style={styles.guideItemIcon}
+        name="chevron-thin-right"
+        iconPack="Entypo"
+      />
     </TouchableOpacity>
   );
 
@@ -108,7 +112,8 @@ class GuideListScreen extends Component {
   };
 
   onGuidePress = guide => {
-    console.log('GUIDE PRESS', guide);
+    supportStore.chosenGuide = guide;
+    this.props.navigation.navigate(screenKeys.SupportGuide);
   };
 }
 
