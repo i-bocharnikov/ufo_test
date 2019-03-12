@@ -19,10 +19,8 @@ export default {
     referralGuideLink: 'https://www.ufodrive.com/en/ufo-world/referral'
   },
   activities: {
-    internetAccessFailure:
-      'Unexpected internet connectivity issues. Operating in offline/degraded mode',
-    bluetoothAccessFailure:
-      'Unexpected bluetooth connectivity issues. Operating in offline/degraded mode',
+    internetAccessFailure: 'Unexpected internet connectivity issues. Operating in offline/degraded mode',
+    bluetoothAccessFailure: 'Unexpected bluetooth connectivity issues. Operating in offline/degraded mode',
     internetbluetoothAccessFailure:
       'Unexpected internet and bluetooth connectivity issues. Operating in offline/degraded mode'
   },
@@ -36,31 +34,23 @@ export default {
   },
   error: {
     error: 'Error',
-    internetConnectionRequired:
-      'This operation requires an internet connection',
-    bluetoothConnectionRequired:
-      'This operation requires a blootooth connection',
-    unexpectedServerResponse:
-      'Oops, this was not supposed to happen. Apologises for the inconvenience',
+    internetConnectionRequired: 'This operation requires an internet connection',
+    bluetoothConnectionRequired: 'This operation requires a blootooth connection',
+    unexpectedServerResponse: 'Oops, this was not supposed to happen. Apologises for the inconvenience',
     noKey: 'You currently have no key. Please ask support team to have one',
     stringNotMatch: 'Please type "I agree" to sign the contract.',
     unknown: 'Unknown Error',
-    nativeException:
-      'Oops, this was not supposed to happen. Apologises for the inconvenience',
+    nativeException: 'Oops, this was not supposed to happen. Apologises for the inconvenience',
     jsException: 'Warning from JS exception handler',
-    jsExceptionFatal:
-      'Oops, this was not supposed to happen. Apologises for the inconvenience',
-    jsExceptionFatalReport:
-      'We have reported this to our team. Please close the app and start again.',
-    localPermissionNeeded:
-      'Location permission is required to access the car (please control system settings)',
+    jsExceptionFatal: 'Oops, this was not supposed to happen. Apologises for the inconvenience',
+    jsExceptionFatalReport: 'We have reported this to our team. Please close the app and start again.',
+    localPermissionNeeded: 'Location permission is required to access the car (please control system settings)',
     invalidCodeError: 'This code is not valid!',
     // it's not just var name - such format using 'context' in 'i18next'
     invalidCodeError_voucher: "Voucher code '{{code}}' is not valid",
     invalidCodeError_referal: "Referral code '{{code}}' is not valid",
     connectionIsRequired: 'Internet connectivity is required',
-    rentalKeyMissing:
-      'The key is missing, please contact UFODRIVE if the problem persist.',
+    rentalKeyMissing: 'The key is missing, please contact UFODRIVE if the problem persist.',
     rentalNotOpen: 'The rental is not yet started, please wait...',
     bluetoothNeeded: 'Please enable bluetooth on your phone and try again',
     connectivityIssue: 'Connectivity Issue, please try again'
@@ -132,43 +122,33 @@ export default {
     redoCaptureConfirm: 'Please confirm you want to change the captured scan',
     identificationTitle: 'Register ID',
     identificationLabel: 'ID or Passport',
-    identificationFrontInputLabel:
-      'Please position the front side of your ID card or passport inside this rectangle',
-    identificationCheckLabel:
-      'Please check that the text is readable and that the whole document is visible',
-    identificationBackInputLabel:
-      'Please position the back side of your ID card or passport inside this rectangle.',
+    identificationFrontInputLabel: 'Please position the front side of your ID card or passport inside this rectangle',
+    identificationCheckLabel: 'Please check that the text is readable and that the whole document is visible',
+    identificationBackInputLabel: 'Please position the back side of your ID card or passport inside this rectangle.',
     driverLicenceTitle: 'Register driver licence',
     driverLicenceLabel: 'Driver licence',
-    driverLicenceFrontInputLabel:
-      'Please position the front side of your driver licence inside this rectangle',
-    driverLicenceCheckLabel:
-      'Please check that the text is readable and the whole document is visible',
-    driverLicenceBackInputLabel:
-      'Please position the back side of your driver licence inside this rectangle.',
+    driverLicenceFrontInputLabel: 'Please position the front side of your driver licence inside this rectangle',
+    driverLicenceCheckLabel: 'Please check that the text is readable and the whole document is visible',
+    driverLicenceBackInputLabel: 'Please position the back side of your driver licence inside this rectangle.',
     CameraNotAvailable: 'The camera is not available',
     CameraProcessingError:
       'Unexpected issues detected during the image processing of the camera ({{message}}). Please try again and/or contact the support team if the problem persists.',
     devicePermissionTitle: 'Permission to use {{type}}',
-    cameraPermissionMessage:
-      "We need your permission to use your phone's camera",
+    cameraPermissionMessage: "We need your permission to use your phone's camera",
     disconnectConfirmationMessage: 'Are you sure you want to logout?',
     idCardPickerLabel: 'Passport\nor ID card',
     driveCardPickerLabel: 'Driving\nLicense',
     shareDialogTitle: 'Share referal code',
     referalBlock: 'Referal Code {{code}}',
-    referalCodeMessage:
-      'You can use my UFODRIVE referral code {{code}} to get €30 off of your first ride',
-    devicePermissionRestricted:
-      'To use {{type}} activate it in the phone settings',
+    referalCodeMessage: 'You can use my UFODRIVE referral code {{code}} to get €30 off of your first ride',
+    devicePermissionRestricted: 'To use {{type}} activate it in the phone settings',
     companyInputPlaceholder: 'Company name (optional)',
     vatInputPlaceholder: 'VAT number (optional)'
   },
   inspect: {
     initialInspectionTitle: 'Initial inspection',
     finalInspectionTitle: 'Declare damage(s)',
-    inspectGuidance:
-      'Confirm the car conforms to the condition described below:',
+    inspectGuidance: 'Confirm the car conforms to the condition described below:',
     locateDamageTitle: 'Declare damage 1/3',
     locateGuidance: 'Locate the damage on the picture below',
     captureDamageTitle: 'Capture damage 2/3',
@@ -196,15 +176,13 @@ export default {
     rentalEndAt: 'to {{end_at}}',
     rentalLocation: '{{rental.location.name}}',
     rentalCar: '{{rental.car.reference}}',
-    rentalCarModel:
-      '{{rental.car.car_model.manufacturer}} {{rental.car.car_model.name}}',
+    rentalCarModel: '{{rental.car.car_model.manufacturer}} {{rental.car.car_model.name}}',
     noRentalsTitle: 'No rentals',
     noRentalsDescription:
       'After booking, the actions below will be activated and will allow you to find the car, inspect it, start the rental contract and ultimately lock/unlock the vehicle',
     confirmCloseRentalConfirmationMessage:
       "You are about to end your rental contract.{{keyMessage}}\nThe car will then lock automatically so please ensure you don't leave any personal belongings in the car as you will not be able to open it once you press 'OK'.\nThank you.",
-    confirmCloseRentalKeyMessageConfirmationMessage:
-      '\nPLEASE PUT THE KEY BACK IN THE GLOVEBOX.',
+    confirmCloseRentalKeyMessageConfirmationMessage: '\nPLEASE PUT THE KEY BACK IN THE GLOVEBOX.',
     noKey: 'No key',
     notConnected: 'Not connected',
     connecting: '...Connecting...',
@@ -221,8 +199,7 @@ export default {
   },
   term: {
     rentalAgreementTitle: 'Sign the agreement',
-    confirmContractDescription:
-      'By signing, I certify that I have read and fully accepted the terms and conditions.',
+    confirmContractDescription: 'By signing, I certify that I have read and fully accepted the terms and conditions.',
     confirmContractTitle: "Enter '{{strKey}}' to confirm",
     confirmContractKeyString: 'I agree'
   },
@@ -239,8 +216,7 @@ export default {
     timeSectionTitle: 'PICK-UP & RETURN TIME',
     notFoundData: 'Data not found',
     infoLink: 'info',
-    datesTooltip:
-      'Enter your pick-up & return date here. You can also use the calendar view.\nNeed more help? ',
+    datesTooltip: 'Enter your pick-up & return date here. You can also use the calendar view.\nNeed more help? ',
     tooltipLink: 'Contact us',
     dareSectionTitle: 'PICK-UP & RETURN DATE',
     totalPrice: 'TOTAL',
@@ -279,8 +255,7 @@ export default {
     driveNextRegister: 'REGISTER',
     driveNextDrive: 'DRIVE YOUR CAR',
     driveNextHome: 'HOME',
-    driveDescrRegisterP1:
-      'Before the rental, please register by scanning your ID and driver licence.',
+    driveDescrRegisterP1: 'Before the rental, please register by scanning your ID and driver licence.',
     driveDescrDriveP1: 'Find your bookings in the drive section of the app.',
     driveDescrP2: ' If you want to know more about how it works, ',
     driveDescrGuideLink: 'Please consult the FAQ.',
@@ -305,8 +280,7 @@ export default {
     launchTitle: 'Fast track\ncar rental',
     slideOneTitle: 'The most advanced car rental',
     slideOneSubTitle: 'No key pick-up, no paperwork, no queues.',
-    slideOneDescription:
-      'This app will perform car inspection, activate your rental agreement and unlock your car',
+    slideOneDescription: 'This app will perform car inspection, activate your rental agreement and unlock your car',
     slideTwoTitle: 'No hidden charges',
     slideTwoSubTitle: 'No refuelling cost',
     slideTwoDescription:
@@ -327,10 +301,9 @@ export default {
     validateBtnLabel: 'Validate',
     captureBtn: 'Capture',
     handlingDefaultError: 'Something went wrong. try again...',
-    handlingRentalError:
-      "Identity wasn't validate, something went wrong, try again...",
-    registerCaptureDescription: 'Capture your face',
-    rentalCaptureDescription: 'Capture your face to confirm your identity',
+    handlingRentalError: "Identity wasn't validate, something went wrong, try again...",
+    registerCaptureDescription: 'Please capture your face',
+    rentalCaptureDescription: 'Please capture your face to confirm your identity',
     incorrectFacePosition: 'Your face must be in the center of the screen',
     incorrectFaceSize: 'Your face must be closer to the camera',
     incorrectFaceYaw: 'Your face must be in front of the camera'

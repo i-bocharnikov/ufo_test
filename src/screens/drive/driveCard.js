@@ -67,7 +67,7 @@ class DriveCard extends Component {
             end_at: driveStore.format(rental.end_at, values.DATE_DRIVE_FORMAT)
           })}
         </UFOText>
-        {status !== rentalStatuses.CLOSED && (
+        {status !== rentalStatuses.CLOSED && rental.is_editable && (
           <TouchableOpacity
             style={styles.editRow}
             onPress={this.editBooking}

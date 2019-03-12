@@ -6,12 +6,16 @@ import i18n from 'i18next';
 import locations from './Locations';
 import cars from './Cars';
 import order from './Order';
+<<<<<<< HEAD
 import {
   getPreselectedDatesForRollPicker,
   getTimeItemsForRollPicker,
   getCurrencyChar
 } from './helpers';
 import rentalStatuses from './../DriveStore/rentalStatuses';
+=======
+import { getPreselectedDatesForRollPicker, getTimeItemsForRollPicker, getCurrencyChar } from './helpers';
+>>>>>>> adf94e24dcee4d7f6a32a831b1138a0216382399
 import { values } from './../../utils/theme';
 
 // period in months
@@ -129,10 +133,7 @@ export default class BookingStore {
     this.resetStore();
     this.isLoading = true;
 
-    const [receivedLocations, receivedCars] = await Promise.all([
-      locations.getLocations(),
-      cars.getCars()
-    ]);
+    const [receivedLocations, receivedCars] = await Promise.all([locations.getLocations(), cars.getCars()]);
 
     this.locations = receivedLocations;
     this.cars = receivedCars;
@@ -294,10 +295,7 @@ export default class BookingStore {
     const startIndex = this.rollPickerStartSelectedTimeItem;
     const endIndex = this.rollPickerEndSelectedTimeItem;
 
-    if (
-      this.startRentalDate.diff(this.endRentalDate, 'days') !== 0 ||
-      startIndex < endIndex
-    ) {
+    if (this.startRentalDate.diff(this.endRentalDate, 'days') !== 0 || startIndex < endIndex) {
       return;
     }
 
@@ -336,10 +334,7 @@ export default class BookingStore {
         item => item.label === currentLocationTime
       );
 
-      if (
-        currentLocationTimeIndex < this.rollPickerStartSelectedTimeItem ||
-        currentLocationTimeIndex === -1
-      ) {
+      if (currentLocationTimeIndex < this.rollPickerStartSelectedTimeItem || currentLocationTimeIndex === -1) {
         return;
       }
 
@@ -355,13 +350,8 @@ export default class BookingStore {
       } else {
         this.startRentalTime = currentLocationTime;
 
-        if (
-          isEndDateToday &&
-          this.rollPickerEndSelectedTimeItem <= currentLocationTimeIndex
-        ) {
-          this.endRentalTime = this.rollPickersTimeItems[
-            currentLocationTimeIndex + 1
-          ].label;
+        if (isEndDateToday && this.rollPickerEndSelectedTimeItem <= currentLocationTimeIndex) {
+          this.endRentalTime = this.rollPickersTimeItems[currentLocationTimeIndex + 1].label;
         }
       }
     }
@@ -393,8 +383,7 @@ export default class BookingStore {
       return;
     }
 
-    const isOneDayRental =
-      this.startRentalDate.diff(this.endRentalDate, 'days') === 0;
+    const isOneDayRental = this.startRentalDate.diff(this.endRentalDate, 'days') === 0;
 
     if (isOneDayRental && itemIndex + 1 >= this.rollPickersTimeItems.length) {
       // forbid to choose last time-item of day as start
@@ -404,10 +393,7 @@ export default class BookingStore {
     }
 
     if (isOneDayRental && this.rollPickerEndSelectedTimeItem <= itemIndex) {
-      const nextIndex =
-        this.rollPickersTimeItems.length > itemIndex + 1
-          ? itemIndex + 1
-          : itemIndex;
+      const nextIndex = this.rollPickersTimeItems.length > itemIndex + 1 ? itemIndex + 1 : itemIndex;
       this.endRentalTime = this.rollPickersTimeItems[nextIndex].label;
     }
 
@@ -426,8 +412,7 @@ export default class BookingStore {
       return;
     }
 
-    const isOneDayRental =
-      this.startRentalDate.diff(this.endRentalDate, 'days') === 0;
+    const isOneDayRental = this.startRentalDate.diff(this.endRentalDate, 'days') === 0;
 
     if (isOneDayRental && itemIndex === 0) {
       // forbid to choose first time-item of day as end
@@ -436,11 +421,7 @@ export default class BookingStore {
       this.endRentalTime = timeStr;
     }
 
-    if (
-      !this.isOngoing &&
-      isOneDayRental &&
-      this.rollPickerStartSelectedTimeItem >= itemIndex
-    ) {
+    if (!this.isOngoing && isOneDayRental && this.rollPickerStartSelectedTimeItem >= itemIndex) {
       const prevIndex = itemIndex - 1 >= 0 ? itemIndex - 1 : itemIndex;
       this.startRentalTime = this.rollPickersTimeItems[prevIndex].label;
     }
@@ -461,11 +442,7 @@ export default class BookingStore {
    * @description Set origin start/end dates and time for editing booking
    */
   @action
-  setEditingPeriod = async (
-    momentStartBooking,
-    momentEndBooking,
-    isOngoing
-  ) => {
+  setEditingPeriod = async (momentStartBooking, momentEndBooking, isOngoing) => {
     const startDate = moment(momentStartBooking).startOf('day');
     const endDate = moment(momentEndBooking).startOf('day');
     this.startRentalTime = momentStartBooking.format(values.TIME_STRING_FORMAT);
@@ -474,9 +451,7 @@ export default class BookingStore {
     if (!isOngoing) {
       /* if rental didn't start, check and set chosen dates to min allowed values */
       this.startRentalDate = startDate.isBefore(TODAY) ? TODAY : startDate;
-      this.endRentalDate = endDate.isBefore(this.startRentalDate)
-        ? TOMORROW
-        : endDate;
+      this.endRentalDate = endDate.isBefore(this.startRentalDate) ? TOMORROW : endDate;
       this.correctSelectedTime();
     } else {
       /* if rental is ongoing, set start as constant value and end date as min allowed value */
@@ -505,29 +480,16 @@ export default class BookingStore {
   getDescriptionData = async () => {
     this.isLoading = true;
 
-    if (
-      this.locationInfoRef &&
-      this.locationInfoRef !== this.locationInfoDescription.reference
-    ) {
-      this.locationInfoDescription = await locations.getDescription(
-        this.locationInfoRef
-      );
+    if (this.locationInfoRef && this.locationInfoRef !== this.locationInfoDescription.reference) {
+      this.locationInfoDescription = await locations.getDescription(this.locationInfoRef);
     }
 
-    if (
-      this.carInfoRef &&
-      this.carInfoRef !== this.carInfoDescription.reference
-    ) {
+    if (this.carInfoRef && this.carInfoRef !== this.carInfoDescription.reference) {
       this.carInfoDescription = await cars.getDescription(this.carInfoRef);
     }
 
-    if (
-      this.priceInfoRef &&
-      this.priceInfoRef !== this.priceInfoDescription.reference
-    ) {
-      this.priceInfoDescription = await order.getPriceDescription(
-        this.priceInfoRef
-      );
+    if (this.priceInfoRef && this.priceInfoRef !== this.priceInfoDescription.reference) {
+      this.priceInfoDescription = await order.getPriceDescription(this.priceInfoRef);
     }
 
     this.isLoading = false;
@@ -597,19 +559,14 @@ export default class BookingStore {
    */
   @action
   removeCreditCardFromList = (cardRef, removeOnlyIfNew) => {
-    const isNew = _.has(
-      _.find(this.userCreditCards, [ 'reference', cardRef ]),
-      'token'
-    );
+    const isNew = _.has(_.find(this.userCreditCards, ['reference', cardRef]), 'token');
 
     if (removeOnlyIfNew && !isNew) {
       return;
     }
 
     this.userCreditCards = this.userCreditCards.filter(card => card.reference !== cardRef);
-    this.currentCreditCardRef = this.userCreditCards.length
-      ? this.userCreditCards[0].reference
-      : null;
+    this.currentCreditCardRef = this.userCreditCards.length ? this.userCreditCards[0].reference : null;
   };
 
   /**
@@ -693,10 +650,7 @@ export default class BookingStore {
   confirmBooking = async () => {
     this.isLoading = true;
     const payment = {};
-    const currentCreditCard = _.find(this.userCreditCards, [
-      'reference',
-      this.currentCreditCardRef
-    ]);
+    const currentCreditCard = _.find(this.userCreditCards, ['reference', this.currentCreditCardRef]);
 
     if (currentCreditCard.token) {
       payment.token = currentCreditCard.token;
@@ -718,10 +672,7 @@ export default class BookingStore {
   @action
   confirmCancellation = async () => {
     this.isLoading = true;
-    this.bookingConfirmation = await order.confirmCancellation(
-      this.editableOrderRef,
-      this.cancellationOrder
-    );
+    this.bookingConfirmation = await order.confirmCancellation(this.editableOrderRef, this.cancellationOrder);
     this.isLoading = false;
   };
 
@@ -737,9 +688,7 @@ export default class BookingStore {
       return;
     }
 
-    const momentStartAlt = moment
-      .utc(startAlt)
-      .tz(this.order.schedule.timezone);
+    const momentStartAlt = moment.utc(startAlt).tz(this.order.schedule.timezone);
     const momentEndAlt = moment.utc(endAlt).tz(this.order.schedule.timezone);
 
     this.endRentalTime = momentEndAlt.format(values.TIME_STRING_FORMAT);
@@ -788,9 +737,7 @@ export default class BookingStore {
    */
   @computed
   get rollPickerOngoingStartDate() {
-    const dateString = this.startRentalDate.format(
-      values.DATE_ROLLPICKER_FORMAT
-    );
+    const dateString = this.startRentalDate.format(values.DATE_ROLLPICKER_FORMAT);
     return [
       {
         label: dateString,
@@ -837,9 +784,7 @@ export default class BookingStore {
   @computed
   get orderPrice() {
     const unknownPrice = '-';
-    const currentOrder = this.isCancellation
-      ? this.cancellationOrder
-      : this.order;
+    const currentOrder = this.isCancellation ? this.cancellationOrder : this.order;
     const price = _.get(currentOrder, 'price.amount', unknownPrice);
     const currencyChar = getCurrencyChar(_.get(currentOrder, 'price.currency'));
 
@@ -855,9 +800,7 @@ export default class BookingStore {
    */
   @computed
   get orderOriginPrice() {
-    const currentOrder = this.isCancellation
-      ? this.cancellationOrder
-      : this.order;
+    const currentOrder = this.isCancellation ? this.cancellationOrder : this.order;
     const amount = _.get(currentOrder, 'price.amountOrigin', '');
     const currencyChar = getCurrencyChar(_.get(currentOrder, 'price.currency'));
 
@@ -890,18 +833,12 @@ export default class BookingStore {
    */
   @computed
   get feesPriceLabel() {
-    const currentOrder = this.isCancellation
-      ? this.cancellationOrder
-      : this.order;
+    const currentOrder = this.isCancellation ? this.cancellationOrder : this.order;
     const amount = _.get(currentOrder, 'feePrice.amount', '');
     const description = _.get(currentOrder, 'feePrice.description', '');
-    const currencyChar = getCurrencyChar(
-      _.get(currentOrder, 'feePrice.currency')
-    );
+    const currencyChar = getCurrencyChar(_.get(currentOrder, 'feePrice.currency'));
 
-    return amount || _.isNumber(amount)
-      ? `${description}${amount}${currencyChar}`
-      : null;
+    return amount || _.isNumber(amount) ? `${description}${currencyChar}${amount}` : null;
   }
 
   /**
@@ -911,13 +848,9 @@ export default class BookingStore {
   get newPriceLabel() {
     const amount = _.get(this.order, 'newPrice.amount', '');
     const description = _.get(this.order, 'newPrice.description', '');
-    const currencyChar = getCurrencyChar(
-      _.get(this.order, 'newPrice.currency')
-    );
+    const currencyChar = getCurrencyChar(_.get(this.order, 'newPrice.currency'));
 
-    return amount || _.isNumber(amount)
-      ? `${description}${amount}${currencyChar}`
-      : null;
+    return amount || _.isNumber(amount) ? `${description}${currencyChar}${amount}` : null;
   }
 
   /**
@@ -925,18 +858,12 @@ export default class BookingStore {
    */
   @computed
   get currentPriceLabel() {
-    const currentOrder = this.isCancellation
-      ? this.cancellationOrder
-      : this.order;
+    const currentOrder = this.isCancellation ? this.cancellationOrder : this.order;
     const amount = _.get(currentOrder, 'currentPrice.amount', '');
     const description = _.get(currentOrder, 'currentPrice.description', '');
-    const currencyChar = getCurrencyChar(
-      _.get(currentOrder, 'currentPrice.currency')
-    );
+    const currencyChar = getCurrencyChar(_.get(currentOrder, 'currentPrice.currency'));
 
-    return amount || _.isNumber(amount)
-      ? `${description}${amount}${currencyChar}`
-      : null;
+    return amount || _.isNumber(amount) ? `${description}${currencyChar}${amount}` : null;
   }
 
   /**
@@ -956,10 +883,7 @@ export default class BookingStore {
       return 0;
     }
 
-    const index = _.findIndex(
-      this.rollPickersTimeItems,
-      item => item.label === this.startRentalTime
-    );
+    const index = _.findIndex(this.rollPickersTimeItems, item => item.label === this.startRentalTime);
 
     return index === -1 ? 0 : index;
   }
@@ -969,10 +893,7 @@ export default class BookingStore {
    */
   @computed
   get rollPickerEndSelectedTimeItem() {
-    const index = _.findIndex(
-      this.rollPickersTimeItems,
-      item => item.label === this.endRentalTime
-    );
+    const index = _.findIndex(this.rollPickersTimeItems, item => item.label === this.endRentalTime);
 
     return index === -1 ? 0 : index;
   }
@@ -1023,10 +944,7 @@ export default class BookingStore {
       return null;
     }
 
-    const {
-      alternativeStartAt: startAlt,
-      alternativeEndAt: endAlt
-    } = this.order.carAvailabilities;
+    const { alternativeStartAt: startAlt, alternativeEndAt: endAlt } = this.order.carAvailabilities;
 
     if (!this.isOrderCarHasAlt || !startAlt || !endAlt) {
       return this.order.carAvailabilities.message;
@@ -1046,9 +964,7 @@ export default class BookingStore {
         .tz(this.order.schedule.timezone)
         .format(' ddd DD MMM YYYY HH:mm');
 
-    return `${
-      this.order.carAvailabilities.message
-    }\n-${startAltFormatted}\n-${endAltFormatted}`;
+    return `${this.order.carAvailabilities.message}\n-${startAltFormatted}\n-${endAltFormatted}`;
   }
 
   /**
@@ -1056,24 +972,15 @@ export default class BookingStore {
    */
   @computed
   get infoDescription() {
-    if (
-      this.locationInfoRef &&
-      this.locationInfoRef === this.locationInfoDescription.reference
-    ) {
+    if (this.locationInfoRef && this.locationInfoRef === this.locationInfoDescription.reference) {
       return { isLocation: true, ...this.locationInfoDescription };
     }
 
-    if (
-      this.carInfoRef &&
-      this.carInfoRef === this.carInfoDescription.reference
-    ) {
+    if (this.carInfoRef && this.carInfoRef === this.carInfoDescription.reference) {
       return { isCar: true, ...this.carInfoDescription };
     }
 
-    if (
-      this.priceInfoRef &&
-      this.priceInfoRef === this.priceInfoDescription.reference
-    ) {
+    if (this.priceInfoRef && this.priceInfoRef === this.priceInfoDescription.reference) {
       return { isPrice: true, ...this.priceInfoDescription };
     }
 
@@ -1090,12 +997,8 @@ export default class BookingStore {
     }
 
     const m = moment.utc(this.order.schedule.startAt);
-    const dateStr = m
-      .tz(this.order.schedule.timezone)
-      .format(values.DATE_ROLLPICKER_FORMAT);
-    const timeStr = m
-      .tz(this.order.schedule.timezone)
-      .format(values.TIME_STRING_FORMAT);
+    const dateStr = m.tz(this.order.schedule.timezone).format(values.DATE_ROLLPICKER_FORMAT);
+    const timeStr = m.tz(this.order.schedule.timezone).format(values.TIME_STRING_FORMAT);
 
     return `${dateStr} ${timeStr}`;
   }
@@ -1110,12 +1013,8 @@ export default class BookingStore {
     }
 
     const m = moment.utc(this.order.schedule.endAt);
-    const dateStr = m
-      .tz(this.order.schedule.timezone)
-      .format(values.DATE_ROLLPICKER_FORMAT);
-    const timeStr = m
-      .tz(this.order.schedule.timezone)
-      .format(values.TIME_STRING_FORMAT);
+    const dateStr = m.tz(this.order.schedule.timezone).format(values.DATE_ROLLPICKER_FORMAT);
+    const timeStr = m.tz(this.order.schedule.timezone).format(values.TIME_STRING_FORMAT);
 
     return `${dateStr} ${timeStr}`;
   }
@@ -1144,12 +1043,7 @@ export default class BookingStore {
     const minDate = moment().format(values.DATE_STRING_FORMAT);
     const maxDate = MAX_RENTAL_DATE.format(values.DATE_STRING_FORMAT);
 
-    this.carCalendar = await cars.getCarsCalendar(
-      this.selectedLocationRef,
-      this.selectedCarRef,
-      minDate,
-      maxDate
-    );
+    this.carCalendar = await cars.getCarsCalendar(this.selectedLocationRef, this.selectedCarRef, minDate, maxDate);
   };
 
   /**
@@ -1171,21 +1065,11 @@ export default class BookingStore {
     }
 
     /* prepare order times to utc format */
-    const momentFormat = `${values.DATE_STRING_FORMAT}T${
-      values.TIME_STRING_FORMAT
-    }`;
-    const startRentalStr = `${this.startRentalDate.format(
-      values.DATE_STRING_FORMAT
-    )}T${this.startRentalTime}`;
-    const endRentalStr = `${this.endRentalDate.format(
-      values.DATE_STRING_FORMAT
-    )}T${this.endRentalTime}`;
+    const momentFormat = `${values.DATE_STRING_FORMAT}T${values.TIME_STRING_FORMAT}`;
+    const startRentalStr = `${this.startRentalDate.format(values.DATE_STRING_FORMAT)}T${this.startRentalTime}`;
+    const endRentalStr = `${this.endRentalDate.format(values.DATE_STRING_FORMAT)}T${this.endRentalTime}`;
 
-    const startRental = moment.tz(
-      startRentalStr,
-      momentFormat,
-      location.timezone
-    );
+    const startRental = moment.tz(startRentalStr, momentFormat, location.timezone);
     const endRental = moment.tz(endRentalStr, momentFormat, location.timezone);
 
     /* get order object */
