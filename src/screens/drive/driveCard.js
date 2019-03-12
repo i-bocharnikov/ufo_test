@@ -70,7 +70,7 @@ class DriveCard extends Component {
         {status !== rentalStatuses.CLOSED && (
           <TouchableOpacity
             style={styles.editRow}
-            onPress={this.startEditBooking}
+            onPress={this.editBooking}
             activeOpacity={values.BTN_OPACITY_DEFAULT}
           >
             <UFOText bold style={styles.editLabel}>
@@ -109,25 +109,11 @@ class DriveCard extends Component {
     return otaKeyStore.doorsLocked ? t('locked') : t('unlocked');
   }
 
-  startEditBooking = async () => {
-    this.isWaiting = true;
-
-    const rental = this.props.rental;
-    const locationRef = rental.location.reference;
-    const carRef = rental.car.car_model.reference;
-    const isOngoing = rental.status === rentalStatuses.ONGOING;
-    const startDate = moment.utc(rental.start_at).tz(rental.location.timezone);
-    const endDate = moment.utc(rental.end_at).tz(rental.location.timezone);
-
-    bookingStore.resetStore();
-    bookingStore.editableOrderRef = rental.reference;
-    bookingStore.isOngoing = isOngoing;
-    bookingStore.selectLocation(locationRef);
-    bookingStore.selectCar(carRef);
-    await bookingStore.setEditingPeriod(startDate, endDate, isOngoing);
-
-    this.isWaiting = false;
-    this.props.navigation.navigate(screenKeys.Booking);
+  editBooking = () => {
+    bookingStore.startEditing(
+      { ...this.props.rental },
+      () => this.props.navigation.navigate(screenKeys.Booking)
+    );
   };
 }
 

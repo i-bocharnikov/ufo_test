@@ -11,6 +11,7 @@ import {
   getTimeItemsForRollPicker,
   getCurrencyChar
 } from './helpers';
+import rentalStatuses from './../DriveStore/rentalStatuses';
 import { values } from './../../utils/theme';
 
 // period in months
@@ -116,15 +117,16 @@ export default class BookingStore {
   };
 
   /**
-   * @description Get lists of all locations and cars
+   * @description Get lists of all locations and cars (new booking)
    */
   @action
   getInitialData = async () => {
-    if (!this.editableOrderRef) {
+    if (this.editableOrderRef) {
       /* in case of editing booking the reset makes before attach editing data */
-      this.resetStore();
+      return;
     }
 
+    this.resetStore();
     this.isLoading = true;
 
     const [receivedLocations, receivedCars] = await Promise.all([
@@ -136,6 +138,33 @@ export default class BookingStore {
     this.cars = receivedCars;
 
     this.isLoading = false;
+  };
+
+  /**
+   * @description Start editing, force selection for booking and fetch data
+   */
+  @action
+  startEditing = async (rental, navAction) => {
+    const locationRef = _.get(rental, 'location.reference');
+    const carRef = _.get(rental, 'car.car_model.reference');
+    const isOngoing = rental.status === rentalStatuses.ONGOING;
+
+    const startDate = moment.utc(rental.start_at).tz(rental.location.timezone);
+    const endDate = moment.utc(rental.end_at).tz(rental.location.timezone);
+
+    this.resetStore();
+    this.editableOrderRef = rental.reference;
+    this.isOngoing = isOngoing;
+
+    if (typeof navAction === 'function') {
+      navAction();
+    }
+
+    await Promise.all([
+      this.selectLocation(locationRef),
+      this.selectCar(carRef)
+    ]);
+    await this.setEditingPeriod(startDate, endDate, isOngoing);
   };
 
   /**

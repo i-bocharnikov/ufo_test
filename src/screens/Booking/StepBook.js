@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { View, Text, FlatList, TouchableOpacity, Linking } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, Linking, BackHandler } from 'react-native';
 import { translate } from 'react-i18next';
 import { observer } from 'mobx-react';
 import moment from 'moment';
@@ -30,11 +30,19 @@ class StepBookScreen extends Component {
     };
     this.onSelectEndRollDateDebounce = _.debounce(this.onSelectEndRollDate, 100);
     this.onSelectStartRollDateDebounce = _.debounce(this.onSelectStartRollDate, 100);
+    this.screenFocusListener = null;
+    this.backHandler = null;
   }
 
   async componentDidMount() {
     await this.fetchInitialData();
-    this.props.navigation.addListener('didFocus', this.fetchInitialData);
+    this.screenFocusListener = this.props.navigation.addListener('didFocus', this.fetchInitialData);
+    this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.navBack);
+  }
+
+  componentWillUnmount() {
+    this.backHandler.remove()
+    this.screenFocusListener.remove();
   }
 
   render() {
@@ -321,11 +329,16 @@ class StepBookScreen extends Component {
   };
 
   navBack = () => {
-    if (bookingStore.editableOrderRef) {
-      bookingStore.resetStore();
+    const { navigation } = this.props;
+
+    if (navigation.isFocused()) {
+      navigation.navigate(screenKeys.Home);
+      bookingStore.editableOrderRef && bookingStore.resetStore();
+
+      return true;
     }
 
-    this.props.navigation.navigate(screenKeys.Home);
+    return false;
   };
 
   navToFaq = () => {

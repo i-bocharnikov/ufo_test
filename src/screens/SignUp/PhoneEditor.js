@@ -28,13 +28,14 @@ class PhoneScreen extends Component {
   @observable activityPending = false;
   @observable isCodeRequested = false;
   @observable code = null;
+  backHandler = null;
 
   componentDidMount() {
-    BackHandler.addEventListener('hardwareBackPress', this.doCancel);
+    this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.doCancel);
   }
 
   componentWillUnmount() {
-    BackHandler.removeEventListener('hardwareBackPress', this.doCancel);
+    this.backHandler.remove();
   }
 
   render() {
@@ -145,12 +146,17 @@ class PhoneScreen extends Component {
   }
 
   doCancel = () => {
+    if (!this.props.navigation.isFocused()) {
+      /* to prevent hardwareBackPress event with tab navigation */
+      return false;
+    }
+
     this.isCodeRequested = false;
     registerStore.isConnected
       ? this.props.navigation.popToTop()
       : this.props.navigation.navigate(screenKeys.Home);
 
-    /* for prevent hardwareBackPress event on android */
+    /* to handle manual hardwareBackPress event on android */
     return true;
   };
 
