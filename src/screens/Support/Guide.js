@@ -5,7 +5,7 @@ import { translate } from 'react-i18next';
 
 import { supportStore } from './../../stores';
 import { UFOHeader, UFOSubHeader, UFOHeaderStickyWrapper } from './../../components/UFOHeader';
-import { UFOContainer } from './../../components/common';
+import { UFOContainer, UFOImage, UFOVideo } from './../../components/common';
 import styles from './styles';
 
 @observer
@@ -28,8 +28,35 @@ class GuideScreen extends Component {
   }
 
   renderContent = () => {
+    if (!supportStore.chosenGuide) {
+      return null;
+    }
+
+    const { title, text, media_type, media_url } = supportStore.chosenGuide;
+    const hasImageContent = media_type === 'image' || media_type === 'external_map';
+    const hasVideoContent = media_type === 'video';
+
     return (
-      <View></View>
+      <View style={styles.guideContentWrapper}>
+        {hasImageContent && (
+          <UFOImage
+            source={{ uri: media_url }}
+            style={styles.guideMedia}
+          />
+        )}
+        {hasVideoContent && (
+          <UFOVideo
+            source={{ uri: media_url }}
+            style={styles.guideMedia}
+          />
+        )}
+        <Text style={styles.guideTitle}>
+          {title.toUpperCase()}
+        </Text>
+        <Text style={styles.guideDescription}>
+          {text}
+        </Text>
+      </View>
     );
   };
 

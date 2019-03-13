@@ -43,7 +43,7 @@ export default StyleSheet.create({
     fontSize: 10,
     lineHeight: TAG_HEIGHT,
     letterSpacing: 0.36,
-    marginTop: Platform.OS == 'ios' ? 1 : 0
+    marginTop: Platform.OS === 'ios' ? 1 : 0
   },
 
   guideTagBtnChosen: { backgroundColor: colors.MAIN_COLOR },
@@ -74,5 +74,34 @@ export default StyleSheet.create({
     color: colors.TEXT_DEFAULT_COLOR,
     fontSize: 16,
     marginLeft: 8
+  },
+
+  guideContentWrapper: {
+    backgroundColor: colors.BG_INVERT,
+    paddingVertical: 20
+  },
+
+  guideMedia: {
+    flex: 1,
+    height: 240
+  },
+
+  guideTitle: {
+    ...textThemes.SP_BOLD,
+    fontSize: 13,
+    lineHeight: 22,
+    color: colors.MAIN_COLOR,
+    letterSpacing: 4,
+    marginHorizontal: HORIZONTAL_INDENTS,
+    marginTop: 24,
+    alignSelf: 'center',
+    textAlign: 'center'
+  },
+
+  guideDescription: {
+    ...textThemes.SP_REGULAR,
+    lineHeight: 21,
+    marginHorizontal: HORIZONTAL_INDENTS,
+    marginTop: 20
   }
 });

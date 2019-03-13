@@ -1,5 +1,7 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 import { textThemes, colors } from './../../../utils/theme';
+
+const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 const HEADER_HEIGHT = 54;
 const HEADER_TOP_PADDING = 18;
@@ -93,7 +95,8 @@ export default StyleSheet.create({
   /* sticky wrapper styles */
   bouncesHeaderBG: {
     position: 'absolute',
-    top: 0,
+    height: SCREEN_HEIGHT / 2,
+    top: -(SCREEN_HEIGHT / 2),
     left: 0,
     right: 0,
     backgroundColor: colors.BG_DEFAULT
