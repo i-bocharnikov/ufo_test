@@ -61,7 +61,8 @@ const support = {
   chatTab: 'Chat',
   faqTab: 'FAQ',
   guideAllCategory: 'all',
-  guideHeader: 'Guide'
+  guideHeader: 'Guide',
+  webViewError: 'Oops, something went wrong...\nYou can open faq by the url:\n'
 };
 
 export default {

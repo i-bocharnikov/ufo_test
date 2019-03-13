@@ -108,5 +108,16 @@ export default StyleSheet.create({
   textUrl: {
     color: colors.MAIN_LIGHT_COLOR,
     textDecorationLine: 'underline'
+  },
+
+  webviewError: {
+    ...textThemes.SP_REGULAR,
+    fontSize: 18,
+    lineHeight: 24,
+    alignSelf: 'center',
+    textAlign: 'center',
+    marginTop: 36,
+    paddingHorizontal: HORIZONTAL_INDENTS,
+    color: colors.TEXT_LIGHT_COLOR
   }
 });
