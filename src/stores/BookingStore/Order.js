@@ -98,8 +98,9 @@ export default class Order {
   static async validateVoucher(code, locationRef, carRef, startDate) {
     const path = `/reserve/validation/${locationRef}/${carRef}/${startDate}/${code}`;
     const response = await getFromApi(path);
+    const invalidMessage = _.get(response, 'data.response.data.message');
 
-    return response.isSuccess;
+    return { isValid: response.isSuccess, invalidMessage };
   }
 
   /**

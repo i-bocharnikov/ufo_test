@@ -28,6 +28,7 @@ const REGEX_EMAIL_VALIDATION = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 class ContactsInfoEditorScreen extends Component {
   phoneInputRef = React.createRef();
   countryPickerRef = React.createRef();
+  backHandler = null;
 
   @observable initRegistration = !registerStore.isConnected;
   @observable countryCode = DeviceInfo.getDeviceCountry().toLowerCase();
@@ -37,11 +38,11 @@ class ContactsInfoEditorScreen extends Component {
   @observable activityPending = false;
 
   componentDidMount() {
-    BackHandler.addEventListener('hardwareBackPress', this.doCancel);
+    this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.doCancel);
   }
 
   componentWillUnmount() {
-    BackHandler.removeEventListener('hardwareBackPress', this.doCancel);
+    this.backHandler.remove();
   }
 
   render() {

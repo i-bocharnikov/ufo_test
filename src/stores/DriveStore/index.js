@@ -66,6 +66,7 @@ class Rental {
   @persist @observable start_at = null;
   @persist @observable end_at = null;
   @persist @observable face_capture_required = false;
+  @persist @observable is_editable = false;
   @persist @observable carbon_footprint = null;
 
   @persist('object', Location) @observable location = new Location();

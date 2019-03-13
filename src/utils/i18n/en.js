@@ -68,22 +68,23 @@ export default {
   common: {
     okBtn: 'OK',
     cancelBtn: 'Cancel',
+    openBtn: 'Open',
     closeBtn: 'close',
     modeAuto: 'auto',
     modeOn: 'on',
     modeOff: 'off',
     calendarTitle: 'SELECT DATE',
     saveBtn: 'Save',
+    days: ' days',
     scheduleFrom: 'from',
     scheduleTo: 'to',
     postponeBtn: 'Ask me later',
-    termsUrl: 'https://www.ufodrive.com/en/terms-and-conditions'
+    termsUrl: 'https://www.ufodrive.com/en/terms-and-conditions',
+    referralGuideLink: 'https://www.ufodrive.com/en/ufo-world/referral'
   },
   activities: {
-    internetAccessFailure:
-      'Unexpected internet connectivity issues. Operating in offline/degraded mode',
-    bluetoothAccessFailure:
-      'Unexpected bluetooth connectivity issues. Operating in offline/degraded mode',
+    internetAccessFailure: 'Unexpected internet connectivity issues. Operating in offline/degraded mode',
+    bluetoothAccessFailure: 'Unexpected bluetooth connectivity issues. Operating in offline/degraded mode',
     internetbluetoothAccessFailure:
       'Unexpected internet and bluetooth connectivity issues. Operating in offline/degraded mode'
   },
@@ -97,31 +98,23 @@ export default {
   },
   error: {
     error: 'Error',
-    internetConnectionRequired:
-      'This operation requires an internet connection',
-    bluetoothConnectionRequired:
-      'This operation requires a blootooth connection',
-    unexpectedServerResponse:
-      'Oops, this was not supposed to happen. Apologises for the inconvenience',
+    internetConnectionRequired: 'This operation requires an internet connection',
+    bluetoothConnectionRequired: 'This operation requires a blootooth connection',
+    unexpectedServerResponse: 'Oops, this was not supposed to happen. Apologises for the inconvenience',
     noKey: 'You currently have no key. Please ask support team to have one',
     stringNotMatch: 'Please type "I agree" to sign the contract.',
     unknown: 'Unknown Error',
-    nativeException:
-      'Oops, this was not supposed to happen. Apologises for the inconvenience',
+    nativeException: 'Oops, this was not supposed to happen. Apologises for the inconvenience',
     jsException: 'Warning from JS exception handler',
-    jsExceptionFatal:
-      'Oops, this was not supposed to happen. Apologises for the inconvenience',
-    jsExceptionFatalReport:
-      'We have reported this to our team. Please close the app and start again.',
-    localPermissionNeeded:
-      'Location permission is required to access the car (please control system settings)',
+    jsExceptionFatal: 'Oops, this was not supposed to happen. Apologises for the inconvenience',
+    jsExceptionFatalReport: 'We have reported this to our team. Please close the app and start again.',
+    localPermissionNeeded: 'Location permission is required to access the car (please control system settings)',
     invalidCodeError: 'This code is not valid!',
     // it's not just var name - such format using 'context' in 'i18next'
     invalidCodeError_voucher: "Voucher code '{{code}}' is not valid",
     invalidCodeError_referal: "Referral code '{{code}}' is not valid",
     connectionIsRequired: 'Internet connectivity is required',
-    rentalKeyMissing:
-      'The key is missing, please contact UFODRIVE if the problem persist.',
+    rentalKeyMissing: 'The key is missing, please contact UFODRIVE if the problem persist.',
     rentalNotOpen: 'The rental is not yet started, please wait...',
     bluetoothNeeded: 'Please enable bluetooth on your phone and try again',
     connectivityIssue: 'Connectivity Issue, please try again'
@@ -180,8 +173,7 @@ export default {
   inspect: {
     initialInspectionTitle: 'Initial inspection',
     finalInspectionTitle: 'Declare damage(s)',
-    inspectGuidance:
-      'Confirm the car conforms to the condition described below:',
+    inspectGuidance: 'Confirm the car conforms to the condition described below:',
     locateDamageTitle: 'Declare damage 1/3',
     locateGuidance: 'Locate the damage on the picture below',
     captureDamageTitle: 'Capture damage 2/3',
@@ -208,22 +200,20 @@ export default {
     rentalEndAt: 'to {{end_at}}',
     rentalLocation: '{{rental.location.name}}',
     rentalCar: '{{rental.car.reference}}',
-    rentalCarModel:
-      '{{rental.car.car_model.manufacturer}} {{rental.car.car_model.name}}',
+    rentalCarModel: '{{rental.car.car_model.manufacturer}} {{rental.car.car_model.name}}',
     noRentalsTitle: 'No rentals',
     noRentalsDescription:
       'After booking, the actions below will be activated and will allow you to find the car, inspect it, start the rental contract and ultimately lock/unlock the vehicle',
     confirmCloseRentalConfirmationMessage:
       "You are about to end your rental contract.{{keyMessage}}\nThe car will then lock automatically so please ensure you don't leave any personal belongings in the car as you will not be able to open it once you press 'OK'.\nThank you.",
-    confirmCloseRentalKeyMessageConfirmationMessage:
-      '\nPLEASE PUT THE KEY BACK IN THE GLOVEBOX.',
+    confirmCloseRentalKeyMessageConfirmationMessage: '\nPLEASE PUT THE KEY BACK IN THE GLOVEBOX.',
     noKey: 'No key',
     notConnected: 'Not connected',
     connecting: '...Connecting...',
     locked: 'Doors locked',
     unlocked: 'Doors unlocked',
     noData: '...',
-    editBooking: 'Edit'
+    editBooking: 'Amend'
   },
   guide: {
     findTitle: 'Where is the car',
@@ -233,8 +223,7 @@ export default {
   },
   term: {
     rentalAgreementTitle: 'Sign the agreement',
-    confirmContractDescription:
-      'By signing, I certify that I have read and fully accepted the terms and conditions.',
+    confirmContractDescription: 'By signing, I certify that I have read and fully accepted the terms and conditions.',
     confirmContractTitle: "Enter '{{strKey}}' to confirm",
     confirmContractKeyString: 'I agree'
   },
@@ -251,8 +240,7 @@ export default {
     timeSectionTitle: 'PICK-UP & RETURN TIME',
     notFoundData: 'Data not found',
     infoLink: 'info',
-    datesTooltip:
-      'Enter your pick-up & return date here. You can also use the calendar view.\nNeed more help? ',
+    datesTooltip: 'Enter your pick-up & return date here. You can also use the calendar view.\nNeed more help? ',
     tooltipLink: 'Contact us',
     dareSectionTitle: 'PICK-UP & RETURN DATE',
     totalPrice: 'TOTAL',
@@ -277,8 +265,6 @@ export default {
     totalPricePayment: 'TOTAL - ALL INCLUDED',
     voucherPlaceholder: 'Voucher / referral code',
     milesPlaceholder: 'Miles and more number',
-    voucherTooltip:
-      'Gain free credit and additional benefits by referring new customers. More information on https://www.ufodrive.com/en/ufo-world/referral',
     scanCreditCardBtn: 'Scan a new credit card',
     applyBtn: 'APPLY\nALTERNATIVE',
     pickUpAlt: 'Pickup',
@@ -297,24 +283,28 @@ export default {
     driveDescrDriveP1: 'Find your bookings in the drive section of the app.',
     driveDescrP2: ' If you want to know more about how it works, ',
     driveDescrGuideLink: 'Please consult the FAQ.',
-    driveDescrCancellation: 'Please note it will take a couple of day for the money to appear on your statement.\n\nWe look forward to welcoming you in the future.',
+    driveDescrCancellation:
+      'Please note it will take a couple of day for the money to appear on your statement.\n\nWe look forward to welcoming you in the future.',
     feedBackTitle: 'Just one question',
     confirmDialog: 'DONE',
     feedBackInputPlaceholder: 'Your variant',
     ageConfirmation:
       'By confirming, I certify that I have read and fully accepted the general terms and conditions and that I am at least 26 years old and in possession of a valid driver license.',
+    updateConfirmation:
+      'By confirming, I certify that I have read and fully accepted the general terms and conditions and that I am at least 26 years old and in possession of a valid driver license.',
+    undoConfirmation: 'Confirmation for cancellable.',
     termsAlertBtn: 'Read terms',
     termsLinkLabel: 'Terms and conditions',
     undoBooking: 'Cancel booking (fees may apply)',
     bookingEditResult: 'BOOKING',
-    cancelationFees: 'Cancelation fees'
+    cancelationFees: 'Cancelation fees',
+    readMoreByLink: 'Read more info on the link'
   },
   launch: {
     launchTitle: 'Fast track\ncar rental',
     slideOneTitle: 'The most advanced car rental',
     slideOneSubTitle: 'No key pick-up, no paperwork, no queues.',
-    slideOneDescription:
-      'This app will perform car inspection, activate your rental agreement and unlock your car',
+    slideOneDescription: 'This app will perform car inspection, activate your rental agreement and unlock your car',
     slideTwoTitle: 'No hidden charges',
     slideTwoSubTitle: 'No refuelling cost',
     slideTwoDescription:
@@ -335,10 +325,9 @@ export default {
     validateBtnLabel: 'Validate',
     captureBtn: 'Capture',
     handlingDefaultError: 'Something went wrong. try again...',
-    handlingRentalError:
-      "Identity wasn't validate, something went wrong, try again...",
-    registerCaptureDescription: 'Capture your face',
-    rentalCaptureDescription: 'Capture your face to confirm your identity',
+    handlingRentalError: "Identity wasn't validate, something went wrong, try again...",
+    registerCaptureDescription: 'Please capture your face',
+    rentalCaptureDescription: 'Please capture your face to confirm your identity',
     incorrectFacePosition: 'Your face must be in the center of the screen',
     incorrectFaceSize: 'Your face must be closer to the camera',
     incorrectFaceYaw: 'Your face must be in front of the camera'

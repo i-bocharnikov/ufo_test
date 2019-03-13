@@ -263,7 +263,7 @@ class StepDriveScreen extends Component {
 
     registerStore.isUserRegistered
       ? navigation.navigate(screenKeys.Drive)
-      : navigation.navigate(screenKeys.Phone);
+      : navigation.navigate(screenKeys.ContactsInfoEditor);
   };
 
   /*

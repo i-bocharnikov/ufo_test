@@ -78,17 +78,19 @@ export default class UFOCamera extends Component {
   render() {
     return (
       <Fragment>
-        <FocusListener
-          onFocus={this.onNavFocus}
-          onBlur={this.onNavBlur}
-        />
+        <FocusListener onFocus={this.onNavFocus} onBlur={this.onNavBlur} />
         {this.renderCameraView()}
       </Fragment>
     );
   }
 
   renderCameraView = () => {
-    const { showTorchBtn, torchBtnTopIndent, cameraMask, ...restCameraProps } = this.props;
+    const {
+      showTorchBtn,
+      torchBtnTopIndent,
+      cameraMask,
+      ...restCameraProps
+    } = this.props;
     const { hasPermit, flashMode, isFocused } = this.state;
 
     if (!hasPermit || !isFocused) {
@@ -106,7 +108,10 @@ export default class UFOCamera extends Component {
         {showTorchBtn && (
           <TouchableOpacity
             onPress={this.changeFlashMode}
-            style={[ styles.torchBtn, torchBtnTopIndent && { marginTop: torchBtnTopIndent } ]}
+            style={[
+              styles.torchBtn,
+              torchBtnTopIndent && { marginTop: torchBtnTopIndent }
+            ]}
             activeOpacity={1}
           >
             <UFOIcon_old
@@ -115,7 +120,7 @@ export default class UFOCamera extends Component {
               color={colors.INVERTED_TEXT}
               style={styles.torchShadow}
             />
-            <Text style={[ styles.torchLabel, styles.torchShadow ]}>
+            <Text style={[styles.torchLabel, styles.torchShadow]}>
               {flashMode.getLabel()}
             </Text>
           </TouchableOpacity>
@@ -135,23 +140,28 @@ export default class UFOCamera extends Component {
 
   changeFlashMode = () => {
     const currentIndex = this.state.flashMode.index;
-    const nextIndex = currentIndex + 1 >= FLASH_MODE_ITEMS.length
-      ? 0
-      : currentIndex + 1;
+    const nextIndex =
+      currentIndex + 1 >= FLASH_MODE_ITEMS.length ? 0 : currentIndex + 1;
     this.setState({ flashMode: FLASH_MODE_ITEMS[nextIndex] });
   };
 
-  rotateImage = (imageData, angle = 90) => new Promise((resolve, reject) => {
-    const { uri, width, height } = imageData;
+  rotateImage = (imageData, angle = 90) =>
+    new Promise((resolve, reject) => {
+      const { uri, width, height } = imageData;
 
-    ImageRotate.rotateImage(uri, angle, res => {
-      imageData.uri = res;
-      imageData.width = height;
-      imageData.height = width;
+      ImageRotate.rotateImage(
+        uri,
+        angle,
+        res => {
+          imageData.uri = res;
+          imageData.width = height;
+          imageData.height = width;
 
-      return resolve(imageData);
-    }, err => reject(err));
-  });
+          return resolve(imageData);
+        },
+        err => reject(err)
+      );
+    });
 
   takePicture = async (customOptions = {}) => {
     try {
@@ -172,7 +182,9 @@ export default class UFOCamera extends Component {
          * for main camera the fix image take a lot of time or make app crash
          * leave this option only for low resolution images (nov for frontal camera)
          */
-        fixOrientation: customOptions.fixOrientation && this.props.type === RNCAMERA_CONSTANTS.Type.front
+        fixOrientation:
+          customOptions.fixOrientation &&
+          this.props.type === RNCAMERA_CONSTANTS.Type.front
       };
       const imageData = await this.camera.takePictureAsync(options);
 
@@ -183,8 +195,6 @@ export default class UFOCamera extends Component {
 
       return imageData;
     } catch (err) {
-      console.error(err);
-
       return null;
     }
   };

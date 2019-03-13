@@ -1,7 +1,12 @@
 import { observable, action } from 'mobx';
 import i18n from 'i18next';
 
-import { driveStore, otaKeyStore, registerStore, supportStore } from './../stores';
+import {
+  driveStore,
+  otaKeyStore,
+  registerStore,
+  supportStore
+} from './../stores';
 import { checkConnectivity } from './../utils/api_deprecated';
 import { hydrate } from './../utils/store';
 import { confirm } from './../utils/interaction';
@@ -16,7 +21,9 @@ export default class AppStore {
   async register() {
     try {
       let keyAccessDeviceIdentifier = await otaKeyStore.getKeyAccessDeviceIdentifier();
-      this.keyAccessDeviceToken = await registerStore.registerDevice(keyAccessDeviceIdentifier);
+      this.keyAccessDeviceToken = await registerStore.registerDevice(
+        keyAccessDeviceIdentifier
+      );
 
       if (this.keyAccessDeviceToken) {
         await remoteLoggerService.info(
@@ -31,8 +38,12 @@ export default class AppStore {
           'registration done but without keyAccessDeviceToken so we force creating new one',
           registerStore.user
         );
-        keyAccessDeviceIdentifier = await otaKeyStore.getKeyAccessDeviceIdentifier(true);
-        this.keyAccessDeviceToken = await registerStore.registerDevice(keyAccessDeviceIdentifier);
+        keyAccessDeviceIdentifier = await otaKeyStore.getKeyAccessDeviceIdentifier(
+          true
+        );
+        this.keyAccessDeviceToken = await registerStore.registerDevice(
+          keyAccessDeviceIdentifier
+        );
 
         if (this.keyAccessDeviceToken) {
           await remoteLoggerService.info(
@@ -42,15 +53,15 @@ export default class AppStore {
           );
           await otaKeyStore.openSession(this.keyAccessDeviceToken);
         } else {
-          await remoteLoggerService.error(
+          await remoteLoggerService.fatal(
             'register',
-            'registration success but doesn\'t include keyAccessDeviceToken for the second time after forcing new temp token. give up',
+            "registration success but doesn't include keyAccessDeviceToken for the second time after forcing new temp token. give up",
             registerStore.user
           );
         }
       }
     } catch (error) {
-      await remoteLoggerService.error(
+      await remoteLoggerService.fatal(
         'register',
         `exception: ${error.message}`,
         error,
@@ -188,7 +199,7 @@ export default class AppStore {
   @action
   async connect(code) {
     if (await checkConnectivity()) {
-      if ( !(await registerStore.connect(code)) ) {
+      if (!(await registerStore.connect(code))) {
         return false;
       }
 
@@ -209,7 +220,11 @@ export default class AppStore {
           registerStore.disconnect();
           otaKeyStore.closeSession();
           await this.initialise();
-          await remoteLoggerService.info('disconnect', 'success', registerStore.user);
+          await remoteLoggerService.info(
+            'disconnect',
+            'success',
+            registerStore.user
+          );
         }
       }
     );
