@@ -83,7 +83,8 @@ export default StyleSheet.create({
 
   guideMedia: {
     flex: 1,
-    height: 240
+    height: 240,
+    marginBottom: 24
   },
 
   guideTitle: {
@@ -93,7 +94,6 @@ export default StyleSheet.create({
     color: colors.MAIN_COLOR,
     letterSpacing: 4,
     marginHorizontal: HORIZONTAL_INDENTS,
-    marginTop: 24,
     alignSelf: 'center',
     textAlign: 'center'
   },
@@ -103,5 +103,10 @@ export default StyleSheet.create({
     lineHeight: 21,
     marginHorizontal: HORIZONTAL_INDENTS,
     marginTop: 20
+  },
+
+  textUrl: {
+    color: colors.MAIN_LIGHT_COLOR,
+    textDecorationLine: 'underline'
   }
 });

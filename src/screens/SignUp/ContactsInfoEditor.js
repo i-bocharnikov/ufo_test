@@ -219,6 +219,11 @@ class ContactsInfoEditorScreen extends Component {
    * Cancel editing/registration and go back
   */
   doCancel = () => {
+    if (!this.props.navigation.isFocused()) {
+      /* to prevent hardwareBackPress event with tab navigation */
+      return false;
+    }
+
     this.smsCodeRequested = false;
     registerStore.isConnected
       ? this.props.navigation.popToTop()

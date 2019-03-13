@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import { observer } from 'mobx-react';
 import { translate } from 'react-i18next';
+import Hyperlink from 'react-native-hyperlink';
 
 import { supportStore } from './../../stores';
 import { UFOHeader, UFOSubHeader, UFOHeaderStickyWrapper } from './../../components/UFOHeader';
@@ -53,9 +54,14 @@ class GuideScreen extends Component {
         <Text style={styles.guideTitle}>
           {title.toUpperCase()}
         </Text>
-        <Text style={styles.guideDescription}>
-          {text}
-        </Text>
+        <Hyperlink
+          linkDefault={true}
+          linkStyle={styles.textUrl}
+        >
+          <Text style={styles.guideDescription}>
+            {text}
+          </Text>
+        </Hyperlink>
       </View>
     );
   };

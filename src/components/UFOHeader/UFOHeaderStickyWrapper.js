@@ -9,7 +9,7 @@ export default class UFOHeaderStickyWrapper extends PureComponent {
 
     return (
       <ScrollView
-        stickyHeaderIndices={[1]}
+        stickyHeaderIndices={[2]}
         alwaysBounceVertical={false}
         {...scrollProps}
       >
