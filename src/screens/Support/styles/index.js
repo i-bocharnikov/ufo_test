@@ -110,14 +110,21 @@ export default StyleSheet.create({
     textDecorationLine: 'underline'
   },
 
+  webView: { backgroundColor: colors.BG_INVERT_TINT },
+
+  webviewErrorWrapper: {
+    flex: 1,
+    paddingTop: 36,
+    paddingHorizontal: HORIZONTAL_INDENTS,
+    backgroundColor: colors.BG_INVERT_TINT
+  },
+
   webviewError: {
     ...textThemes.SP_REGULAR,
     fontSize: 18,
     lineHeight: 24,
     alignSelf: 'center',
     textAlign: 'center',
-    marginTop: 36,
-    paddingHorizontal: HORIZONTAL_INDENTS,
     color: colors.TEXT_LIGHT_COLOR
   }
 });
