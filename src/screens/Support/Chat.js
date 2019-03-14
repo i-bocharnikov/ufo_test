@@ -4,7 +4,6 @@ import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 import { translate } from 'react-i18next';
 import DeviceInfo from 'react-native-device-info';
-import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 import { registerStore } from './../../stores';
 import { UFOLoader, UFOContainer } from './../../components/common';
@@ -18,20 +17,26 @@ class ChatScreen extends Component {
   chatRef = React.createRef();
   keyboardShowListener = null;
   keyboardHideListener = null;
+  /* when tab more than 'delayBeforeBlur' ms is unfocused - remove webview from render */
+  delayBeforeBlur = 5000;
+  timerBlur = null;
+  didFocusListener = null;
+  didBlurListener = null;
 
   componentDidMount() {
+    AppState.addEventListener('change', this.handleAppStateChange);
     this.keyboardShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow);
     this.keyboardHideListener = Keyboard.addListener('keyboardDidHide', this.keyboardDidHide);
-    AppState.addEventListener('change', this.handleAppStateChange);
-
-    this.props.navigation.addListener('didFocus', () => { this.isFocused = true; });
-    this.props.navigation.addListener('willBlur', () => { this.isFocused = false; });
+    this.didFocusListener = this.props.navigation.addListener('didFocus', this.onScreenFocus);
+    this.didBlurListener = this.props.navigation.addListener('didBlur', this.onScreenBlur);
   }
 
   componentWillUnmount() {
+    AppState.removeEventListener('change', this.handleAppStateChange);
     this.keyboardShowListener.remove();
     this.keyboardHideListener.remove();
-    AppState.removeEventListener('change', this.handleAppStateChange);
+    this.didFocusListener.remove();
+    this.didBlurListener.remove();
   }
 
   render() {
@@ -56,8 +61,6 @@ class ChatScreen extends Component {
             contentInset={{ bottom: this.contentInsetBottom }}
           />
         )}
-        
-        {Platform.OS === 'android' && <KeyboardSpacer />}
       </UFOContainer>
     );
   }
@@ -131,6 +134,15 @@ class ChatScreen extends Component {
     if (nextAppState === 'active' && this.chatRef) {
       this.chatRef.current.reload();
     }
+  };
+
+  onScreenFocus = () => {
+    clearTimeout(this.timerBlur);
+    this.isFocused = true;
+  };
+
+  onScreenBlur = () => {
+    this.timerBlur = setTimeout(() => { this.isFocused = false; }, this.delayBeforeBlur);
   };
 }
 
